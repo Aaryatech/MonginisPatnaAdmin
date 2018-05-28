@@ -196,7 +196,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_rate1" id="item_rate1"
 											placeholder="Item Rate1" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
 								<div class="form-group">
@@ -205,27 +205,34 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_rate2" id="item_rate2"
 											placeholder="Item Rate2" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
-
+                         
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Special
 										Rate</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_rate3" id="item_rate3"
 											placeholder="Item Rate3" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
-
+                              <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Local
 										MRP</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp1" id="item_mrp1"
 											placeholder="Item Mrp1" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" readonly/>
 									</div>
 								</div>
 
@@ -235,7 +242,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp2" id="item_mrp2"
 											placeholder="Item Mrp2" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" readonly />
 									</div>
 								</div>
 								<div class="form-group">
@@ -244,7 +251,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp3" id="item_mrp3"
 											placeholder="Item Mrp3" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" readonly/>
 									</div>
 								</div>
 
@@ -332,7 +339,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_sort_id" id="item_sort_id"
 											placeholder="Item Sort Id" class="form-control"
-											data-rule-number="true" />
+											data-rule-number="true" value="0" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -519,7 +526,22 @@
 					totGst);
 		}
 	</script>
-
+<script type="text/javascript">
+function calMrp()
+{
+	var rate1 = parseFloat($("#item_rate1").val());
+	var rate2 = parseFloat($("#item_rate2").val());
+	var rate3 = parseFloat($("#item_rate3").val());
+	var margin= parseFloat($("#margin").val());
+	
+	var calRate1=rate1+(rate1*margin/100);
+	var calRate2=rate2+(rate2*margin/100);
+	var calRate3=rate3+(rate3*margin/100);
+	document.getElementById("item_mrp1").setAttribute('value', calRate1);
+	document.getElementById("item_mrp2").setAttribute('value', calRate2);
+	document.getElementById("item_mrp3").setAttribute('value', calRate3);
+}
+</script>
 
 </body>
 </html>

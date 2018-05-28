@@ -113,7 +113,7 @@
 												Date</label>
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker" id="fr_opening_date"
-													size="16" type="text" name="fr_opening_date" required
+													size="16" type="text" name="fr_opening_date" 
 													placeholder="Opening Date" />
 											</div>
 										</div>
@@ -345,7 +345,7 @@
 												Birthdate</label>
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker" id="fr_birth_date"
-													size="16" type="text" name="fr_birth_date" required
+													size="16" type="text" name="fr_birth_date" 
 													placeholder="Birthdate" />
 											</div>
 										</div>
@@ -365,7 +365,7 @@
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker"
 													id="fr_agreement_date" size="16" type="text"
-													name="fr_agreement_date" required
+													name="fr_agreement_date" 
 													placeholder="Agreement Date" />
 											</div>
 										</div>

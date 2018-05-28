@@ -1,7 +1,5 @@
 package com.ats.adminpanel.model.franchisee;
 
-import java.sql.Date;
-import com.sun.istack.internal.NotNull;
 
 public class FranchiseeList {
 
@@ -70,91 +68,17 @@ private String fbaLicenseDate;
 
 private String frAgreementDate;
 
-private String frGstType;
+private int frGstType;
 
 private String frGstNo;
 
-private Integer stockType;
+private int stockType;
 
 private String frAddress;
 
-private String frTarget;
+private int frTarget;
 
 private int isSameState;
-
-
-public int getIsSameState() {
-	return isSameState;
-}
-
-public void setIsSameState(int isSameState) {
-	this.isSameState = isSameState;
-}
-
-public String getOwnerBirthDate() {
-	return ownerBirthDate;
-}
-
-public void setOwnerBirthDate(String ownerBirthDate) {
-	this.ownerBirthDate = ownerBirthDate;
-}
-
-
-public String getFbaLicenseDate() {
-	return fbaLicenseDate;
-}
-
-public void setFbaLicenseDate(String fbaLicenseDate) {
-	this.fbaLicenseDate = fbaLicenseDate;
-}
-
-public String getFrAgreementDate() {
-	return frAgreementDate;
-}
-
-public void setFrAgreementDate(String frAgreementDate) {
-	this.frAgreementDate = frAgreementDate;
-}
-
-public String getFrGstType() {
-	return frGstType;
-}
-
-public void setFrGstType(String frGstType) {
-	this.frGstType = frGstType;
-}
-
-public String getFrGstNo() {
-	return frGstNo;
-}
-
-public void setFrGstNo(String frGstNo) {
-	this.frGstNo = frGstNo;
-}
-
-public Integer getStockType() {
-	return stockType;
-}
-
-public void setStockType(Integer stockType) {
-	this.stockType = stockType;
-}
-
-public String getFrAddress() {
-	return frAddress;
-}
-
-public void setFrAddress(String frAddress) {
-	this.frAddress = frAddress;
-}
-
-public String getFrTarget() {
-	return frTarget;
-}
-
-public void setFrTarget(String frTarget) {
-	this.frTarget = frTarget;
-}
 
 public int getFrId() {
 	return frId;
@@ -179,7 +103,6 @@ public String getFrCode() {
 public void setFrCode(String frCode) {
 	this.frCode = frCode;
 }
-
 
 public int getFrRate() {
 	return frRate;
@@ -349,6 +272,78 @@ public void setIsSameDayApplicable(int isSameDayApplicable) {
 	this.isSameDayApplicable = isSameDayApplicable;
 }
 
+public String getOwnerBirthDate() {
+	return ownerBirthDate;
+}
+
+public void setOwnerBirthDate(String ownerBirthDate) {
+	this.ownerBirthDate = ownerBirthDate;
+}
+
+public String getFbaLicenseDate() {
+	return fbaLicenseDate;
+}
+
+public void setFbaLicenseDate(String fbaLicenseDate) {
+	this.fbaLicenseDate = fbaLicenseDate;
+}
+
+public String getFrAgreementDate() {
+	return frAgreementDate;
+}
+
+public void setFrAgreementDate(String frAgreementDate) {
+	this.frAgreementDate = frAgreementDate;
+}
+
+public int getFrGstType() {
+	return frGstType;
+}
+
+public void setFrGstType(int frGstType) {
+	this.frGstType = frGstType;
+}
+
+public String getFrGstNo() {
+	return frGstNo;
+}
+
+public void setFrGstNo(String frGstNo) {
+	this.frGstNo = frGstNo;
+}
+
+public int getStockType() {
+	return stockType;
+}
+
+public void setStockType(int stockType) {
+	this.stockType = stockType;
+}
+
+public String getFrAddress() {
+	return frAddress;
+}
+
+public void setFrAddress(String frAddress) {
+	this.frAddress = frAddress;
+}
+
+public int getFrTarget() {
+	return frTarget;
+}
+
+public void setFrTarget(int frTarget) {
+	this.frTarget = frTarget;
+}
+
+public int getIsSameState() {
+	return isSameState;
+}
+
+public void setIsSameState(int isSameState) {
+	this.isSameState = isSameState;
+}
+
 @Override
 public String toString() {
 	return "FranchiseeList [frId=" + frId + ", frName=" + frName + ", frCode=" + frCode + ", frOpeningDate="
@@ -357,7 +352,10 @@ public String toString() {
 			+ frEmail + ", frPassword=" + frPassword + ", frMob=" + frMob + ", frOwner=" + frOwner + ", frRateCat="
 			+ frRateCat + ", grnTwo=" + grnTwo + ", delStatus=" + delStatus + ", frRmn1=" + frRmn1 + ", showItems="
 			+ showItems + ", notShowItems=" + notShowItems + ", frOpening=" + frOpening + ", frPasswordKey="
-			+ frPasswordKey + ", isSameDayApplicable=" + isSameDayApplicable + "]";
+			+ frPasswordKey + ", isSameDayApplicable=" + isSameDayApplicable + ", ownerBirthDate=" + ownerBirthDate
+			+ ", fbaLicenseDate=" + fbaLicenseDate + ", frAgreementDate=" + frAgreementDate + ", frGstType=" + frGstType
+			+ ", frGstNo=" + frGstNo + ", stockType=" + stockType + ", frAddress=" + frAddress + ", frTarget="
+			+ frTarget + ", isSameState=" + isSameState + "]";
 }
 
 

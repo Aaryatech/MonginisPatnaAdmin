@@ -20,11 +20,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllEventListResponse;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.SubCategoryRes;
+import com.ats.adminpanel.model.RawMaterial.RmItemSubCategory;
 import com.ats.adminpanel.model.events.Event;
 import com.ats.adminpanel.model.flavours.AllFlavoursListResponse;
 import com.ats.adminpanel.model.flavours.Flavour;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
+import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
+import com.ats.adminpanel.model.item.SubCategory;
 import com.ats.adminpanel.model.masters.AllRatesResponse;
 import com.ats.adminpanel.model.masters.AllspMessageResponse;
 import com.ats.adminpanel.model.masters.Rate;
@@ -624,5 +628,114 @@ public String redirectToUpdateRouteProcess(HttpServletRequest request, HttpServl
 		   return "redirect:/showSpMessages";
 
 }
+    @RequestMapping(value="/showSubCatList")
+    public ModelAndView showSubCatList(HttpServletRequest request, HttpServletResponse response) {
+	  
+	    ModelAndView mav = new ModelAndView("masters/subcategory");
+	  /*  Constants.mainAct=1;
+		Constants.subAct=9;*/
+	    try {
 
+		RestTemplate restTemplate = new RestTemplate();
+		CategoryListResponse	categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+		List<SubCategory> subCatList = new ArrayList<SubCategory>();
+	
+		for(int i=0;i<categoryListResponse.getmCategoryList().size();i++)
+		{
+			subCatList.addAll(categoryListResponse.getmCategoryList().get(i).getSubCategoryList());
+			
+		}
+		mav.addObject("catList", categoryListResponse.getmCategoryList());
+		mav.addObject("subCatList", subCatList);
+	    }
+	    catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mav;
+		
+     }
+    @RequestMapping(value = "/updateSubCategory/{subCatId}", method=RequestMethod.GET)
+    public ModelAndView updateSubCategory(@PathVariable("subCatId") int subCatId, HttpServletRequest request, HttpServletResponse response) {
+    	ModelAndView model = new ModelAndView("masters/subcategory");
+    	try {
+    	MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+    	map.add("subCatId", subCatId);
+    	RestTemplate restTemplate = new RestTemplate();
+    	
+    	SubCategoryRes subCategory=restTemplate.postForObject(Constants.url+"getSubCategory",map,SubCategoryRes.class);
+    	
+    	model.addObject("subCategory",subCategory);
+    	CategoryListResponse	categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+		List<SubCategory> subCatList = new ArrayList<SubCategory>();
+	
+		for(int i=0;i<categoryListResponse.getmCategoryList().size();i++)
+		{
+			subCatList.addAll(categoryListResponse.getmCategoryList().get(i).getSubCategoryList());
+			
+		}
+		model.addObject("catList", categoryListResponse.getmCategoryList());
+		model.addObject("subCatList", subCatList);
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+      return model;
+    }
+    @RequestMapping(value="/deleteSubCategory/{subCatId}",method=RequestMethod.GET)
+    public String deleteSubCategory(@PathVariable int subCatId) {
+         try {
+    		RestTemplate rest = new RestTemplate();
+          MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+          map.add("subCatId",subCatId);
+       
+    	   ErrorMessage errorResponse = rest.postForObject(Constants.url+"deleteSubCategory", map,ErrorMessage.class);
+          System.err.println("errorResponse"+errorResponse.toString());
+
+       
+         }catch (Exception e) {
+			e.printStackTrace();
+		}
+         return "redirect:/showSubCatList";
+    }
+	@RequestMapping(value = "/addSubCategoryProcess", method = RequestMethod.POST)
+	public String addSubCategoryProcess(HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			
+			String subCatId=request.getParameter("subCatId");
+			
+			String subCatName=request.getParameter("sub_cat_name");
+			
+			int catId=Integer.parseInt(request.getParameter("cat_id"));
+
+			SubCategoryRes  subCategory=new SubCategoryRes();
+			if(subCatId==null||subCatId=="")
+			{
+				subCategory.setSubCatId(0);
+			}else
+			{
+				subCategory.setSubCatId(Integer.parseInt(subCatId));
+			}
+			
+			subCategory.setCatId(catId);
+			subCategory.setSubCatName(subCatName);
+			subCategory.setDelStatus(0);
+			
+			RestTemplate restTemplate = new RestTemplate();
+			
+			ErrorMessage errorMessage=restTemplate.postForObject(Constants.url + "/saveSubCategory", subCategory,
+					ErrorMessage.class);
+			System.out.println("Response: "+errorMessage.toString());
+		}catch(Exception e)
+		{
+			System.out.println("Exception In Add  SubCategory Process:"+e.getMessage());
+
+			return "redirect:/showSubCatList";
+
+		}
+
+		return "redirect:/showSubCatList";
+		}
 }

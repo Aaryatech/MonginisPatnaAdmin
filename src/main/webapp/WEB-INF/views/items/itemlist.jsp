@@ -197,12 +197,15 @@
 									<table id="table2" class="main-table">
 											<thead>
 												<tr class="bgpink">
-														<th class="col-md-1">Sr No</th>
+											<th class="col-md-1">SELECT</th>
+                                            <th class="col-md-1">Sr No</th>
 											<th class="col-md-2">Item Id</th>
 											<th class="col-md-3">Item Name</th>
-<!-- 											<th class="col-md-2">Image</th>
- -->											<th class="col-md-2">Rate</th>
-											<th class="col-md-2">MRP</th>
+<!-- 										<th class="col-md-2">Image</th>
+ -->										<th class="col-md-1">Rate</th>
+											<th class="col-md-1">MRP</th>
+											<th class="col-md-1">Status</th>
+											
 											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
@@ -214,12 +217,14 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
+												<th class="col-md-1">SELECT</th>
 													<th class="col-md-1">Sr No</th>
 											<th class="col-md-2">Item Id</th>
 											<th class="col-md-3">Item Name</th>
 <!-- 											<th class="col-md-2">Image</th>
- -->											<th class="col-md-2">Rate</th>
-											<th class="col-md-2">MRP</th>
+ -->											<th class="col-md-1">Rate</th>
+											<th class="col-md-1">MRP</th>
+												<th class="col-md-1">Status</th>
 											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
@@ -227,6 +232,8 @@
 											
 	<c:forEach items="${itemsList}" var="itemsList" varStatus="count">
 											<tr>
+										<td><input type="checkbox" class="chk" name="select_to_print" id="${itemsList.id}"	value="${itemsList.id}"/></td>
+
 												<td><c:out value="${count.index+1}" /></td>
 												<td align="left"><c:out value="${itemsList.itemId}" /></td>
 												<td align="left"><c:out value="${itemsList.itemName}"/></td>
@@ -240,8 +247,17 @@
 												<td align="left"><c:out value="${itemsList.itemRate1}" /></td>
 												<td align="left"><c:out value="${itemsList.itemMrp1}" /></td>
 												
-												
-												
+												<td align="left">
+												<c:choose>
+												<c:when test="${itemsList.itemIsUsed==1}">
+													<c:out value="Active" />
+												</c:when>
+												<c:when test="${itemsList.itemIsUsed==2}"><c:out value="Special Days"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==3}"><c:out value="Sp Day Cake"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==4}"><c:out value="InActive"/></c:when>
+												</c:choose>
+											
+												</td>
 												
 												
 												
@@ -286,10 +302,10 @@
 
 																		<td align="left"><a href="updateItem/${itemsList.id}" class="disableClick"><span
 														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
-                                             <a href="showItemDetail/${itemsList.id}"><span
+                                             <a href="${pageContext.request.contextPath}/showItemDetail/${itemsList.id}"><span
 														class="glyphicon glyphicon-list"></span></a>
 													&nbsp;&nbsp;
-													<a href="deleteItem/${itemsList.id}" 
+													<a href="${pageContext.request.contextPath}/deleteItem/${itemsList.id}" 
 													onClick="return confirm('Are you sure want to delete this record');"><span
 														class="glyphicon glyphicon-remove"></span></a></td>
 														
@@ -326,13 +342,16 @@
 						
 						
 						<div class="form-group"  id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();">
-											</div>
-											</div>
+											
+								<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();">
+											
+								<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" />
+												<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="inactiveById()" 
+											value="InActive" /></div>
+							
 					</div>
 				</div>
 			</div>
@@ -446,5 +465,46 @@ function exportToExcel()
 			document.getElementById("expExcel").disabled=true;
 }
 </script>
+<script type="text/javascript">
+function deleteById()
+{
 
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Item")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteItem/'+checkedVals;
+
+	}
+
+}
+</script>
+<script type="text/javascript">
+function inactiveById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Item")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/inactiveItem/'+checkedVals;
+
+	}
+
+}
+</script>
 </html>

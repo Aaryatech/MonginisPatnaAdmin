@@ -126,7 +126,7 @@ public class ItemController {
 		for (int x = 0; x < mCategoryList.size(); x++) {
 			System.out.println("mCategoryList.get(x).getCatId(" + mCategoryList.get(x).getCatId());
 			if (mCategoryList.get(x).getCatId() == catId) {
-				subCatList = mCategoryList.get(x).getSubCategory();
+				subCatList = mCategoryList.get(x).getSubCategoryList();
 				System.out.println("SubCat List" + subCatList);
 			}
 
@@ -692,16 +692,23 @@ public class ItemController {
 
 	}
 
-	@RequestMapping(value = "/deleteItem/{id}", method = RequestMethod.GET)
-	public String deleteItem(@PathVariable int id) {
+	@RequestMapping(value = "/deleteItem/{idList}", method = RequestMethod.GET)
+	public String deleteItem(@PathVariable String[] idList) {
 
 		// String id=request.getParameter("id");
-
+    try {
 		ModelAndView mav = new ModelAndView("items/itemList");
 
 		RestTemplate rest = new RestTemplate();
+		
+		String strItemIds=new String();
+		for(int i=0;i<idList.length;i++)
+		{
+			strItemIds=strItemIds+","+idList[i];
+		}
+		strItemIds=strItemIds.substring(1);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("id", id);
+		map.add("id", strItemIds);
 
 		ErrorMessage errorResponse = rest.postForObject("" + Constants.url + "deleteItem", map, ErrorMessage.class);
 		System.out.println(errorResponse.toString());
@@ -717,7 +724,48 @@ public class ItemController {
 			return "redirect:/itemList";
 
 		}
+    }
+    catch (Exception e) {
+	e.printStackTrace();
 	}
+    return "redirect:/itemList";
+	}
+	@RequestMapping(value = "/inactiveItem/{idList}", method = RequestMethod.GET)
+	public String inactiveItem(@PathVariable String[] idList) {
+
+		// String id=request.getParameter("id");
+    try {
+		ModelAndView mav = new ModelAndView("items/itemList");
+
+		RestTemplate rest = new RestTemplate();
+		
+		String strItemIds=new String();
+		for(int i=0;i<idList.length;i++)
+		{
+			strItemIds=strItemIds+","+idList[i];
+		}
+		strItemIds=strItemIds.substring(1);
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("id", strItemIds);
+
+		ErrorMessage errorResponse = rest.postForObject("" + Constants.url + "inactivateItems", map, ErrorMessage.class);
+		System.out.println(errorResponse.toString());
+
+		
+		if (errorResponse.getError()) {
+			return "redirect:/itemList";
+
+		} else {
+			return "redirect:/itemList";
+
+		}
+    }
+    catch (Exception e) {
+	e.printStackTrace();
+	}
+    return "redirect:/itemList";
+	}
+
 
 	@RequestMapping(value = "/updateItem/{id}", method = RequestMethod.GET)
 	public ModelAndView updateMessage(@PathVariable int id) {
@@ -749,7 +797,7 @@ public class ItemController {
 
 		for (int i = 0; i < mCategoryList.size(); i++) {
 			if (item.getItemGrp1() == (mCategoryList.get(i).getCatId()))
-				subCategoryList = mCategoryList.get(i).getSubCategory();
+				subCategoryList = mCategoryList.get(i).getSubCategoryList();
 
 		}
 
