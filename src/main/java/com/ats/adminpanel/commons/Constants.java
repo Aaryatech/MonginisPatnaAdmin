@@ -4,9 +4,8 @@ import java.io.File;
 
 public class Constants {
 	
-	//public static final String url="http://132.148.151.41:8080/webapi/";
-	//public static final String url = "http://132.148.151.41:8080/webapi/";
-	public static final String url="http://localhost:8091/";
+	//public static final String url="http://132.148.143.124:8080/webapi/";
+	public static final String url="http://localhost:8098/";
 	public static final String SPCAKE_IMAGE_URL = "http://132.148.143.124:8080/uploads/MSPCAKE/";
 	public static final String FR_IMAGE_URL = "http://132.148.143.124:8080/uploads/FR/";
 
@@ -58,7 +57,7 @@ public class Constants {
 
 	public static final int DIS_BY_GATE = 3;
 
-	public static final String REPORT_SAVE = "/opt/tomcat-latest/webapps/uploads/Report.pdf";
+	public static final String REPORT_SAVE = "/opt/apache-tomcat-8.5.6/webapps/uploads/Report.pdf";
 
 	public static final String SP_CAKE_FOLDER = "http://132.148.143.124:8080/uploads/SPCAKE/";
 

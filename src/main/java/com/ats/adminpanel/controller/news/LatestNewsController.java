@@ -124,11 +124,17 @@ public class LatestNewsController {
 	
 	
 	@RequestMapping(value = "/deleteNews/{schId}",method=RequestMethod.GET)
-	public String deleteSpecialCake(@PathVariable int schId) {
+	public String deleteSpecialCake(@PathVariable String[] schId) {
 		ModelAndView model = new ModelAndView("latestNews/allLatestNews");
-		
+		 String strSchIds=new String();
+			for(int i=0;i<schId.length;i++)
+			{
+				strSchIds=strSchIds+","+schId[i];
+			}
+			strSchIds=strSchIds.substring(1);
+			
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("schId", schId);
+		map.add("schId", strSchIds);
 		RestTemplate restTemplate=new RestTemplate();
 		Info info=restTemplate.postForObject(Constants.url+"deleteScheduler", map,Info.class);
 		

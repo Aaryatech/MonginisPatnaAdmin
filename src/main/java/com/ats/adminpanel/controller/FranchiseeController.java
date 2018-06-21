@@ -371,7 +371,67 @@ public class FranchiseeController {
 	}
 
 	// ----------------------------------------END--------------------------------------------
+	@RequestMapping(value = "/configureItems", method = RequestMethod.POST)
+	public String configureItems(HttpServletRequest request, HttpServletResponse response)
+	{
+		try {
+			String[] itemShow = request.getParameterValues("items[]");
+			String[] frId = request.getParameterValues("fr_id[]");
+			int menuId=Integer.parseInt(request.getParameter("menu"));
+			RestTemplate restTemplate = new RestTemplate();
 
+			
+			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+					FranchiseeAndMenuList.class);
+
+			menuList = franchiseeAndMenuList.getAllMenu();
+			Menu frMenu = new Menu();
+			for (Menu menu : menuList) {
+				if (menu.getMenuId() == menuId) {
+					frMenu = menu;
+					break;
+				}
+			}
+			selectedCatId = frMenu.getMainCatId();
+
+			StringBuilder sb = new StringBuilder();
+
+			for (int i = 0; i < itemShow.length; i++) {
+				sb = sb.append(itemShow[i] + ",");
+
+			}
+			String items = sb.toString();
+			items = items.substring(0, items.length() - 1);
+			System.out.println("items" + items);
+
+			StringBuilder sb1 = new StringBuilder();
+
+			for (int i = 0; i < frId.length; i++) {
+				sb1 = sb1.append(frId[i] + ",");
+
+			}
+			String frIdList = sb1.toString();
+			frIdList = frIdList.substring(0, frIdList.length() - 1);
+			
+			RestTemplate rest=new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("itemIdList", items);
+			map.add("frIdList", frIdList);
+			map.add("menuId", menuId);
+            map.add("catId", selectedCatId);
+			Info errorMessage = rest.postForObject(Constants.url + "updateConfiguredItems", map, Info.class);
+
+			if(errorMessage.getError()==false)
+			{
+				System.err.println("stock");
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/configureFranchiseesList";
+		
+	}
 	// -------------------------ADD NEW FRANCHISEE
 	// PROCESS-------------------------------
 
@@ -765,7 +825,6 @@ public class FranchiseeController {
 
 		System.out.println("Finding Item List for Selected CatId=" + catId);
 
-		List<Item> filterItemsList = new ArrayList<Item>();
 
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -778,7 +837,29 @@ public class FranchiseeController {
 		return itemList;
 
 	}
+	@RequestMapping(value = "/getItemByIdUpdateHsn", method = RequestMethod.GET)
+	public @ResponseBody List<Item> getItemByIdUpdateHsn(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<Item> itemList =null;
+		try {
 
+        int catId=Integer.parseInt(request.getParameter("catId"));
+		
+
+		RestTemplate restTemplate = new RestTemplate();
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("itemGrp1", catId);
+
+		Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
+		 itemList = new ArrayList<Item>(Arrays.asList(item));
+		System.out.println("Filter Item List " + itemList.toString());
+
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return itemList;
+
+	}
 	// ----------------------------------------END--------------------------------------------
 
 	public List<SpecialCake> spCakeById(int catId) {
@@ -2270,4 +2351,28 @@ public class FranchiseeController {
 		return franchiseeList;
 	}
 	// ----------------------------------------END--------------------------------------------
+	@RequestMapping(value = "/configureFrItems")
+	public ModelAndView configureFrItems(HttpServletRequest request, HttpServletResponse response) {
+
+		logger.info("/configureFrItems request mapping.");
+
+		ModelAndView mav = new ModelAndView("franchisee/configureItems");
+		Constants.mainAct = 2;
+		Constants.subAct = 14;
+
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+					FranchiseeAndMenuList.class);
+
+			System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+
+			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+
+		} catch (Exception e) {
+			System.out.println("Franchisee Controller Exception " + e.getMessage());
+		}
+
+		return mav;
+	}
 }

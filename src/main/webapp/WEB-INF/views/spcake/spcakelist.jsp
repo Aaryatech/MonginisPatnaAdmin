@@ -136,14 +136,18 @@
 									<table id="table2" class="main-table">
 											<thead>
 												<tr class="bgpink">
-														<th width="138" style="width: 18px" align="left">No</th>
+															<th  style="width: 18px" align="left">Select</th>
+												
+														<th style="width: 18px" align="left">No</th>
 																<th width="364" align="left">Image</th>
-																<th width="230" align="center">Code</th>
-																<th width="230" align="center">Name</th>
+																<th width="230" align="left">Code</th>
+																<th width="230" align="left">Name</th>
 																<th width="106" align="left">Type</th>
 																<th width="206" align="left">Min Weight</th>
 																<th width="206" align="left">Max Weight</th>
-																<th width="206" align="left">Book Before</th>
+																<th width="80" align="left">Rate</th>
+																
+																<th width="80" align="left">MRP</th>
 																<th width="90" align="left">Action</th>
 												</tr>
 												</thead>
@@ -155,14 +159,17 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-													<th width="138" style="width: 18px" align="left">No</th>
-																<th width="364" align="left">Image</th>
-																<th width="230" align="center">Code</th>
-																<th width="230" align="center">Name</th>
+											<th  style="width: 18px" align="left">Select</th>
+												
+													<th  style="width: 18px" align="left">No</th>
+																<th width="104" align="left">Image</th>
+																<th width="150" align="left">Code</th>
+																<th width="150" align="left">Name</th>
 																<th width="106" align="left">Type</th>
-																<th width="206" align="left">Weight</th>
-																<th width="206" align="left">Weight</th>
-																<th width="206" align="left">Before</th>
+																<th width="106" align="left">Weight</th>
+																<th width="106" align="left">Weight</th>
+																<th width="80" align="left">Rate</th>
+																<th width="80" align="left">MRP</th>
 																<th width="90" align="left">Action</th>
 												</tr>
 												</thead>
@@ -171,9 +178,11 @@
 
 
 																<tr>
+																<td><input type="checkbox" class="chk" name="select_to_print" id="${specialCake.spId}"	value="${specialCake.spId}"/></td>
+																
 																	<td><c:out value="${count.index+1}"/></td>
 																	<td align="left">
-																			 <img src="${url}${specialCake.spImage}" width="120" height="100" 	
+																			 <img src="${url}${specialCake.spImage}" width="70" height="70" 	
 																			 onerror="this.src='resources/img/No_Image_Available.jpg';"/> 
 																	</td>
 																	<td align="left"><c:out
@@ -200,30 +209,32 @@
 																			value="${specialCake.spMinwt}  "></c:out></td>
 																				<td align="left"><c:out
 																			value="${specialCake.spMaxwt}  "></c:out></td>
+																		<td align="left"><c:out
+																			value="${specialCake.spRate1}  "></c:out></td>
 																				<td align="left"><c:out
-																			value="${specialCake.spBookb4}  "></c:out></td>
+																			value="${specialCake.mrpRate1}  "></c:out></td>
 																			
 																			
 																			
 																			<c:choose>
 																	<c:when test="${isEdit==1 and isDelete==1}">
 																		<td align="left"><a
-																		href="updateSpCake/${specialCake.spId}"><span
+																		href="updateSpCake/${specialCake.spId}"data-toggle="tooltip" title="Edit Special Cake">	<span
 																			class="glyphicon glyphicon-edit"></span></a>
-																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn" >
-					                                                  	<abbr title="Detailed"><i class="fa fa-list"></i></abbr></a>
+																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn" data-toggle="tooltip" title="Sp Ingredients Details">
+					                                                  <i class="fa fa-list"></i></a>
                                                                          <a href="deleteSpecialCake/${specialCake.spId}"
-																		onClick="return confirm('Are you sure want to delete this record');"><span
+																		onClick="return confirm('Are you sure want to delete this record');" data-toggle="tooltip" title="Delete"><span
 																			class="glyphicon glyphicon-remove"></span></a></td>
 														
 																	</c:when>
 
 																	<c:when test="${isEdit==1 and isDelete==0}">
 																		<td align="left"><a
-																		href="updateSpCake/${specialCake.spId}"><span
+																		href="updateSpCake/${specialCake.spId}"data-toggle="tooltip" title="Edit Special Cake"><span
 																			class="glyphicon glyphicon-edit"></span></a>
-																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn" >
-					                                                  	<abbr title="Detailed"><i class="fa fa-list"></i></abbr></a>
+																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn"data-toggle="tooltip" title="Sp Ingredients Details" >
+					                                                  <i class="fa fa-list"></i></a>
                                                                          <a href="deleteSpecialCake/${specialCake.spId}"  class="disableClick"
 																		onClick="return confirm('Are you sure want to delete this record');"><span
 																			class="glyphicon glyphicon-remove"></span></a></td>
@@ -234,10 +245,10 @@
 																		href="updateSpCake/${specialCake.spId}"  class="disableClick"><span
 																			class="glyphicon glyphicon-edit"></span></a>
 																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn" >
-					                                                  	<abbr title="Detailed"><i class="fa fa-list"></i></abbr></a>
+					                                                  	<i class="fa fa-list"></i></a>
                                                                          <a href="deleteSpecialCake/${specialCake.spId}"
 																		onClick="return confirm('Are you sure want to delete this record');"><span
-																			class="glyphicon glyphicon-remove"></span></a></td>
+																			class="glyphicon glyphicon-remove"data-toggle="tooltip" title="Delete"></span></a></td>
 																	</c:when>
 
 																	<c:otherwise>
@@ -245,8 +256,8 @@
 																	<td align="left"><a
 																		href="updateSpCake/${specialCake.spId}"  class="disableClick"><span
 																			class="glyphicon glyphicon-edit"></span></a>
-																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn" >
-					                                                  	<abbr title="Detailed"><i class="fa fa-list"></i></abbr></a>
+																			<a href="viewSpCakeDetailed/${specialCake.spId}" class="action_btn"data-toggle="tooltip" title="Sp Ingredients Details" >
+					                                                  	<i class="fa fa-list"></i></a>
                                                                          <a href="deleteSpecialCake/${specialCake.spId}"  class="disableClick"
 																		onClick="return confirm('Are you sure want to delete this record');"><span
 																			class="glyphicon glyphicon-remove"></span></a></td>
@@ -280,11 +291,9 @@
 						
 						<div class="form-group"  id="range">
 								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();">
-											</div>
+						 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();">
+						<input type="button" margin-right: 5px;" id="btn_delete" class="btn btn-primary" onclick="deleteBySpId()" 
+											value="Delete" />
 											</div>
 
 											<%-- <div class="box-content">
@@ -469,6 +478,32 @@ function myFunction() {
 }
 </script>
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
+<script type="text/javascript">
+function deleteBySpId()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Special Cake")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteSpecialCake/'+checkedVals;
+
+	}
+
+}
+</script>
 <script type="text/javascript">
 function exportToExcel()
 {

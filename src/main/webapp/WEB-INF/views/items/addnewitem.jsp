@@ -6,6 +6,7 @@
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
+	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getGroup2ByCatId" value="/getGroup2ByCatId" />
 

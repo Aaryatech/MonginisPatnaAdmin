@@ -87,6 +87,79 @@ public class ItemController {
 	ArrayList<String> tempItemList;
 	public  int  catId = 0; 
 
+	@RequestMapping(value = "/updateHsnAndPer", method = RequestMethod.GET)
+	public ModelAndView updateHsnAndPer(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView("items/updateHsnPer");
+
+		/*Constants.mainAct =1;
+		  Constants.subAct =4;*/
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+
+			
+			List<Item> itemsList = new ArrayList<Item>();
+			itemsList = allItemsListResponse.getItems();
+		
+
+			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+					CategoryListResponse.class);
+			mCategoryList = categoryListResponse.getmCategoryList();
+			List<MCategoryList> resCatList=new ArrayList<MCategoryList>();
+			for(MCategoryList mCat:mCategoryList)
+			{
+				if(mCat.getCatId()!=5 && mCat.getCatId()!=6)
+				{
+					resCatList.add(mCat);
+				}
+			}
+            model.addObject("itemsList", itemsList);
+            model.addObject("mCategoryList",resCatList);
+		} catch (Exception e) {
+			System.out.println("" + e.getMessage());
+		}
+		return model;
+	}
+
+	@RequestMapping(value = "/updateHsnAndTaxPerc", method = RequestMethod.POST)
+	public String updateHsnAndTaxPer(HttpServletRequest request, HttpServletResponse response)
+	{
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			String[] item = request.getParameterValues("items[]");
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < item.length; i++) {
+				sb = sb.append(item[i] + ",");
+			}
+			String items = sb.toString();
+			items = items.substring(0, items.length() - 1);
+			
+			float itemTax1 =Float.parseFloat(request.getParameter("item_tax1"));
+
+			float itemTax2 = Float.parseFloat(request.getParameter("item_tax2"));
+
+			float itemTax3 = Float.parseFloat(request.getParameter("item_tax3"));
+			
+			String itemHsncd = request.getParameter("hsn_code");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("items", items);
+			map.add("itemHsncd", itemHsncd);
+			map.add("itemTax1", itemTax1);
+			map.add("itemTax2", itemTax2);
+			map.add("itemTax3", itemTax3);
+			
+			Info info=restTemplate.postForObject(Constants.url + "updateItemHsnAndPer",map,Info.class);
+
+			System.err.println(info.toString());
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/itemList";
+	}
+	
 	@RequestMapping(value = "/addItem", method = RequestMethod.GET)
 	public ModelAndView addItem(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("items/addnewitem");

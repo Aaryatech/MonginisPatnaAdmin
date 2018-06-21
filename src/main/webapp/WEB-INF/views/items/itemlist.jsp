@@ -440,8 +440,8 @@ function myFunction() {
   table = document.getElementById("table1");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
-    td1 = tr[i].getElementsByTagName("td")[1];
+    td = tr[i].getElementsByTagName("td")[3];
+    td1 = tr[i].getElementsByTagName("td")[2];
     if (td || td1) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";

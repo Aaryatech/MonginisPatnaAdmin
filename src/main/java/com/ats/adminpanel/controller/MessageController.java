@@ -158,15 +158,20 @@ public class MessageController {
 
 	  }
 	@RequestMapping(value="/deleteMessage/{msgId}",method=RequestMethod.GET)
-	public String deleteEvent(@PathVariable int msgId) {
+	public String deleteEvent(@PathVariable String[] msgId) {
 
 		//String id=request.getParameter("id");
 		
 		  ModelAndView mav = new ModelAndView("message/listsMessage");
-		
+		  String strMsgIds=new String();
+			for(int i=0;i<msgId.length;i++)
+			{
+				strMsgIds=strMsgIds+","+msgId[i];
+			}
+			strMsgIds=strMsgIds.substring(1);
 			RestTemplate rest = new RestTemplate();
 	      MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-	      map.add("id",msgId);
+	      map.add("id",strMsgIds);
 	   
 		   ErrorMessage errorResponse = rest.postForObject(Constants.url+"deleteMessage", map,ErrorMessage.class);
 	     System.out.println(errorResponse.toString());

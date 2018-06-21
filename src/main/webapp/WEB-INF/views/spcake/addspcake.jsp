@@ -51,9 +51,10 @@
 </head> --%>
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
-<body>
+<body onload="calMrp()">
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include> 
+	<c:url var="findEventList" value="/findEventList" />
 
 
 
@@ -227,7 +228,7 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate1" id="sp_rate1"
-													 placeholder="Special Cake Rate 1" class="form-control"
+													 placeholder="Special Cake Rate 1" class="form-control" onchange="calMrp()" value="0"
 													 data-rule-required="true"
 													data-rule-number="true" />
 											</div>
@@ -237,7 +238,7 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate2" id="sp_rate2"
-													 placeholder="Special Cake Rate 2" class="form-control"
+													 placeholder="Special Cake Rate 2" class="form-control" onchange="calMrp()" value="0"
 													 data-rule-required="true"
 													data-rule-number="true" />
 											</div>
@@ -247,11 +248,19 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate3" id="sp_rate3"
-									                placeholder="Special Cake Rate 3" class="form-control"
+									                placeholder="Special Cake Rate 3" class="form-control" onchange="calMrp()" value="0"
 									                data-rule-required="true"
 													data-rule-number="true" />
 											</div>
 										</div>
+										 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="20" onchange="calMrp()"/>
+									</div>
+								</div>
 										  <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Local MRP
 											</label>
@@ -347,16 +356,15 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Events"
 													class="form-control chosen" multiple="multiple"
-													tabindex="6" name="spe_id_list[]" id="spe_id_list"data-rule-required="true">
+													tabindex="6" name="spe_id_list[]" id="spe_id_list"data-rule-required="true" onchange="eventChange()">
 													<option value=""> </option>
-													<optgroup label="EVENTS">
-
+													<option value="0" >All</option>
+                                                    
 
 														<c:forEach items="${eventList}" var="eventList">
 
 															<option value="${eventList.speId}">${eventList.speName}</option>
 														</c:forEach>
-													</optgroup>
 
 												</select>
 											</div>
@@ -397,7 +405,7 @@
 												</label>
 											</div>
 										</div>
-										<div class="form-group">
+									<!-- 	<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Type 2
 												Applicable ?</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -409,7 +417,9 @@
 													Yes
 												</label>
 											</div>
-										</div>
+										</div> -->
+										 <input type="hidden"
+													name="type_2_applicable" id="type_2_applicable" value="1" >
 
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Is
@@ -422,7 +432,7 @@
 												</label>
 											</div>
 										</div>
-
+<c:set var="eventList" value="${eventList}"></c:set>
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Allow
 												to upload Photo</label>
@@ -560,5 +570,50 @@
 }
    
 </script>	
+<script type="text/javascript">
+function calMrp()
+{
+	var rate1 = parseFloat($("#sp_rate1").val());
+	var rate2 = parseFloat($("#sp_rate2").val());
+	var rate3 = parseFloat($("#sp_rate3").val());
+	var margin= parseFloat($("#margin").val());
+	
+	var calRate1=rate1+(rate1*margin/100);
+	var calRate2=rate2+(rate2*margin/100);
+	var calRate3=rate3+(rate3*margin/100);
+	document.getElementById("mrp_rate1").setAttribute('value', calRate1);
+	document.getElementById("mrp_rate2").setAttribute('value', calRate2);
+	document.getElementById("mrp_rate3").setAttribute('value', calRate3);
+}
+</script>
+<script>
+function eventChange()
+{
+ var event=$('#spe_id_list option:selected').val()
+  if(event==0){
+	  $.getJSON('${findEventList}', {
+			ajax : 'true'
+		}, function(data) {
 
+			$('#spe_id_list')
+		    .find('option')
+		    .remove()
+		    .end()
+
+	var html = '<option value="0">ALL</option>';
+	var len = data.length;
+	
+	for ( var i = 0; i < len; i++) {
+
+       $("#spe_id_list").append(
+               $("<option selected></option>").attr(
+                   "value", data[i].speId).text(data[i].speName)
+           );
+	}
+
+	   $("#spe_id_list").trigger("chosen:updated");
+		});
+  }
+}
+</script>
 </html>

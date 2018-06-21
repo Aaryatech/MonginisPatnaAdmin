@@ -2142,7 +2142,7 @@ public class BillController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-	    File f = new File("/opt/tomcat-latest/webapps/uploads/report.pdf");
+	    File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
 		//File f = new File("/home/ats-11/pdf/ordermemo221.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
@@ -2161,7 +2161,7 @@ public class BillController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		 String filePath = "/opt/tomcat-latest/webapps/uploads/report.pdf";
+		 String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
 		//String filePath = "/home/ats-11/pdf/ordermemo221.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 

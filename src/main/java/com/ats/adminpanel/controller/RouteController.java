@@ -65,13 +65,18 @@ public class RouteController {
 	
 	@RequestMapping(value = "/deleteRoute/{routeId}", method=RequestMethod.GET)
 
-	public String deleteRoute(@PathVariable int routeId) {
+	public String deleteRoute(@PathVariable String[] routeId) {
 		ModelAndView model = new ModelAndView("masters/route");
 		RestTemplate rest = new RestTemplate();
-
+		String strRouteIds=new String();
+		for(int i=0;i<routeId.length;i++)
+		{
+			strRouteIds=strRouteIds+","+routeId[i];
+		}
+		strRouteIds=strRouteIds.substring(1);
 			
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("routeId", routeId);
+		map.add("routeId", strRouteIds);
 		Info info = rest.postForObject(Constants.url+"deleteRoute", map, Info.class);
 		if(info.getError())
 		{

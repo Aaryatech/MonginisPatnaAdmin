@@ -67,7 +67,8 @@
 									<table id="table2" class="main-table">
 											<thead>
 												<tr class="bgpink">
-																						<th width="17" style="width: 18px">#</th>
+						          <th width="17" style="width: 18px">SELECT</th>
+									<th width="17" style="width: 18px">#</th>
 											<th width="221" align="left">Date</th>
 											<th width="301" align="left">Image</th>
 											<th width="185" align="left">Header</th>
@@ -83,7 +84,8 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-																							<th width="17" style="width: 18px">#</th>
+						                    <th width="17" style="width: 18px">SELECT</th>
+						                	<th width="17" style="width: 18px">#</th>
 											<th width="221" align="left">Date</th>
 											<th width="301" align="left">Image</th>
 											<th width="185" align="left">Header</th>
@@ -94,6 +96,9 @@
 												<tbody>
 	 <c:forEach items="${message}" var="message" varStatus="count">
 										<tr>
+			
+						<td><input type="checkbox" class="chk" name="select_to_print" id="${message.msgId}"	value="${message.msgId}"/></td>
+										
 											<td><c:out value="${count.index+1}"/></td>
 											<td align="left"><c:out value="${message.msgFrdt} ${message.msgTodt}" /></td>
 											<%-- <td align="left"><c:out value="${message.msgImage}" /></td> --%>
@@ -121,7 +126,10 @@
 					</div>
 				</div>
 				
-						</div>
+						</div>	</div><div class="form-group">				
+								<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" /></div>
 <%-- 
 
 
@@ -240,5 +248,27 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript">
+function deleteById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Message")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteMessage/'+checkedVals;
+
+	}
+
+}
+</script>
+
 </body>
 </html>

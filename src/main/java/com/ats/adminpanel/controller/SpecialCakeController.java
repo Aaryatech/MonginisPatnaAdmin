@@ -47,7 +47,9 @@ import com.ats.adminpanel.model.SpCakeResponse;
 import com.ats.adminpanel.model.SpCakeSupplement;
 import com.ats.adminpanel.model.ViewSpCakeResponse;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUom;
+import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.GetItemSup;
+import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.item.ItemSup;
 import com.ats.adminpanel.model.item.ItemSupList;
 import com.ats.adminpanel.model.masters.AllRatesResponse;
@@ -63,6 +65,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SpecialCakeController {
 	private static final Logger logger = LoggerFactory.getLogger(SpecialCakeController.class);
 
+	List<Event> eventList = new ArrayList<Event>();
+
+		@RequestMapping(value = "/findEventList", method = RequestMethod.GET)
+		public @ResponseBody List<Event> findEventList() {
+           try
+           {
+       		RestTemplate restTemplate = new RestTemplate();
+
+        	   AllEventListResponse allEventListResponse = restTemplate.getForObject(Constants.url + "showEventList",
+   					AllEventListResponse.class);
+
+   			eventList = allEventListResponse.getEvent();
+   			System.out.println("Event List" + eventList.toString());
+           }catch (Exception e) {
+			// TODO: handle exception
+		}
+			return eventList;
+		}
 	@RequestMapping(value = "/addSpCake", method = RequestMethod.GET)
 
 	public ModelAndView redirectToAddSpCake(HttpServletRequest request, HttpServletResponse response) {
@@ -76,7 +96,6 @@ public class SpecialCakeController {
 			AllEventListResponse allEventListResponse = restTemplate.getForObject(Constants.url + "showEventList",
 					AllEventListResponse.class);
 
-			List<Event> eventList = new ArrayList<Event>();
 			eventList = allEventListResponse.getEvent();
 			System.out.println("Event List" + eventList.toString());
 			model.addObject("eventList", eventList);
@@ -377,21 +396,26 @@ public class SpecialCakeController {
 
 	}
 
-	@RequestMapping(value = "/deleteSpecialCake/{spId}", method = RequestMethod.GET)
-	public String deleteSpecialCake(@PathVariable int spId) {
+	@RequestMapping(value = "/deleteSpecialCake/{spIdList}", method = RequestMethod.GET)
+	public String deleteSpecialCake(@PathVariable String[] spIdList) {
 		ModelAndView model = new ModelAndView("spcake/spcakelist");
-
+		String strSpIds=new String();
+		for(int i=0;i<spIdList.length;i++)
+		{
+			strSpIds=strSpIds+","+spIdList[i];
+		}
+		strSpIds=strSpIds.substring(1);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("spId", spId);
+		map.add("spId", strSpIds);
 		RestTemplate restTemplate = new RestTemplate();
 		Info info = restTemplate.postForObject(Constants.url + "deleteSpecialCake", map, Info.class);
 		map = new LinkedMultiValueMap<String, Object>();
-		map.add("id", spId);
+		map.add("id", strSpIds);
 		Info infoSpCk = restTemplate.postForObject(Constants.url + "deleteSpCakeSup", map, Info.class);
 
 		
 		if (info.getError()||infoSpCk.getError()) {
-			return "redirect:/showSpecialcake";
+			return "redirect:/showSpecialCake";
 		} else {
 			return "redirect:/showSpecialCake";
 

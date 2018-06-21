@@ -395,15 +395,20 @@ public ModelAndView fjdfhfj (HttpServletRequest request, HttpServletResponse res
 
 // end of event update
 @RequestMapping(value="/deleteFlavour/{spfId}",method=RequestMethod.GET)
-public String deleteFlavour(@PathVariable int spfId) {
+public String deleteFlavour(@PathVariable String[] spfId) {
 
 	//String id=request.getParameter("id");
 	
 	  ModelAndView mav = new ModelAndView("masters/flavours");
-	
+	  String strSpfIdIds=new String();
+		for(int i=0;i<spfId.length;i++)
+		{
+			strSpfIdIds=strSpfIdIds+","+spfId[i];
+		}
+		strSpfIdIds=strSpfIdIds.substring(1);
 		RestTemplate restTemplate = new RestTemplate();
       MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-      map.add("spfId",spfId);
+      map.add("spfId",strSpfIdIds);
    
 	   ErrorMessage errorResponse = restTemplate.postForObject(Constants.url+"deleteFlavour", map,ErrorMessage.class);
      System.out.println(errorResponse.toString());
@@ -557,18 +562,22 @@ public String deleteRates(@PathVariable int sprId) {
 }
 // from mahesh
 @RequestMapping(value="/deleteSpMessage/{spMsgId}",method=RequestMethod.GET)
-public String deleteSpMessage(@PathVariable int spMsgId) {
+public String deleteSpMessage(@PathVariable String[] spMsgId) {
 
 	//String id=request.getParameter("id");
 	
 	  ModelAndView mav = new ModelAndView("masters/messages");
 	   
-	  
-	  // resttemplate object
+	  String strMsgIds=new String();
+		for(int i=0;i<spMsgId.length;i++)
+		{
+			strMsgIds=strMsgIds+","+spMsgId[i];
+		}
+		strMsgIds=strMsgIds.substring(1);
 	  
 		RestTemplate rest = new RestTemplate();
       MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-      map.add("spMsgId",spMsgId);
+      map.add("spMsgId",strMsgIds);
    
 	   ErrorMessage errorResponse = rest.postForObject(Constants.url+"deleteSpMessage", map,ErrorMessage.class);
      System.out.println(errorResponse.toString());
