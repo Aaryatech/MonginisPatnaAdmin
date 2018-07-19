@@ -3821,7 +3821,7 @@ model.addObject("royPer",getRoyPer());
 
 				Dimension landscapeA4 = pd4ml.changePageOrientation(PD4Constants.A4);
 				pd4ml.setPageSize(landscapeA4);
-				
+				pd4ml.enableSmartTableBreaks(true);
 				PD4PageMark footer = new PD4PageMark();
 
 				footer.setPageNumberTemplate("Page $[page] of $[total]");
@@ -3925,7 +3925,7 @@ model.addObject("royPer",getRoyPer());
 			java.io.FileOutputStream fos = new java.io.FileOutputStream(output);
 
 			PD4ML pd4ml = new PD4ML();
-
+			pd4ml.enableSmartTableBreaks(true);
 			try {
 
 				  try {                                                              
