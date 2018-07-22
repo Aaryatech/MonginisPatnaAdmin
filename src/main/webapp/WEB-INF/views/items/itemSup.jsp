@@ -5,7 +5,7 @@
 	 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+	<body onload="onCatIdChange(${suppCatId},${suppId})">
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	
@@ -93,10 +93,18 @@
 								<div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
 									<div class="col-sm-9 col-lg-3 controls">
-									<select name="cat_id" id="cat_id" data-rule-required="true" class="form-control" placeholder="Select Category">
+									<select name="cat_id" id="cat_id" data-rule-required="true" class="form-control" placeholder="Select Category" onchange="onCatIdChange(this.value,0)">
 											<option value="-1">Select Category</option>
 										 <c:forEach items="${mCategoryList}" var="mCategoryList">
-										            	  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+										 <c:choose>
+										 <c:when test="${mCategoryList.catId==suppCatId}">
+										  <option value="${mCategoryList.catId}" selected><c:out value="${mCategoryList.catName}"></c:out></option>
+										 </c:when>
+										 <c:otherwise>
+										  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+										 </c:otherwise>
+										 </c:choose>
+										            	 
 										</c:forEach> 
 												
 								</select>	
@@ -172,14 +180,22 @@
 											data-rule-required="true" data-rule-number="true" value="${itemSupp.baseWeight}"/>
 									</div>
 							  </div>
-							  <div class="col2">
-									<label class="col-sm-3 col-lg-2 control-label">Input Per Unit</label>
+							   <div class="col2">
+									<label class="col-sm-3 col-lg-2 control-label">Short Name</label>
 									<div class="col-sm-9 col-lg-3 controls">
-										<input type="text" name="input_per_qty" id="input_per_qty"
-											placeholder="Input Per Unit" class="form-control"
-											data-rule-required="true"  data-rule-number="true" value="${itemSupp.inputPerQty}"/>
+										<input type="text" name="short_name" id="short_name"
+											placeholder="Short Name" class="form-control"
+											data-rule-required="true"  value="${itemSupp.shortName}"/>
 									</div>
-							  </div>
+							  </div> 
+							 <!--  <div class="col2">
+									<label class="col-sm-3 col-lg-2 control-label">Input Per Unit</label>
+									<div class="col-sm-9 col-lg-3 controls"> -->
+										<input type="hidden" name="input_per_qty" id="input_per_qty"
+											placeholder="Input Per Unit" class="form-control"
+											data-rule-required="true"  data-rule-number="true" value="1"/>
+									<!-- </div>
+							  </div> -->
 							    <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Cut Section</label>
 									<div class="col-sm-9 col-lg-3 controls">
@@ -240,7 +256,7 @@
 											data-rule-required="true"  data-rule-number="true" value="${itemSupp.noOfItemPerTray}"/>
 									</div>
 							  </div> 
-							      <div class="col2">
+							      <div class="col2" style="visibility: hidden;">
 									<label class="col-sm-3 col-lg-2 control-label">Gate Sale Allowed?</label>
 									<div class="col-sm-9 col-lg-3 controls">
 												<c:choose>
@@ -275,7 +291,7 @@
 												</c:choose>
 									</div>
 							  </div>
-							    <div class="form-group">
+							    <div class="form-group" style="visibility: hidden;">
 									<label class="col-sm-3 col-lg-2 control-label">Gate Sale Discount Allowed?</label>
 									<div class="col-sm-9 col-lg-3 controls">
 												<c:choose>
@@ -314,16 +330,9 @@
 							  
 							    <div class="col2">
 							    
-							     <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Short Name</label>
-									<div class="col-sm-9 col-lg-3 controls">
-										<input type="text" name="short_name" id="short_name"
-											placeholder="Short Name" class="form-control"
-											data-rule-required="true"  value="${itemSupp.shortName}"/>
-									</div>
-							  </div> 
-									<label class="col-sm-3 col-lg-2 control-label">Allowed For Employee Birthday?</label>
-									<div class="col-sm-9 col-lg-3 controls">
+							    
+									<!-- <label class="col-sm-3 col-lg-2 control-label">Allowed For Employee Birthday?</label> -->
+									<div class="col-sm-9 col-lg-3 controls" style="visibility: hidden;">
 												<c:choose>
 												<c:when test="${itemSupp.isAllowBday==0}">
 												<label class="radio-inline"> <input type="radio"
@@ -444,29 +453,40 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 
-</body>
+
 <script type="text/javascript">
-$(document).ready(function() { 
-	$('#cat_id').change(
-			function() {
+/* $(document).ready(function() { 
+	$('#cat_id').change( */
+			function onCatIdChange(catId,itemId) {
 				
 				$.getJSON('${getItemsByCatId}', {
-					cat_id : $(this).val(),
+					cat_id : catId,
 					ajax : 'true'
 				}, function(data) {
 					var html = '<option value="-1"selected >Select Item</option>';
 					
 					var len = data.length;
 					for ( var i = 0; i < len; i++) {
-						html += '<option value="' + data[i].id + '">'
+						if(data[i].id==itemId){
+						html += '<option value="' + data[i].id + '"selected>'
 								+ data[i].itemName + '</option>';
+								
+						document.getElementById('item_name').value=data[i].itemName;	
+						}
+						else
+							{
+							html += '<option value="' + data[i].id + '">'
+							+ data[i].itemName + '</option>';	
+							}
 					}
 					html += '</option>';
 					$('#item_id').html(html);
 
 				});
-			});
-});
+                document.getElementById('sel_item_id').value=itemId;
+				
+			}/* );
+}); */
 </script>
 <script type="text/javascript">
 $(document).ready(function() { 
@@ -487,4 +507,5 @@ $(document).ready(function() {
 				
 			}
 </script>
+</body>
 </html>

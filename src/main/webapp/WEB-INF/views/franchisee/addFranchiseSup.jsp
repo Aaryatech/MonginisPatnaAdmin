@@ -5,7 +5,7 @@
 
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-<body onload="disableFranchise(${isEdit})">
+<body onload="disableFranchise(${isEdit},${frIdForSupp})">
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -36,6 +36,7 @@
 					</h1>
 
 				</div>
+			
 			</div>
 			<!-- END Page Title -->
 
@@ -124,11 +125,11 @@
 									<label class="col-sm-3 col-lg-2 control-label">Franchisee</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<select name="fr_id" id="fr_id" class="form-control"
-											placeholder="Select Franchise" data-rule-required="true">
+											placeholder="Select Franchise" data-rule-required="true" onchange="onFrIdChange(this.value)">
 											<option value="">Select Franchise</option>
 											<c:forEach items="${franchiseeList}" var="franchiseeList">
 												<c:choose>
-													<c:when test="${franchiseeList.frId==frSup.frId}">
+													<c:when test="${franchiseeList.frId==frSup.frId || franchiseeList.frId==frIdForSupp}">
 														<option value="${franchiseeList.frId}" selected><c:out value="${franchiseeList.frName}"></c:out></option>
 													</c:when>
 													<c:otherwise>
@@ -503,7 +504,8 @@
 
 </body>
 <script>
-function disableFranchise(isEdit) {
+function disableFranchise(isEdit,frIdForSupp) {
+	onFrIdChange(frIdForSupp);
 	if(isEdit==1)
 		{
 		$("#fr_id option:not(:selected)").prop("disabled", true);
@@ -512,18 +514,18 @@ function disableFranchise(isEdit) {
 }
 </script>
 <script type="text/javascript">
-$(document).ready(function() { 
-	$('#fr_id').change(
-			function() {
+/* $(document).ready(function() { 
+	$('#fr_id').change( */
+			function onFrIdChange(frId) {
 				$.getJSON('${findFranchiseeData}', {
-					fr_id : $(this).val(),
+					fr_id : frId,
 					ajax : 'true'
 				}, function(data) {
 					var len = data.length;
 					document.getElementById("pass1").value=data.frPassword;
 				});
-			});
-});
+			}
+/* }); */
 </script>
 <!-- 
 <script type="text/javascript">

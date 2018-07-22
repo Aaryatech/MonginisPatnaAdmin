@@ -108,7 +108,6 @@
 										enctype="multipart/form-data" method="post">
 
 
-
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Code</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -163,7 +162,49 @@
 											</div>
 
 										</div>
-										
+											<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="spck_hsncd" id="spck_hsncd"
+											placeholder="HSN Code" class="form-control"
+											data-rule-required="true" value="" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">UOM</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="spck_uom" id="spck_uom" class="form-control"
+											placeholder="Special Cake UOM" data-rule-required="true"
+											onchange="uomChanged()">
+											<option value="">Select Special Cake UOM</option>
+											<c:forEach items="${rmUomList}" var="rmUomList"
+												varStatus="count">
+											
+														<option value="${rmUomList.uomId}"><c:out value="${rmUomList.uom}"/></option>
+												
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+								<input type="hidden" name="sp_uom_name" id="sp_uom_name"
+									value="" />
+							
+
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cut
+										Section</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="cut_section" id="cut_section"
+											class="form-control" data-rule-required="true">
+											<option value="">Select Cut Section</option>
+
+													<option value="0">Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2">Double Cut</option>
+												
+										</select>
+									</div>
+								</div>
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Type</label>
 
@@ -340,7 +381,15 @@
 													
 											</div>
 										</div>
-
+	                          <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cess(%)</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="sp_cess" id="sp_cess"
+											placeholder="Cess %" class="form-control"
+											data-rule-required="true" data-rule-number="true"
+											value="0.0" />
+									</div>
+								</div>
                                       
                                  <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Total GST Applicable %</label>
@@ -615,5 +664,13 @@ function eventChange()
 		});
   }
 }
+</script>
+
+<script type="text/javascript">
+	function uomChanged() {
+
+		document.getElementById('sp_uom_name').value = $('#spck_uom option:selected').text();
+
+	}
 </script>
 </html>

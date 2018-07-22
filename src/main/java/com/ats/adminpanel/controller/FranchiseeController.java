@@ -86,6 +86,7 @@ public class FranchiseeController {
 	AllFranchiseeAndMenu allFranchiseeAndMenuList;
 	FranchiseeAndMenuList franchiseeAndMenuList;
 	public static int settingValue;
+	int frIdForSupp;boolean isError=false;
 
 	private static final Logger logger = LoggerFactory.getLogger(FranchiseeController.class);
 
@@ -147,6 +148,8 @@ public class FranchiseeController {
 		System.out.println("Event List" + routeList.toString());
 		model.addObject("routeList", routeList);
 		model.addObject("frCode", frCode);
+		model.addObject("isError",isError);
+		isError=false;
 		return model;
 	}
 	// ----------------------------------------END-------------------------------------------
@@ -581,14 +584,24 @@ public class FranchiseeController {
 		map.add("frAddress", frAddr);
 		map.add("frTarget", frTarget);
 		map.add("isSameState", isSameState);
-
-		ErrorMessage errorMessage = rest.postForObject(Constants.url + "saveFranchisee", map, ErrorMessage.class);
-		if (errorMessage.getError()) {
-			return "redirect:/listAllFranchisee";
+        try {
+		FranchiseeList frResponse = rest.postForObject(Constants.url + "saveFranchisee", map, FranchiseeList.class);
+		
+		if (frResponse!=null) {
+			
+			frIdForSupp=frResponse.getFrId();
+			System.err.println("frIdForSupp"+frIdForSupp);
+			isError=false;
+			return "redirect:/showAddFranchiseSup";
 		} else {
-
-			return "redirect:/listAllFranchisee";
-
+			isError=true;
+			return "redirect:/showAddNewFranchisee";
+		}
+        }
+        catch (Exception e) {
+        	isError=true;
+			return "redirect:/showAddNewFranchisee";
+			
 		}
 
 	}
@@ -2021,9 +2034,11 @@ public class FranchiseeController {
 
 		mav.addObject("franchiseeList", franchiseeList);
 		mav.addObject("frSupList", frSupList.getFrList());
+		mav.addObject("frIdForSupp", frIdForSupp);
 		mav.addObject("isEdit", 0);
-		mav.addObject("state", "Maharashtra");
-
+		mav.addObject("state", "BIHAR");
+		frIdForSupp=0;
+        
 		return mav;
 	}
 	// ----------------------------------------END---------------------------------------------------------
@@ -2095,7 +2110,7 @@ public class FranchiseeController {
 
 			Info info = restTemplate.postForObject(Constants.url + "/saveFranchiseSup", frSup, Info.class);
 			System.out.println("Response: " + info.toString());
-
+          
 			if (info.getError() == true) {
 
 				System.out.println("Error:True" + info.toString());

@@ -587,14 +587,25 @@ public class ViewProdController {
 
 			e.printStackTrace();
 		}
-
-		PdfPTable table = new PdfPTable(4);
+		int cols=0;
+		float[] cols1 = new float[] {0.4f,1.7f, 1.0f ,0.9f,1.0f};
+		if (pdfPlanHeader.getIsPlanned()==0) {
+			cols=5;
+			cols1=new float[] { 0.4f,1.7f, 1.0f ,0.9f,1.0f};
+		}else if (pdfPlanHeader.getIsPlanned()==1) {
+			cols=6;
+			cols1=new float[] { 0.4f,1.7f, 1.0f,1.0f ,0.9f,1.0f};
+		}else if (pdfPlanHeader.getIsPlanned()==2) {
+			cols=8;
+			cols1=new float[] { 0.4f,1.7f, 1.0f,1.0f,1.0f,1.0f ,0.9f,1.0f};
+		}
+		PdfPTable table = new PdfPTable(cols);
 		try {
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.4f, 1.7f, 0.9f,1.0f});
-			Font headFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.NORMAL, BaseColor.BLACK);
-			Font headFont1 = new Font(FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
+			table.setWidths(cols1);
+			Font headFont = new Font(FontFamily.TIMES_ROMAN, 14, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 13, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
 
 			PdfPCell hcell=new PdfPCell();
@@ -609,7 +620,9 @@ public class ViewProdController {
 			table.addCell(hcell);
 
 			System.out.println("Plan Header data " + pdfPlanHeader.getIsPlanned());
-
+			hcell = new PdfPCell(new Phrase("Current Stock", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell);
 			if (pdfPlanHeader.getIsPlanned() == 0) {
 				hcell = new PdfPCell(new Phrase("Order Quantity", headFont1));
 				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -618,9 +631,26 @@ public class ViewProdController {
 				hcell = new PdfPCell(new Phrase("Plan Quantity", headFont1));
 				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod1 Quantity", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+			}else if (pdfPlanHeader.getIsPlanned() == 2) {
+				hcell = new PdfPCell(new Phrase("Plan Quantity", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod1 Qty", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Act Order Qty", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod2 Qty", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
 
 			}
-			hcell = new PdfPCell(new Phrase("Production Quantity", headFont1));
+			hcell = new PdfPCell(new Phrase("Actual Prod Qty", headFont1));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
 			
@@ -641,16 +671,57 @@ public class ViewProdController {
 				cell.setPaddingRight(2);
 				  cell.setPadding(4);
 				table.addCell(cell);
-
-				if (pdfPlanHeader.getIsPlanned() == 0) {
+				cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getCurOpeQty()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setPaddingRight(2);
+				cell.setPadding(4);
+				table.addCell(cell);
+				
+				int currentQty=(int)(Math.round(getMoneyOut.getCurOpeQty()));
+                 int  production1Qty=(getMoneyOut.getPlanQty()-currentQty);
+                 int production2Qty=(getMoneyOut.getOrderQty()-production1Qty);
+				if (pdfPlanHeader.getIsPlanned()==0) {
 					cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getOrderQty()), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					cell.setPaddingRight(2);
 					  cell.setPadding(4);
 					table.addCell(cell);
-				} else {
+				} else 	if (pdfPlanHeader.getIsPlanned()==1) {
 					cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getPlanQty()), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setPaddingRight(2);
+					  cell.setPadding(4);
+					table.addCell(cell);
+					cell = new PdfPCell(new Phrase(String.valueOf(production1Qty), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setPaddingRight(2);
+					  cell.setPadding(4);
+					table.addCell(cell);
+				}
+				else 	if (pdfPlanHeader.getIsPlanned()==2) {
+					cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getPlanQty()), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setPaddingRight(2);
+					  cell.setPadding(4);
+					table.addCell(cell);
+					cell = new PdfPCell(new Phrase(String.valueOf(production1Qty), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setPaddingRight(2);
+					  cell.setPadding(4);
+					table.addCell(cell);
+					cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getOrderQty()), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setPaddingRight(2);
+					  cell.setPadding(4);
+					table.addCell(cell);
+					cell = new PdfPCell(new Phrase(String.valueOf(production2Qty), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					cell.setPaddingRight(2);

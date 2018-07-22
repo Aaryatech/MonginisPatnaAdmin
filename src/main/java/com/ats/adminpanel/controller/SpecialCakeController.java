@@ -108,7 +108,9 @@ public class SpecialCakeController {
 			rateList = allRatesResponse.getRates();
 			System.out.println("Rate List" + rateList.toString());
 			//model.addObject("rateList", rateList);
-
+			List<RawMaterialUom> rawMaterialUomList=restTemplate.getForObject(Constants.url + "rawMaterial/getRmUom", List.class);
+			model.addObject("rmUomList", rawMaterialUomList);
+			
 		} catch (Exception e) {
 			System.out.println("Error in event list display" + e.getMessage());
 		}
@@ -310,7 +312,25 @@ public class SpecialCakeController {
 		
 		int isSlotUsed = Integer.parseInt(request.getParameter("isSlotUsed"));
 		System.out.println("isSlotUsed"+isSlotUsed);
-		
+		//--------------------------------Sp Supplement Data--------------------
+		String spHsncd="";int uomId=0; float spCess=0.0f;String spUom="";int cutSection = 0;
+		try {
+
+
+		    spHsncd = request.getParameter("spck_hsncd");
+
+		    uomId = Integer.parseInt(request.getParameter("spck_uom"));
+			
+			spCess = Float.parseFloat(request.getParameter("sp_cess"));
+			
+			spUom=request.getParameter("sp_uom_name");
+			
+			cutSection= Integer.parseInt(request.getParameter("cut_section"));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		//-----------------------------------------------------------------
 		StringBuilder sb = new StringBuilder();
 
 		String strEventTypes = "";
@@ -383,11 +403,32 @@ public class SpecialCakeController {
 		
 		System.out.println("map value for spc_type " + request.getParameter("spc_type"));
 		try {
-			String spcakeResponse = rest.postForObject(Constants.url + "insertSpecialCake", map, String.class);
-			System.out.println(spcakeResponse);
+			SpecialCake spcakeResponse = rest.postForObject(Constants.url + "insertSpecialCake", map, SpecialCake.class);
+			if(spcakeResponse!=null)
+			{
 
-			model = new ModelAndView("addSpCake");
+				SpCakeSupplement spCakeSupplement=new SpCakeSupplement();
+				spCakeSupplement.setId(0);
+				spCakeSupplement.setUomId(uomId);
+				spCakeSupplement.setSpId(spcakeResponse.getSpId());// add errorMessage in else
+				spCakeSupplement.setSpUom(spUom);
+				spCakeSupplement.setSpHsncd(spHsncd);
+				spCakeSupplement.setSpCess(spCess);
+				spCakeSupplement.setDelStatus(0);
+				spCakeSupplement.setIsTallySync(0);
+				spCakeSupplement.setCutSection(cutSection);
+				
+				RestTemplate restTemplate = new RestTemplate();
 
+				Info info = restTemplate.postForObject(Constants.url + "/saveSpCakeSup",
+						spCakeSupplement, Info.class);
+				System.out.println("Response: " + info.toString());
+			}
+			else
+			{
+				model = new ModelAndView("addSpCake");
+			}
+             
 		} catch (Exception e) {
 			System.out.println("AddSpCakeProcess Excep: " + e.getMessage());
 		}
@@ -440,6 +481,21 @@ public class SpecialCakeController {
 		AllEventListResponse allEventListResponse = restTemplate.getForObject(Constants.url + "showEventList",
 				AllEventListResponse.class);
 
+		try {
+			 map = new LinkedMultiValueMap<String, Object>();
+			map.add("id", spId);
+			
+			GetSpCkSupplement getSpCkSupplement=restTemplate.postForObject(Constants.url+"/getSpCakeSupplement",map, GetSpCkSupplement.class);
+			System.out.println("getSpCkSupplement"+getSpCkSupplement.toString() );
+		    List<RawMaterialUom> rawMaterialUomList=restTemplate.getForObject(Constants.url + "rawMaterial/getRmUom", List.class);
+			
+		    model.addObject("rmUomList", rawMaterialUomList);
+		 
+		    model.addObject("spCkSupp", getSpCkSupplement);
+
+		} catch (Exception e) {
+			System.out.println("Exc In /updateSpSupp" + e.getMessage());
+		}
 		List<Event> eventList = new ArrayList<Event>();
 		eventList = allEventListResponse.getEvent();
 		//System.out.println("Event List" + eventList.toString());
@@ -682,7 +738,26 @@ int rate=0;
 
 		int id = Integer.parseInt(request.getParameter("spId"));
 		System.out.println("id "+id);
-		
+		//--------------------------------Sp Supplement Data--------------------
+				int suppId = 0;String spHsncd="";int uomId=0; float spCess=0.0f;String spUom="";int cutSection = 0;
+				try {
+
+					suppId = Integer.parseInt(request.getParameter("suppId"));
+
+				    spHsncd = request.getParameter("spck_hsncd");
+
+				    uomId = Integer.parseInt(request.getParameter("spck_uom"));
+					
+					spCess = Float.parseFloat(request.getParameter("sp_cess"));
+					
+					spUom=request.getParameter("sp_uom_name");
+					
+					cutSection= Integer.parseInt(request.getParameter("cut_section"));
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				//-----------------------------------------------------------------
 
 		StringBuilder sb = new StringBuilder();
 		String strEventTypes = "";
@@ -762,8 +837,38 @@ int rate=0;
 		System.out.println("sp name is "+name);
 		//System.out.println("type 2 value in update event"+type2app);
 		
-			String cakeResponse = restTemplate.postForObject(Constants.url + "updateSpecialCake", map,
-					String.class);
+			SpecialCake cakeResponse = restTemplate.postForObject(Constants.url + "updateSpecialCake", map,
+					SpecialCake.class);
+			
+			try {
+				
+				if(cakeResponse!=null)
+				{
+
+					SpCakeSupplement spCakeSupplement=new SpCakeSupplement();
+					spCakeSupplement.setId(suppId);
+					spCakeSupplement.setUomId(uomId);
+					spCakeSupplement.setSpId(id);// add errorMessage in else
+					spCakeSupplement.setSpUom(spUom);
+					spCakeSupplement.setSpHsncd(spHsncd);
+					spCakeSupplement.setSpCess(spCess);
+					spCakeSupplement.setDelStatus(0);
+					spCakeSupplement.setIsTallySync(0);
+					spCakeSupplement.setCutSection(cutSection);
+					
+
+					Info info = restTemplate.postForObject(Constants.url + "/saveSpCakeSup",
+							spCakeSupplement, Info.class);
+					System.out.println("Response: " + info.toString());
+				}
+				else
+				{
+					model = new ModelAndView("addSpCake");
+				}
+	             
+			} catch (Exception e) {
+				System.out.println("AddSpCakeProcess Excep: " + e.getMessage());
+			}
 		}
 		catch(Exception e)
 		{

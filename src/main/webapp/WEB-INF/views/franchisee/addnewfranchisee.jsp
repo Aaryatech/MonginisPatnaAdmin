@@ -3,7 +3,29 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style>
+.alert {
+    padding: 20px;
+    background-color: red;
+    color: white;
+    
+}
 
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
 
@@ -35,6 +57,16 @@
 						<i class="fa fa-file-o"></i> Franchisee
 					</h1>
 				</div>
+				<c:choose>
+				<c:when test="${isError==true}">
+				<div class="alert">
+					<span class="closebtn"
+						onclick="this.parentElement.style.display='none';">&times;</span>
+					<strong>Failed !</strong>     Failed to Add New Franchisee !!
+				</div>
+				</c:when>
+				</c:choose>
+			
 			</div>
 			<!-- END Page Title -->
 
@@ -460,11 +492,11 @@
 												<c:choose>
 													<c:when test="${isAdd==1}">
 														<input type="submit" class="btn btn-primary"
-															value="Submit">
+															value="SAVE & NEXT">
 													</c:when>
 													<c:otherwise>
 														<input type="submit" class="btn btn-primary"
-															disabled="disabled" value="Submit">
+															disabled="disabled" value="SAVE & NEXT">
 													</c:otherwise>
 												</c:choose>
 

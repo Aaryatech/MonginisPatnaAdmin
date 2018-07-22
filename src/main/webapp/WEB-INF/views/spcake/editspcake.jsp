@@ -106,6 +106,7 @@
 									<form action="updateSpCakeProcess" class="form-horizontal" id="validation-form"
 										enctype="multipart/form-data" method="post">
 
+<input type="hidden" name="suppId" id="suppId" value="${spCkSupp.id}" />
 
 
 										<div class="form-group">
@@ -165,7 +166,72 @@
 											</div>
 
 										</div>
+		<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="spck_hsncd" id="spck_hsncd"
+											placeholder="HSN Code" class="form-control"
+											data-rule-required="true" value="${spCkSupp.spHsncd}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">UOM</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="spck_uom" id="spck_uom" class="form-control"
+											placeholder="Special Cake UOM" data-rule-required="true"
+											onchange="uomChanged()">
+											<option value="">Select Special Cake UOM</option>
+											<c:forEach items="${rmUomList}" var="rmUomList"
+												varStatus="count">
+												<c:choose>
+													<c:when test="${rmUomList.uomId==spCkSupp.uomId}">
+														<option value="${rmUomList.uomId}" selected><c:out value="${rmUomList.uom}"/></option>
+													</c:when>
+													<c:otherwise>
+														<option value="${rmUomList.uomId}"><c:out value="${rmUomList.uom}"/></option>
+													</c:otherwise>
+												</c:choose>
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+								<input type="hidden" name="sp_uom_name" id="sp_uom_name"
+									value="${spCkSupp.spUom}" />
+							
 
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cut
+										Section</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="cut_section" id="cut_section"
+											class="form-control" data-rule-required="true">
+											<option value="">Select Cut Section</option>
+
+											<c:choose>
+												<c:when test="${spCkSupp.cutSection==0}">
+													<option value="0" selected>Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:when>
+												<c:when test="${spCkSupp.cutSection==1}">
+													<option value="0">Not Applicable</option>
+													<option value="1" selected>Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:when>
+												<c:when test="${spCkSupp.cutSection==2}">
+													<option value="0">Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2" selected>Double Cut</option>
+												</c:when>
+												<c:otherwise>
+													<option value="0">Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:otherwise>
+											</c:choose>
+										</select>
+									</div>
+								</div>
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Type</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -341,7 +407,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_3" id="tax_3"
 													value="${specialCake.spTax3}" placeholder="IGST"
-													class="form-control"  data-rule-required="true"  data-rule-number="true" value="0.0"onchange="calTotalGst()"/>
+													class="form-control"  data-rule-required="true"  data-rule-number="true" onchange="calTotalGst()"/>
 											</div>
 										</div>
 										
@@ -352,7 +418,7 @@
 												<input type="text" name="tax_1"
 													value="${specialCake.spTax1 }" id="tax_1"
 													placeholder="CGST" class="form-control"
-													data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													data-rule-required="true" data-rule-number="true"  onchange="calTotalGst()"/>
 											</div>
 										</div>
 										
@@ -362,10 +428,18 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_2" id="tax_2"
 													value="${specialCake.spTax2}" placeholder="SGST"
-													class="form-control" data-rule-required="true" data-rule-number="true" value="0.0"onchange="calTotalGst()"/>
+													class="form-control" data-rule-required="true" data-rule-number="true" onchange="calTotalGst()"/>
 											</div>
 										</div>
-
+                                    <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cess(%)</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="sp_cess" id="sp_cess"
+											placeholder="Cess %" class="form-control"
+											data-rule-required="true" data-rule-number="true"
+											value="${spCkSupp.spCess}" />
+									</div>
+								</div>
                                  <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Total GST Applicable %</label>
 									<div class="col-sm-9 col-lg-10 controls">
@@ -784,6 +858,15 @@ function eventChange()
 		});
   }
 }
+</script>
+
+<script type="text/javascript">
+	function uomChanged() {
+
+		document.getElementById('sp_uom_name').value = $(
+				'#spck_uom option:selected').text();
+
+	}
 </script>
 </body>
 </html>

@@ -85,7 +85,7 @@ public class ItemController {
 	public static List<GetPrevItemStockResponse> getPrevItemStockResponsesList;
 
 	ArrayList<String> tempItemList;
-	public  int  catId = 0; 
+	public  int  catId = 0; int suppId;int suppCatId;String suppItemName;boolean isError=false;
 
 	@RequestMapping(value = "/updateHsnAndPer", method = RequestMethod.GET)
 	public ModelAndView updateHsnAndPer(HttpServletRequest request, HttpServletResponse response) {
@@ -181,6 +181,8 @@ public class ItemController {
 
 			model.addObject("itemId", maxId);
 			model.addObject("mCategoryList", mCategoryList);
+			model.addObject("isError", isError);
+			isError=false;
 
 		} catch (Exception e) {
 			System.out.println("error in item show sachin" + e.getMessage());
@@ -608,12 +610,29 @@ public class ItemController {
 		map.add("itemSortId", itemSortId);
 		map.add("grnTwo", grnTwo);
 		map.add("itemShelfLife", itemShelfLife);
-
-		ErrorMessage errorResponse = rest.postForObject("" + Constants.url + "insertItem", map, ErrorMessage.class);
-		System.out.println(errorResponse.toString());
-		System.out.println("Response:" + errorResponse.getMessage());
-
-		return "redirect:/itemList";
+     try {
+		Item itemRes= rest.postForObject("" + Constants.url + "insertItem", map, Item.class);
+         
+		if(itemRes!=null)
+		{
+			isError=false;
+			
+			suppId=itemRes.getId();
+			suppCatId=Integer.parseInt(itemGrp1);
+			suppItemName=itemRes.getItemName();
+			return "redirect:/showAddItemSup";
+		}
+		else {
+			isError=true;
+			return "redirect:/addItem";
+		}
+		
+	 }
+    catch (Exception e) {
+    	isError=true;
+    	return "redirect:/addItem";
+		
+	}
 
 	}
 
@@ -1048,6 +1067,10 @@ public class ItemController {
 
 			model.addObject("mCategoryList", resCatList);
 			model.addObject("isEdit", 0);
+			model.addObject("suppCatId",suppCatId);
+			model.addObject("suppId",suppId);
+			model.addObject("suppItemName",suppItemName);
+			suppCatId=0;suppId=0;suppItemName="";
 		}
 		catch(Exception e)
 		{

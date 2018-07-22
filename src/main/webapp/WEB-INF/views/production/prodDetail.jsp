@@ -186,11 +186,11 @@
 										<div class="clearfix"></div>
 										<div id="table-scroll" class="table-scroll">
 
-											<div id="faux-table" class="faux-table" aria="hidden" >
+											<!-- <div id="faux-table" class="faux-table" aria="hidden" >
 												<table id="table2" class="main-table">
 													<thead>
 														<tr class="bgpink">
-															<!-- 		<th width="150">Item Name</th>
+																	<th width="150">Item Name</th>
 															<th width="110" align="left">Current Stock</th>
 															<th width="110" align="left">Opening Qty</th>
 															<th width="120" align="left">Plan Qty</th>
@@ -199,39 +199,49 @@
 															<th width="150" align="left">Actual Prod</th>
 															<th width="120" align="left">Rej Qty</th>
 															<th width="150" align="left">Total Qty</th>
-															not in use -->
+															not in use
 
 
 															<th class="col-md-3">Item Name</th>
-															<th class="col-md-2">Current Stock</th>
+															<th class="col-md-1">Current Stock</th>
 															<th class="col-md-2">Opening Qty</th>
 															<th class="col-md-1">Plan Qty</th>
-															<th class="col-md-1">Order Qty</th>
+															<th class="col-md-2">Production Qty</th>
+															<th class="col-md-2">Actual Order Qty</th>
 
 															<th class="col-md-2">Actual Prod</th>
 															<th class="col-md-1">Rej Qty</th>
 															<th class="col-md-2">Total Qty</th>
-															<!-- not in use -->
+															not in use
 
 														</tr>
 													</thead>
 												</table>
 
-											</div>
+											</div> -->
 											<div class="table-wrap">
 
 												<table id="table1" class="table table-advance">
 													<thead>
 														<tr class="bgpink">
-															<th class="col-md-3">Item Name</th>
-															<th class="col-md-2">Current Stock</th>
-															<th class="col-md-2">Opening Qty</th>
+															<th class="col-md-2">Item Name</th>
+															<th class="col-md-1">Current Stock</th>
+														<!-- 	<th class="col-md-2">Opening Qty</th> -->
 															<th class="col-md-1">Plan Qty</th>
-															<th class="col-md-1">Order Qty</th>
-
+												
+											<c:if test="${planHeader.isPlanned!=0}">
+															<th class="col-md-2">Production1 Qty</th>
+											</c:if>
+											<c:if test="${planHeader.isPlanned!=1}">
+															<th class="col-md-2">Actual Order Qty</th>
+											</c:if>				
+                                           
+											<c:if test="${planHeader.isPlanned==2}">
+											<th class="col-md-2">Production2 Qty</th>
+											</c:if>
 															<th class="col-md-2">Actual Prod</th>
-															<th class="col-md-1">Rej Qty</th>
-															<th class="col-md-2">Total Qty</th>
+															<!-- <th class="col-md-1">Rej Qty</th>
+															<th class="col-md-2">Total Qty</th> -->
 															<!-- not in use -->
 
 														</tr>
@@ -268,13 +278,13 @@
 																	name="stk_qty${planDetail.productionDetailId}"
 																	id="stk_qty${planDetail.productionDetailId}"
 																	data-rule-required="true" style="width: 65px" /></td>
-																<td class="col-md-2"><input align="left" type="text"
+															<%-- 	<td class="col-md-2"><input align="left" type="text"
 																	value="${planDetail.openingQty}"
 																	placeholder="Opening Qty" class="form-control"
 																	name="op_total${planDetail.productionDetailId}"
 																	id="op_total${planDetail.productionDetailId}"
 																	data-rule-required="true" style="width: 65px" /></td>
-
+ --%>
 																<c:choose>
 
 																	<c:when test="${planHeader.productionStatus==1}">
@@ -296,7 +306,18 @@
 																			disabled /></td>
 																	</c:otherwise>
 																</c:choose>
-																<c:choose>
+											 
+											<c:if test="${planHeader.isPlanned!=0}">
+											<td class="col-md-1"><input align="left" type="text"
+											   name="prod1_qty${planDetail.productionDetailId}"
+												id="prod1_qty${planDetail.productionDetailId}"
+												placeholder="Production1 Qty" class="form-control"
+												value="${planDetail.planQty-planDetail.curOpeQty}"
+												data-rule-required="true" style="width: 65px" /></td>
+												</c:if>
+											
+				 
+											<c:if test="${planHeader.isPlanned!=1}">	<c:choose>
 																	<c:when test="${planHeader.productionStatus==2}">
 																		<td class="col-md-1" "><input align="left" type="text"
 																			name="order_qty${planDetail.productionDetailId}"
@@ -315,6 +336,18 @@
 																			disabled /></td>
 																	</c:otherwise>
 																</c:choose>
+					</c:if>
+					  <c:if test="${planHeader.isPlanned==2}">
+						<td class="col-md-1" ><input align="left" type="text"
+										name="prod2_qty${planDetail.productionDetailId}"
+										id="prod2_qty${planDetail.productionDetailId}"
+										placeholder="Production2 Qty" class="form-control"
+										value="${planDetail.orderQty-(planDetail.planQty-planDetail.curOpeQty)}"
+										data-rule-required="true" style="width: 65px"
+										disabled /></td>
+						</c:if>
+					
+					
 																<c:choose>
 																	<c:when test="${planHeader.productionStatus==3}">
 
@@ -358,7 +391,7 @@
 																	</c:otherwise>
 																</c:choose>
 
-																<c:choose>
+														<%-- 		<c:choose>
 																	<c:when test="${planHeader.productionStatus==3}">
 																		<td class="col-md-2"><input align="left" type="text"
 																			name="rej_qty${planDetail.productionDetailId}"
@@ -378,9 +411,9 @@
 																			disabled
 																			onkeyup="changeQty(${planDetail.productionDetailId})" /></td>
 																	</c:otherwise>
-																</c:choose>
+																</c:choose> --%>
 
-																<c:choose>
+															<%-- 	<c:choose>
 																	<c:when test="${planHeader.isPlanned==0}">
 																		<td class="col-md-2"><input align="left" type="text"
 																			name="total_qty${planDetail.productionDetailId}"
@@ -399,7 +432,7 @@
 																			data-rule-required="true" style="width: 65px"
 																			disabled /></td>
 																	</c:when>
-																</c:choose>
+																</c:choose> --%>
 
 
 

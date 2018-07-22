@@ -4,6 +4,29 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
+<style>
+.alert {
+    padding: 20px;
+    background-color: red;
+    color: white;
+    
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -33,7 +56,15 @@
 					<h1>
 						<i class="fa fa-file-o"></i> Items
 					</h1>
-
+	<c:choose>
+				<c:when test="${isError==true}">
+				<div class="alert">
+					<span class="closebtn"
+						onclick="this.parentElement.style.display='none';">&times;</span>
+					<strong>Failed !</strong>     Failed to Add New Item !!
+				</div>
+				</c:when>
+				</c:choose>
 					<c:set var="isEdit" value="0">
 					</c:set>
 					<c:set var="isView" value="0">
@@ -191,34 +222,7 @@
 											data-rule-required="true" data-rule-number="true" />
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Local
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate1" id="item_rate1"
-											placeholder="Item Rate1" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Out
-										Station Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate2" id="item_rate2"
-											placeholder="Item Rate2" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
-									</div>
-								</div>
-                         
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Special
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate3" id="item_rate3"
-											placeholder="Item Rate3" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
-									</div>
-								</div>
+							
                               <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
 									<div class="col-sm-9 col-lg-10 controls">
@@ -233,7 +237,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp1" id="item_mrp1"
 											placeholder="Item Mrp1" class="form-control"
-											data-rule-required="true" data-rule-number="true" readonly/>
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
 
@@ -243,7 +247,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp2" id="item_mrp2"
 											placeholder="Item Mrp2" class="form-control"
-											data-rule-required="true" data-rule-number="true" readonly />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
 								<div class="form-group">
@@ -252,10 +256,37 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp3" id="item_mrp3"
 											placeholder="Item Mrp3" class="form-control"
-											data-rule-required="true" data-rule-number="true" readonly/>
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
-
+                                	<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Local
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate1" id="item_rate1"
+											placeholder="Item Rate1" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Out
+										Station Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate2" id="item_rate2"
+											placeholder="Item Rate2" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+									</div>
+								</div>
+                         
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Special
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate3" id="item_rate3"
+											placeholder="Item Rate3" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Product
 										Image</label>
@@ -377,13 +408,13 @@
 
 											<c:when test="${isAdd==1}">
 
-												<input type="submit" class="btn btn-primary" value="Submit">
+												<input type="submit" class="btn btn-primary" value="Save & Next">
 
 											</c:when>
 
 											<c:otherwise>
 												<input type="submit" disabled="disabled"
-													class="btn btn-primary" value="Submit">
+													class="btn btn-primary" value="Save & Next">
 
 											</c:otherwise>
 										</c:choose>
@@ -530,17 +561,17 @@
 <script type="text/javascript">
 function calMrp()
 {
-	var rate1 = parseFloat($("#item_rate1").val());
-	var rate2 = parseFloat($("#item_rate2").val());
-	var rate3 = parseFloat($("#item_rate3").val());
+	var mrp1 = parseFloat($("#item_mrp1").val());
+	var mrp2 = parseFloat($("#item_mrp2").val());
+	var mrp3 = parseFloat($("#item_mrp3").val());
 	var margin= parseFloat($("#margin").val());
 	
-	var calRate1=rate1+(rate1*margin/100);
-	var calRate2=rate2+(rate2*margin/100);
-	var calRate3=rate3+(rate3*margin/100);
-	document.getElementById("item_mrp1").setAttribute('value', calRate1);
-	document.getElementById("item_mrp2").setAttribute('value', calRate2);
-	document.getElementById("item_mrp3").setAttribute('value', calRate3);
+	var calRate1=((mrp1*100)/(100+margin));      
+	var calRate2=((mrp2*100)/(100+margin));  
+	var calRate3=((mrp3*100)/(100+margin));  
+	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2));
+	document.getElementById("item_rate2").setAttribute('value', (calRate2).toFixed(2));
+	document.getElementById("item_rate3").setAttribute('value', (calRate3).toFixed(2));
 }
 </script>
 
