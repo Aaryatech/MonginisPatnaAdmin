@@ -476,9 +476,11 @@ for(int i=0;i<showFinStockDetail.size();i++) {
 		else if (isFirstStock == 0) {
 
 			System.out.println("Its Opening Stock Update call");
+			
+			System.err.println("showFinStockDetail  " +showFinStockDetail.toString());
 
 			FinishedGoodStockDetail detail;
-			List<FinishedGoodStockDetail> finGoodStockList = new ArrayList<>();
+			List<FinishedGoodStockDetail> finGoodStockList = new ArrayList<FinishedGoodStockDetail>();
 
 			for (int i = 0; i < showFinStockDetail.size(); i++) {
 
@@ -488,18 +490,29 @@ for(int i=0;i<showFinStockDetail.size();i++) {
 				float t2 = Float.parseFloat(request.getParameter("qty2" + detail.getItemId()));
 				float t3 = Float.parseFloat(request.getParameter("qty3" + detail.getItemId()));
 
-				System.out.println("t1 for Item :" + detail.getItemName() + ":" + t1);
-				System.out.println("t2 for Item :" + detail.getItemName() + ":" + t2);
-				System.out.println("t3 for Item :" + detail.getItemName() + ":" + t3);
+				//System.out.println("t1 for Item :" + detail.getItemName() + ":" + t1);
+				//System.out.println("t2 for Item :" + detail.getItemName() + ":" + t2);
+				//System.out.println("t3 for Item :" + detail.getItemName() + ":" + t3);
 
 				/*
 				 * detail.setItemId(detail.getItemId());
 				 * detail.setItemName(detail.getItemName());
+				 * 
 				 */
 				detail.setOpT1(t1);
 				detail.setOpT2(t2);
 				detail.setOpT3(t3);
 				detail.setOpTotal(t1 + t2 + t3);
+				
+				//System.err.println("Stock Date For Item Id  "+detail.getItemId() +detail.getStockDate());
+				
+				if(detail.getStockDate()==null) {
+					
+					System.err.println("Null Date found  ");
+					detail.setStockDate(showStockHeader.getFinGoodStockDate());
+					System.err.println("Date setted ");
+				}
+				//detail.setStockDate(stockDate);
 				/*
 				 * detail.setStockDate(new Date()); detail.setDelStatus(0);
 				 * detail.setCatId(detail.getCatId());

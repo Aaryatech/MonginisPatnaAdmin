@@ -527,7 +527,7 @@ $(document).ready(function() {
 				
 				$('#loader').hide();
 				 if (data == "") {
-					alert("No records found !!");
+				//	alert("No records found !!");
 					document.getElementById("callSubmit").disabled=true;
 
 				} 

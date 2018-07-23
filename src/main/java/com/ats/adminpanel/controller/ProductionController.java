@@ -2341,8 +2341,13 @@ System.err.println("getVarianceorderlistforsort Item List " +getVarianceorderlis
 	public String updateOrderQtyinPlan(HttpServletRequest request, HttpServletResponse response) {
 
 		List<PostProductionPlanDetail> postProductionPlanDetailnewplan = new ArrayList<PostProductionPlanDetail>();
+		
 		PostProductionPlanDetail postProductionPlanDetailnew = new PostProductionPlanDetail();
+		
 		PostProdPlanHeader postProdPlanHeadernewplan = new PostProdPlanHeader();
+		
+		
+		
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String Pdate = formatter.format(date);
@@ -2350,12 +2355,17 @@ System.err.println("getVarianceorderlistforsort Item List " +getVarianceorderlis
 
 		RestTemplate restTemplate = new RestTemplate();
 		try {
+			
+			if(postProdPlanHeader.getProductionStatus()==4) {
+				
 			postProdPlanHeadernewplan.setProductionStatus(2);
 			postProdPlanHeadernewplan.setItemGrp1(postProdPlanHeader.getItemGrp1());
 			postProdPlanHeadernewplan.setProductionDate(postProdPlanHeader.getProductionDate());
 			postProdPlanHeadernewplan.setTimeSlot(postProdPlanHeader.getTimeSlot());
 			postProdPlanHeadernewplan.setProductionBatch("");
+			
 			for (int i = 0; i < postProductionPlanDetaillist.size(); i++) {
+				
 				if (postProductionPlanDetaillist.get(i).getInt4() > 0) {
 					postProductionPlanDetailnew = new PostProductionPlanDetail();
 					postProductionPlanDetailnew.setItemId(postProductionPlanDetaillist.get(i).getItemId());
@@ -2373,7 +2383,9 @@ System.err.println("getVarianceorderlistforsort Item List " +getVarianceorderlis
 				}
 
 			}
+			
 			for (int i = 0; i < getVarianceorderlistforsort.size(); i++) {
+				
 				if (getVarianceorderlistforsort.get(i).getRemainingQty() > 0) {
 					postProductionPlanDetailnew = new PostProductionPlanDetail();
 					postProductionPlanDetailnew.setItemId(getVarianceorderlistforsort.get(i).getId());
@@ -2391,17 +2403,119 @@ System.err.println("getVarianceorderlistforsort Item List " +getVarianceorderlis
 			}
 
 			postProdPlanHeader.setProductionStatus(5);
+			
 			postProdPlanHeader.setPostProductionPlanDetail(postProductionPlanDetaillist);
+			
 			Info updateOrderQtyinPlan = restTemplate.postForObject(Constants.url + "postProductionPlan",
 					postProdPlanHeader, Info.class);
+			
 			System.out.println("updateOrderQtyinPlan " + updateOrderQtyinPlan);
+			
 			System.out.println("postProductionPlanDetailnewplan " + postProductionPlanDetailnewplan.size());
+			
 			if (updateOrderQtyinPlan.getError() == false && postProductionPlanDetailnewplan.size() != 0) {
+				
 				System.out.println("in if insert new plan");
+				
 				postProdPlanHeadernewplan.setPostProductionPlanDetail(postProductionPlanDetailnewplan);
+				
 				Info insertNewinPlan = restTemplate.postForObject(Constants.url + "postProductionPlan",
 						postProdPlanHeadernewplan, Info.class);
+				
 				System.out.println("insertNewinPlan" + insertNewinPlan);
+				
+				
+			}
+			}//end of if production status ==4
+			
+			
+			else if(postProdPlanHeader.getProductionStatus()==3) {
+				System.err.println("Inside  else If postProdPlanHeader.getProductionStatus()==3");
+				
+				postProdPlanHeadernewplan.setProductionStatus(2);
+				postProdPlanHeadernewplan.setItemGrp1(postProdPlanHeader.getItemGrp1());
+				postProdPlanHeadernewplan.setProductionDate(postProdPlanHeader.getProductionDate());
+				postProdPlanHeadernewplan.setTimeSlot(postProdPlanHeader.getTimeSlot());
+				postProdPlanHeadernewplan.setProductionBatch("");
+				
+				postProdPlanHeadernewplan.setIsPlanned(2);
+				
+				for (int i = 0; i < postProductionPlanDetaillist.size(); i++) {
+					
+					if (postProductionPlanDetaillist.get(i).getInt4() > 0) {
+						postProductionPlanDetailnew = new PostProductionPlanDetail();
+						postProductionPlanDetailnew.setItemId(postProductionPlanDetaillist.get(i).getItemId());
+						postProductionPlanDetailnew.setOpeningQty(0);
+						//postProductionPlanDetailnew.setOrderQty(postProductionPlanDetaillist.get(i).getInt4());
+						
+						postProductionPlanDetailnew.setOrderQty(postProductionPlanDetaillist.get(i).getOrderQty());
+						
+						postProductionPlanDetailnew.setProductionQty(0);
+						postProductionPlanDetailnew.setRejectedQty(0);
+						postProductionPlanDetailnew.setPlanQty(postProductionPlanDetaillist.get(i).getPlanQty());
+						postProductionPlanDetailnew.setInt4(0);
+						postProductionPlanDetailnew
+								.setProductionDate(postProductionPlanDetaillist.get(i).getProductionDate());
+						postProductionPlanDetailnew.setProductionBatch("");
+						postProductionPlanDetailnewplan.add(postProductionPlanDetailnew);
+
+					}
+
+				}
+				
+				for (int i = 0; i < getVarianceorderlistforsort.size(); i++) {
+					
+					if (getVarianceorderlistforsort.get(i).getRemainingQty() > 0) {
+						postProductionPlanDetailnew = new PostProductionPlanDetail();
+						postProductionPlanDetailnew.setItemId(getVarianceorderlistforsort.get(i).getId());
+						postProductionPlanDetailnew.setOpeningQty(0);
+						//postProductionPlanDetailnew.setOrderQty(getVarianceorderlistforsort.get(i).getRemainingQty());
+						
+						postProductionPlanDetailnew.setOrderQty(getVarianceorderlistforsort.get(i).getOrderQty());
+
+						postProductionPlanDetailnew.setProductionQty(0);
+						postProductionPlanDetailnew.setRejectedQty(0);
+						postProductionPlanDetailnew.setPlanQty(0);
+						postProductionPlanDetailnew.setInt4(0);
+						postProductionPlanDetailnew.setProductionDate(postProdPlanHeader.getProductionDate());
+						postProductionPlanDetailnew.setProductionBatch("");
+						postProductionPlanDetailnewplan.add(postProductionPlanDetailnew);
+
+					}
+				}
+
+				postProdPlanHeader.setProductionStatus(5);
+				
+				postProdPlanHeader.setPostProductionPlanDetail(postProductionPlanDetaillist);
+				
+				Info updateOrderQtyinPlan = restTemplate.postForObject(Constants.url + "postProductionPlan",
+						postProdPlanHeader, Info.class);
+				
+				System.out.println("updateOrderQtyinPlan " + updateOrderQtyinPlan);
+				
+				System.out.println("postProductionPlanDetailnewplan " + postProductionPlanDetailnewplan.size());
+				
+				if (updateOrderQtyinPlan.getError() == false && postProductionPlanDetailnewplan.size() != 0) {
+					
+					System.out.println("in if insert new plan");
+					
+					postProdPlanHeadernewplan.setPostProductionPlanDetail(postProductionPlanDetailnewplan);
+					
+					Info insertNewinPlan = restTemplate.postForObject(Constants.url + "postProductionPlan",
+							postProdPlanHeadernewplan, Info.class);
+					
+					System.out.println("insertNewinPlan" + insertNewinPlan);
+					
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 
 		} catch (Exception e) {

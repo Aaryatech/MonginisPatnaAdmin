@@ -22,8 +22,8 @@
 			
 	
 		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
-		<div style="text-align: right; font-size: 10px;">CIN -
-			U15122MH2011PTC221108</div>
+		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
+			</div>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
 			<tr>
@@ -31,11 +31,11 @@
 					style="padding: 10px; color: #FFF; font-size: 15px;">&nbsp;</td>
 				<td width="60%" colspan="6"
 					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
-					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">Galdhar
-						Foods Pvt. Ltd.</h4>
+					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
+						FOODS LLP</h4>
 					<p style="color: #000; font-size: 10px; text-align: center; margin: 0px;">
-						Factory Add: A-32 Shendra, MIDC, Aurangabad-4331667 <br />
-						Phone:0240-2466217, Email: aurangabad@monginis.net
+						Village-Fatehpur,Dist-Patna <br />
+						 Email: bihar.monginis@gmail.com
 					</p>
 				</td>
 				<td colspan="3" width="20%"
@@ -51,12 +51,13 @@
 
 			<tr>
 				<td width="50%" colspan="6"
-					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 14px;">
+					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 
+					14px;">
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
 						GSTIN:
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>27AAECG5545R1ZX</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
-							State:&nbsp;27 Maharashtra </span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10AACFF8396C1ZP</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
+							State:&nbsp;10 BIHAR </span>
 					</p> <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
  -->
 					<p
@@ -89,7 +90,7 @@
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Maharashtra</p>
+						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
 				</td>
 			</tr>
 			<tr>
@@ -209,10 +210,10 @@
 				<td colspan="6" width="60%"
 					style="border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 					<p
-						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FDA
+						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FSSAI
 						Declaration: We hereby certify that food mentioned in the Tax
 						Invoice is warranted to be of the nature and quality which it
-						purpose to be. FDA Lic. No: 11515044000208</p>
+						purpose to be. FSSAI Lic. No: 10416000001698</p>
 				</td>
 
 
@@ -251,14 +252,14 @@
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;">
 					<p
 						style="color: #000; font-size: 11px; text-align: left; margin: 0px;">Subject
-						to Aurangabad Jurisdiction
+						to PATNA Jurisdiction
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's
 						Signature</p>
 				</td>
 
 				<td align="center" colspan="5" width="38%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;"><p>
-						<b>For Galdhar Foods Pvt. Ltd.<br></br> <br></br> <br></br>
+						<b>For DEVOUR FOODS LLP<br></br> <br></br> <br></br>
 							Authorised Signatory
 						</b>
 					</p></td>
@@ -280,8 +281,8 @@
 						
 								
 		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
-		<div style="text-align: right; font-size: 10px;">CIN -
-			U15122MH2011PTC221108</div>
+		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
+			</div>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
 			<tr>
@@ -289,11 +290,11 @@
 					style="padding: 10px; color: #FFF; font-size: 15px;">&nbsp;</td>
 				<td width="60%" colspan="6"
 					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
-					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">Galdhar
-						Foods Pvt. Ltd</h4>
+					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
+						FOODS LLP</h4>
 					<p style="color: #000; font-size: 10px; text-align: center; margin: 0px;">
-						Factory Add: A-32 Shendra, MIDC, Aurangabad-4331667 <br />
-						Phone:0240-2466217, Email: aurangabad@monginis.net
+						Village-Fatehpur,Dist-Patna <br />
+						 Email: bihar.monginis@gmail.com
 					</p>
 				</td>
 				<td colspan="3" width="20%"
@@ -313,8 +314,8 @@
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
 						GSTIN:
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>27AAECG5545R1ZX</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
-							State:&nbsp;27 Maharashtra </span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10AACFF8396C1ZP</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
+							State:&nbsp;10 BIHAR </span>
 					</p> <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
  -->
 					<p
@@ -347,7 +348,7 @@
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Maharashtra</p>
+						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
 				</td>
 			</tr>
 			<tr>
@@ -620,10 +621,10 @@
 				<td colspan="6" width="60%"
 					style="border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 					<p
-						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FDA
+						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FSSAI
 						Declaration: We hereby certify that food mentioned in the Tax
 						Invoice is warranted to be of the nature and quality which it
-						purpose to be. FDA Lic. No: 11515044000208</p>
+						purpose to be. FSSAI Lic. No: 10416000001698</p>
 				</td>
 
 
@@ -664,14 +665,14 @@
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;">
 					<p
 						style="color: #000; font-size: 11px; text-align: left; margin: 0px;">Subject
-						to Aurangabad Jurisdiction
+						to PATNA Jurisdiction
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's
 						Signature</p>
 				</td>
 
 				<td align="center" colspan="5" width="38%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;"><p>
-						<b>For Galdhar Foods Pvt. Ltd.<br></br> <br></br> <br></br>
+						<b>For DEVOUR FOODS LLP<br></br> <br></br> <br></br>
 							Authorised Signatory
 						</b>
 					</p></td>
