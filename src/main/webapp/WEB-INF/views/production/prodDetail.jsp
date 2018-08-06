@@ -278,12 +278,12 @@
 																	name="stk_qty${planDetail.productionDetailId}"
 																	id="stk_qty${planDetail.productionDetailId}"
 																	data-rule-required="true" style="width: 65px" /></td>
-															<%-- 	<td class="col-md-2"><input align="left" type="text"
+															<%-- 	<td class="col-md-2">--%><input align="left" type="hidden"
 																	value="${planDetail.openingQty}"
 																	placeholder="Opening Qty" class="form-control"
 																	name="op_total${planDetail.productionDetailId}"
 																	id="op_total${planDetail.productionDetailId}"
-																	data-rule-required="true" style="width: 65px" /></td>
+																	data-rule-required="true" style="width: 65px" />	<%-- </td>
  --%>
 																<c:choose>
 
@@ -554,12 +554,12 @@
 																<i class="fa fa-check"></i>Complete Production
 															</button>
 														</c:when>
-														<c:otherwise>
+														<c:when test="${planHeader.productionStatus==3}">
 															<button type="button" class="btn btn-primary"
 																id="complete_prod">
 																<i class="fa fa-check"></i>Complete Production
 															</button>
-														</c:otherwise>
+														</c:when>
 													</c:choose>
 													<c:choose>
 

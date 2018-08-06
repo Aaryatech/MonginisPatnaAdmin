@@ -9,6 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList; 
@@ -20,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -580,7 +584,7 @@ public class PurchaseOrderController {
 	
 	
 	@RequestMapping(value = "/requestPOFinalByDirectore", method = RequestMethod.POST)
-	public String requestPOFinalByDirectore(final @RequestParam CommonsMultipartFile attachFile,HttpServletRequest request, HttpServletResponse response) {
+	public String requestPOFinalByDirectore(HttpServletRequest request, HttpServletResponse response) {
 
 		try
 		{
@@ -634,8 +638,8 @@ public class PurchaseOrderController {
 				 map.add("country", "91");
 				 map.add("response", "json");
 				String String=rest.postForObject("http://control.bestsms.co.in/api/sendhttp.php",map, String.class);
-				final String[] e_mail={email,email2};
-				System.out.println("email"+email);
+				final String[] e_mail={email,email2,"maheshgaidhani94@gmail.com"};
+				System.out.println(""+email);
 				System.out.println("email2"+email2);
 				System.out.println("e_mail"+e_mail);
 				System.out.println("phonno"+phonno);
@@ -646,9 +650,13 @@ public class PurchaseOrderController {
 						MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 						messageHelper.setTo(e_mail);
 						messageHelper.setSubject("Email Testing");
-						messageHelper.setText("Nana Po Approved");
+						messageHelper.setText("Po Approved");
 						
-						String attachName = attachFile.getOriginalFilename();
+						Path path = Paths.get("/opt/apache-tomcat-8.5.6/webapps/admin/Po.pdf");
+						//	Path path = Paths.get("/home/ats-12/Po.pdf");
+						byte[] content = Files.readAllBytes(path);
+						messageHelper.addAttachment("Po.pdf", new ByteArrayResource(content));
+					/*	String attachName = attachFile.getOriginalFilename();
 						if ( attachFile.getSize()>0) {
 							System.out.println("Attaching file to mail");
 							messageHelper.addAttachment(attachName, new InputStreamSource() {
@@ -658,7 +666,7 @@ public class PurchaseOrderController {
 									return attachFile.getInputStream();
 								}
 							});
-						}
+						}*/
 
 					}
 
@@ -944,7 +952,7 @@ public class PurchaseOrderController {
 			purchaseOrderHeader.setPayId(payId);
 			purchaseOrderHeader.setPoDate(poDate);
 			purchaseOrderHeader.setPoNo(poNo);
-			purchaseOrderHeader.setPoStatus(poStatus);
+			purchaseOrderHeader.setPoStatus(2);//change
 			//  float totalValue=0;
 			for(int i=0;i<purchaseOrderDetailList.size();i++)
 			{
@@ -1402,8 +1410,8 @@ public class PurchaseOrderController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/Po.pdf");
-		//File f = new File("C:/pdf/ordermemo221.pdf");
+		File f = new File("/opt/apache-tomcat-8.5.6/webapps/admin/Po.pdf");
+		//File f = new File("/home/ats-12/Po.pdf");
 		System.out.println("I am here " + f.toString());
 		try {
 			runConverter(Constants.ReportURL + url, f);
@@ -1418,8 +1426,8 @@ public class PurchaseOrderController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/Po.pdf";
-		//String filePath = "C:/pdf/ordermemo221.pdf";
+		String filePath = "/opt/apache-tomcat-8.5.6/webapps/admin/Po.pdf";
+		//String filePath = "/home/ats-12/Po.pdf";
 		//String filePath = "/ordermemo221.pdf";
 
 		// construct the complete absolute path of the file

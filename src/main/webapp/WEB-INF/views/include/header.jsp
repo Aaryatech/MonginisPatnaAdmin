@@ -47,7 +47,6 @@
 	  <link rel="shortcut icon"
 	href="${pageContext.request.contextPath}/resources/img/monginislogo.png">
 
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
 											window.jQuery

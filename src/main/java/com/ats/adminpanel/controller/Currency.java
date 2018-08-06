@@ -65,7 +65,7 @@ public class Currency {
         String Rupees = String.join(" ", str).trim();
 
         String paise = (decimal) > 0 ? " And Paise " + words.get(Integer.valueOf((int) (decimal - decimal % 10))) + " " + words.get(Integer.valueOf((int) (decimal % 10))) : "";
-        return "Rupees " + Rupees + paise + " Only";
+        return "" + Rupees + paise + " Only";
     }
 
     /**

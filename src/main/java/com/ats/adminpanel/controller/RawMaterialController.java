@@ -65,6 +65,8 @@ public class RawMaterialController {
 	public  List<ItemDetail> itemDetailList;
 	public  List<CommonConf> commonConfs=new ArrayList<CommonConf>();
 	public  int globalId=0;
+	int grpIdGlobal=0;
+	RawMaterialDetails info;
 	
 	@RequestMapping(value = "/showAddRawMaterial", method = RequestMethod.GET)
 	public ModelAndView showRowMaterial(HttpServletRequest request, HttpServletResponse response) {
@@ -103,6 +105,9 @@ public class RawMaterialController {
 		Constants.subAct=85;
 			RestTemplate rest=new RestTemplate();
 			try {
+				   SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
+				    Date date = new Date();  
+				
 			RawMaterialDetailsList rawMaterialDetailsList=rest.getForObject(Constants.url +"rawMaterial/getAllRawMaterial", RawMaterialDetailsList.class);
 		
 		System.out.println("RM Details : "+rawMaterialDetailsList.toString());
@@ -110,6 +115,15 @@ public class RawMaterialController {
 
 			model.addObject("supplierList", supplierDetailsList);
 			model.addObject("RawmaterialList", rawMaterialDetailsList.getRawMaterialDetailsList());
+		    model.addObject("currentDate", formatter.format(date));
+			if(info!=null) {
+				model.addObject("rmId", info.getRmId());
+				info=new RawMaterialDetails();
+				}
+				else {
+				model.addObject("rmId",0);
+				}
+				grpIdGlobal=0;
 			}
 			catch(Exception e)
 			{
@@ -120,10 +134,10 @@ public class RawMaterialController {
 	}
 	
 	@RequestMapping(value = "/addRawMaterial", method = RequestMethod.POST)
-	public ModelAndView addRawMaterial(HttpServletRequest request, HttpServletResponse response, @RequestParam("rm_icon") List<MultipartFile> file)
+	public String addRawMaterial(HttpServletRequest request, HttpServletResponse response, @RequestParam("rm_icon") List<MultipartFile> file)
 	{
 		ModelAndView model = new ModelAndView("masters/rawMaterial/showAllRawMaterial");
-		
+		String mapping="";
 		try {
 		System.out.println("In method");
 		
@@ -250,10 +264,21 @@ public class RawMaterialController {
 		
 		System.out.println("Data  : "+rawMaterialDetails.toString());
 		RestTemplate rest=new RestTemplate();
-		Info info=rest.postForObject(Constants.url + "/rawMaterial/addRawMaterial", rawMaterialDetails, Info.class);
+		 info=rest.postForObject(Constants.url + "/rawMaterial/addRawMaterial", rawMaterialDetails, RawMaterialDetails.class);
 		
-		
-		System.out.println("Response : " +info.toString());
+
+		if(rmId==null)
+		{
+			if(info!=null)
+			{
+				mapping="redirect:/showRmRateVerification";
+			}
+			
+		}
+		if(rmId!=null)
+		{
+			grpIdGlobal=Integer.parseInt(rmGroup);
+		/*//System.out.println("Response : " +info.toString());
 		MultiValueMap<String , Object> map =new LinkedMultiValueMap<String, Object>();
 		map.add("grpId",Integer.parseInt(rmGroup));
 		
@@ -266,13 +291,18 @@ public class RawMaterialController {
 		model.addObject("grpId",Integer.parseInt(rmGroup));
 
 		model.addObject("groupList", rmItemGroupList);
-		model.addObject("RawmaterialList", getRawmaterialByGroupList);
+		model.addObject("RawmaterialList", getRawmaterialByGroupList);*/
+			mapping="redirect:/showRawMaterial";
+		}
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception In /addRawMaterial"+e.getMessage());
+			
+			mapping="redirect:/showRawMaterial";
+			e.printStackTrace();
 		}
-		return model;
+	
+		return mapping;
 	}
 	@RequestMapping(value = "/showRawMaterialDetails", method = RequestMethod.POST)
 	public ModelAndView showRawMaterialDetails(HttpServletRequest request, HttpServletResponse response) {
@@ -316,6 +346,23 @@ public class RawMaterialController {
 		System.out.println("Group list :: "+rmItemGroupList.toString());
 		
 		model.addObject("groupList", rmItemGroupList);
+		
+        if(grpIdGlobal!=0) {
+		MultiValueMap<String , Object> map =new LinkedMultiValueMap<String, Object>();
+		map.add("grpId",grpIdGlobal);
+		
+		List<GetRawmaterialByGroup> getRawmaterialByGroupList=rest.postForObject(Constants.url +"rawMaterial/getRawMaterialDetailByGroup", map,  List.class);
+		
+		List<RmItemGroup> rmItemGroupRes=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		System.out.println("Group list :: "+rmItemGroupList.toString());
+		
+		System.out.println("RM Details : "+getRawmaterialByGroupList.toString());
+		model.addObject("grpId",grpIdGlobal);
+
+		model.addObject("groupList", rmItemGroupRes);
+		model.addObject("RawmaterialList", getRawmaterialByGroupList);
+		
+        }
         }
         catch(Exception e)
         {

@@ -17,7 +17,7 @@
 	
 	<c:set var="srCnt" value="0" />
 		<c:set var="totalRowCount" value="0" />
-						<c:set var="maxRowCount" value="20" />
+						<c:set var="maxRowCount" value="28" />
 			
 			
 	
@@ -62,15 +62,14 @@
  -->
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
-						Invoice No: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.invoiceNo}</b>
-					</p>
+						Invoice No: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.invoiceNo}</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<!-- </p>
 					<p
-						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> -->
 						Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b>
 					</p>
 					<p
-						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Tax
-						is payable on reverse charges(Yes/No): No</p>
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Is reverse tax Applicable?(Yes/No): No</p>
 				</td>
 
 				<td width="50%" colspan="5"
@@ -84,10 +83,10 @@
 						Vehicle No:
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${vehicleNo}</b>
 					</p>
-					<p
+					<%-- <p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
 						Supply Dt & Time:&nbsp;&nbsp;&nbsp; &nbsp;<b>${dateTime}</b>
-					</p>
+					</p> --%>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
 						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
@@ -190,13 +189,12 @@
 						style="border-left: 1px solid #313131; padding: 3px 5px; color: white; font-size: 10px;">-</td>
 
 
-				</tr>
+				</tr>	
 				<c:forEach items="${frDetails.billDetailsList}" var="billDetails"
 					varStatus="count">
-						
+					
 					<c:choose>
 						<c:when test="${category.subCatId eq billDetails.subCatId}">
-						
 						
 					<c:choose>
 						
@@ -206,7 +204,7 @@
 						
 							<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-top: 1px solid #313131; border-right: 1px solid #313131;">
-			<tr>
+			<!-- <tr>
 				<td colspan="6" width="60%"
 					style="border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 					<p
@@ -227,27 +225,27 @@
 				<td colspan="6" width="50%"
 					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;"><p>Certified
 						that the particulars given above are true and correct.</p></td>
-			</tr>
+			</tr> -->
 			<tr>
-				<td colspan="6" width="60%"
-					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;"><p>
+				<!-- <td colspan="6" width="60%"
+					style=" border-bottom: 1px solid #313131;border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;"><p>
 						<b></b><br></br>
-					</p></td>
-				<td colspan="5" width="40%"
-					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 8px; color: #000; font-size: 15px;">
+					</p></td> -->
+				<td colspan="11" width="60%"
+					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 
 					<table width="100%" border="0" align="left" cellpadding="0"
 						cellspacing="0" style="border-right: 0px solid #313131">
 						<tr>
 							<td align="center" width="9%" colspan="2"
-								style="border-top: 0px solid #313131; padding: 2px; color: #000; font-size: 13px; text-align: center;"><b>Continue...</b></td>
+								style="border-top: 0px solid #313131; padding: 2px; color: #000; font-size: 13px; text-align: center;"><b>Continued...</b></td>
 						</tr>
 
 					</table>
 
 				</td>
 			</tr>
-			<tr>
+		<!-- 	<tr>
 				<td colspan="6" width="50%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;">
 					<p
@@ -263,16 +261,16 @@
 							Authorised Signatory
 						</b>
 					</p></td>
-			</tr>
+			</tr> -->
 
 
 
 		</table>
-		<p
+		<!-- <p
 			style="color: #000; font-size: 11px; text-align: center; margin: 0px;">
 			<b>This Is A Computer Generated Invoice Does Not Require
 				Signature </b>
-		</p>
+		</p> -->
 						
 						
 						
@@ -286,9 +284,16 @@
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
 			<tr>
-				<td colspan="2" width="20%"
-					style="padding: 10px; color: #FFF; font-size: 15px;">&nbsp;</td>
-				<td width="60%" colspan="6"
+				<td colspan="3" width="30%"
+					style="padding: 10px; color: #FFF; font-size: 15px;"><p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						Invoice No: &nbsp;<b>${frDetails.invoiceNo}</b>
+		</p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> 
+						Invoice Date: &nbsp;<b>${frDetails.billDate}</b>
+					</p></td>
+				<td width="40%" colspan="5"
 					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
 					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
 						FOODS LLP</h4>
@@ -297,7 +302,7 @@
 						 Email: bihar.monginis@gmail.com
 					</p>
 				</td>
-				<td colspan="3" width="20%"
+				<td colspan="3" width="30%"
 					style="border-left: 1px solid #313131; padding: 10px; color: #FFF; font-size: 15px;">
 					<p
 						style="color: #000; font-size: 11px; text-align: left; margin: 0px;">
@@ -308,7 +313,7 @@
 
 			</tr>
 
-			<tr>
+			<%-- <tr>
 				<td width="50%" colspan="6"
 					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 14px;">
 					<p
@@ -321,14 +326,13 @@
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
 						Invoice No: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.invoiceNo}</b>
-					</p>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<!-- </p>
 					<p
-						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> -->
 						Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b>
 					</p>
 					<p
-						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Tax
-						is payable on reverse charges(Yes/No): No</p>
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Is reverse tax Applicable?(Yes/No): No</p>
 				</td>
 
 				<td width="50%" colspan="5"
@@ -372,7 +376,7 @@
 						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
 
 				</td>
-			</tr>
+			</tr> --%>
 		</table>
 						
 							<table width="100%" border="0" cellpadding="0" cellspacing="0"
@@ -552,9 +556,113 @@
 				</b></td>
 			</tr>
 		</table>
+      <c:if test="${totalRowCount>28}"><div style="page-break-after: always;"></div><br></br>
+     <!-- //-------------------------------------------------------------------------------- -->			
+		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
+		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
+			</div>
+		<table width="100%" border="0" cellpadding="0" cellspacing="0"
+			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
+			<tr>
+				<td colspan="3" width="30%"
+					style="padding: 10px; color: #FFF; font-size: 15px;">	<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						Invoice No: &nbsp;<b>${frDetails.invoiceNo}</b>
+					 </p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> 
+						Invoice Date: &nbsp;<b>${frDetails.billDate}</b>
+					</p></td>
+				<td width="45%" colspan="5"
+					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
+					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
+						FOODS LLP</h4>
+					<p style="color: #000; font-size: 10px; text-align: center; margin: 0px;">
+						Village-Fatehpur,Dist-Patna <br />
+						 Email: bihar.monginis@gmail.com
+					</p>
+				</td>
+				<td colspan="3" width="30%"
+					style="border-left: 1px solid #313131; padding: 10px; color: #FFF; font-size: 15px;">
+					<p
+						style="color: #000; font-size: 11px; text-align: left; margin: 0px;">
+						Original for Buyer <br /> Duplicate for Transporter<br />Triplicate
+						for Assesse
+					</p>
+				</td>
 
-		<table width="56%" border="0" cellpadding="0" cellspacing="0"
-			style="border-right: 1px solid #313131">
+			</tr>
+<%-- 
+			<tr>
+				<td width="50%" colspan="6"
+					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 14px;">
+					<p
+						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
+						GSTIN:
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10AACFF8396C1ZP</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
+							State:&nbsp;10 BIHAR </span>
+					</p> <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
+ -->
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						Invoice No: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.invoiceNo}</b>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<!-- </p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> -->
+						Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Is reverse tax Applicable?(Yes/No): No</p>
+				</td>
+
+				<td width="50%" colspan="5"
+					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 8px; color: #FFF; font-size: 15px;">
+					<p
+						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
+						Mode of Transport: &nbsp;&nbsp;&nbsp;&nbsp;<b>${transportMode}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						Vehicle No:
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${vehicleNo}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
+						Supply Dt & Time:&nbsp;&nbsp;&nbsp; &nbsp;<b>${dateTime}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
+						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="50%" colspan="6"
+					style="border-top: 1px solid #313131; padding: 7px; color: #FFF; font-size: 15px;">
+					<p
+						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
+						<b> Billed To:&nbsp; &nbsp; ${frDetails.frName}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
+  
+				</td>
+				<td width="50%" colspan="5"
+					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 7px; color: #FFF; font-size: 15px;">
+					<p
+						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
+						<b> Ship To:&nbsp; &nbsp; ${frDetails.frName}</b>
+					</p>
+					<p
+						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
+
+				</td>
+			</tr> --%>
+		</table>
+		<!-- //-------------------------------------------------------------------------------- -->
+      
+      </c:if>
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" 
+			style="border-right: 1px solid #313131; border-top: 1px solid #313131">
 			<tr>
 				<td align="center" width="9%" colspan="2"
 					style="border-left: 1px solid #313131; padding: 2px; color: #000; font-size: 10px; text-align: center;">Tax(%)</td>
@@ -618,8 +726,8 @@
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-top: 1px solid #313131; border-right: 1px solid #313131;">
 			<tr>
-				<td colspan="6" width="60%"
-					style="border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
+				<td colspan="10" width="100%"
+					style="border-left: 1px solid #313131; padding: 4px; color: #000; font-size: 10px;">
 					<p
 						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FSSAI
 						Declaration: We hereby certify that food mentioned in the Tax
@@ -628,21 +736,20 @@
 				</td>
 
 
-				<td colspan="5" width="40%" rowspan="2"
-					style="border-left: 1px solid #313131; color: #000; font-size: 12px;">
+			 <td colspan="11" width="40%" rowspan="2"
+					style="color: #000; font-size: 10px;">
 
 					
-				</td>
+				</td> 
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td colspan="6" width="50%"
-					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;"><p>Certified
-						that the particulars given above are true and correct.</p></td>
-			</tr>
+					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;"><p></p></td>
+			</tr> -->
 			<tr>
-				<td colspan="6" width="60%"
-					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;"><p>
-						<b>Invoice Value in Rs.</b><br></br> ${frDetails.amtInWords}
+				<td colspan="8" width="60%"
+					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 12px;"><p>
+						<b>Invoice Value in Rs.</b>  ${frDetails.amtInWords}
 					</p></td>
 				<td colspan="5" width="40%"
 					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 8px; color: #000; font-size: 15px;">
@@ -661,19 +768,19 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="6" width="50%"
-					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;">
+				<td colspan="8" width="50%"
+					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding-top: 4px; color: #000; font-size: 8px;">
 					<p
-						style="color: #000; font-size: 11px; text-align: left; margin: 0px;">Subject
+						style="color: #000; font-size: 9px; text-align: left; margin: 0px;">&nbsp;&nbsp; Subject
 						to PATNA Jurisdiction
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's
 						Signature</p>
 				</td>
 
 				<td align="center" colspan="5" width="38%"
-					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;"><p>
+					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding-top: 4px; color: #000; font-size: 9px;"><p>
 						<b>For DEVOUR FOODS LLP<br></br> <br></br> <br></br>
-							Authorised Signatory
+							
 						</b>
 					</p></td>
 			</tr>
@@ -681,11 +788,11 @@
 
 
 		</table>
-		<p
+	<!-- 	<p
 			style="color: #000; font-size: 11px; text-align: center; margin: 0px;">
 			<b>This Is A Computer Generated Invoice Does Not Require
 				Signature </b>
-		</p>
+		</p> -->
 
 
 		<div style="page-break-after: always;"></div>

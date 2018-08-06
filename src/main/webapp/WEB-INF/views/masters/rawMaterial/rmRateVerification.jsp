@@ -5,7 +5,7 @@
 
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-<body>
+<body onload="onRmIdChange(${rmId})">
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -97,7 +97,7 @@
 								<i class="fa fa-bars"></i>Raw material Rate Verification
 							</h3>
 							<div class="box-tool">
-								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
+								<a href=""></a> <a data-action="collapse" href="#"><i
 									class="fa fa-chevron-up"></i></a>
 							</div>
 							<!-- <div class="box-tool">
@@ -127,14 +127,21 @@
 											</c:forEach>
 										</select>
 									</div>
-									<label class="col-sm-3 col-lg-2 control-label">Select
-										Row Material</label>
+									<label class="col-sm-3 col-lg-2 control-label">Select Raw Material</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<select name="rm_id" id="rm_id" class="form-control chosen">
-											<option value="-1">Select Row Material</option>
+										<select name="rm_id" id="rm_id" onchange="onRmIdChange(this.value)" class="form-control chosen">
+											<option value="-1">Select Raw Material</option>
 											<c:forEach items="${RawmaterialList}" var="RawmaterialList"
 												varStatus="count">
+												<c:choose>
+												<c:when test="${rmId==RawmaterialList.rmId}">
+												<option value="${RawmaterialList.rmId}" selected><c:out value="${RawmaterialList.rmName}"/></option>
+												</c:when>
+												<c:otherwise>
 												<option value="${RawmaterialList.rmId}"><c:out value="${RawmaterialList.rmName}"/></option>
+												</c:otherwise>
+												</c:choose>
+												
 											</c:forEach>
 										</select>
 									</div>
@@ -177,7 +184,7 @@
 										Rate Date </label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input class="form-control date-picker" id="dp2" size="16"
-											type="text" name="curr_rate_date" data-rule-required="true" />
+											type="text" name="curr_rate_date" value="${currentDate}" data-rule-required="true" />
 									</div>
 
 
@@ -291,7 +298,8 @@
 													value="Submit" disabled>
 
 											</c:otherwise>
-										</c:choose>
+										</c:choose> &nbsp;&nbsp;&nbsp;&nbsp;
+									<a href="${pageContext.request.contextPath}/showAddRawMaterial"><input type="button" class="btn btn-info" value="Back to Add Raw Material"></a>	
 										<!-- <input type="button" id="search" class="btn btn-info"
 											value="Edit" onclick="onEdit()" /> -->
 
@@ -393,11 +401,9 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 	<script type="text/javascript">
-$(document).ready(function() { 
-	$('#rm_id').change(
-			function() {
+			function onRmIdChange(rmId) {
 				$.getJSON('${getUomTax}', {
-					rmId : $(this).val(),
+					rmId : rmId,
 					ajax : 'true'
 				}, function(data) {
 					 
@@ -408,8 +414,7 @@ $(document).ready(function() {
 				
 
 				});
-			});
-});
+			}
 function onSearch()
 {	
 	 

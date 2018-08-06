@@ -13,7 +13,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
-
+   	<c:url var="getFranchisees" value="/getFranchiseByRoute"></c:url>
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse" >
 
@@ -76,7 +76,7 @@
 						<div class="col-sm-6 col-lg-4 controls">
 							<select data-placeholder="Select Route"
 								class="form-control chosen" name="selectRoute" id="selectRoute"
-								onchange="disableFr()">
+								 onchange="getFranchise(this.value)">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
 									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
@@ -100,7 +100,7 @@
 
 							<select data-placeholder="Choose Category"
 								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectCat" name="selectCat" onchange="disableRoute()">
+								id="selectCat" name="selectCat">
 
 								<option value="-1"><c:out value="All"/></option>
 
@@ -124,6 +124,31 @@
 					</div>
 
 
+
+				</div>
+				<div class="row">
+
+					<div class="form-group">
+
+						<label class="col-sm-3 col-lg-2 control-label">Select
+							Franchisee</label>
+						<div class="col-sm-3 col-lg-4">
+
+							<select data-placeholder="Choose Franchise"
+								class="form-control"  tabindex="6"
+								id="fraId" name="fraId" >
+								<option value="">Select Franchise</option>
+                                
+							</select>
+						</div>
+
+
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdfBill()">PDF</button>
+							
+							
+							</div>
+							
 					<div align="center" id="loader" style="display: none">
 
 						<span>
@@ -133,9 +158,7 @@
 						</span> <span class="l-1"></span> <span class="l-2"></span> <span
 							class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 						<span class="l-6"></span>
-					</div>
-
-				</div>
+					</div></div>
 			</div>
 
 
@@ -206,6 +229,40 @@
 			class="fa fa-chevron-up"></i></a>
 
 
+
+<script type="text/javascript">
+
+			function getFranchise(routeId) {
+			
+				$.getJSON('${getFranchisees}', {
+					
+					routeId : routeId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Franchisee</option>';
+				
+					var len = data.length;
+					
+					$('#fraId')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				 $("#fraId").append(
+                                $("<option></option>").attr(
+                                    "value", 0).text("Select Franchisee")
+                            );
+					
+					for ( var i = 0; i < len; i++) {
+                        $("#fraId").append(
+                                $("<option></option>").attr(
+                                    "value", data[i].frId).text(data[i].frName)
+                            );
+					}
+					   $("#fraId").trigger("chosen:updated");
+				}); 
+			}
+</script>
 		<script type="text/javascript">
 			function searchReport() {
 				//	var isValid = validate();
@@ -682,7 +739,18 @@
 				window.open("${pageContext.request.contextPath}/exportToExcel");
 						document.getElementById("expExcel").disabled=true;
 			}
+			function genPdfBill() {
+				var billDate = $("#billDate").val();
+				var routeId = $("#selectRoute").val();
+				var selectedCat = $("#selectCat").val();
+				var frId = $("#fraId").val();
+				
+				window.open('pdfForDisReport?url=pdf/getDispatchPReportPdfForBill/'
+						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
+
+			}
 		</script>
+		
 		<!--basic scripts-->
 		<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

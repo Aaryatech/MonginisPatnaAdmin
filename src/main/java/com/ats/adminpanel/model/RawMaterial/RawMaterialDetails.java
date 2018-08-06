@@ -3,9 +3,10 @@ package com.ats.adminpanel.model.RawMaterial;
  
 
 public class RawMaterialDetails {
-private int rmId;
+    
+	private int rmId;
 
-private String rmName;
+    private String rmName;
 	 
 	private String rmCode;
 	 

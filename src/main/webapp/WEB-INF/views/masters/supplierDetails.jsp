@@ -67,7 +67,7 @@
 					<label class="col-sm-3 col-lg-2 control-label">Supplier Name*</label>
 					<div class="col-sm-6 col-lg-4 controls">
 						 <select  name="supplier" id="supplier"  class="form-control chosen "onchange="return supplierChange()">
-										<option value="-1">Select Suppiler </option>
+										<option value="-1">Select Supplier </option>
 										<c:forEach items="${supplierList}" var="supplierList"
 													varStatus="count">
 													<c:choose>
@@ -117,11 +117,47 @@
 								<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">State*</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										 <!-- <select  name="supp_state"  class="form-control"> 
-										<option value="1">Maharashtra</option>
-								</select>-->
-								<input type="text" name="supp_state" id="supp_state" class="form-control"  placeholder="Enter State "data-rule-required="true"/>
-									
+										<select data-placeholder="Select State" class="form-control chosen" name="supp_state" tabindex="-1"
+											id="supp_state"  >
+											<option  value="">Select State</option>
+										<option value="35-Andaman and Nicobar Islands-AN">35-Andaman and Nicobar Islands-AN</option>
+										<option value="28-Andhra Pradesh-AP">28-Andhra Pradesh-AP</option>
+										<option value="37-Andhra Pradesh (New)-AD">37-Andhra Pradesh (New)-AD</option>
+										<option value="12-Arunachal Pradesh-AR">12-Arunachal Pradesh-AR</option>
+										<option value="18-Assam-AS">18-Assam-AS</option>
+										<option value="10-Bihar-BH">10-Bihar-BH</option>
+										<option value="4-Chandigarh-CH">4-Chandigarh-CH</option>
+										<option value="22-Chattisgarh-CT">22-Chattisgarh-CT</option>
+										<option value="26-Dadra and Nagar Haveli-DN">26-Dadra and Nagar Haveli-DN</option>
+										<option value="25-Daman and Diu-DD">25-Daman and Diu-DD</option>
+										<option value="7-Delhi-DL">7-Delhi-DL</option>
+										<option value="30-Goa-GA">30-Goa-GA</option>
+										<option value="24-Gujarat-GJ">24-Gujarat-GJ</option>
+										<option value="6-Haryana-HR">6-Haryana-HR</option>
+										<option value="2-Himachal Pradesh-HP">2-Himachal Pradesh-HP</option>
+										<option value="1-Jammu and Kashmir-JK">1-Jammu and Kashmir-JK</option>
+										<option value="20-Jharkhand-JH">20-Jharkhand-JH</option>
+										<option value="29-Karnataka-KA">29-Karnataka-KA</option>
+										<option value="32-Kerala-KL">32-Kerala-KL</option>
+										<option value="31-Lakshadweep Islands-LD">31-Lakshadweep Islands-LD</option>
+										<option value="23-Madhya Pradesh-MP">23-Madhya Pradesh-MP</option>
+										<option value="27-Maharashtra-MH">27-Maharashtra-MH</option>
+										<option value="14-Manipur-MN">14-Manipur-MN</option>
+										<option value="17-Meghalaya-ME">17-Meghalaya-ME</option>
+										<option value="15-Mizoram-MI">15-Mizoram-MI</option>
+										<option value="13-Nagaland-NL">13-Nagaland-NL</option>
+										<option value="21-Odisha-OR">21-Odisha-OR</option>
+										<option value="34-Pondicherry-PY">34-Pondicherry-PY</option>
+										<option value="3-Punjab-PB">3-Punjab-PB</option>
+										<option value="8-Rajasthan-RJ">8-Rajasthan-RJ</option>
+										<option value="11-Sikkim-SK">11-Sikkim-SK</option>
+										<option value="33-Tamil Nadu-TN">33-Tamil Nadu-TN</option>
+										<option value="36-Telangana-TS">36-Telangana-TS</option>
+										<option value="16-Tripura-TR">16-Tripura-TR</option>
+										<option value="9-Uttar Pradesh-UP">9-Uttar Pradesh-UP</option>
+										<option value="5-Uttarakhand-UT">5-Uttarakhand-UT</option>
+										<option value="19-West Bengal-WB">19-West Bengal-WB</option>
+								</select>
 									</div>
 
 									<label class="col-sm-3 col-lg-2 control-label">Country* </label>
@@ -207,10 +243,10 @@
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Email 5</label>
+									<label class="col-sm-3 col-lg-2 control-label">Lead Time</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email5" id="supp_email5" class="form-control"placeholder="Enter Email 5 "
-													data-rule-email="true"  />
+										<input type="text" name="supp_email5" id="supp_email5" class="form-control" placeholder="Lead Time "
+													data-rule-required="true"  />
 									</div>
 								 
 								</div>
@@ -352,7 +388,10 @@
 				 
 					document.getElementById("supp_name").value=data.suppName;
 					document.getElementById("supp_city").value=data.suppCity;
+					
 					document.getElementById("supp_state").value=data.suppState;
+					$("#supp_state").trigger("chosen:updated");
+					
 					document.getElementById("supp_country").value=data.suppCountry;
 					document.getElementById("supp_addr").value=data.suppAddr;
 					document.getElementById("supp_gstin").value=data.suppGstin;

@@ -68,8 +68,8 @@
 
 
 
-								<input type="hidden" name="mode_add" id="mode_add"
-									value="add_att">
+							<!-- 	<input type="hidden" name="mode_add" id="mode_add"
+									value="add_att"> -->
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
@@ -105,6 +105,7 @@
 									<table id="table2" class="main-table">
 											<thead>
 												<tr class="bgpink">
+												<th width="70" style="width: 10px">Sr.No</th>
 										<th width="180" style="width: 90px">Prod ID</th>
 												<th width="200" align="left">Production Date</th>
 												<th width="358" align="left">Category</th>
@@ -121,6 +122,7 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
+												<th width="70" style="width: 10px">Sr.No</th>
 												<th width="180" style="width: 90px">Prod ID</th>
 												<th width="200" align="left">Production Date</th>
 												<th width="358" align="left">Category</th>
@@ -143,10 +145,10 @@
 										</thead> -->
 										<tbody>
 
-											<c:forEach items="${planHeader}" var="planHeader">
+											<c:forEach items="${planHeader}" var="planHeader" varStatus="count">
 
 												<tr>
-
+	                        	<td><c:out value="${count.index+1}" /></td>
 													<td align="left"><c:out
 															value="${planHeader.productionHeaderId}" /></td>
 													<td align="left"><c:out
@@ -198,7 +200,13 @@
 													<td align="left"><a
 														href="${pageContext.request.contextPath}/getProdDetail/${planHeader.productionHeaderId}"><span
 															class="glyphicon glyphicon-info-sign"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-
+                                              <c:choose>
+														<c:when test="${planHeader.isPlanned==1 and planHeader.productionStatus!=4 and planHeader.productionStatus!=5}">
+											<a href="deletePlanHeader/${planHeader.productionHeaderId}/${fromDate}/${toDate}"
+											onClick="return confirm('Are you sure want to delete this record');"><span
+												class="glyphicon glyphicon-remove"></span></a>
+                                                 </c:when>
+                                                 </c:choose>
 													</td>
 												</tr>
 											</c:forEach>
@@ -228,7 +236,7 @@
 	<!-- END Container -->
 
 	<!--basic scripts-->
-	<script
+	 <script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script>
 		window.jQuery
@@ -280,15 +288,23 @@
 		src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
-	<script type="text/javascript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script type="text/javascript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
-	<script type="text/javascript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-</body>
+ <script type="text/javascript">
+ $('.date-picker').datepicker({
+     format: "dd-mm-yyyy",
+     autoclose: true,
+}).on('changeDate', function (ev) {
+     $(this).datepicker('hide');
+});
+</script>
+ </body>
 </html>

@@ -314,13 +314,13 @@
 			var yesterdayDate = new Date(diff);
 			var yesterdayDate1 = new Date(diff1);
 			var todaysDate = new Date(todayTimeStamp);
-
+			var currDate= new Date(todayTimeStamp1);
 			var tommarowString =  yesterdayDate.getDate()+ '-' + (yesterdayDate.getMonth() + 1) + '-' +yesterdayDate.getFullYear();
 			var yesterdayString =  (yesterdayDate1.getDate())+ '-' + (yesterdayDate1.getMonth() + 1) + '-' +yesterdayDate1.getFullYear();
-            
+            var currDateStr=(currDate.getDate())+ '-' + (currDate.getMonth() + 1) + '-' +currDate.getFullYear();
 			
 			$("#datepicker1").val(yesterdayString); 
-            $("#datepicker5").val(tommarowString); 
+            $("#datepicker5").val(currDateStr); 
  
 			//alert(catId);
 			

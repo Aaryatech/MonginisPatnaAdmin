@@ -5,7 +5,7 @@
 	 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+	<body onload="getPdf()">
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -65,7 +65,7 @@
 		<div class="box">
 			<form id="submitPurchaseOrder"
 				action="${pageContext.request.contextPath}/requestPOFinalByDirectore"
-				method="post" enctype="multipart/form-data" onsubmit="return(validate());">
+				method="post" onsubmit="return(validate());"> <!-- enctype="multipart/form-data"  -->
 			<div class="box-content">
 				<div class="col-md-2">PO No.  </div>
 				<div class="col-md-4"><input type="text" id="po_no" name="po_no" value="${purchaseOrderHeader.poNo}" class="form-control" readonly>
@@ -155,7 +155,7 @@
 									
 						</div>	<br/>		
 							
-							 <c:choose>
+							<%--  <c:choose>
 									<c:when test="${(purchaseOrderHeader.poStatus==2) and (flag==2)}">
 										<div class="box-content">
 											<div class="col-md-2" >Select Pdf</div>
@@ -164,7 +164,7 @@
 												</div> 
 									</div><br/>
 									</c:when>  
-							</c:choose>
+							</c:choose> --%>
 			
 			
 				<div class=" box-content">
@@ -440,7 +440,8 @@
     var poId = $("#poId").val();
     document.getElementById('submit').disabled=false;
     
-	    	window.open('${pageContext.request.contextPath}/purchase?url=pdf/poPdf/'+poId);
+    var myWindow=window.open('${pageContext.request.contextPath}/purchase?url=pdf/poPdf/'+poId);
+    myWindow.close();	
 		 
     }
 		

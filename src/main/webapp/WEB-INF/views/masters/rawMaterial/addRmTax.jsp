@@ -67,9 +67,9 @@
 									<input type="hidden" name="tax_id" id="tax_id" value="${rmTax.taxId}"/>
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Tax Description</label>
+									<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="tax_desc" id="tax_desc" class="form-control"placeholder="Tax Description"data-rule-required="true" value="${rmTax.taxDesc}"/>
+										<input type="text" name="tax_desc" id="tax_desc" class="form-control"placeholder="HSN Code"data-rule-required="true" value="${rmTax.taxDesc}"/>
 									</div>
 
 									<label class="col-sm-3 col-lg-2 control-label">IGST Percentage(%)
@@ -127,7 +127,7 @@
 												<thead>
 													<tr>
 														<th width="55" style="width: 18px">Sr.No.</th>
-														<th width="140" align="center">Tax Description</th>
+														<th width="140" align="center">HSN Code</th>
 														<th width="140" align="center">IGST Percentage</th>
 														<th width="140" align="center">CGST Percentage</th>
 														<th width="140" align="center">SGST Percentage</th>

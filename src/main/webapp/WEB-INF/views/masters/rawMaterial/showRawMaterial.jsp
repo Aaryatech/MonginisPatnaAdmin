@@ -221,17 +221,17 @@
 					<div class="form-group">
 							<label class="col-sm-3 col-lg-2 control-label">RM GST % </label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<select name="rm_tax_id" id="rm_tax_id" class="form-control">
+							<select name="rm_tax_id" id="rm_tax_id" class="form-control"  onchange="onChangeGst(this.value)">
 								<option value="1">Select RM GST</option>
 								<c:forEach items="${rmTaxList}" var="rmTaxList"
 													varStatus="count">
 													
 													<c:choose>
 													<c:when test="${rawMaterialDetails.rmTaxId==rmTaxList.taxId}">
-														<option selected value="${rmTaxList.taxId}"><c:out value="${rmTaxList.sgstPer + rmTaxList.cgstPer}"/>%</option>
+														<option selected value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
 												</c:when>
 													<c:otherwise>
-  														<option value="${rmTaxList.taxId}"><c:out value="${rmTaxList.sgstPer + rmTaxList.cgstPer}"/>%</option>
+  														<option value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
 												 </c:otherwise>
  													 </c:choose>
 												 
@@ -266,7 +266,7 @@
 						<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
 
 						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmCloQty }" name="rm_clo_qty" id="rm_clo_qty" class="form-control" placeholder="RM HSNCD" data-rule-required="true" data-rule-number="true"/>
+							<input type="text" value="${rawMaterialDetails.rmCloQty}" readonly name="rm_clo_qty" id="hsncode" class="form-control" placeholder="RM HSNCD" data-rule-required="true" data-rule-number="true"/>
 						</div>
 
 						<label class="col-sm-3 col-lg-2 control-label">RM Rejected
@@ -550,5 +550,12 @@ function validationForStore() {
 function validate() {
     return validation() && validationForStore();
 }</script> 
+<script type="text/javascript">
+function onChangeGst(id)
+{
+	document.getElementById("hsncode").value=$('#rm_tax_id option:selected').text();
+}
+</script>
+
 </body>
 </html>
