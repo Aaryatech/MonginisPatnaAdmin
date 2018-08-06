@@ -3222,23 +3222,34 @@ model.addObject("royPer",getRoyPer());
 	public String submitEditedQty(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/pDispatchReport");
 		try {
+			System.err.println("#####################pDispatchReportList##########################"+pDispatchReportList.toString());
+
 			if(!pDispatchReportList.isEmpty()) {
 				List<POrder> orderList=new ArrayList<>();
 				
-				for(int i=0;i<pDispatchReportList.size();i++)
+				for(int i=0;i<pDispatchReportList.size();i++) 
 				{
-					POrder order=new POrder();
+					POrder order=null;
+					try {
 			       int editedQty=Integer.parseInt(request.getParameter("itemQty"+pDispatchReportList.get(i).getFrId()+""+pDispatchReportList.get(i).getItemId()+""+pDispatchReportList.get(i).getOrderId()));
+                   order=new POrder();
 			       order.setOrderId(pDispatchReportList.get(i).getOrderId());
 			       order.setEditQty(editedQty);
+					}
+					catch (Exception e) {
+						System.err.println("orderQty:"+pDispatchReportList.get(i).getFrId()+""+pDispatchReportList.get(i).getItemId()+""+pDispatchReportList.get(i).getOrderId());
+						e.printStackTrace();
+					}
+					if(order!=null) {
 			       orderList.add(order);
+					}
 				}
 				RestTemplate restTemplate=new RestTemplate();
 				List<POrder> orderLists=restTemplate.postForObject(Constants.url+"updateEditedQty",orderList, List.class);
 				System.err.println("orderLists"+orderLists.toString());
 			}
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return "redirect:/showPDispatchItemReport";
 	}
