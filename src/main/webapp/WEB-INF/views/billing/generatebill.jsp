@@ -305,8 +305,10 @@
 														if(bill.orderQty>0){
 
 														var index = key + 1;
-
-														var tr = "<tr>";
+													
+															var tr ;
+															tr="<tr>";
+														
 
 														var index = "<td>&nbsp;&nbsp;&nbsp;"
 																+ index
@@ -323,10 +325,19 @@
 														/* var itemId = "<td>&nbsp;&nbsp;&nbsp;"
 																+ bill.itemId
 																+ "</td>"; */
-
-														var itemName = "<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-																+ bill.itemName
-																+ "</td>";
+															
+																
+																if(bill.menuId==67){
+																var itemName = "<td style='background-color:pink' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+																		+ bill.itemName
+																		+ "</td>";	
+																}else{
+																	var itemName = "<td  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+																		+ bill.itemName
+																		+ "</td>";	
+																	
+																}
+																
 
 														var orderQty = "<td align=center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 																+ bill.orderQty
