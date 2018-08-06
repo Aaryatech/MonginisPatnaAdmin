@@ -162,9 +162,9 @@
 														<tr>
 															<td><c:out value="${count.index+1}"></c:out></td>
 															<td><c:out value="${item.itemName}"></c:out></td>
-															<td><input type=text  class=form-control  id="qty1${item.itemId}" value="${item.opT1}" name="qty1${item.itemId}" ></td>
-															<td><input type=text  class=form-control  id="qty2${item.itemId}" value="${item.opT2}" name="qty2${item.itemId}"  ></td>
-															<td><input type=text  class=form-control  id="qty3${item.itemId}" value="${item.opT3}" name="qty3${item.itemId}"  ></td>
+															<td><input type=text  class=form-control  id="qty1${item.itemId}" value="${item.opT1}" name="qty1${item.itemId}" readonly></td>
+															<td><input type=text  class=form-control  id="qty2${item.itemId}" value="${item.opT2}" name="qty2${item.itemId}"  readonly></td>
+															<td><input type=text  class=form-control  id="qty3${item.itemId}" value="${item.opT3}" name="qty3${item.itemId}"  readonly></td>
 														</tr>
 													</c:forEach>
 
