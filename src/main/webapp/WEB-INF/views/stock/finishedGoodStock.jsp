@@ -9,8 +9,9 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="findItemsByCategory" value="/getItemsByCatIdForFinGood"></c:url>
-
-	<c:url var="finishedGoodDayEnd" value="/finishedGoodDayEnd"></c:url>
+		<c:url var="getGroup2ByCatId" value="/getSubCateListByCatId" />
+	
+	<c:url var="getFinGoodStockNewMapping" value="/getFinGoodStockNewMapping"></c:url>
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -62,29 +63,7 @@
 						<div class="box-content">
 							<form class="form-horizontal" id="validation-form">
 
-								<%-- <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Category</label>
-
-									<div class="col-sm-9 col-lg-10 controls">
-										<select class="form-control chosen" name="catId" id="catId">
-
-
-										<option value="-1">All</option>
-
-											<c:forEach items="${catList}" var="catList">
-
-												<option value="${catList.catId}">${catList.catName} </option>
-
-											</c:forEach>
-
-
-										</select>
-									</div>
-
-								</div>
-
-								 --%>
-
+							
 								<!-- 
 								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
@@ -113,6 +92,37 @@
 
 									<div class="box-content">
 									<div style="text-align: left;color:grey; "><b>Date:</b> ${sDate}</div>
+                          
+                          	<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Category</label>
+									<div class="col-sm-9 col-lg-3 controls">
+										<select data-placeholder="Select Category"
+											class="form-control chosen" name="item_grp1" tabindex="-1"
+											id="item_grp1" data-rule-required="true">
+											<option selected>Select Group 1</option>
+
+											<c:forEach items="${catList}" var="mCategoryList">
+
+
+												<option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+											</c:forEach>
+
+
+										</select>
+									</div>
+									<!-- </div>
+
+
+								<div class="form-group"> -->
+									<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
+									<div class="col-sm-9 col-lg-4 controls">
+										<select data-placeholder="Select Sub Category"
+											class="form-control chosen-select" name="item_grp2" id="item_grp2" onchange="getItemsForSubCat()"
+											tabindex="-1"  data-rule-required="true">
+										</select>
+									</div>
+								</div>
+<br/>
                           <jsp:include page="/WEB-INF/views/include/tableSearch.jsp"></jsp:include>
 
 										<div class="clearfix"></div>
@@ -162,9 +172,9 @@
 														<tr>
 															<td><c:out value="${count.index+1}"></c:out></td>
 															<td><c:out value="${item.itemName}"></c:out></td>
-															<td><input type=text  class=form-control  id="qty1${item.itemId}" value="${item.opT1}" name="qty1${item.itemId}" readonly></td>
-															<td><input type=text  class=form-control  id="qty2${item.itemId}" value="${item.opT2}" name="qty2${item.itemId}"  readonly></td>
-															<td><input type=text  class=form-control  id="qty3${item.itemId}" value="${item.opT3}" name="qty3${item.itemId}"  readonly></td>
+															<td><input type=text  class=form-control  id="qty1${item.itemId}" value="${item.opT1}" name="qty1${item.itemId}" ></td>
+															<td><input type=text  class=form-control  id="qty2${item.itemId}" value="${item.opT2}" name="qty2${item.itemId}"  ></td>
+															<td><input type=text  class=form-control  id="qty3${item.itemId}" value="${item.opT3}" name="qty3${item.itemId}" ></td>
 														</tr>
 													</c:forEach>
 
@@ -276,23 +286,22 @@
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-	<!-- <script type="text/javascript">
-		function searchItemsByCategory() {
-			
-			/* var catId = $("#catId").val();
-			document.getElementById("selectedCatId").value =catId;
-			 */
-			var option= $("#selectStock").val();
-			
+	<script type="text/javascript">
+		function getItemsForSubCat() {
+			$('#table1 td').remove();
+				var catId= $("#item_grp1").val();
+				var subCatId= $("#item_grp2").val();
+				var subCatName=$('#item_grp2 option:selected').text();
+
+			alert("Items For Sub Category - " +subCatName);
 			$('#loader').show();
 
 			$
 					.getJSON(
-							'${findItemsByCategory}',
+							'${getFinGoodStockNewMapping}',
 							{
-								
-							/* 	catId : catId,
-								option : option, */
+								item_grp1 : catId,
+								item_grp2 : subCatId, 
 								ajax : 'true'
 
 							},
@@ -305,6 +314,7 @@
 									alert("No records found !!");
 
 								}
+								//alert(data.length);
 
 								
 								$
@@ -327,11 +337,11 @@
 															
 								
 											
-												    	var qty1 = "<td align=center ><input type=text  class=form-control  id= qty1"+ item.itemId+ " value=0 name=qty1"+item.itemId+"  ></td>"; 
+												    	var qty1 = "<td align=center ><input type=text  class=form-control  id= qty1"+ item.itemId+ " value="+item.opT1+" name=qty1"+item.itemId+"  ></td>"; 
 														
-														var qty2 = "<td align=center ><input type=text  class=form-control  id= qty2"+ item.itemId+ " value=0 name=qty2"+item.itemId+"  ></td>";
+														var qty2 = "<td align=center ><input type=text  class=form-control  id= qty2"+ item.itemId+ " value="+item.opT2+" name=qty2"+item.itemId+"  ></td>";
 
-														var qty3 = "<td align=center ><input type=text  class=form-control  id= qty3"+ item.itemId+ " value=0 name=qty3"+item.itemId+"  ></td>";
+														var qty3 = "<td align=center ><input type=text  class=form-control  id= qty3"+ item.itemId+ " value="+item.opT3+" name=qty3"+item.itemId+"  ></td>";
 												    	
 								 				var trclosed = "</tr>";
 
@@ -364,7 +374,7 @@
 			
 		}
 
-</script> -->
+</script>
 
 
 <!-- 
@@ -423,6 +433,47 @@ if(option==1){
 		   
 		    }
 	</script> 
+	
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$('#item_grp1')
+									.change(
+											function() {
+												$
+														.getJSON(
+																'${getGroup2ByCatId}',
+																{
+																	catId : $(
+																			this)
+																			.val(),
+																	ajax : 'true'
+																},
+																function(data) {
+																	var html = '<option value="" selected >Select Group 2</option>';
+
+																	var len = data.length;
+																	for (var i = 0; i < len; i++) {
+																		html += '<option value="' + data[i].subCatId + '">'
+																				+ data[i].subCatName
+																				+ '</option>';
+																	}
+																	html += '</option>';
+																	$(
+																			'#item_grp2')
+																			.html(
+																					html);
+																	$(
+																			'#item_grp2')
+																			.formcontrol(
+																					'refresh');
+
+																});
+											});
+						});
+	</script>
+	
 </body>
 
 </html>
