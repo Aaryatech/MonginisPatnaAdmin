@@ -4,6 +4,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 <body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -27,14 +32,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i>GVN Header Sell <!--ie Store  -->
+						<i class="fa fa-file-o"></i>GVN Header Sell ie Store 
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<!-- BEGIN Main Content -->
@@ -43,7 +48,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search GVN Header for Sell
+								<i class="fa fa-bars"></i>GVN Approve For Sell
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -133,25 +138,25 @@
 								id="validation-form">
  -->
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> GRN List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 
 										<div class="clearfix"></div>
-										<div class="table-responsive" style="border: 0">
+										<div class="table-responsive">
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
-												id="table1">
-												<thead>
+												id="table1"  border= 1>
+												<thead style="background-color: #f3b5db; ">
 													<tr>
 														<th class="col-md-2">GvnSr No</th>
 														<th class="col-md-1">Date</th>
@@ -177,14 +182,14 @@
 																value="${grnList.grnGvnHeaderId}"></td>
 															<td class="col-md-1"><c:out
 																	value="${grnList.grngvnDate}" /></td>
-															<td class="col-md-1"><c:out
+															<td class="col-md-1" style="text-align:right;"><c:out
 																	value="${grnList.taxableAmt}" /></td>
-															<td class="col-md-1"><c:out
+															<td class="col-md-1" style="text-align:right;"><c:out
 																	value="${grnList.taxAmt}" /></td>
-															<td class="col-md-1"><c:out
+															<td class="col-md-1" style="text-align:right;"><c:out
 																	value="${grnList.totalAmt}" /></td>
 
-															<td class="col-md-1"><fmt:formatNumber type="number"
+															<td class="col-md-1" style="text-align:right;"><fmt:formatNumber type="number"
 																	minFractionDigits="2" maxFractionDigits="2"
 																	value="${grnList.apporvedAmt}" /> <%-- <c:out value="${grnList.taxableAmt}" /> --%></td>
 

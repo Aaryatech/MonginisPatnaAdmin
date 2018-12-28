@@ -72,6 +72,7 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.sun.org.apache.bcel.internal.generic.ALOAD;
 
 @Controller
 @Scope("session")
@@ -89,6 +90,16 @@ public class CreditNoteController {
 	public ModelAndView showCrediNotePage(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
 
+		AllFrIdNameList	allFrIdNameList = new AllFrIdNameList();
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+           model.addObject("franchiseeList",allFrIdNameList.getFrIdNamesList());
+		} catch (Exception e) {
+			System.out.println("Exception in getAllFrIdName" + e.getMessage());
+			e.printStackTrace();
+
+		}
 		return model;
 
 	}
@@ -118,22 +129,50 @@ public class CreditNoteController {
 	@RequestMapping(value = "/insertCreNoteProcess", method = RequestMethod.POST)
 	public ModelAndView showInsertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("HIIIIIIII");
-
 		// Constants.mainAct = 11;
 		// Constants.subAct = 72;
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
 
 		try {
+			
+			
+			AllFrIdNameList	allFrIdNameList = new AllFrIdNameList();
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+	           model.addObject("franchiseeList",allFrIdNameList.getFrIdNamesList());
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
+			}
+			   model.addObject("franchiseeList",allFrIdNameList.getFrIdNamesList());
 			String type = request.getParameter("selectType");
 
+			//--------------------------------------------------------
+			String[] selectFr = request.getParameterValues("selectFr");
+			System.err.println(" array is" + selectFr[0]);
+            //--------------------------------------------------------
+			StringBuilder sb = new StringBuilder();
+            List<Integer> frList=new ArrayList<>();
+			for (int i = 0; i < selectFr.length; i++) {
+				sb = sb.append(selectFr[i] + ",");
+				frList.add(Integer.parseInt(selectFr[i]));
+			}
+			String franchise = sb.toString();
+			franchise = franchise.substring(0, franchise.length() - 1);
+			model.addObject("frList", frList);
+		    //--------------------------------------------------------
+			System.err.println("franchise's" + franchise);
+			
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 			if (type.equals("1")) {
 
 				map.add("isGrn", 1);
+				map.add("frList", franchise);
 				isGrn = 1;
 				// get /grnGvnDetailForCreditNote for GRN
 
@@ -144,7 +183,7 @@ public class CreditNoteController {
 				isGrn = 0;
 				// get /grnGvnDetailForCreditNote for GVN
 				map.add("isGrn", 0);
-
+				map.add("frList", franchise);
 				// get /grnGvnDetailForCreditNote for GRN
 
 				getGrnGvnForCreditNoteList = restTemplate.postForObject(Constants.url + "grnGvnDetailForCreditNote",
@@ -159,7 +198,7 @@ public class CreditNoteController {
 			System.out.println("grn gvn for credit note  : " + getGrnGvnForCreditNote.toString());
 
 			model.addObject("creditNoteList", getGrnGvnForCreditNote);
-
+            model.addObject("type", type);
 		} catch (Exception e) {
 
 			System.out.println("Error in Getting grngvn for credit details " + e.getMessage());
@@ -1093,7 +1132,7 @@ public class CreditNoteController {
 			
 			document.open();
 			Paragraph company = new Paragraph(
-					"Galdhar Foods Pvt.Ltd\n",
+				Constants.FACTORYNAME+"\n",
 					f);
 			company.setAlignment(Element.ALIGN_CENTER);
 			document.add(company);
@@ -1348,7 +1387,8 @@ public class CreditNoteController {
 
 			System.err.println("printList = " + printList.toString());
 			model.addObject("crnPrint", printList);
-
+			model.addObject("factoryName", Constants.FACTORYNAME);
+			model.addObject("factoryAddress", Constants.FACTORYADDRESS);
 			System.out.println("crn Detail List******** " + crnDetailList);
 
 		} catch (Exception e) {

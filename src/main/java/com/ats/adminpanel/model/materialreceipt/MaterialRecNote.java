@@ -62,7 +62,20 @@ public class MaterialRecNote {
 		private float other2; 
 		private float other3; 
 		private float other4;
+		
+		private int grpId;//added on 5 Sept 18
 		 
+		
+		public int getGrpId() {
+			return grpId;
+		}
+
+		public void setGrpId(int grpId) {
+			this.grpId = grpId;
+		}
+
+
+
 		List<MaterialRecNoteDetails> materialRecNoteDetails;
 
 		public int getMrnId() {
@@ -474,8 +487,6 @@ public class MaterialRecNote {
 		public void setOther4(float other4) {
 			this.other4 = other4;
 		}
-		
-		 
 
 		@Override
 		public String toString() {
@@ -493,11 +504,9 @@ public class MaterialRecNote {
 					+ ", cess=" + cess + ", roundOff=" + roundOff + ", billAmount=" + billAmount + ", useridAcc="
 					+ useridAcc + ", accRemark=" + accRemark + ", isTallySync=" + isTallySync + ", delStatus="
 					+ delStatus + ", status=" + status + ", other1=" + other1 + ", other2=" + other2 + ", other3="
-					+ other3 + ", other4=" + other4 + ", materialRecNoteDetails=" + materialRecNoteDetails + "]";
+					+ other3 + ", other4=" + other4 + ", grpId=" + grpId + ", materialRecNoteDetails="
+					+ materialRecNoteDetails + "]";
 		}
-
-		 
-		
 		
 		
 	}

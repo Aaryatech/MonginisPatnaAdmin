@@ -55,8 +55,8 @@
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead>
+								 id="table_grid">
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Inward No.</th>
@@ -153,7 +153,7 @@
 													 
 															 
 																
-							<td><a href="${pageContext.request.contextPath}/materialRecieptAccDetail?mrnId=${materialRecNoteList.mrnId}" class="action_btn" >
+							<td><a href="${pageContext.request.contextPath}/materialRecieptAccDetail?mrnId=${materialRecNoteList.mrnId}&rate=1" class="action_btn" >
 						<abbr title="Details"><i class="fa fa-list"></i></abbr></a></td>
 																</tr>
 																 
@@ -233,7 +233,7 @@
 						 <input type="hidden" name="flag" id="flag" value="${flag}">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid1">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 								
 									<tr>
 										<th>Sr.No.</th>

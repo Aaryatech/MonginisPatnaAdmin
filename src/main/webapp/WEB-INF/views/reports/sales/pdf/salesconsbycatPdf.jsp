@@ -49,8 +49,8 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-<h4 align="center">Galdhar Foods Pvt Ltd</h4>
-<p align="center">A-89, Shendra M.I.D.C., Aurangabad</p>
+<h4 align="center">${FACTORYNAME}</h4>
+<p align="center">${FACTORYADDRESS}</p>
 <div align="center"> <h5>Royalty Consolidated Report (Category/Item wise) &nbsp;&nbsp;&nbsp;&nbsp; From &nbsp; ${fromDate}  &nbsp;To &nbsp; ${toDate}</h5></div>
 <table  align="center" border="1" cellspacing="0" cellpadding="1" 
 		id="table_grid" class="table table-bordered">

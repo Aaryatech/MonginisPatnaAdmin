@@ -225,7 +225,80 @@ public class TempManualBom {
 		return bomDetailList;
 
 	}
+	@RequestMapping(value = "/manBomAddItemsNew", method = RequestMethod.GET)
+	public @ResponseBody List<BillOfMaterialDetailed> manBomAddItemsNew(HttpServletRequest request,
+			HttpServletResponse response) {
+		bomDetailList = new ArrayList<BillOfMaterialDetailed>();
+		try {
+			RestTemplate rest = new RestTemplate();
 
+			RawMaterialUomList rawMaterialUomList = rest.getForObject(Constants.url + "rawMaterial/getRmUomList",
+					RawMaterialUomList.class);
+
+			List<RawMaterialUom> uomList = rawMaterialUomList.getRawMaterialUom();
+
+		
+		int materialType = Integer.parseInt(request.getParameter("mat_type"));
+		
+		if (materialType == 1) {
+			System.out.println("inside if");
+			try {
+				RawMaterialDetailsList rawMaterialDetailsList = rest
+						.getForObject(Constants.url + "rawMaterial/getAllRawMaterial", RawMaterialDetailsList.class);
+
+				System.out.println("RM Details : " + rawMaterialDetailsList.toString());
+
+				for (RawMaterialDetails rawMaterialDetails : rawMaterialDetailsList.getRawMaterialDetailsList()) {
+					BillOfMaterialDetailed bomDetail = new BillOfMaterialDetailed();
+
+					for (int i = 0; i < uomList.size(); i++) {
+						RawMaterialUom uom = uomList.get(i);
+						if (uom.getUomId() == rawMaterialDetails.getRmUomId()) {
+							bomDetail.setUom(uom.getUom());
+						}
+					}
+					bomDetail.setRmId(rawMaterialDetails.getRmId());
+					bomDetail.setRmName(rawMaterialDetails.getRmName());
+					bomDetail.setRmReqQty(0);
+					bomDetail.setRmType(materialType);
+					bomDetail.setReturnQty(0);
+					bomDetailList.add(bomDetail);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else {
+			ItemSfHeaderList itemHeaderDetailList = rest.getForObject(Constants.url + "rawMaterial/getItemSfHeaders",
+					ItemSfHeaderList.class);
+
+			System.out.println("ItemSfHeaderList Details : " + itemHeaderDetailList.toString());
+
+			for (ItemSfHeader itemSfHeader : itemHeaderDetailList.getItemSfHeaderList()) {
+				BillOfMaterialDetailed bomDetail = new BillOfMaterialDetailed();
+				for (int i = 0; i < uomList.size(); i++) {
+					RawMaterialUom uom = uomList.get(i);
+					if (uom.getUomId() == itemSfHeader.getSfUomId()) {
+						bomDetail.setUom(uom.getUom());
+					}
+				}
+				bomDetail.setRmId(itemSfHeader.getSfId());
+				bomDetail.setRmName(itemSfHeader.getSfName());
+				bomDetail.setRmReqQty(0);
+				bomDetail.setRmType(materialType);
+				bomDetail.setReturnQty(0);
+				bomDetailList.add(bomDetail);
+
+			}
+
+		}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bomDetailList;
+
+	}
 	@RequestMapping(value = "/deleteBomDetail", method = RequestMethod.GET)
 	public @ResponseBody List<BillOfMaterialDetailed> deleteBomDetail(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -237,10 +310,11 @@ public class TempManualBom {
 		return bomDetailList;
 	}
 
-	@RequestMapping(value = "/insertBomHeader", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertBomHeader", method = RequestMethod.POST)
 	public String insertBomHeader(HttpServletRequest request, HttpServletResponse response) {
 
 		BillOfMaterialHeader bomHeader = new BillOfMaterialHeader();
+		int headerId=0;
 		try {
 			
 			HttpSession session = request.getSession();
@@ -250,15 +324,22 @@ public class TempManualBom {
 
 			int userId = userResponse.getUser().getId();
 
-			System.out.println(" inside Header Insert NNNNNNNNN ");
+            if(!bomDetailList.isEmpty())
+            {
+            	for(int i=0;i<bomDetailList.size();i++)
+            	{
 
-			System.out.println(" bomDetailList " + bomDetailList.toString());
+            		float qty = Float.parseFloat(request.getParameter("qty"+i));
+            		bomDetailList.get(i).setRmReqQty(qty);
+            	}
+            }
+			System.err.println(" bomDetailList " + bomDetailList.toString());
 
-			int fromDept = Integer.parseInt(request.getParameter("fromDept"));
+			int fromDept = Integer.parseInt(request.getParameter("from_dept"));
 
-			int toDept = Integer.parseInt(request.getParameter("toDept"));
+			int toDept = Integer.parseInt(request.getParameter("to_dept"));
 
-			int headerId = Integer.parseInt(request.getParameter("headerId"));
+			 headerId = Integer.parseInt(request.getParameter("prodHeaderId"));
 
 			String prodDate = request.getParameter("prodDate");
 
@@ -318,15 +399,17 @@ public class TempManualBom {
 			bomHeader.setBillOfMaterialDetailed(bomDetailList);
 
 			RestTemplate restTemplate = new RestTemplate();
-
+			  if(!bomDetailList.isEmpty())
+	            {
 			Info info = restTemplate.postForObject(Constants.url + "saveBom", bomHeader, Info.class);
-
 			System.out.println("After Insert Bom Header " + info.getMessage());
+
+	            }
 		} catch (Exception e) {
 			System.out.println("Ex in manual bom insert " + e.getMessage());
 			e.printStackTrace();
 		}
-		return "redirect:/manualBom";
+		return "redirect:/getProdDetail/"+headerId;
 
 	}
 

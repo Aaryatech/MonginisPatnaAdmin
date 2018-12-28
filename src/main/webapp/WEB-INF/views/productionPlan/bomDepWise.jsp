@@ -72,8 +72,8 @@
 					
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped"
-								style="width: 100%" id="table_grid1">
-								<thead>
+								style="width: 100%" id="table_grid1" >
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										
@@ -263,7 +263,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

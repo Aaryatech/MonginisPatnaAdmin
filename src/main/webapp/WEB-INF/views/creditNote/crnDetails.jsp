@@ -102,7 +102,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
 
 														<th>Sr No</th>
@@ -204,7 +204,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 

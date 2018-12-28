@@ -79,9 +79,9 @@
 										<div class="table-responsive" style="border: 0">
 											<table width="100%"
 												class="table table-advance table-responsive table-position" id="table1">
-												<thead>
-													<tr>
-														<th width="30"></th>
+												<thead style="background-color:#f3b5db; ">
+													<tr >
+														<th width="30"><input type="checkbox" name="select_to_agree1"/></th>
 														<th width="50" style="width: 18px" align="left">Sr No</th>
 														<th width="100" align="left">Invoice No</th>
 														<th width="120" align="left">Franchise Name</th>
@@ -117,27 +117,27 @@
 																<c:when test="${gvnList.grnGvnStatus==2}">
 																	<td><input type="checkbox" name="select_to_agree"
 																		 id="${gvnList.grnGvnId}"
-																		value="${gvnList.grnGvnId}"></></td>
+																		value="${gvnList.grnGvnId}"></td>
 
 																</c:when>
 																<c:when test="${gvnList.grnGvnStatus==4}">
-																	<td><input type="checkbox" name="select_to_agree" disabled="disabled"
-																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></></td>
+																	<td>-<%-- <input type="checkbox" name="select_to_agree" disabled="disabled"
+																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"> --%></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==5}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></></td>
+																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></td>
 
 
 																</c:when>
 
 																<c:otherwise>
 
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${gvnList.grnGvnId}"
-																		value="${gvnList.grnGvnId}"></></td>
+																		value="${gvnList.grnGvnId}"> --%></td>
 
 
 																</c:otherwise>
@@ -714,7 +714,7 @@
 
 										<div
 											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-											<input type="submit" value="Submit" class="btn btn-primary">
+											<input type="submit" value="Approve" class="btn btn-primary">
 
 
 										</div>
@@ -730,7 +730,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 

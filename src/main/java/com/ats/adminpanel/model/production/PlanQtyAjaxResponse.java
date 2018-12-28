@@ -8,7 +8,18 @@ public class PlanQtyAjaxResponse {
 
 	List<GetProductionItemQty> getProductionItemQtyList;
 	
+	List<PostProductionPlanDetail> prodDetails;
+	
 	List<Item> itemList;
+
+	
+	public List<PostProductionPlanDetail> getProdDetails() {
+		return prodDetails;
+	}
+
+	public void setProdDetails(List<PostProductionPlanDetail> prodDetails) {
+		this.prodDetails = prodDetails;
+	}
 
 	public List<GetProductionItemQty> getGetProductionItemQtyList() {
 		return getProductionItemQtyList;

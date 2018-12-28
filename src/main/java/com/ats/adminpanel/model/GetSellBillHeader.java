@@ -1,6 +1,5 @@
 package com.ats.adminpanel.model;
 
-import java.sql.Date;
 
 
 public class GetSellBillHeader {
@@ -8,9 +7,9 @@ public class GetSellBillHeader {
 	
 	private int sellBillNo;
 	
-	private int invoiceNo;
+	private String invoiceNo;
 	
-	private Date billDate;
+	private String billDate;
  
 	private float taxableAmt;
 	
@@ -30,6 +29,18 @@ public class GetSellBillHeader {
 	
 	private String frName;
 	
+	private String billType;
+	
+	
+	
+	public String getBillType() {
+		return billType;
+	}
+
+	public void setBillType(String billType) {
+		this.billType = billType;
+	}
+
 	public int getSellBillNo() {
 		return sellBillNo;
 	}
@@ -38,19 +49,19 @@ public class GetSellBillHeader {
 		this.sellBillNo = sellBillNo;
 	}
 
-	public int getInvoiceNo() {
+	public String getInvoiceNo() {
 		return invoiceNo;
 	}
 
-	public void setInvoiceNo(int invoiceNo) {
+	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
 
-	public Date getBillDate() {
+	public String getBillDate() {
 		return billDate;
 	}
 
-	public void setBillDate(Date billDate) {
+	public void setBillDate(String billDate) {
 		this.billDate = billDate;
 	}
 

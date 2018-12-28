@@ -7,6 +7,13 @@
   
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+  	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 
 
@@ -30,14 +37,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Production Header
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -48,7 +55,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> View Production
+								<i class="fa fa-bars"></i> View Production Headers
 							</h3>
 							<div class="box-tool">
 								<a href=""></a> <a data-action="collapse" href="#"><i
@@ -102,7 +109,7 @@
 <div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2"  class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 												<th width="70" style="width: 10px">Sr.No</th>
@@ -119,7 +126,7 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 												<th width="70" style="width: 10px">Sr.No</th>

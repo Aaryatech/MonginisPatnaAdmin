@@ -2,7 +2,14 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+  	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
 
+ </style>
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
@@ -29,14 +36,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Finished Good Stock Adjustment & Overview
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -81,7 +88,7 @@
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> Finished Good
+											<i class="fa fa-table"></i> Finished Good Stock Adjustment & Overview
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -91,11 +98,11 @@
 									</div>
 
 									<div class="box-content">
-									<div style="text-align: left;color:grey; "><b>Date:</b> ${sDate}</div>
+						<div class="form-group">			<label class="col-sm-2" style="color:green; "><b>Date:</b> ${sDate}</label>
                           
-                          	<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Category</label>
-									<div class="col-sm-9 col-lg-3 controls">
+                          	
+									<label class="col-sm-2 col-lg-1 control-label">Category</label>
+									<div class="col-sm-6 col-lg-2 controls">
 										<select data-placeholder="Select Category"
 											class="form-control chosen" name="item_grp1" tabindex="-1"
 											id="item_grp1" data-rule-required="true">
@@ -115,7 +122,7 @@
 
 								<div class="form-group"> -->
 									<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
-									<div class="col-sm-9 col-lg-4 controls">
+									<div class="col-sm-6 col-lg-2 controls">
 										<select data-placeholder="Select Sub Category"
 											class="form-control chosen-select" name="item_grp2" id="item_grp2" onchange="getItemsForSubCat()"
 											tabindex="-1"  data-rule-required="true">
@@ -129,14 +136,14 @@
 										<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-												<th width="30" align="left">Sr No</th>
-														<th width="120" align="left">Item Name</th>
-														<th width="100">T1</th>
-														<th width="100">T2</th>
-														<th width="100">T3</th>
+												<th  class="col-md-1"  align="left">Sr No</th>
+														<th class="col-md-2" align="left">Item Name</th>
+														<th  class="col-md-2" >T1</th>
+														<th  class="col-md-2" >T2</th>
+														<th  class="col-md-2" >T3</th>
 												</tr>
 												</thead>
 												</table>
@@ -144,14 +151,14 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance"  border="1">
 											<thead>
 												<tr class="bgpink">
-											<th width="30" align="left">Sr No</th>
-														<th width="120" align="left">Item Name</th>
-														<th width="100">T1</th>
-														<th width="100">T2</th>
-														<th width="100">T3</th>
+											<th  class="col-md-1"  align="left">Sr No</th>
+														<th  class="col-md-2"  align="left">Item Name</th>
+														<th  class="col-md-2" >T1</th>
+														<th  class="col-md-2" >T2</th>
+														<th  class="col-md-2" >T3</th>
 												</tr>
 												</thead>
 									<!-- 	<div class="table-responsive" style="border: 0">
@@ -209,12 +216,12 @@
 					<!-- </form> -->
 				</div>
 
-			</div>
+			</div></div>
 
 
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -292,7 +299,10 @@
 				var catId= $("#item_grp1").val();
 				var subCatId= $("#item_grp2").val();
 				var subCatName=$('#item_grp2 option:selected').text();
-
+             if(subCatId==0)
+            	 {
+            	 subCatId=catId;
+            	 }
 			alert("Items For Sub Category - " +subCatName);
 			$('#loader').show();
 
@@ -321,12 +331,22 @@
 										.each(
 												data,
 												function(key, item) {
-
+													
 													
 												 	var index = key + 1;
 
-													var tr = "<tr>";
+													var tr = $('<tr ></tr>');
 
+													tr.append($('<td ></td>').html(index));
+													tr.append($('<td ></td>').html(item.itemName));
+												 	tr.append($('<td align=center ><input type=number  class=form-control style=height:26px;  id= qty1'+ item.itemId+' value='+item.opT1+' name=qty1'+item.itemId+'  required></td>'));
+												 	tr.append($('<td align=center ><input type=number  class=form-control style=height:26px;  id= qty2'+ item.itemId+ ' value='+item.opT2+' name=qty2'+item.itemId+'  required></td>'));
+												 	tr.append($('<td align=center ><input type=number  class=form-control style=height:26px;  id= qty3'+ item.itemId+' value='+item.opT3+' name=qty3'+item.itemId+'  required></td>'));
+
+													$('#table1 tbody').append(tr);
+													$("#myInput").focus();
+													
+											/* 		
 													var index = "<td>&nbsp;&nbsp;&nbsp;"
 															+ index
 															+ "</td>";
@@ -337,11 +357,11 @@
 															
 								
 											
-												    	var qty1 = "<td align=center ><input type=text  class=form-control  id= qty1"+ item.itemId+ " value="+item.opT1+" name=qty1"+item.itemId+"  ></td>"; 
+												    	var qty1 = "<td align=center ><input type=number  class=form-control  id= qty1"+ item.itemId+ " value="+item.opT1+" name=qty1"+item.itemId+"  required></td>"; 
 														
-														var qty2 = "<td align=center ><input type=text  class=form-control  id= qty2"+ item.itemId+ " value="+item.opT2+" name=qty2"+item.itemId+"  ></td>";
+														var qty2 = "<td align=center ><input type=number  class=form-control  id= qty2"+ item.itemId+ " value="+item.opT2+" name=qty2"+item.itemId+"  required></td>";
 
-														var qty3 = "<td align=center ><input type=text  class=form-control  id= qty3"+ item.itemId+ " value="+item.opT3+" name=qty3"+item.itemId+"  ></td>";
+														var qty3 = "<td align=center ><input type=number  class=form-control  id= qty3"+ item.itemId+ " value="+item.opT3+" name=qty3"+item.itemId+"  required></td>";
 												    	
 								 				var trclosed = "</tr>";
 
@@ -365,7 +385,7 @@
 													
 													$('#table1 tbody')
 															.append(
-																	trclosed); 
+																	trclosed);  */
 
 												})
 
@@ -451,7 +471,7 @@ if(option==1){
 																	ajax : 'true'
 																},
 																function(data) {
-																	var html = '<option value="" selected >Select Group 2</option>';
+																	var html = '<option value="" selected >Select Group 2</option><option value="0"  >All</option>';
 
 																	var len = data.length;
 																	for (var i = 0; i < len; i++) {

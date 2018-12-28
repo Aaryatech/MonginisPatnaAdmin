@@ -3236,7 +3236,7 @@ public class LogisticsController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		
-		File f = new File("/opt/tomcat-latest/webapps/webapi/uploads/Inward.pdf");
+		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Inward.pdf");
 		//File f = new File("C:/pdf/ordermemo221.pdf");
 
 		try {
@@ -3253,7 +3253,7 @@ public class LogisticsController {
 		String appPath = context.getRealPath("");
 		 //String filePath = "C:/pdf/ordermemo221.pdf";
 
-		String filePath = "/opt/tomcat-latest/webapps/webapi/uploads/Inward.pdf";
+		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Inward.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

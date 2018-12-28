@@ -114,7 +114,12 @@
 										<option value="0" disabled="disabled" selected="selected">Select RM Group</option>
 											 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList"
 						            	varStatus="count">
-							   <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+						            	<c:choose>
+						            	<c:when test="${rmItemGroupList.grpId!=2 && rmItemGroupList.grpId!=3}">
+						            								   <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+						            	
+						            	</c:when>
+						            	</c:choose>
  													 
 												</c:forEach>
 						
@@ -205,7 +210,7 @@
 	<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance">
 											<thead>
 														<tr class="bgpink">
 											

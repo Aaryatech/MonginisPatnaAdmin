@@ -269,10 +269,10 @@
 								<div id="table-scroll" class="table-scroll">
 
 									<div id="faux-table" class="faux-table" aria="hidden">
-										<table id="table2" class="main-table">
+										<table id="table2" class="table ">
 											<thead>
 												<tr class="bgpink">
-													<th width="140" style="width: 30px" align="left">Sr No</th>
+												<!-- 	<th width="140" style="width: 30px" align="left">Sr No</th>
 													<th width="138" align="left">SF Name</th>
 													<th width="120" align="left">SF Type</th>
 													<th width="60" align="left">SF Weight</th>
@@ -280,7 +280,7 @@
 													<th width="80" align="left">Min Level Qty</th>
 													<th width="100" align="left">Reorder Level Qty</th>
 
-													<th width="120" align="left">Action</th>
+													<th width="120" align="left">Action</th> -->
 												</tr>
 											</thead>
 										</table>

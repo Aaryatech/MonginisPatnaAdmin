@@ -6,6 +6,13 @@
  
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+ 	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 <script>
   $( function() {
@@ -40,14 +47,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Production
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -58,7 +65,7 @@
 						<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i> Search Production Order
+					<i class="fa fa-bars"></i> Add Order to Production Page
 				</h3>
 
 			</div>
@@ -83,11 +90,10 @@
 			<div class="box-content">
 						<div class="row" > -->
 					
-					<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Select
-										Category </label>
-									<div class="col-md-6 controls">
+					<div class="form-group" >
+					
+			<label class=" col-md-1 control-label menu_label">Category </label>
+									<div class="col-md-3 controls">
 
 										<select class="form-control chosen" data-placeholder="Choose Category"
 											 name="selectCategory" id="selectCategory" tabindex="-1" data-rule-required="true">
@@ -110,12 +116,12 @@
 									</div>
 
 
-								</div>
+								<!-- </div>
 							
 							<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Menu</label>
-									<div class="col-md-6 controls">
+					<label class=" col-md-3 control-label franchisee_label"></label> -->
+				<label class="col-md-1 control-label menu_label">Menu</label>
+									<div class="col-md-3 controls">
 										<select data-placeholder="Select Menu" multiple="multiple"
 											class="form-control chosen-select chosen" name="selectMenu"
 											tabindex="-1" id="selectMenu" data-rule-required="true">
@@ -124,13 +130,12 @@
 									</div>
 
 
-								</div>
-<br/>
-								<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Production
+								<!-- </div><br></br>
+
+								<div class="form-group"><div class="col-md-1"></div> -->
+				<label class=" col-md-1 control-label menu_label">Production
 										Date</label>
-									<div class="col-md-6 controls">
+									<div class="col-md-2 controls">
 										<input value="${todayDate}" class="form-control date-picker" id="datepicker" size="16"
 											 type="text" name="production_date" required />
 									</div>
@@ -139,16 +144,16 @@
 
 
 
-								</div>
-	</div>
+							
+	<!-- </div>
 								<div class="row" align="center">
 									<div
-										class="col-md-12">
+										class="col-md-12"> -->
 										<input type="button" class="btn btn-info" value="Search" id="callsearch"
 											onclick="searchOrder()">
 
-									</div>
-								</div>
+									<!-- </div> -->
+								</div>	</div>
 
 </div>
 								<div align="center" id="loader" style="display: none">
@@ -164,17 +169,17 @@
 </div>
 								 
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i>  Production List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
 									</div>
-									
+									 -->
 									
 								 <form action="submitProduction" method ="post">
 						
@@ -183,21 +188,21 @@
 <div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-	                                                    <th width="10" style="width: 10px">Sr No</th>
-														<th width="90">Item Id</th>
-														<th width="150">Item Name</th> 
+	                                                 	<th width="60" style="width: 50px">Sr No</th>
+														<th width="100">Item Id</th>
+														<th width="170">Item Name</th> 
 														<th width="100">Current Opening Qty</th>
-														<th width="100">Order Quantity</th></tr>
+														<th width="100">Order Quantity</th>
 												</thead>
 												</table>
 									
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 											<th width="60" style="width: 50px">Sr No</th>
@@ -297,7 +302,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -444,7 +449,7 @@ $(document).ready(function() {
 								//$('#table_grid td').remove();
 								
 								document.getElementById("callsearch").disabled=false;
-								$('#loader').hide();
+								
 								  if (data == "") {
 									//alert("No records found !!");
 									document.getElementById("callSubmit").disabled=true;
@@ -455,6 +460,7 @@ $(document).ready(function() {
 									
 								
 								$.each(data,function(key, order) {
+									$('#loader').hide();
 									if(order.qty>0){
 										document.getElementById("callSubmit").disabled=false;
 									}
@@ -499,9 +505,9 @@ $(document).ready(function() {
 							  	tr.append($('<td></td>').html(key+1));			  	
 							  	tr.append($('<td></td>').html(order.itemId));
 								tr.append($('<td></td>').html(order.itemName)); 
-								tr.append($('<td></td>').html(order.curOpeQty));
+								tr.append($('<td style="text-align:right;"></td>').html(order.curOpeQty));
 								
-								tr.append($('<td></td>').html(order.qty));
+								tr.append($('<td style="text-align:right;"></td>').html(order.qty));
 								 
 								 
 								 

@@ -88,9 +88,9 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
-														<th></th>
+														<th><input type="checkbox" name="select_to_agree1"/></th>
 														<th>Sr No</th>
 														<th align="center">Invoice No</th>
 														<th>Franchise Name</th>
@@ -120,29 +120,29 @@
 													<tr bgcolor="${color}">
  															<c:choose>
 																<c:when test="${grnList.grnGvnStatus==2}">
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${grnList.grnGvnId}"
-																		value="${grnList.grnGvnId}"></></td>
+																		value="${grnList.grnGvnId}"> --%></td>
 
 																</c:when>
 																<c:when test="${grnList.grnGvnStatus==3}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></></td>
+																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==1}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></></td>
+																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></td>
 
 
 																</c:when>
 
 																<c:otherwise>
 
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${grnList.grnGvnId}"
-																		value="${grnList.grnGvnId}"></></td>
+																		value="${grnList.grnGvnId}"> --%></td>
 
 
 																</c:otherwise>
@@ -560,8 +560,8 @@
 
 
 										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="button" value="Submit" onclick="callSubmit()"
+											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+											<input type="button" value="Approve" onclick="callSubmit()"
 												class="btn btn-primary">
 
 										</div>
@@ -577,7 +577,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 

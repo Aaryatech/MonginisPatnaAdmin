@@ -36,14 +36,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Bill of Material Request Detailed
 					</h1>
 				</div>
 			</div>
-			<!-- END Page Title -->
+ -->			<!-- END Page Title -->
 
 			<div class="row">
 				<div class="col-md-12">
@@ -67,23 +67,23 @@
 								action="${pageContext.request.contextPath}/approvedBom"
 								method="post">
 								<div class="box-content">
-									<div class="col-md-2">Bill Of Material Request Date</div>
+									<div class="col-md-1">BOM Req Date</div>
 
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" id="mix_date" name="mix_date"
 											value="<fmt:formatDate pattern = "dd-MM-yyyy" value = "${billOfMaterialHeader.reqDate}" />"
 											class="form-control" readonly>
 									</div>
 
-
+<!-- 
 
 								</div>
-								<br>
+								
 
-								<div class="box-content">
+								<div class="box-content"> -->
 
-									<div class="col-md-2">Status</div>
-									<div class="col-md-3">
+									<div class="col-md-1">Status</div>
+									<div class="col-md-2">
 									<c:choose>
 										<c:when test="${billOfMaterialHeader.status==0}">
 											<c:set var="sts" value="Pending"></c:set>
@@ -108,10 +108,10 @@
 											value="${billOfMaterialHeader.status}" class="form-control"
 											readonly>
 									</div>
-								</div>
-								<br>
+							<!-- 	</div>
+								
 
-								<div class="box-content">
+								<div class="box-content"> -->
 								<c:set var="prod" value="PROD"></c:set>
 								<c:set var="mix" value="MIX"></c:set>
 									<c:choose>
@@ -125,21 +125,21 @@
 									 	</c:when>
 									</c:choose>
 
-									<div class="col-md-2">From Department Name</div>
-									<div class="col-md-3">
+									<div class="col-md-1">From Dept</div>
+									<div class="col-md-2">
 										<input class="form-control" id="time_slot" size="16"
 											type="text" name="time_slot"
 											value="${depname}" readonly />
 									</div>
 
-
+<!-- 
 								</div>
-								<br>
-								<div class="box-content">
+								
+								<div class="box-content"> -->
 
 
-									<div class="col-md-2">To Department Name</div>
-									<div class="col-md-3">
+									<div class="col-md-1">To Dept</div>
+									<div class="col-md-2">
 										<input class="form-control" id="time_slot" size="16"
 											type="text" name="time_slot"
 											value="${billOfMaterialHeader.toDeptName}" readonly />
@@ -156,8 +156,8 @@
 									<div class="row">
 										<div class="col-md-12 table-responsive">
 											<table class="table table-bordered table-advance"
-												style="width: 100%" id="table_grid">
-												<thead>
+												 id="table_grid">
+												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th>Sr.No.</th>
 														<th>Name</th>
@@ -189,10 +189,10 @@
 
 															<c:choose>
 																<c:when test="${billOfMaterialHeader.status==0}">
-																	<td><input type="text"
+																	<td padding=0><input type="text"
 																		name='issue_qty<c:out
 																value="${bomwithdetaild.reqDetailId}" />'
-																		class="form-control"
+																		class="form-control" style="height:25px; font-size:12px;"
 																		value=<c:out
 																value="${bomwithdetaild.rmReqQty}"/> pattern="[+-]?([0-9]*[.])?[0-9]+" required></td>
 																</c:when>

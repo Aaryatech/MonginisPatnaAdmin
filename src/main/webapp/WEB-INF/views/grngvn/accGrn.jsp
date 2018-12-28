@@ -109,7 +109,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
 													<c:choose>
 														<c:when test="${sts==1}">
@@ -637,7 +637,7 @@
 
 										<div
 											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-											<input type="button" value="Submit" onclick="callSubmit()"
+											<input type="button" value="Approve" onclick="callSubmit()"
 												class="btn btn-primary">
 
 										</div>

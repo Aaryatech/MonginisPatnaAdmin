@@ -408,14 +408,21 @@ public class FranchiseeController {
 			System.out.println("items" + items);
 
 			StringBuilder sb1 = new StringBuilder();
-
+            if(frId[0].equals("0"))
+            {
+            	for(FranchiseeList frList:franchiseeAndMenuList.getAllFranchisee())
+            	{
+            		sb1 = sb1.append(frList.getFrId() + ",");
+            	}
+            }else {
 			for (int i = 0; i < frId.length; i++) {
 				sb1 = sb1.append(frId[i] + ",");
 
 			}
+            }
 			String frIdList = sb1.toString();
 			frIdList = frIdList.substring(0, frIdList.length() - 1);
-			
+			System.err.println(frIdList.toString());
 			RestTemplate rest=new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("itemIdList", items);
@@ -428,7 +435,6 @@ public class FranchiseeController {
 			{
 				System.err.println("stock");
 			}
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

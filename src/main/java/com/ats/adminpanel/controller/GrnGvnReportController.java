@@ -371,7 +371,8 @@ if(isGrn.equalsIgnoreCase("2")) {
 		model.addObject("fromDate", fDate);
 
 		model.addObject("toDate", tDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("report", grnGvnByDateList);
 
 		return model;
@@ -681,7 +682,8 @@ if(isGrn.equalsIgnoreCase("2")) {
 			model.addObject("fromDate", fDate);
 
 			model.addObject("toDate", tDate);
-
+			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 			model.addObject("report", grnGvnGrpByFrList);
 
 			return model;
@@ -996,7 +998,8 @@ if(isGrn.equalsIgnoreCase("2")) {
 			model.addObject("fromDate", fDate);
 
 			model.addObject("toDate", tDate);
-
+			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 			model.addObject("report", grnGvnGrpByDateList);
 
 			return model;
@@ -1298,7 +1301,8 @@ List<ExportToExcel> exportToExcelList=new ArrayList<ExportToExcel>();
 					model.addObject("fromDate", fDate);
 
 					model.addObject("toDate", tDate);
-
+					model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+					model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 					model.addObject("report", grnGvnGrpByDateList);
 
 					return model;

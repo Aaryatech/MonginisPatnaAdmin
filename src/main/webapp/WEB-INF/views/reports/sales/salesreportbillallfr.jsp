@@ -169,12 +169,12 @@
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
 				method="post">
-				<div class=" box-content">
+				<div class="box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Invoice No</th>

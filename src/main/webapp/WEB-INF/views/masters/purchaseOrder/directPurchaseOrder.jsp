@@ -88,7 +88,16 @@
 										<option value="" disabled="disabled" selected="selected">Select Supplier</option>
 											 <c:forEach items="${supplierList}" var="supplierList"
 							varStatus="count">
-							  <option value="${supplierList.suppId}"><c:out value="${supplierList.suppName}"/></option>
+							<c:choose>
+							<c:when test="${suppId==supplierList.suppId}">
+						  <option value="${supplierList.suppId}" selected><c:out value="${supplierList.suppName}"/></option>
+							
+							</c:when>
+							<c:otherwise>
+						  <option value="${supplierList.suppId}"><c:out value="${supplierList.suppName}"/></option>
+															
+							</c:otherwise>
+							</c:choose>
  													 
 												</c:forEach>
 						
@@ -221,7 +230,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Product</th>
@@ -237,6 +246,29 @@
 								</thead>
 								<tbody>
 
+<c:forEach items="${purchaseOrderDetailList}" var="po" varStatus="cnt">
+											<tr>
+												<td>
+											<c:out value="${cnt.index+1}"/>  <input type="hidden" id="poRate${cnt.index+1}" value='${po.poRate}' readonly>
+												</td>
+												<td align="left"><c:out
+														value="${po.rmName}" /></td>
+											
+												<td align="left"><input type="text" id="poQty${cnt.index+1}" onkeyup="changeQty(${cnt.index+1});" name="poQty${cnt.index+1}"  value="${po.poQty}" class="form-control" disabled></td>
+											<td align="left"><c:out
+														value="${po.poRate}" /></td>		
+								        		
+										        <td align="left"><input type="text" id="discPer${cnt.index+1}" name="discPer${cnt.index+1}"  value="${po.discPer}" class="form-control" ></td>		
+												<td align="left"><input type="text" value="${po.poTaxable}" id="poValue${cnt.index+1}" class="form-control" disabled="disabled"></td>
+												
+												  <td align="left"><c:out
+														value="${po.schDays}" /></td>			
+												  <td align="left"><c:out
+														value="${po.specification}" /></td>							
+													
+													  <td align="left"><span class="glyphicon glyphicon-edit" id="edit${cnt.index+1}" onclick="edit(${cnt.index+1});"></span><span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit(${cnt.index+1});" id="ok${cnt.index+1}"></span><span class="glyphicon glyphicon-remove" id="delete${cnt.index+1}"></span></td>	
+													  </tr></c:forEach>  
+					
 								</tbody>
 							</table>
 						</div>

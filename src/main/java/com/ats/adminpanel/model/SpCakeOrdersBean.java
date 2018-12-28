@@ -3,6 +3,7 @@ package com.ats.adminpanel.model;
 
 import java.util.Date;
 
+
 public class SpCakeOrdersBean {
 	
    /*  private int frId;// frId added
@@ -17,7 +18,10 @@ public class SpCakeOrdersBean {
     private String frName;
     private String itemId;
 	private float spSelectedWeight;
-
+    private String spBookedForName;
+	private int isAllocated;
+	
+	
 /*
     public int getFrId() {
     	return frId;
@@ -28,7 +32,23 @@ public class SpCakeOrdersBean {
     }
     */
 	
-    public String getSpCode() {
+    public String getSpBookedForName() {
+		return spBookedForName;
+	}
+
+	public void setSpBookedForName(String spBookedForName) {
+		this.spBookedForName = spBookedForName;
+	}
+
+	public int getIsAllocated() {
+		return isAllocated;
+	}
+
+	public void setIsAllocated(int isAllocated) {
+		this.isAllocated = isAllocated;
+	}
+
+	public String getSpCode() {
         return spCode;
     }
 

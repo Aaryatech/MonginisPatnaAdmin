@@ -3,7 +3,13 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
+	<style>
+	table{
+  width:100%;
+  table-layout: fixed;
+  border:1px solid #ddd;
+}
+	</style> 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 	<body>
@@ -90,18 +96,13 @@
 							</c:choose>
 						</c:forEach>
 					</c:forEach>
-			
-
-
 			<!-- BEGIN Main Content -->
 			<div class="row">
 				<div class="col-md-12">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="box">
-
-
-								<div class="row">
+                           	<div class="row">
 									<div class="col-md-12">
 
 										<div class="box">
@@ -126,25 +127,21 @@
 
 							<div class="clearfix"></div>
 							
-							
-							
-							
-							
 								<div id="table-scroll" class="table-scroll">
 							 
-									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<div id="faux-table" class="faux-table" aria="hidden" >
+									<table id="table2"class="table table-advance" border="1" >
 											<thead>
 												<tr class="bgpink">
-															<th  style="width: 18px" align="left">Select</th>
+															<th  style="width: 38px" align="left">Select</th>
 												
-														<th style="width: 18px" align="left">No</th>
-																<th width="364" align="left">Image</th>
-																<th width="230" align="left">Code</th>
-																<th width="230" align="left">Name</th>
-																<th width="106" align="left">Type</th>
-																<th width="206" align="left">Min Weight</th>
-																<th width="206" align="left">Max Weight</th>
+														<th style="width: 38px" align="left">No</th>
+																<th width="104" align="left">Image</th>
+																<th width="126" align="left">Code</th>
+																<th width="120" align="left">Name</th>
+																<th width="96" align="left">Type</th>
+																<th width="96" align="left">Min Weight</th>
+																<th width="96" align="left">Max Weight</th>
 																<th width="80" align="left">Rate</th>
 																
 																<th width="80" align="left">MRP</th>
@@ -154,20 +151,20 @@
 												</table>
 									
 									</div>
-									<div class="table-wrap">
+									<div class="table-wrap"  >
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-											<th  style="width: 18px" align="left">Select</th>
+											<th  style="width:38px" align="left">Select</th>
 												
-													<th  style="width: 18px" align="left">No</th>
+													<th  style="width: 38px" align="left">No</th>
 																<th width="104" align="left">Image</th>
-																<th width="150" align="left">Code</th>
-																<th width="150" align="left">Name</th>
-																<th width="106" align="left">Type</th>
-																<th width="106" align="left">Weight</th>
-																<th width="106" align="left">Weight</th>
+																<th width="126" align="left">Code</th>
+																<th width="120" align="left">Name</th>
+																<th width="96" align="left">Type</th>
+																<th width="96" align="left">Weight</th>
+																<th width="96" align="left">Weight</th>
 																<th width="80" align="left">Rate</th>
 																<th width="80" align="left">MRP</th>
 																<th width="90" align="left">Action</th>

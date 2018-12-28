@@ -86,13 +86,13 @@
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
 				method="post">
-				<div class=" box-content">
+				<div class="box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 						 <input type="hidden" name="flag" id="flag" value="${flag}">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead>
+								 id="table_grid">
+								<thead style="background-color: #f3b5db;">
 								
 									<tr>
 										<th>Sr.No.</th>

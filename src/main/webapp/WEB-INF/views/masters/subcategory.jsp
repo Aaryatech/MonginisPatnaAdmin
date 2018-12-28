@@ -117,13 +117,13 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" >
 											<thead>
 												<tr class="bgpink">
-											<th width="17" style="width: 18px">#</th>
-									<th width="348" align="left">Name</th>
-									<th width="322" align="left">Category Name</th>
-									<th width="80" align="left">Action</th>
+											<th class="col-md-1">#</th>
+									<th class="col-md-4">Name</th>
+									<th class="col-md-3">Category Name</th>
+									<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
 												</table>
@@ -131,13 +131,13 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" >
 											<thead>
 												<tr class="bgpink">
-											<th width="17" style="width: 18px">#</th>
-								            <th width="348" align="left">Name</th>
-									        <th width="322" align="left">Category Name</th>
-									        <th width="80" align="left">Action</th>
+											<th class="col-md-1">#</th>
+								            <th class="col-md-4" align="left">Name</th>
+									        <th class="col-md-3" align="left">Category Name</th>
+									        <th class="col-md-1" align="left">Action</th>
 												</tr>
 												</thead>
 												<tbody>

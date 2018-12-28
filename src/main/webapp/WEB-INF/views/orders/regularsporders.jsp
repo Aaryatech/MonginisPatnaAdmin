@@ -1,12 +1,22 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	
+<html>
+<head>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
+ </head>
 <body onload="searchOrder(${isDelete})">
 
 
@@ -30,14 +40,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i> Regular Special Cake Orders
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -87,7 +97,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search Order
+								<i class="fa fa-bars"></i>Search Regular Special Cake Orders
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -111,7 +121,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Franchisee
 									</label>
-									<div class="col-sm-6 col-lg-9 controls">
+									<div class="col-sm-6 col-lg-4 controls">
 
 										<select data-placeholder="Select Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
@@ -132,11 +142,11 @@
 										</select>
 									</div>
 
-								</div>
-								<div class="form-group">
+								<!-- </div>
+								<div class="form-group" -->
 									<label class="col-sm-1 col-lg-1 control-label"> <b>OR</b></label>
 									<label class="col-sm-1 col-lg-1 control-label">Route</label>
-									<div class="col-sm-2 col-lg-7 controls">
+									<div class="col-sm-2 col-lg-4 controls">
 										<select data-placeholder="Select Route"
 											class="form-control chosen" name="selectRoute"
 											id="selectRoute" onchange="disableFr()">
@@ -178,15 +188,15 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Production
 										Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
+									<div class="col-sm-5 col-lg-4 controls">
 										<input value="${todayDate}" class="form-control date-picker"
 											id="dp2" size="16" type="text" name="prod_date"
 											id="prod_date" required />
 									</div>
-								</div>
+								<!-- </div>
 
-								<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
+								<div class="form-group"> -->
+									<div class="col-sm-9 col-sm-offset-2 col-lg-2 col-lg-offset-1">
 										<button type="submit" class="btn btn-primary">
 											<i class="fa fa-check"></i> Search
 										</button>
@@ -195,23 +205,23 @@
 								</div>
 
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Order List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 										<c:set var="dis" value="none" />
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="border: 0">
-											<table width="100%" class="table table-advance" id="table1">
-												<thead>
+											<table width="100%" class="table table-advance" id="table1" border=1>
+												<thead style="background-color: #f3b5db; ">
 													<tr>
 														<th width="20" align="left">No</th>
 														<th width="138" align="left">Franchisee</th>
@@ -356,7 +366,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

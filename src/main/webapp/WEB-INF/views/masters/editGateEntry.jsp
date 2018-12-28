@@ -200,6 +200,27 @@
 											placeholder="Remark" class="form-control"
 											data-rule-required="true">
 									</div>
+									<label class="col-sm-1 col-lg-2 control-label">Group</label>
+									<div class="col-md-3">
+									
+										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
+										<option value="-1">Select Group</option>
+											 <c:forEach items="${groupList}" var="groupList"
+							varStatus="count">
+							
+									<c:choose>
+													<c:when test="${groupList.grpId==grpId}">
+														<option  value="${groupList.grpId}" selected><c:out value="${groupList.grpName}"/></option>
+												</c:when>
+													<c:otherwise>
+  														 <option value="${groupList.grpId}" disabled ><c:out value="${groupList.grpName}"/></option>
+ 													 </c:otherwise>
+ 													 </c:choose>
+												</c:forEach>
+						
+
+										</select>
+									</div>
 								</div>
 								
 								<div class="form-group">
@@ -270,6 +291,9 @@
 											id="rm_id">
 											<option selected value="">Select Raw Material Name</option>
 											
+											<c:choose>
+											<c:when test="${grpId==1||grpId==6}">
+										
 											<c:forEach items="${rmlist}" var="rmlist">
                                               
                                               
@@ -277,6 +301,20 @@
 													
 
 											</c:forEach>
+												</c:when>
+												<c:otherwise>
+										
+											<c:forEach items="${itemList}" var="itemList">
+                                              
+                                              
+														<option value="${itemList.id}"><c:out value="${itemList.itemName}"></c:out> </option>
+													
+
+											</c:forEach>
+												</c:otherwise>
+											</c:choose>
+											
+											
 											</select>
 									</div>
 									
@@ -313,7 +351,7 @@
 								<div class="col-md-12 table-responsive">
 									<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Name</th>
@@ -360,7 +398,7 @@
 									
 							
 							<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-5 col-lg-offset-5">
 										<input type="submit" class="btn btn-primary" value="Submit">
 <!-- 										
  -->									</div>
@@ -452,7 +490,7 @@
 			  
 				var rm_id = $("#rm_id").val();
 				var rm_qty = $("#rm_qty").val();
-				
+				var rm_group = $("#rm_group").val();
 				if(validation()==true){		
 				$('#loader').show();
 
@@ -464,6 +502,7 @@
 									 
 									rm_id : rm_id,
 									rm_qty : rm_qty,
+									rm_group:rm_group,
 									ajax : 'true'
 
 								},

@@ -31,14 +31,13 @@
 }
 	
 </style>
+  	<style>
+ table{
+  width:100%;
  
- 
- 
-
- 
-	
-	
-	
+  border:1px solid #ddd;
+}
+ </style>
 </head>
 <body>
 
@@ -65,31 +64,31 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-		<div class="page-title">
+	<!-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Push Orders
 				</h1>
 			</div>
-		</div>
+		</div> -->
 		<!-- END Page Title -->
-
+	<form id="submitPushOrderForm"
+				action="${pageContext.request.contextPath}/submitPushOrder"
+				method="post">
 
 		<!-- BEGIN Main Content -->
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Orders For Franchise
+					<i class="fa fa-bars"></i>Push Orders For Franchise
 				</h3>
 
 			</div>
 			<div class="box-content">
-				<div class="row">
-					<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-						<label class=" col-md-3 control-label menu_label">Select
-							Menu</label>
-						<div class=" col-md-6 controls menu_select">
+				
+					<div class="form-group">
+						<label class=" col-md-1 control-label menu_label">Menu</label>
+						<div class=" col-md-3 controls menu_select">
 
 							<select data-placeholder="Choose Menu"
 								class="form-control chosen" tabindex="6" id="selectMenu"
@@ -109,13 +108,11 @@
 
 							</select>
 						</div>
-					</div>
+					<!-- </div>
 
-					<div class="form-group col-md-8">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-						<label class=" col-md-3 control-label franchisee_label">Select
-							Franchise </label>
-						<div class=" col-md-6 controls franchisee_select">
+					<div class="form-group col-md-8"> -->
+						<label class=" col-md-1 control-label franchisee_label">Franchise </label>
+						<div class=" col-md-3 controls franchisee_select">
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen " multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr">
@@ -133,34 +130,39 @@
 
 							</select>
 						</div>
-					</div>
+					<!-- </div>
 					
 					<div class="form-group col-md-8">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-						<label class=" col-md-3 control-label franchisee_label">Date</label>
-						<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control" id="date" size="16"
-											type="text" name="date" value="${date}" readonly />
+					<label class=" col-md-3 control-label franchisee_label"></label> -->
+						<label class=" col-md-1 control-label franchisee_label">Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control" id="date" size="19"
+											type="date" name="date" value="${date}"  />
 									</div>
-					</div>
+				
 
 
 
 
-				</div>
+				
 
-				<div class="row">
-					<div class="col-md-12" style="text-align: center">
+			<!-- 	<div class="row">
+					<div class="col-md-12" style="text-align: center"> -->
 						<input type="button" id="searchFr" class="btn btn-info"
 							value="Search" onclick="searchItem()" />
 						<!-- onclick="generateOrders()" -->
 						<!-- </button> -->
 
 
-					</div>
+					<!-- </div> -->
 				</div>
 
-				<div align="center" id="loader" style="display: none">
+			
+
+			</div>
+		</div>	
+
+	<div align="center" id="loader" style="display: none">
 
 					<span>
 						<h4>
@@ -170,27 +172,20 @@
 						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 					<span class="l-6"></span>
 				</div>
-
-			</div>
-		</div>
-
-
 		<div class="box">
-			<div class="box-title">
+		<!-- 	<div class="box-title">
 				<h3>
-					<i class="fa fa-list-alt"></i>Order
+					<i class="fa fa-list-alt"></i>Push Order
 				</h3>
 
-			</div>
+			</div> -->
 
-			<form id="submitPushOrderForm"
-				action="${pageContext.request.contextPath}/submitPushOrder"
-				method="post">
+		
 				<div class=" box-content">
 					<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 										
@@ -201,7 +196,7 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table_grid" class="table table-advance">
+										<table id="table_grid" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 									
@@ -236,13 +231,13 @@
 						</div>
 					</div>
 				</div>
-			</form>
-		</div>
+			
+		</div></form>
 	</div>
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2017 © Monginis.</p>
+	<p>2018 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -301,6 +296,8 @@
 
 														var tr = $('<tr></tr>');
 														 
+													  	tr.append($('<td></td>').html(""+index));
+
 													  	tr.append($('<td></td>').html(itemname.itemName));
  
 
@@ -332,12 +329,12 @@
 													    	  
 													    	  if(qty > 0){
 												    		//var orderQty = "<td align=center><input type=number min=0 max=500 class=form-control  readonly='true'   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
-												    		tr.append($('<td></td>').html("<input type=number min=0 max=500 class=form-control  readonly='true'   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+">"));
+												    		tr.append($('<td></td>').html("<input type=number min=0 max=500 class=form-control  readonly='true' style='  height: 24px;'  id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+">"));
 													    	  }
 													    	  else
 													    		{//var orderQty = "<td align=center><input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
 	
-													    		tr.append($('<td></td>').html("<input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+" tabindex="+key+">"));
+													    		tr.append($('<td></td>').html("<input onkeypress='return IsNumeric(event);' ondrop='return false;'style='  height: 24px;'  onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+" tabindex="+key+">"));
 													    		}
 												      });
 												    
@@ -393,8 +390,8 @@
    
         var tr;
         tr = document.getElementById('table_grid').tHead.children[0];
-
-        tr.insertCell(0).outerHTML = "<th aligh='right'>ItemName</th>"
+        tr.insertCell(0).outerHTML = "<th aligh='right'>Sr.</th>"
+        tr.insertCell(1).outerHTML = "<th aligh='right'>ItemName</th>"
         $.each($("#selectFr option:selected"), function(){            
         	frName.push($(this).text());
         	i++;
@@ -402,7 +399,7 @@
         i=i-1;
         $.each(frName, function(){  
        
-            tr.insertCell(1).outerHTML = "<th>"+frName[i] +"</th>"
+            tr.insertCell(2).outerHTML = "<th>"+frName[i] +"</th>"
             i--;
        });
         	

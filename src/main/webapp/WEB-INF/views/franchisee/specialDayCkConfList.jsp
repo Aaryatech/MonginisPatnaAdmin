@@ -48,6 +48,11 @@
 
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/js/common.js"></script>
+	<style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 </head>
 <body>
 
@@ -73,13 +78,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Configured Special Day Cake List
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -119,16 +124,16 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2"class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-										<th width="17" style="width: 18px">#</th>
-																<th width="300" align="left">Event Name</th>
-																<th width="170" align="left">From Order Date</th>
-																<th width="170" align="left">To Order Date</th>
-																<th width="170" align="left">From Delivery Date</th>
-																<th width="170" align="left">To Delivery Date</th>
-																<th width="90" align="left">Action</th>
+										<th width="19" style="width: 19px">#</th>
+																<th class="col-md-2" align="left">Event Name</th>
+																<th class="col-md-2" align="left">From Order Date</th>
+																<th class="col-md-2" align="left">To Order Date</th>
+																<th class="col-md-2" align="left">From Delivery Date</th>
+																<th class="col-md-2" align="left">To Delivery Date</th>
+																<th class="col-md-1"  align="left">Action</th>
 												</tr>
 												</thead>
 												</table>
@@ -136,16 +141,16 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-												<th width="17" style="width: 18px">#</th>
-																<th width="300" align="left">Event Name</th>
-																<th width="170" align="left">From Order Date</th>
-																<th width="170" align="left">To Order Date</th>
-																<th width="170" align="left">From Delivery Date</th>
-																<th width="170" align="left">To Delivery Date</th>
-																<th width="90" align="left">Action</th>
+												<th width="19" style="width: 19px">#</th>
+																<th class="col-md-2" align="left">Event Name</th>
+																<th class="col-md-2"  align="left">From Order Date</th>
+																<th class="col-md-2"  align="left">To Order Date</th>
+																<th class="col-md-2"  align="left">From Delivery Date</th>
+																<th class="col-md-2"  align="left">To Delivery Date</th>
+																<th class="col-md-1"  align="left">Action</th>
 												</tr>
 												</thead>
 												<tbody>

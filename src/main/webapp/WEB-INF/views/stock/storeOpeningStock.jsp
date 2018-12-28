@@ -49,22 +49,72 @@
 							</div>
 							
 						</div>
-						
-						
+						<div class="box-content">
+								<form action="${pageContext.request.contextPath}/showStoreOpeningStock" name="validation-from"
+													id="validation-from" method="get">
+
+
+													<div class="form-group">
+														<label class="col-sm-2 col-lg-2 control-label">Category</label>
+														<div class="col-sm-1 col-lg-3 controls">
+															<select data-placeholder="Select Category"
+																class="form-control chosen" tabindex="6" name="cat_name"
+																id="cat_name">
+																<c:choose>
+																<c:when test="${subCatId==1}">
+                                                                    <option  value="1" selected><c:out value="Raw Materials"/></option>
+																	<option  value="18"><c:out value="Packing Materials"/></option>
+                                                                    <option  value="19"><c:out value="Celebrations & Party Items"/></option>
+                                                                </c:when>
+                                                                <c:when test="${subCatId==18}">
+                                                                    <option  value="1" ><c:out value="Raw Materials"/></option>
+																	<option  value="18" selected><c:out value="Packing Materials"/></option>
+                                                                    <option  value="19"><c:out value="Celebrations & Party Items"/></option>
+                                                                </c:when>
+                                                                <c:when test="${subCatId==19}">
+                                                                    <option  value="1" ><c:out value="Raw Materials"/></option>
+																	<option  value="18"><c:out value="Packing Materials"/></option>
+                                                                    <option  value="19" selected><c:out value="Celebrations & Party Items"/></option>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                 <option  value="1" ><c:out value="Raw Materials"/></option>
+																 <option  value="18"><c:out value="Packing Materials"/></option>
+                                                                 <option  value="19" ><c:out value="Celebrations & Party Items"/></option>
+                                                       
+                                                                </c:otherwise>
+																</c:choose>
+															</select>
+														</div>
+														<!-- </div>
+
+
+
+
+													<div class="form-group"> -->
+
+														<div class="col-md-2">
+															<input type="submit" class="btn btn-primary"
+																value="Submit">
+
+														</div>
+													</div><br><br>
+												</form>
+												</div>
+												
 						<div class="box-content">
 
 							<form id="completproduction" action="${pageContext.request.contextPath}/insertStoreOpeningStock" method="post">
 							 
-							 
+							 <input type="hidden" name="catId" id="catId" value="${subCatId}" />
 							
 							<div class=" box-content">
 								<div class="row">
 								<div class="col-md-12 table-responsive">
 									<table class="table table-bordered table-striped fill-head "
-								style="width: 50%" id="table_grid">
-								<thead>
+								 id="table_grid">
+								<thead style="background-color:#f3b5db; ">
 									<tr>
-										<th>Sr.No.</th>
+										<th> Sr.No.</th>
 										<th style="width: 400px">Raw Material Name</th>
 										
 										<th style="width: 100px"> Uom</th>
@@ -81,15 +131,22 @@
 														<tr>
 															<td><c:out value="${count.index+1}"></c:out></td> 
 															<td><c:out value="${rmList.rmName}"></c:out></td>
-														
+														    <c:choose>
+														    <c:when test="${subCatId != 18 && subCatId != 19}">
 															<c:forEach items="${uomList}" var="uomList" >
-														<c:choose>
-														<c:when test="${uomList.uomId == rmList.rmUom}">
+													    	<c:choose>
+													    	<c:when test="${uomList.uomId == rmList.rmUom}">
 															<td><c:out value="${uomList.uom}"></c:out>
 															</td>
 															</c:when>
 															</c:choose>
 															</c:forEach>
+															</c:when>
+															<c:otherwise>
+															<td>Kg./No.
+															</td>
+															</c:otherwise>
+															</c:choose>
 															
 															<td>  <input type='text' class='form-control' value='${rmList.storeOpeningStock}' pattern='[+-]?([0-9]*[.])?[0-9]+' name='stockQty<c:out value="${rmList.rmId}" />' required> 
 															</td>
@@ -105,7 +162,7 @@
 								</div>
 								</div>
 									<div class="form-group">
-												<div class="col-sm-9 col-sm-offset-3 col-lg-11 col-lg-offset-3">
+												<div class="col-sm-9">
 										
 													<input type="submit" class="btn btn-primary" value="Submit">
 												</div>
@@ -127,7 +184,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

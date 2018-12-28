@@ -226,15 +226,28 @@
 													data-rule-maxlength="11"
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
-
-									<label class="col-sm-3 col-lg-2 control-label">Email 4</label>
-									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email4" id="supp_email4" class="form-control" placeholder="Enter Email 4 "
-													data-rule-email="true" />
-									</div>
-								 
+                                    <label class="col-sm-3 col-lg-2 control-label">RM Group</label>
+											<div class="col-sm-6 col-lg-4 controls">
+												<select name="rm_group" id="rm_group" class="form-control chosen" >
+												<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
+													 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList" varStatus="count">
+									  						 <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+		 											</c:forEach> 
+												</select>
+											</div>
+									
 								</div>
-								 
+								 	<div class="form-group">
+								 <label class="col-sm-3 col-lg-2 control-label">RM Items</label>
+									<div class="col-sm-6 col-lg-4 controls">
+									<select data-placeholder="Select RM Items" class="form-control chosen" name="supp_email4"  multiple="multiple"
+											id="supp_email4"  >
+											 <c:forEach items="${rawMaterialList}" var="rawMaterialList" varStatus="count">
+									  						 <option value="${rawMaterialList.rmId}"><c:out value="${rawMaterialList.rmName}"/></option>
+		 											</c:forEach> 
+										</select>
+									</div>
+									</div>
 								<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Phone 2</label>
 									<div class="col-sm-6 col-lg-4 controls">
@@ -378,20 +391,37 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 	<script type="text/javascript">
-
+	
 			function supplierChange() {
 				var suppId=document.getElementById("supplier").value;
 				$.getJSON('${getSupplierDetails}', {
 					selectedSupplier :suppId,
 					ajax : 'true'
 				}, function(data) {
-				 
+					//--------------------------------------------------------------
+					// var rawMaterialList= JSON.parse('${rawMaterialList}');
+					/*  var html = '<option value="" disabled="disabled"  >Select Raw Material</option>';
+						
+						var len = rawMaterialList.length;
+						for ( var i = 0; i < len; i++) {
+							html += '<option value="' + rawMaterialList[i].rmId + '">'
+									+ rawMaterialList[i].rmName + '</option>';
+						}
+						html += '</option>';
+						$('#supp_email4').html(html);
+						$("#supp_email4").trigger("chosen:updated"); */
+					//--------------------------------------------------------------
+					
+					
 					document.getElementById("supp_name").value=data.suppName;
 					document.getElementById("supp_city").value=data.suppCity;
 					
 					document.getElementById("supp_state").value=data.suppState;
 					$("#supp_state").trigger("chosen:updated");
-					
+					var str=data.suppEmail4;
+					var temp = new Array();
+					// this will return an array with strings "1", "2", etc.
+					temp = str.split(",");
 					document.getElementById("supp_country").value=data.suppCountry;
 					document.getElementById("supp_addr").value=data.suppAddr;
 					document.getElementById("supp_gstin").value=data.suppGstin;
@@ -403,7 +433,9 @@
 					document.getElementById("supp_email1").value=data.suppEmail1;
 					document.getElementById("supp_email2").value=data.suppEmail2;
 					document.getElementById("supp_email3").value=data.suppEmail3;
-					document.getElementById("supp_email4").value=data.suppEmail4;
+					//document.getElementById("supp_email4").value=temp;
+					$('#supp_email4').val(temp);
+					$("#supp_email4").trigger("chosen:updated");
 					document.getElementById("supp_email5").value=data.suppEmail5;
 					document.getElementById("supp_c_person").value=data.suppCPerson;
 					document.getElementById("supp_fdalic").value=data.suppFdaLic;
@@ -425,6 +457,28 @@ $('#btn_submit').click(function(){
 });
 
 </script>
+<script type="text/javascript">
+$(document).ready(function() { 
+	$('#rm_group').change(
+			function() {
+				$.getJSON('${getRmItems}', {
+					grpId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+               var html = '<option value="" disabled="disabled"  >Select Raw Material</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].rmId + '">'
+								+ data[i].rmName + '</option>';
+					}
+					html += '</option>';
+					$('#supp_email4').html(html);
+					$("#supp_email4").trigger("chosen:updated");
 
+				});
+			});
+});
+</script>
 </body>
 </html>

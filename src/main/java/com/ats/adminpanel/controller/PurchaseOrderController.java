@@ -14,7 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List; 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
@@ -61,6 +62,7 @@ import com.ats.adminpanel.model.materialreceipt.Supplist;
 import com.ats.adminpanel.model.materialrecreport.GetMaterialRecieptReportMonthWise;
 import com.ats.adminpanel.model.purchaseorder.GetPurchaseOrderList;
 import com.ats.adminpanel.model.purchaseorder.GetRmRateAndTax;
+import com.ats.adminpanel.model.purchaseorder.PoDetailsByChkSupp;
 import com.ats.adminpanel.model.purchaseorder.PurchaseOrderDetail;
 import com.ats.adminpanel.model.purchaseorder.PurchaseOrderHeader; 
 import com.ats.adminpanel.model.supplierMaster.SupPaymentTermsList;
@@ -90,6 +92,102 @@ public class PurchaseOrderController {
 	
 	public GetRmRateAndTax getRmRateAndTax;
 	  
+	List<SupplierDetails>	supplierList;
+	ArrayList<PoDetailsByChkSupp> poDetailsList;
+	int type=0;int flag=0;int suppId=0;int itemId=0;int rmCat=0;int group=0;
+	List<RmItemGroup> rmItemGroupList;
+	@RequestMapping(value = "/poByCheckingSupplier", method = RequestMethod.GET)
+	public ModelAndView poByCheckingSupplier(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("masters/purchaseOrder/poByCheckingSupplier");
+		Constants.mainAct =10;
+		Constants.subAct =182;
+		
+		RestTemplate rest=new RestTemplate();
+		try {
+		List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		
+		GetRawMaterialDetailList	 getRawMaterialDetailList=rest.getForObject(Constants.url +"rawMaterial/getAllRawMaterialList", GetRawMaterialDetailList.class);
+				System.out.println("RM Details : "+getRawMaterialDetailList.getRawMaterialDetailsList().toString());
+				
+		supplierDetailsList=new ArrayList<SupplierDetails>();
+		supplierDetailsList=rest.getForObject(Constants.url + "getAllSupplier",   List.class);
+				
+		if(type==1) {
+		model.addObject("poDList", poDetailsList);
+		model.addObject("suppId", suppId);
+		model.addObject("rmCat", 0);
+		model.addObject("group", 0);
+		model.addObject("itemId", 0);
+		}
+		else
+			if(type==2)
+			{
+				model.addObject("supplierLists", supplierList);
+				model.addObject("rmItemGroupList", rmItemGroupList);
+				model.addObject("rmCat", rmCat);
+				model.addObject("group", group);
+				model.addObject("itemId", itemId);
+			}
+			model.addObject("supplierList", supplierDetailsList);
+			model.addObject("rmItemGroupList", rmItemGroupList);
+			model.addObject("type", type);
+			//System.err.println("supplierList"+supplierList.toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = "/searchSuppliersByItem", method = RequestMethod.POST)
+	public String  searchSuppliersByItem(HttpServletRequest request, HttpServletResponse response) {
+
+		//ModelAndView model = new ModelAndView("masters/purchaseOrder/poByCheckingSupplier");
+
+		RestTemplate rest = new RestTemplate();
+		try {
+			
+			 type=Integer.parseInt(request.getParameter("type"));
+			 if(type==1) {
+				 try {
+					suppId=Integer.parseInt(request.getParameter("supp_id"));
+					MultiValueMap<String, Object> map=new LinkedMultiValueMap<String, Object>();
+				      
+					map.add("suppId", suppId);
+					PoDetailsByChkSupp[] poDList=rest.postForObject(Constants.url + "purchaseOrder/poDetailsByChkSuppList",map, PoDetailsByChkSupp[].class);
+					poDetailsList=new ArrayList<>(Arrays.asList(poDList));
+				 }
+				 catch (Exception e) {
+					 e.printStackTrace();
+					// TODO: handle exception
+				}
+				
+			 }else 
+			if(type==2) {
+				try {
+			itemId=Integer.parseInt(request.getParameter("rm_id"));
+			rmCat=Integer.parseInt(request.getParameter("rm_cat"));
+			group=Integer.parseInt(request.getParameter("rm_group"));
+		    rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+
+			System.out.println("Item Id"+itemId);
+			MultiValueMap<String, Object> map=new LinkedMultiValueMap<String, Object>();
+			map.add("grpId", group);
+			map.add("itemId", itemId);
+			supplierList = rest.postForObject(Constants.url + "/getSuppliersByItemId",map, List.class);
+		    System.err.println("supplierList"+supplierList.toString());
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return  "redirect:/poByCheckingSupplier";
+	}
 	@RequestMapping(value = "/showDirectPurchaseOrder", method = RequestMethod.GET)
 	public ModelAndView showPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
 
@@ -138,6 +236,59 @@ public class PurchaseOrderController {
 			model.addObject("rmItemGroupList", rmItemGroupList);
 			model.addObject("poNo", poNo);
 
+		return model;
+	}
+	@RequestMapping(value = "/showDirectPurchaseOrder/{suppId}", method = RequestMethod.GET)
+	public ModelAndView showPurchaseOrder(@PathVariable("suppId")int suppId,HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("masters/purchaseOrder/directPurchaseOrder");
+		Constants.mainAct =10;
+		Constants.subAct =57;
+		if(flag!=1) {
+		purchaseOrderDetailList=new ArrayList<PurchaseOrderDetail>();
+		}
+		RestTemplate rest=new RestTemplate();
+		//rawMaterialDetailsList=new ArrayList<RawMaterialDetails>();
+		
+		
+	//	rawMaterialTaxDetailsList= new RawMaterialTaxDetailsList();
+			 // rawMaterialTaxDetailsList=rest.getForObject(Constants.url + "rawMaterial/getAllRmTaxList", RawMaterialTaxDetailsList.class);
+			//System.out.println("RM Tax data : "+rawMaterialTaxDetailsList);
+		
+		int poNo=rest.getForObject(Constants.url + "purchaseOrder/getPoNo", Integer.class);
+		
+		
+		List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		
+			supPaymentTerms=new SupPaymentTermsList();
+			  supPaymentTerms = rest.getForObject(Constants.url + "/showPaymentTerms",
+					SupPaymentTermsList.class);
+
+			System.out.println("Payment Term List Response:" + supPaymentTerms.toString());
+			
+			 getRawMaterialDetailList=rest.getForObject(Constants.url +"rawMaterial/getAllRawMaterialList", GetRawMaterialDetailList.class);
+				System.out.println("RM Details : "+getRawMaterialDetailList.getRawMaterialDetailsList().toString());
+				
+				supplierDetailsList=new ArrayList<SupplierDetails>();
+				  supplierDetailsList=rest.getForObject(Constants.url + "getAllSupplier",   List.class);
+				
+				transporterList=new TransporterList();
+				transporterList = rest.getForObject(Constants.url + "/showTransporters",TransporterList.class);
+						System.out.println("Transporter List Response:" + transporterList.toString());
+
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate localDate = LocalDate.now();
+			System.out.println(dtf.format(localDate)); //2016/11/16
+			
+			model.addObject("todayDate", dtf.format(localDate));
+			model.addObject("paymentTermsList", supPaymentTerms.getSupPaymentTermsList());
+			model.addObject("transporterList", transporterList.getTransporterList());
+			model.addObject("supplierList", supplierDetailsList);
+			model.addObject("rmItemGroupList", rmItemGroupList);
+			model.addObject("purchaseOrderDetailList", purchaseOrderDetailList);
+			model.addObject("poNo", poNo);
+			model.addObject("suppId", suppId);
+           flag=0;
 		return model;
 	}
 	
@@ -854,6 +1005,71 @@ public class PurchaseOrderController {
 			
 		}
 		
+		@RequestMapping(value = "/makePoListOfSelectedItems", method = RequestMethod.POST)
+		public  String makePoListOfSelectedItems(HttpServletRequest request,
+			HttpServletResponse response) {
+	flag=1;
+			//String suppId = request.getParameter("supp_id");
+	int suppId=0;
+			int taxation = Integer.parseInt(request.getParameter("taxation"));
+			purchaseOrderDetailList=new ArrayList<>();
+			if(poDetailsList!=null)
+			{suppId=poDetailsList.get(0).getSuppId();
+				for(int i=0;i<poDetailsList.size();i++)
+				{ 
+					try {
+					int rmId = Integer.parseInt(request.getParameter("chk"+poDetailsList.get(i).getRmId()));
+					
+					float discPer=Float.parseFloat(request.getParameter("discPer"+poDetailsList.get(i).getRmId()));
+					int  poQty =Integer.parseInt(request.getParameter("poQty"+poDetailsList.get(i).getRmId()));
+					
+					PurchaseOrderDetail purchaseOrderDetail=new PurchaseOrderDetail();
+					purchaseOrderDetail.setCgstPer(poDetailsList.get(i).getCgstPer());
+					purchaseOrderDetail.setSgstPer(poDetailsList.get(i).getSgstPer());
+					purchaseOrderDetail.setIgstPer(poDetailsList.get(i).getIgstPer());
+					 purchaseOrderDetail.setGstPer(poDetailsList.get(i).getGstPer());
+						purchaseOrderDetail.setRmId(rmId);
+						purchaseOrderDetail.setDelStatus(0);
+						purchaseOrderDetail.setDiscPer(discPer);
+						purchaseOrderDetail.setPoQty(poQty);
+
+						if(taxation==1) {
+							 
+							purchaseOrderDetail.setPoRate(poDetailsList.get(i).getRateTaxIncl());
+							float poTaxable=poQty*(poDetailsList.get(i).getRateTaxIncl());
+							purchaseOrderDetail.setPoTaxable(poTaxable);//-Discount per %
+							float poTotal=(poTaxable*poDetailsList.get(i).getGstPer())/100;
+							purchaseOrderDetail.setPoTotal(poTotal);
+							}
+							else if(taxation==2){
+								purchaseOrderDetail.setPoRate(poDetailsList.get(i).getRateTaxExtra());
+								float poTaxable=poQty*(poDetailsList.get(i).getRateTaxExtra());
+								purchaseOrderDetail.setPoTaxable(poTaxable);//-Discount per %
+								float poTotal=(poTaxable*poDetailsList.get(i).getGstPer())/100;
+								purchaseOrderDetail.setPoTotal(poTotal);
+								}
+							 
+							
+							 
+							purchaseOrderDetail.setRmName(poDetailsList.get(i).getRmName());
+							purchaseOrderDetail.setRmRemark("Remark ");//Remark Hard Coded
+						 
+							purchaseOrderDetail.setRmUomId(poDetailsList.get(i).getRmUomId());
+							purchaseOrderDetail.setSpecification(poDetailsList.get(i).getSpecification());
+							purchaseOrderDetail.setSuppId(poDetailsList.get(i).getSuppId());
+							purchaseOrderDetail.setSchDays(poDetailsList.get(i).getSchDays());
+							
+							purchaseOrderDetailList.add(purchaseOrderDetail);
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			System.err.println("Item List :"+purchaseOrderDetailList);
+			return "redirect:/showDirectPurchaseOrder/"+suppId;//redirect:/showPurchaseOrder
+			
+		}
 		
 		//---------------------------------------Maintain item List ------------------------
 				@RequestMapping(value = "/updateRmQty", method = RequestMethod.GET)
@@ -956,7 +1172,9 @@ public class PurchaseOrderController {
 			//  float totalValue=0;
 			for(int i=0;i<purchaseOrderDetailList.size();i++)
 			{
-				
+				purchaseOrderDetailList.get(i).setPoNo(poNo);
+				purchaseOrderDetailList.get(i).setPoType(poType);
+				purchaseOrderDetailList.get(i).setPoDate(poDate);
 				//totalValue+=purchaseOrderDetailList.get(i).getPoTotal();
 				purchaseOrderHeader.setPoTotalValue(purchaseOrderHeader.getPoTotalValue()+purchaseOrderDetailList.get(i).getPoTaxable());
 			}
@@ -977,6 +1195,7 @@ public class PurchaseOrderController {
 			RestTemplate rest=new RestTemplate();
 			 Info info=rest.postForObject(Constants.url + "purchaseOrder/insertPurchaseOrder",purchaseOrderHeader, Info.class);
 			 System.out.println("Response :"+info.toString());
+			 System.out.println("Response :"+purchaseOrderDetailList.toString());
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -1410,7 +1629,7 @@ public class PurchaseOrderController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		File f = new File("/opt/apache-tomcat-8.5.6/webapps/admin/Po.pdf");
+		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Po.pdf");
 		//File f = new File("/home/ats-12/Po.pdf");
 		System.out.println("I am here " + f.toString());
 		try {
@@ -1426,7 +1645,7 @@ public class PurchaseOrderController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		String filePath = "/opt/apache-tomcat-8.5.6/webapps/admin/Po.pdf";
+		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Po.pdf";
 		//String filePath = "/home/ats-12/Po.pdf";
 		//String filePath = "/ordermemo221.pdf";
 

@@ -18,7 +18,15 @@
 	color: #e32139;
 	background: #ffeff1;
 }
+
 </style>
+  	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
 <body>
@@ -46,7 +54,7 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Production Detail
@@ -56,7 +64,7 @@
 
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -101,17 +109,17 @@
 
 										<div class="form-group">
 
-											<label class="col-sm-3 col-lg-2 control-label">Prod
+											<label class="col-sm-1">Prod
 												ID</label>
-											<div class="col-sm-5 col-lg-3 controls">
+											<div class="col-sm-5 col-lg-1 controls">
 												<input disabled type="text"
 													value="${planHeader.productionHeaderId}" id="prod_id"
 													name="prod_id" class="form-control" />
 											</div>
 
-											<label class="col-sm-3 col-lg-2 control-label">Prod
+											<label class="col-sm-3 col-lg-1 control-label">Prod
 												Date </label>
-											<div class="col-sm-5 col-lg-3 controls">
+											<div class="col-sm-5 col-lg-2 controls">
 												<input type="text" name="prod_date" id="prod_date"
 													class="form-control" value="${planHeader.productionDate}"
 													readonly />
@@ -119,28 +127,28 @@
 
 
 
-										</div>
+									<!-- 	</div> -->
 
 										<input type="hidden" value="${planHeader.isPlanned}"
 											name="is_plan" /> <input type="hidden"
 											value="${planHeader.productionHeaderId}" name="production_id" />
 
-										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Category
+										<!-- <div class="form-group"> -->
+											<label class="col-sm-3 col-lg-1 control-label">Category
 											</label>
-											<div class="col-sm-5 col-lg-3 controls">
+											<div class="col-sm-5 col-lg-2 controls">
 												<input disabled type="text" name="cat_name" id="cat_name"
 													value="${planHeader.catName}" class="form-control" required />
 											</div>
 
-											<label class="col-sm-3 col-lg-2 control-label">Time
+											<!-- <label class="col-sm-3 col-lg-2 control-label">Time
 												Slot</label>
-											<div class="col-sm-5 col-lg-3 controls">
-												<input disabled type="text" value="${planHeader.timeSlot}"
+											<div class="col-sm-5 col-lg-3 controls"> -->
+												<input disabled type="hidden" value="${planHeader.timeSlot}"
 													name="time_slot" class="form-control" />
-											</div>
+											<!-- </div> -->
 
-										</div>
+										<!-- </div> -->
 										<c:choose>
 											<c:when test="${planHeader.productionStatus==1}">
 												<c:set var="sts" value="Planning"></c:set>
@@ -168,20 +176,20 @@
 											</c:otherwise>
 
 										</c:choose>
-										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Status
+										<!-- <div class="form-group"> -->
+											<label class="col-sm-3 col-lg-1 control-label">Status
 											</label>
-											<div class="col-sm-5 col-lg-3 controls">
+											<div class="col-sm-5 col-lg-2 controls">
 												<input disabled type="text" name="status" id="status"
 													value="${sts}" class="form-control" />
 											</div>
 
 
-											<div class="col-sm-5 col-lg-3 controls">
+										<!-- 	<div class="col-sm-5 col-lg-3 controls"> -->
 
 												<input type="button" value="PDF" class="btn btn-primary"
 													onclick="genPdf()" />
-											</div>
+										<!-- 	</div> -->
 										</div>
 										<div class="clearfix"></div>
 										<div id="table-scroll" class="table-scroll">
@@ -221,7 +229,7 @@
 											</div> -->
 											<div class="table-wrap">
 
-												<table id="table1" class="table table-advance">
+												<table id="table1" class="table table-advance" border="1">
 													<thead>
 														<tr class="bgpink">
 															<th class="col-md-2">Item Name</th>
@@ -232,6 +240,9 @@
 											<c:if test="${planHeader.isPlanned!=0}">
 															<th class="col-md-2">Production1 Qty</th>
 											</c:if>
+											 <c:if test="${planHeader.isPlanned==2}">
+											 <th class="col-md-2">Total</th>
+											 </c:if>
 											<c:if test="${planHeader.isPlanned!=1}">
 															<th class="col-md-2">Actual Order Qty</th>
 											</c:if>				
@@ -312,9 +323,18 @@
 											   name="prod1_qty${planDetail.productionDetailId}"
 												id="prod1_qty${planDetail.productionDetailId}"
 												placeholder="Production1 Qty" class="form-control"
-												value="${planDetail.planQty-planDetail.curOpeQty}"
+												value="${planDetail.planQty}"
 												data-rule-required="true" style="width: 65px" /></td>
 												</c:if>
+												 <c:if test="${planHeader.isPlanned==2}">
+						<td class="col-md-1" ><input align="left" type="text"
+										name="total${planDetail.productionDetailId}"
+										id="total${planDetail.productionDetailId}"
+										placeholder="Total" class="form-control"
+										value="${planDetail.curOpeQty+planDetail.planQty}"
+										data-rule-required="true" style="width: 65px"
+										disabled /></td>
+						</c:if>
 											
 				 
 											<c:if test="${planHeader.isPlanned!=1}">	<c:choose>
@@ -342,7 +362,7 @@
 										name="prod2_qty${planDetail.productionDetailId}"
 										id="prod2_qty${planDetail.productionDetailId}"
 										placeholder="Production2 Qty" class="form-control"
-										value="${planDetail.orderQty-(planDetail.planQty-planDetail.curOpeQty)}"
+										value="${planDetail.orderQty-(planDetail.planQty+planDetail.curOpeQty)}"
 										data-rule-required="true" style="width: 65px"
 										disabled /></td>
 						</c:if>
@@ -376,6 +396,41 @@
 																					ondrop="return false;" onpaste="return false;"
 																					onkeyup="changeQty(${planDetail.productionDetailId})" /></td>
 																			</c:when>
+																			<c:when test="${planHeader.isPlanned==2}">
+																			<c:choose>
+																			<c:when test="${(planDetail.orderQty-(planDetail.planQty+planDetail.curOpeQty))>0}">
+																			<fmt:formatNumber var="act"   type="number" value="${planDetail.planQty+(planDetail.orderQty-(planDetail.planQty+planDetail.curOpeQty))}" minFractionDigits="0" maxFractionDigits="0"/>
+																			
+																				<td class="col-md-2" ><input align="left"
+																					type="text"
+																					name="act_prod_qty${planDetail.productionDetailId}"
+																					id="act_prod_qty${planDetail.productionDetailId}"
+																					placeholder="Actual Prod" class="form-control"
+																					value="${act}"
+																					data-rule-required="true" style="width: 65px"
+																					onkeypress="return IsNumeric(event);"
+																					ondrop="return false;" onpaste="return false;"
+																					onkeyup="changeQty(${planDetail.productionDetailId})" /></td>
+																					
+																					</c:when>
+																					<c:otherwise>
+																					
+																					<td class="col-md-2" ><input align="left"
+																					type="text"
+																					name="act_prod_qty${planDetail.productionDetailId}"
+																					id="act_prod_qty${planDetail.productionDetailId}"
+																					placeholder="Actual Prod" class="form-control"
+																					value="${planDetail.planQty}"
+																					data-rule-required="true" style="width: 65px"
+																					onkeypress="return IsNumeric(event);"
+																					ondrop="return false;" onpaste="return false;"
+																					onkeyup="changeQty(${planDetail.productionDetailId})" />
+																					</td>
+																					
+																					</c:otherwise>
+																			</c:choose>
+																			</c:when>
+																			
 																		</c:choose>
 																	</c:when>
 
@@ -588,23 +643,18 @@
 							<option value="2">Chikalthana</option>
 							</select> -->
 
-												<div class="form-group">
+												<!-- <div class="form-group">
 													<label class="col-sm-3 col-lg-3 control-label">Select
 														Unit</label> <br></br>
 													<div class="col-sm-5 col-lg-3 controls">
-
-														<select data-placeholder="Choose Franchisee"
-															class="form-control chosen" tabindex="6" id="prodUnit"
-															name="prodUnit">
-															<option value="1">Shendra</option>
-															<option value="2">Chikalthana</option>
-
-														</select>
-													</div>
+ -->
+														<input type="hidden" id="prodUnit"
+															name="prodUnit" value="1"/>
+													<!-- </div>
 
 
 
-												</div>
+												</div> -->
 
 											</div>
 
@@ -620,7 +670,7 @@
 
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

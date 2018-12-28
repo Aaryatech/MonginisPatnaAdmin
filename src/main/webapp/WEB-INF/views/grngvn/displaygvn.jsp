@@ -145,7 +145,7 @@
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="border: 0">
 											<table width="100%" class="table table-advance" id="table_grid" name="table_grid">
-												<thead>
+												<thead style="background-color:#f3b5db; "> 
 													<tr>
 														<!-- <th width="138" style="width: 18px" align="left">Sr
 															No</th> -->

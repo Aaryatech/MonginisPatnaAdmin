@@ -1,5 +1,9 @@
 package com.ats.adminpanel.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +22,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.DumpOrderList;
+import com.ats.adminpanel.model.RawMaterial.GetRawMaterialDetailList;
+import com.ats.adminpanel.model.RawMaterial.GetRawmaterialByGroup;
 import com.ats.adminpanel.model.RawMaterial.Info;
+import com.ats.adminpanel.model.RawMaterial.RawMaterialDetails;
+import com.ats.adminpanel.model.RawMaterial.RawMaterialDetailsList;
+import com.ats.adminpanel.model.RawMaterial.RmItemCategory;
+import com.ats.adminpanel.model.RawMaterial.RmItemGroup;
 import com.ats.adminpanel.model.modules.ErrorMessage;
+import com.ats.adminpanel.model.purchaseorder.PoDetailsByChkSupp;
+import com.ats.adminpanel.model.purchaseorder.PurchaseOrderDetail;
 import com.ats.adminpanel.model.supplierMaster.SupPaymentTerms;
 import com.ats.adminpanel.model.supplierMaster.SupPaymentTermsList;
 import com.ats.adminpanel.model.supplierMaster.SupplierDetails;
@@ -31,16 +43,136 @@ import com.ats.adminpanel.model.supplierMaster.TransporterList;
 public class SuppilerMasterController {
 
 	public  List<SupplierDetails> supplierDetailsList;
+	/*List<SupplierDetails>	supplierList;
+	int type;
+	@RequestMapping(value = "/poByCheckingSupplier", method = RequestMethod.GET)
+	public ModelAndView poByCheckingSupplier(HttpServletRequest request, HttpServletResponse response) {
 
+		ModelAndView model = new ModelAndView("masters/purchaseOrder/poByCheckingSupplier");
+		Constants.mainAct =10;
+		Constants.subAct =57;
+		
+		RestTemplate rest=new RestTemplate();
+		try {
+		List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		
+		GetRawMaterialDetailList	 getRawMaterialDetailList=rest.getForObject(Constants.url +"rawMaterial/getAllRawMaterialList", GetRawMaterialDetailList.class);
+				System.out.println("RM Details : "+getRawMaterialDetailList.getRawMaterialDetailsList().toString());
+				
+		supplierDetailsList=new ArrayList<SupplierDetails>();
+		supplierDetailsList=rest.getForObject(Constants.url + "getAllSupplier",   List.class);
+				
+			model.addObject("supplierList", supplierDetailsList);
+			model.addObject("rmItemGroupList", rmItemGroupList);
+			model.addObject("type", 0);
+			//System.err.println("supplierList"+supplierList.toString());
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = "/searchSuppliersByItem", method = RequestMethod.POST)
+	public ModelAndView  searchSuppliersByItem(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("masters/purchaseOrder/poByCheckingSupplier");
+
+		RestTemplate rest = new RestTemplate();
+		try {
+			
+			 type=Integer.parseInt(request.getParameter("type"));
+			 if(type==1) {
+				 
+					int suppId=Integer.parseInt(request.getParameter("supp_id"));
+					MultiValueMap<String, Object> map=new LinkedMultiValueMap<String, Object>();
+				      
+					map.add("suppId", suppId);
+					List<PoDetailsByChkSupp> poDList=rest.postForObject(Constants.url + "purchaseOrder/poDetailsByChkSuppList",map, List.class);
+					model.addObject("poDList", poDList);
+					model.addObject("suppId", suppId);
+					model.addObject("type", type);
+					supplierDetailsList=rest.getForObject(Constants.url + "getAllSupplier",   List.class);
+					model.addObject("supplierList", supplierDetailsList);
+					model.addObject("rmCat", 0);
+					model.addObject("group", 0);
+					model.addObject("itemId", 0);
+
+			 }else 
+			if(type==2) {
+			int itemId=Integer.parseInt(request.getParameter("rm_id"));
+			int rmCat=Integer.parseInt(request.getParameter("rm_cat"));
+			int group=Integer.parseInt(request.getParameter("rm_group"));
+			List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+
+			System.out.println("Item Id"+itemId);
+			MultiValueMap<String, Object> map=new LinkedMultiValueMap<String, Object>();
+      
+			
+			map.add("itemId", itemId);
+				supplierList = rest.postForObject(Constants.url + "/getSuppliersByItemId",map, List.class);
+		System.err.println("supplierList"+supplierList.toString());
+		supplierDetailsList=rest.getForObject(Constants.url + "getAllSupplier",   List.class);
+		
+		model.addObject("supplierList", supplierDetailsList);
+		model.addObject("supplierLists", supplierList);
+		model.addObject("rmItemGroupList", rmItemGroupList);
+
+		model.addObject("type", type);
+		model.addObject("rmCat", rmCat);
+		model.addObject("group", group);
+		model.addObject("itemId", itemId);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}*/
 	@RequestMapping(value = "/showAddSupplier", method = RequestMethod.GET)
 	public ModelAndView showAddSupplier(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("masters/addSupplier");
 		Constants.mainAct =13;
 		Constants.subAct =77;
+		RestTemplate rest=new RestTemplate();
+		List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		System.out.println("Group list :: "+rmItemGroupList.toString());
+		
+		model.addObject("rmItemGroupList", rmItemGroupList);
 		return model;
 	}
+	@RequestMapping(value = "/getRmItems", method = RequestMethod.GET)
+	public @ResponseBody List<GetRawmaterialByGroup> getRmItems(HttpServletRequest request,
+		HttpServletResponse response) {
+		List<GetRawmaterialByGroup> rmItemList=new ArrayList<GetRawmaterialByGroup>();
 
+		try {
+		 
+		String selectedGroup=request.getParameter("grpId");
+		int grpId=Integer.parseInt(selectedGroup);
+		MultiValueMap<String, Object> map=new LinkedMultiValueMap<String, Object>();
+		RestTemplate rest=new RestTemplate();
+		
+		map.add("grpId", grpId);
+		try {
+	
+			 rmItemList = rest.postForObject(Constants.url + "rawMaterial/getRawMaterialDetailByGroup",map,
+				List.class);
+		
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("List of Menu : "+ rmItemList.toString());
+		}catch(Exception e)
+		{
+			System.out.println("Exception In /rmItemList"+e.getMessage());
+		}
+		return rmItemList;
+		
+	}
 	@RequestMapping(value = "/addSupplier", method = RequestMethod.POST)
 	public String addSupplier(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
@@ -64,7 +196,17 @@ public class SuppilerMasterController {
 		String suppEmail1 = request.getParameter("supp_email1");
 		String suppEmail2 = request.getParameter("supp_email2");
 		String suppEmail3 = request.getParameter("supp_email3");
-		String suppEmail4 = request.getParameter("supp_email4");
+		String[] suppEmail4 = request.getParameterValues("supp_email4");
+		
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < suppEmail4.length; i++) {
+			sb = sb.append(suppEmail4[i] + ",");
+
+		}
+		String items = sb.toString();
+		items = items.substring(0, items.length() - 1);
+		System.out.println("items" + items);
 		String suppEmail5 = request.getParameter("supp_email5");
 
 		String suppGstin = request.getParameter("supp_gstin");
@@ -95,7 +237,7 @@ public class SuppilerMasterController {
 		supplierDetails.setSuppEmail1(suppEmail1);
 		supplierDetails.setSuppEmail2(suppEmail2);
 		supplierDetails.setSuppEmail3(suppEmail3);
-		supplierDetails.setSuppEmail4(suppEmail4);
+		supplierDetails.setSuppEmail4(items);
 		supplierDetails.setSuppEmail5(suppEmail5);
 		supplierDetails.setSuppFdaLic(suppFdaLic);
 		supplierDetails.setSuppPhone2(suppPhone2);
@@ -129,10 +271,21 @@ public class SuppilerMasterController {
 		ModelAndView model = new ModelAndView("masters/supplierDetails");
 
 		RestTemplate rest = new RestTemplate();
+		try {
 		supplierDetailsList = rest.getForObject(Constants.url + "getAllSupplier", List.class);
 		model.addObject("suppId", suppId);
+		List<RmItemGroup> rmItemGroupList=rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup", List.class);
+		System.out.println("Group list :: "+rmItemGroupList.toString());
+		
+		RawMaterialDetailsList rawMaterialDetailsList=rest.getForObject(Constants.url+"rawMaterial/getAllRawMaterial",  RawMaterialDetailsList.class);	
+		model.addObject("rawMaterialList",rawMaterialDetailsList.getRawMaterialDetailsList());
+		model.addObject("rmItemGroupList", rmItemGroupList);
 
 		model.addObject("supplierList", supplierDetailsList);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return model;
 	}
 	@RequestMapping(value = "/showSupplierList", method = RequestMethod.GET)

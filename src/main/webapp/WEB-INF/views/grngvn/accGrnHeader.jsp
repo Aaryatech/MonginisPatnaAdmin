@@ -150,7 +150,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
 														<th class="col-md-2">GrnSr No</th>
 														<th class="col-md-1">Date</th>

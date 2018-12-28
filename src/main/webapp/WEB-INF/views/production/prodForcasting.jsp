@@ -3,8 +3,40 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
- 
+ <html>
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+ <style>
+ #overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(165, 110, 169, 0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+#text {
+   position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 25px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+ 
+ </style>
+ 	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -12,6 +44,9 @@
 <c:url var="getItemsProdQty" value="/getItemsProdQty"></c:url>
 
 	 
+<div id="overlay" >  <div id="text">Loading ,Please Wait...
+
+</div></div>
 
 
 	<div class="container" id="main-container">
@@ -31,14 +66,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Plan Production
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -61,17 +96,17 @@
 									class="fa fa-times"></i></a>
 							</div> -->
 						</div>
-
-						<div class="box-content">
-							<form  class="form-horizontal"
+<form  class="form-horizontal"
 								id="validation-form">
 
+						<div class="box-content">
+							
 
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
 
-									<div class="col-sm-9 col-lg-10 controls">
+									<div class="col-sm-9 col-lg-4 controls">
 										<select class="form-control chosen" name="catId" id="catId" >
 										
 										<c:forEach items="${catList}" var="catList">
@@ -84,12 +119,12 @@
 										</select>
 									</div>
 
-								</div>
+							<!-- 	</div>
 
 
 
 								<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2"> -->
 									
                          <input type="button" class="btn btn-info" name="submit" value="submit" onclick="searchItemsByCategory()"/>
 									</div>
@@ -100,42 +135,48 @@
 					<form action="${pageContext.request.contextPath}/submitProductionPlan" method ="post">
 
 								<div class="box">
-									<div class="box-title">
+									<!-- <div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Production List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 
 										<div class="clearfix"></div>
 									
-										<div id="table-scroll" class="table-scroll">
+									<!-- 	<div id="table-scroll" class="table-scroll"> -->
 							 
-									<div id="faux-table" class="faux-table" aria="hidden">
+									<!-- <div id="faux-table" class="faux-table" aria="hidden">
 									<table id="table2" class="main-table">
 											<thead>
 										
 												</thead>
 												</table>
 									
-									</div>
+									</div> -->
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1" style="overflow: hidden;">
 										<!-- //removed text -->
-									<!-- 	<div class="table-responsive" style="border: 0">
+									<!-- 	<div class="table-responsiv1e" style="border: 0">
 											<table width="100%" class="table table-advance" id="table1"> -->
-												<thead>
+												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th width="20" align="left">No</th>
 														<th width="180" align="left">Item Name</th>
+															<th width="100" align="left" >
+															<div>
+									                     	<input class="form-control date-picker" id="datepicker5" size="16" required type="text" name="datepicker5" value="" placeholder="Date5"  onblur=" return getProdQty(5,5)"/>
+								                     	    </div>
+														</th>
 <!-- 														<th width="30" align="left">Cur Closing</th>
+
  -->														<th width="90" align="left">Cur Opening</th>
 														
 														<%-- <th width="90" align="left">
@@ -153,7 +194,7 @@
 									                     	<input class="form-control date-picker" id="datepicker2" size="16" type="text" name="datepicker2" value="" placeholder="Order Date"  onblur=" return getProdQty(2,2)" />
 								                     	     </div>
 														 </th>
-														<th width="5" align="left">  <i class="	glyphicon glyphicon-circle-arrow-right  fa-2x"onclick=" return getProdQty(2,5)"></i>
+														<th width="5" align="left">  <i class="	glyphicon glyphicon-circle-arrow-left  fa-2x"onclick=" return getProdQty(2,5)"></i>
 														 </th>
 														 
 														<th width="100" align="left">
@@ -161,7 +202,7 @@
 									                     	<input class="form-control date-picker" id="datepicker3" size="16" type="text" name="datepicker3" value="" placeholder="Date3"  onblur=" return getProdQty(3,3)"/>
 								                        	</div>
 														</th>
-													 <th width="5" align="left"> <i class="	glyphicon glyphicon-circle-arrow-right  fa-2x" onclick=" return getProdQty(3,5)"></i>
+													 <th width="5" align="left"> <i class="	glyphicon glyphicon-circle-arrow-left  fa-2x" onclick=" return getProdQty(3,5)"></i>
 														 </th>
 														 
 														<!-- <th width="100" align="left">
@@ -178,23 +219,18 @@
 								                     	    </div>
 														</th> -->
 														
-														<th width="100" align="left" >
-															<div>
-									                     	<input class="form-control date-picker" id="datepicker5" size="16" type="text" name="datepicker5" value="" placeholder="Date5"  onblur=" return getProdQty(5,5)"/>
-								                     	    </div>
-														</th>
+													
 													</tr>
 												</thead>
 												<tbody>
 												
 												</tbody>
 											</table>
-											</div><!-- //added div -->
+										<!-- 	</div>//added div -->
 										</div>
 									</div>
 								</div>
-						</div>
-					</div>
+						
 						
 								<div align="center" class="form-group">
 								<div class="col-sm-5 col-lg-10 controls">
@@ -218,14 +254,15 @@
 
 									</div>
 								</div>
-						</form>		
+						</form>		</div>
+					</div>
 				</div>
 			</div>
 
 
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -320,10 +357,11 @@
             var currDateStr=(currDate.getDate())+ '-' + (currDate.getMonth() + 1) + '-' +currDate.getFullYear();
 			
 			$("#datepicker1").val(yesterdayString); 
-            $("#datepicker5").val(currDateStr); 
+         /*    $("#datepicker5").val(currDateStr);  */
+          $("#datepicker5").val(""); 
  
 			//alert(catId);
-			
+			on();
 			$('#loader').show();
 
 			$
@@ -342,10 +380,11 @@
 								$('#loader').hide();
 								if (data == "") {
 									alert("No records found !!");
+									off;
 									document.getElementById("callSubmit").disabled=true;
 
 								}
-
+                                  off();
 								
 								$
 										.each(
@@ -361,28 +400,28 @@
 															+ index
 															+ "</td>";
 
-													var itemName = "<td>"
+													var itemName = "<td padding=0>"
 															+item.name
 															+ "</td>";
 															
 															
 /* 															var curClosing = "<td align=center colspan='2'><input type=text  class=form-control  id= curClos"+ item.id+ " name=curClos"+item.id+" value ="+item.curClosingQty+"></td>"; 
  */
-													var curOpening = "<td align=center colspan='1'><input type=text  class=form-control  id= curOpe"+ item.id+ " name=curOpe"+item.id+" value ="+item.curOpeQty+" disabled></td>"; 
+													var curOpening = "<td align=center colspan='1' padding=0><input type=text  class=form-control  id= curOpe"+ item.id+ " name=curOpe"+item.id+" value ="+item.curOpeQty+" style='font-size:10pt; height: 20px; ' disabled></td>"; 
 
 
 													/* var qty1 = "<td align=center colspan='2'><input type=text  class=form-control  id= qty1"+ item.id+ " name=qty1"+item.id+" value = "+item.qty+ " disabled></td>"; 
 													 */
 											
-													var qty2 = "<td align=center colspan='2'><input type=text  class=form-control  id= qty2"+ item.id+ " name=qty2"+item.id+" value = "+0+ " disabled></td>";
+													var qty2 = "<td align=center colspan='2' padding=0><input type=text  class=form-control  id= qty2"+ item.id+ " name=qty2"+item.id+" value = "+0+ " style='font-size:10pt; height: 20px; ' disabled></td>";
 
-													var qty3 = "<td align=center colspan='2'><input type=text  class=form-control  id= qty3"+ item.id+ " name=qty3"+item.id+" value = "+0+ " disabled></td>";
+													var qty3 = "<td align=center colspan='2' padding=0><input type=text  class=form-control  id= qty3"+ item.id+ " name=qty3"+item.id+" value = "+0+ " style='font-size:10pt; height: 20px; ' disabled></td>";
 
  													/*  var qty4 = "<td align=center colspan='2'><input type=text  class=form-control  id= qty4"+ item.id+ " name=qty4"+item.id+" value = "+0+ " disabled></td>";
  */
 /* 													var qty5 = "<td align=center><input type=text min=0 max=500 class=form-control  id= qty5"+ item.id+ " name=qty5"+item.id+" value = "+0+ " disabled></td>";
  */
-													var qty5 = "<td align=center colspan='2'><input type=number  class=form-control  id= qty5"+ item.id+ " name=qty5"+item.id+" value = "+0+ "></td>";
+													var qty5 = "<td align=center colspan='1' padding=0><input type=number  class=form-control  id= qty5"+ item.id+ " name=qty5"+item.id+" value = "+0+ " style='font-size:10pt; height: 20px; ' required></td>";
 
 													var trclosed = "</tr>";
 
@@ -393,7 +432,9 @@
 													$('#table1 tbody')
 															.append(itemName);
 													
-												
+													$('#table1 tbody')
+													.append(
+															qty5);
 													$('#table1 tbody')
 													.append(curOpening);
 													
@@ -409,9 +450,7 @@
 																	qty3);
 													 /*  $('#table1 tbody')
 															.append(qty4);  */
-													$('#table1 tbody')
-															.append(
-																	qty5);
+													
 													
 													$('#table1 tbody')
 															.append(
@@ -436,7 +475,7 @@
 			var selectedCatId = document.getElementById("selectedCatId").value;
 
 		   //  alert("Your typed in " + prodDate);
-		    
+		    on();
 		    
 		     $.getJSON('${getItemsProdQty}',
 							{
@@ -448,7 +487,7 @@
 
 							},
 							function(data) {
-
+                                  off();
                                
 								var len = data.length;
 								$.each(data.itemList,function(key, item) {
@@ -456,7 +495,7 @@
 							
 							})
 								
-								
+								if(token!=5){
                                 var prodQtyListLength=data.getProductionItemQtyList.length;
                               if(prodQtyListLength>0)
                                 {
@@ -484,11 +523,46 @@
                                 	
                                 	} 
                                 
-								
+								}
+								else if(token==5)          //code of Previous Plan of specific date // Aug 7 2018
+									{
+									var prodQtyLength=data.prodDetails.length;
+		                              if(prodQtyLength>0)
+		                                {
+									$.each(data.prodDetails,function(key, prod) {
+										
+										$.each(data.itemList,function(key, item) {
+											
+											if(prod.itemId==item.id)
+												{
+										         document.getElementById('qty'+id+''+prod.itemId).value = prod.planQty;
+												}
+										})
+
+									})
+		                                }
+	                                else
+	                                	{
+	                                       $.each(data.itemList,function(key, item) {
+										         document.getElementById('qty'+id+''+item.id).value =0;
+										
+										})
+	                                	
+	                                	} 
+									}
 							});
 		     
 			
 		}
+</script>
+<script>
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
 </script>
 </body>
 

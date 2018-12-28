@@ -11,13 +11,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FR Bill PDF</title>
 
+ <style type="text/css">
+ table {
+	border-collapse: collapse;
+	font-size: 10;
+	width:100%;
+page-break-inside: auto !important 
+
+} 
+</style>
 </head>
 <body>
 	<c:forEach items="${billDetails}" var="frDetails" varStatus="count">
 	
 	<c:set var="srCnt" value="0" />
 		<c:set var="totalRowCount" value="0" />
-						<c:set var="maxRowCount" value="28" />
+						<c:set var="maxRowCount" value="83" />
 			
 			
 	
@@ -116,8 +125,8 @@
 			</tr>
 		</table>
 
-		<table width="100%" border="0" cellpadding="0" cellspacing="0"
-			style="border-top: 1px solid #313131; border-right: 1px solid #313131">
+		<table width="100%" border="1" cellpadding="0" cellspacing="0"
+			style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131">
 			<tr>
 				<td rowspan="2" width="2%"
 					style="border-bottom: 1px solid #313131; border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 10px;">No.</td>
@@ -136,12 +145,14 @@
 				<td align="center" width="5%" rowspan="2"
 					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Rate</td>
 				<td align="center" width="10%" rowspan="2"
-					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Amount</td>
+					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Taxable Amt</td>
 				<td align="center" width="10%" colspan="2"
 					style="border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px; text-align: center;">
 					CGST</td>
 				<td align="center" width="10%" colspan="2"
 					style="border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px; text-align: center;">SGST</td>
+				<td align="center" width="10%" rowspan="2"
+					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Total</td>
 			</tr>
 			<tr>
 				<td align="center"
@@ -159,7 +170,7 @@
 			<c:set var="totalAmt" value="0" />
 			<c:set var="totalCgst" value="0" />
 			<c:set var="totalSgst" value="0" />
-		
+			<c:set var="acttotal" value="0" />
 			
 			<c:forEach items="${frDetails.subCatList}" var="category">
 	<c:set var="totalRowCount" value="${totalRowCount+1}" />
@@ -187,7 +198,8 @@
 						style="border-left: 1px solid #313131; padding: 3px 5px; color: white; font-size: 10px;">-</td>
 					<td
 						style="border-left: 1px solid #313131; padding: 3px 5px; color: white; font-size: 10px;">-</td>
-
+<td
+						style="border-left: 1px solid #313131; padding: 3px 5px; color: white; font-size: 10px;">-</td>
 
 				</tr>	
 				<c:forEach items="${frDetails.billDetailsList}" var="billDetails"
@@ -202,7 +214,7 @@
 						
 						</table>
 						
-							<table width="100%" border="0" cellpadding="0" cellspacing="0"
+							<table width="100%" border="1" cellpadding="0" cellspacing="0"
 			style="border-top: 1px solid #313131; border-right: 1px solid #313131;">
 			<!-- <tr>
 				<td colspan="6" width="60%"
@@ -226,11 +238,11 @@
 					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;"><p>Certified
 						that the particulars given above are true and correct.</p></td>
 			</tr> -->
-			<tr>
-				<!-- <td colspan="6" width="60%"
+		<!-- 	<tr>
+				<td colspan="6" width="60%"
 					style=" border-bottom: 1px solid #313131;border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;"><p>
 						<b></b><br></br>
-					</p></td> -->
+					</p></td>
 				<td colspan="11" width="60%"
 					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 
@@ -244,7 +256,7 @@
 					</table>
 
 				</td>
-			</tr>
+			</tr> -->
 		<!-- 	<tr>
 				<td colspan="6" width="50%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;">
@@ -313,7 +325,7 @@
 
 			</tr>
 
-			<%-- <tr>
+		<tr>
 				<td width="50%" colspan="6"
 					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 14px;">
 					<p
@@ -376,10 +388,10 @@
 						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
 
 				</td>
-			</tr> --%>
+			</tr> 
 		</table>
 						
-							<table width="100%" border="0" cellpadding="0" cellspacing="0"
+							<table width="100%" border="1" cellpadding="0" cellspacing="0"
 			style="border-top: 1px solid #313131; border-right: 1px solid #313131">
 			<tr>
 				<td rowspan="2" width="2%"
@@ -400,12 +412,14 @@
 				<td align="center" width="5%" rowspan="2"
 					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Rate</td>
 				<td align="center" width="10%" rowspan="2"
-					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Amount</td>
+					style="border-bottom: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px;">Taxable Amt</td>
 				<td align="center" width="10%" colspan="2"
 					style="border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px; text-align: center;">
 					CGST</td>
 				<td align="center" width="10%" colspan="2"
 					style="border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px; text-align: center;">SGST</td>
+						<td align="center" width="10%" colspan="2"
+					style="border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 10px; text-align: center;">Total</td>
 			</tr>
 			<tr>
 				<td align="center"
@@ -493,6 +507,12 @@
 										type="number" maxFractionDigits="2" minFractionDigits="2"
 										value="${billDetails.sgstRs}" /></td>
 								<c:set var="totalSgst" value="${totalSgst+billDetails.sgstRs}" />
+								
+								<td align="right"
+									style="border-left: 1px solid #313131; padding: 3px 5px; color: #000; font-size: 12px;"><fmt:formatNumber
+										type="number" maxFractionDigits="2" minFractionDigits="2"
+										value="${(billDetails.sgstRs)+(billDetails.cgstRs)+(billDetails.taxableAmt)}" /></td>
+											<c:set var="acttotal" value="${acttotal+(billDetails.sgstRs)+(billDetails.cgstRs)+(billDetails.taxableAmt)}" />
 							</tr>
 						</c:when>
 					</c:choose>
@@ -529,6 +549,10 @@
 					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 12px;"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalSgst}" /></b></td>
+					<td align="right"
+					style="border-top: 1px solid #313131; border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 12px;"><b><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${acttotal}" /></b></td>			
 			</tr>
 			<tr>
 				<c:set var="finalAmt" value="${totalAmt+totalCgst+totalSgst}"></c:set>
@@ -549,6 +573,7 @@
 				<td
 					style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
 				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
 				<td style="border-bottom: 1px solid #313131; font-size: 12px;"><b>Total:</b></td>
 				<td align="right"
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 12px;"><b>
@@ -556,7 +581,7 @@
 				</b></td>
 			</tr>
 		</table>
-      <c:if test="${totalRowCount>28}"><div style="page-break-after: always;"></div><br></br>
+   <%--    <c:if test="${totalRowCount>28}"><div style="page-break-after: always;"></div><br></br>
      <!-- //-------------------------------------------------------------------------------- -->			
 		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
 		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
@@ -592,7 +617,7 @@
 				</td>
 
 			</tr>
-<%-- 
+
 			<tr>
 				<td width="50%" colspan="6"
 					style="border-top: 1px solid #313131; padding: 8px; color: #FFF; font-size: 14px;">
@@ -656,11 +681,11 @@
 						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
 
 				</td>
-			</tr> --%>
+			</tr>
 		</table>
 		<!-- //-------------------------------------------------------------------------------- -->
       
-      </c:if>
+      </c:if> --%>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" 
 			style="border-right: 1px solid #313131; border-top: 1px solid #313131">
 			<tr>

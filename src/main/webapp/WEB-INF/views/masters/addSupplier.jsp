@@ -13,7 +13,7 @@
 
 
 <c:url var="getSupplierDetails" value="/getSupplierDetails" />
-
+<c:url var="getRmItems" value="/getRmItems" />
 
 
 	<div class="container" id="main-container">
@@ -66,7 +66,7 @@
 
 
 					<div class="box-content">
-							<form action="addSupplier" method="post" class="form-horizontal" id=
+							<form action="${pageContext.request.contextPath}/addSupplier" method="post" class="form-horizontal" id=
 									"validation-form"
 										enctype="multipart/form-data" method="post">
 							
@@ -212,15 +212,26 @@
 													data-rule-maxlength="11"
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
-
-									<label class="col-sm-3 col-lg-2 control-label">Email 4</label>
-									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email4" class="form-control" placeholder="Enter Email 4 "
-													data-rule-email="true" />
-									</div>
+										<label class="col-sm-3 col-lg-2 control-label">RM Group</label>
+											<div class="col-sm-6 col-lg-4 controls">
+												<select name="rm_group" id="rm_group" class="form-control chosen" tabindex="6">
+												<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
+													 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList" varStatus="count">
+									  						 <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+		 											</c:forEach> 
+												</select>
+											</div>
+									
 								 
 								</div>
-								 
+								<div class="form-group">
+								 <label class="col-sm-3 col-lg-2 control-label">RM Items</label>
+									<div class="col-sm-6 col-lg-4 controls">
+									<select data-placeholder="Select RM Items" class="form-control chosen" name="supp_email4"  multiple="multiple"
+											id="supp_email4"  >
+										</select>
+									</div>
+									</div>
 								<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Phone 2</label>
 									<div class="col-sm-6 col-lg-4 controls">
@@ -382,6 +393,28 @@
 				src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/jquery.validate.min.js"></script>
 			<script type="text/javascript"
 				src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/additional-methods.min.js"></script>
-				
+<script type="text/javascript">
+$(document).ready(function() { 
+	$('#rm_group').change(
+			function() {
+				$.getJSON('${getRmItems}', {
+					grpId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+               var html = '<option value="" disabled="disabled"  >Select Raw Material</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].rmId + '">'
+								+ data[i].rmName + '</option>';
+					}
+					html += '</option>';
+					$('#supp_email4').html(html);
+					$("#supp_email4").trigger("chosen:updated");
+
+				});
+			});
+});
+</script>
 </body>
 </html>

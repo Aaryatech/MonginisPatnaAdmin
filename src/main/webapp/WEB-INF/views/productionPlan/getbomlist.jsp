@@ -31,7 +31,7 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+	<!-- 		<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i> Search Bill Of Material List
@@ -39,7 +39,7 @@
 					
 				</div>
 				
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -62,8 +62,8 @@
 					
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid1">
-								<thead>
+								 id="table_grid1">
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										
@@ -122,7 +122,7 @@
 														 	</c:when>
 														</c:choose>
 																<td align="left"><c:out
-																value="${depname}" /></td>
+																value="${getbomList.fromDeptName}" /></td>
 																
 													  
 													<td align="left"><fmt:formatDate pattern = "dd-MM-yyyy" value = "${getbomList.reqDate}" />   </td>

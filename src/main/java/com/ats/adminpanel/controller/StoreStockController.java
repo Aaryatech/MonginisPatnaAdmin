@@ -7,6 +7,7 @@ import java.time.Period;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,11 +34,15 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.BmsStockDetailed;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.ItemRes;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialDetails;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialDetailsList;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUom;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUomList;
+import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
+import com.ats.adminpanel.model.item.Item;
+import com.ats.adminpanel.model.item.MCategoryList;
 import com.ats.adminpanel.model.login.UserResponse;
 import com.ats.adminpanel.model.stock.GetStoreCurrentStock;
 import com.ats.adminpanel.model.stock.StoreStockDetail;
@@ -52,7 +57,7 @@ public class StoreStockController {
 	public StoreStockHeader storeStockHeader = new StoreStockHeader();
 	public  List<GetStoreCurrentStock> getStoreCurrentStockList;
 	public int flag=0;
-	RestTemplate rest = new RestTemplate();
+	RestTemplate rest = new RestTemplate();int catId=1;
 	List<StoreStockDetail> storeStockDetailList=new ArrayList<>();
 	@RequestMapping(value = "/showStoreOpeningStock", method = RequestMethod.GET)
 	public ModelAndView showStoreOpeningStock(HttpServletRequest request, HttpServletResponse response) {
@@ -61,15 +66,125 @@ public class StoreStockController {
 		
 		ModelAndView model = new ModelAndView("stock/storeOpeningStock");//
 		flag=0;
-		
 		try {
+			
+			try {
+				catId = Integer.parseInt(request.getParameter("cat_name"));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+			
 			storeStockDetailList=new ArrayList<>();
 			storeStockHeader = new StoreStockHeader();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("status", 0); 
+			if(catId==18) {
+				
+			    map.add("subCatId", 2); 
+			
+			}
+			else if(catId==19) {
+				
+				map.add("subCatId",3); 
+			}
+			else {
+				
+				map.add("subCatId",1); 
+			}
 			storeStockHeader=rest.postForObject(Constants.url +"getCurrentStoreStockHeader",map, StoreStockHeader.class);
 			System.out.println("storeStockHeaderforedit"+storeStockHeader);
 			
+			if(catId==18 || catId==19)
+			{
+				
+				
+			    map = new LinkedMultiValueMap<String, Object>();
+				map.add("subCatId", catId);
+				
+				ItemRes[] item = rest.postForObject(Constants.url + "getItemsResBySubCatId", map, ItemRes[].class);
+
+				ArrayList<ItemRes> tempItemList = new ArrayList<ItemRes>(Arrays.asList(item));
+				
+				if(storeStockHeader.getStoreStockId()==0)
+				{
+						System.out.println("in if");
+						flag=1; 
+			            for(int i=0;i<tempItemList.size();i++)
+			            {
+			            	StoreStockDetail storeStockDetail = new StoreStockDetail();
+			            	storeStockDetail.setRmName(tempItemList.get(i).getItemName());
+			            	storeStockDetail.setRmId(tempItemList.get(i).getId());
+			            	if(catId==18) {
+			            		
+			            	storeStockDetail.setRmGroup(2);
+			            	
+			            	}else
+			            	{
+			            		storeStockDetail.setRmGroup(3);
+			            	}
+			    			storeStockDetail.setRmUom(tempItemList.get(i).getUomId());
+			    			storeStockDetailList.add(storeStockDetail);
+			            } 
+			            
+				}
+				else
+				{
+					System.out.println("in else");
+					for(int i=0;i<tempItemList.size();i++)
+		            {
+						int add=0;
+						for(int k=0;k<storeStockHeader.getStoreStockDetailList().size();k++)
+						{
+							 
+							if(storeStockHeader.getStoreStockDetailList().get(k).getRmId()==tempItemList.get(i).getId())
+							{
+								StoreStockDetail storeStockDetail = new StoreStockDetail();
+								storeStockDetail.setStoreStockDetailId(storeStockHeader.getStoreStockDetailList().get(k).getStoreStockDetailId());
+								storeStockDetail.setStoreStockDate(storeStockHeader.getStoreStockDetailList().get(k).getStoreStockDate());
+								storeStockDetail.setStoreStockId(storeStockHeader.getStoreStockDetailList().get(k).getStoreStockId());
+								storeStockDetail.setStoreOpeningStock(storeStockHeader.getStoreStockDetailList().get(k).getStoreOpeningStock());
+								storeStockDetail.setStoreClosingStock(storeStockHeader.getStoreStockDetailList().get(k).getStoreClosingStock());
+				            	storeStockDetail.setRmName(storeStockHeader.getStoreStockDetailList().get(k).getRmName());
+				            	storeStockDetail.setRmId(storeStockHeader.getStoreStockDetailList().get(k).getRmId());
+				            	storeStockDetail.setRmGroup(storeStockHeader.getStoreStockDetailList().get(k).getRmGroup());
+				    			storeStockDetail.setRmName(storeStockHeader.getStoreStockDetailList().get(k).getRmName());
+				    			storeStockDetail.setRmUom(storeStockHeader.getStoreStockDetailList().get(k).getRmUom());
+				    			storeStockDetail.setPurRecQty(storeStockHeader.getStoreStockDetailList().get(k).getPurRecQty());
+				    			storeStockDetail.setBmsIssueQty(storeStockHeader.getStoreStockDetailList().get(k).getBmsIssueQty());
+				    			storeStockDetailList.add(storeStockDetail);
+				    			add=1;
+								
+							}
+			            	
+			            }
+						if(add==0)
+						{
+							StoreStockDetail storeStockDetail = new StoreStockDetail();
+			            	storeStockDetail.setRmName(tempItemList.get(i).getItemName());
+			            	storeStockDetail.setRmId(tempItemList.get(i).getId());
+			            	if(catId==18) {
+			            		
+				            	storeStockDetail.setRmGroup(2);
+				            	
+				            	}else
+				            	{
+				            		storeStockDetail.setRmGroup(3);
+				            	}
+			    			storeStockDetail.setRmUom(tempItemList.get(i).getUomId());
+			    			storeStockDetailList.add(storeStockDetail);
+						}
+					}
+					
+				}
+				
+		        model.addObject("rmList",storeStockDetailList);
+		        model.addObject("subCatId",catId);
+				
+			}
+			else
+			{
 			RawMaterialUomList rawMaterialUomList = rest.getForObject(Constants.url + "rawMaterial/getRmUomList",
 	                RawMaterialUomList.class); 
 			
@@ -142,6 +257,11 @@ public class StoreStockController {
 	        System.out.println("storeStockHeader"+storeStockHeader);
 	        model.addObject("uomList",rawMaterialUomList.getRawMaterialUom());
 	        model.addObject("rmList",storeStockDetailList);
+	        model.addObject("subCatId",catId);
+			}
+			
+			
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -155,6 +275,21 @@ public class StoreStockController {
 	public String insertStoreOpeningStock(HttpServletRequest request, HttpServletResponse response) {
 		try
 		{
+		
+			try {
+				catId = Integer.parseInt(request.getParameter("catId"));
+				if(catId==18) {
+					catId=2;
+				}else if(catId==19)
+				{
+					catId=3;
+				}
+			}
+			catch (Exception e) {
+				catId=1;
+				e.printStackTrace();
+			}
+			
 			if(flag==0)
 			{
 				List<StoreStockDetail> storeStockDetailListnew=new ArrayList<>();
@@ -227,7 +362,7 @@ public class StoreStockController {
 				storeStockHeaderin.setStoreStockStatus(0);
 				storeStockHeaderin.setExBoll1(0);
 				storeStockHeaderin.setExBoll2(0);
-				storeStockHeaderin.setExInt1(0);
+				storeStockHeaderin.setExInt1(catId);//CatId added
 				storeStockHeaderin.setExInt2(0);
 				 
 				
@@ -291,7 +426,7 @@ public class StoreStockController {
 		String fromDate=request.getParameter("fromDate");
 		String toDate=request.getParameter("toDate");
 		System.out.println("Date  "+fromDate+"And "+toDate);
-		
+		int grpId=Integer.parseInt(request.getParameter("grpId"));
 		DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd-MM-uuuu" );
 		
 		YearMonth ym = YearMonth.parse( fromDate , f );
@@ -312,7 +447,7 @@ public class StoreStockController {
 		MultiValueMap<String, Object> map=new LinkedMultiValueMap<>();
 		map.add("fromDate",""+fDate);
 		map.add("toDate",""+tDate);
-		 
+		map.add("grpId", grpId);
 		StoreStockDetailList storeStockDetailList=rest.postForObject(Constants.url +"getMonthWiseStoreStock", map, StoreStockDetailList.class);
 		System.out.println("Res List "+storeStockDetailList.toString());
 		
@@ -333,9 +468,11 @@ public class StoreStockController {
 		System.out.println("in method");
 		String fromDate=request.getParameter("fromDate");
 		String toDate=request.getParameter("toDate");
+		int grpId=Integer.parseInt(request.getParameter("grpId"));
+
 		System.out.println("Date  "+fromDate+"And "+toDate);
 		
-		DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd-MM-uuuu" );
+	/*	DateTimeFormatter f = DateTimeFormatter.ofPattern( "dd-MM-uuuu" );
 		  LocalDate tDate = LocalDate.parse(toDate, f);
 		
 		if(tDate.isAfter(LocalDate.now()) || tDate.isEqual(LocalDate.now())){
@@ -343,12 +480,13 @@ public class StoreStockController {
 			tDate=LocalDate.now().minus(Period.ofDays(1));
 			
 			}
-		 
+		 */
 		MultiValueMap<String, Object> map=new LinkedMultiValueMap<>();
-		map.add("fromDate", DateConvertor.convertToYMD(fromDate));
-		map.add("toDate", ""+tDate );
+		map.add("fromDate",DateConvertor.convertToYMD(fromDate));
+		map.add("toDate",DateConvertor.convertToYMD(toDate));
+		map.add("grpId",grpId);
 		 
-		StoreStockDetailList storeStockDetailList=rest.postForObject(Constants.url +"getMonthWiseStoreStock", map, StoreStockDetailList.class);
+		StoreStockDetailList storeStockDetailList=rest.postForObject(Constants.url+"getMonthWiseStoreStock", map, StoreStockDetailList.class);
 		System.out.println("Res List "+storeStockDetailList.toString());
 		List<StoreStockDetail> storeStockList=new ArrayList<StoreStockDetail>();
 		if(storeStockDetailList.getStoreStockDetailList()!=null && !storeStockDetailList.getStoreStockDetailList().isEmpty())
@@ -365,14 +503,15 @@ public class StoreStockController {
 		getStoreCurrentStockList=new ArrayList<>();
 		
 		System.out.println("in method");
-		 
+		int grpId=Integer.parseInt(request.getParameter("grpId"));
+		
 		HttpSession session=request.getSession();
 		UserResponse userResponse =(UserResponse) session.getAttribute("UserDetail");
 		int deptId=userResponse.getUser().getDeptId();
 		
 		String settingKey = new String();
 		MultiValueMap<String, Object> map=new LinkedMultiValueMap<>();
-		settingKey = "STORE";
+		settingKey = "BMS";
 
 		map.add("settingKeyList", settingKey);
 
@@ -381,7 +520,7 @@ public class StoreStockController {
 		try {
 		map=new LinkedMultiValueMap<>();
 		map.add("deptId", settingList.getFrItemStockConfigure().get(0).getSettingValue());
-		 
+	    map.add("grpId", grpId);
 		System.out.println("Dept id :"+settingList.getFrItemStockConfigure().get(0).getSettingValue());
 		ParameterizedTypeReference<List<GetStoreCurrentStock>> typeRef = new ParameterizedTypeReference<List<GetStoreCurrentStock>>() {
 		};
@@ -409,13 +548,24 @@ public class StoreStockController {
 		//getStoreCurrentStockList
 		StoreStockHeader storeStockHeader=new StoreStockHeader();
 		
+		try {
+			catId = Integer.parseInt(request.getParameter("subCat"));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
 		
 		MultiValueMap<String, Object> map=new LinkedMultiValueMap<>();
 		map.add("status", 0);
+			
+		map.add("subCatId",catId); 
+	
 		
 		storeStockHeader=rest.postForObject(Constants.url +"getCurrentStoreStockHeader", map, StoreStockHeader.class);
 		
 		List<StoreStockDetail> storeStockDetailList=storeStockHeader.getStoreStockDetailList();
+		System.err.println(":********storeStockDetailList="+storeStockDetailList.toString());
 		for(int i=0;i<storeStockDetailList.size();i++)
 		{
 			for(int j=0;j<getStoreCurrentStockList.size();j++)
@@ -430,7 +580,7 @@ public class StoreStockController {
 				}
 			}
 		}
-		
+		System.err.println(":********######storeStockDetailList="+storeStockDetailList.toString());
 		storeStockHeader.setStoreStockStatus(1);
 		storeStockHeader.setStoreStockDetailList(storeStockDetailList);
 		
@@ -449,7 +599,68 @@ public class StoreStockController {
 		 
 		
 		//insert next day Stock
-		
+		if(catId==2 || catId==3)
+		{
+			
+			int catIdAct = catId;
+			
+			if(catIdAct==2)
+			{
+				catIdAct=18;
+			}
+			else
+			{
+				catIdAct=19;
+			}
+		    map = new LinkedMultiValueMap<String, Object>();
+			map.add("subCatId", catIdAct);
+			
+			ItemRes[] item = rest.postForObject(Constants.url + "getItemsResBySubCatId", map, ItemRes[].class);
+
+			ArrayList<ItemRes> tempItemList = new ArrayList<ItemRes>(Arrays.asList(item));
+			
+			 storeStockHeader=new StoreStockHeader();
+			  List<StoreStockDetail>  newStoreStockDetailList=new ArrayList<>();
+				StoreStockDetail storeStockDetail=new StoreStockDetail();
+			storeStockHeader.setStoreStockDate(nextDate);
+			storeStockHeader.setStoreStockStatus(0);
+			storeStockHeader.setExBoll1(0);
+			storeStockHeader.setExBoll2(0);
+			storeStockHeader.setExInt1(catId);
+			storeStockHeader.setExInt2(0);
+			 
+			
+			for(int i=0;i<tempItemList.size();i++)
+			{
+				for(int j=0;j< storeStockDetailList.size();j++) {
+					if(storeStockDetailList.get(j).getRmId()==tempItemList.get(i).getId())
+					{
+				storeStockDetail=new StoreStockDetail();
+				storeStockDetail.setRmId(tempItemList.get(i).getId());
+				storeStockDetail.setBmsIssueQty(0);
+				storeStockDetail.setExBool(0);
+				storeStockDetail.setExInt1(0);
+				storeStockDetail.setExInt2(0);
+				storeStockDetail.setIsDelete(0);
+				storeStockDetail.setPurRecQty(0.0f);
+				storeStockDetail.setStoreStockDate(nextDate);
+				storeStockDetail.setRmGroup(catId);
+				storeStockDetail.setRmName(tempItemList.get(i).getItemName());
+				storeStockDetail.setRmUom(tempItemList.get(i).getUomId());
+				storeStockDetail.setStoreClosingStock(0);
+				
+				 
+				storeStockDetail.setStoreOpeningStock(storeStockDetailList.get(j).getStoreClosingStock());
+				newStoreStockDetailList.add(storeStockDetail);
+				break;
+			}
+				}
+			}
+			storeStockHeader.setStoreStockDetailList(newStoreStockDetailList);
+			System.out.println("Before Insert "+storeStockHeader.toString());
+			  storeStockHeader=rest.postForObject(Constants.url +"insertStoreOpeningStock",storeStockHeader, StoreStockHeader.class);
+		}
+		else {
 		
 		 RawMaterialUomList rawMaterialUomList = rest.getForObject(Constants.url + "rawMaterial/getRmUomList",
 	                RawMaterialUomList.class);
@@ -467,7 +678,7 @@ public class StoreStockController {
 			storeStockHeader.setStoreStockStatus(0);
 			storeStockHeader.setExBoll1(0);
 			storeStockHeader.setExBoll2(0);
-			storeStockHeader.setExInt1(0);
+			storeStockHeader.setExInt1(catId);
 			storeStockHeader.setExInt2(0);
 			 
 			
@@ -504,7 +715,7 @@ public class StoreStockController {
 			
 			System.out.println("Res : "+storeStockHeader.toString());
 		
-		
+		}
 		return "redirect:/showStoreStock";
 	}
 		

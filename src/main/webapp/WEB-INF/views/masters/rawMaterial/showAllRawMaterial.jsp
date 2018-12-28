@@ -6,7 +6,12 @@
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 	<style>
-  
+  abbr {
+  text-decoration: none;
+}
+abbr:hover{
+  cursor: default;
+}
 /* #search {
    
     
@@ -22,7 +27,7 @@
 
 </style>
  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
-	<body>
+	<body onload="">
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -135,9 +140,166 @@
 									<div class="table-responsive" style="border: 0">
 									 
 				
-									 
+									 <c:choose>
+									 <c:when test="${grpId==1}">
 										<table width="100%" class="table table-advance" id="table1">
-											<thead>
+											<thead style="background-color: #f3b5db;">
+												<tr>
+
+													<th width="100"  align="left">Sr No</th>
+													<th width="188" align="left">RM Name</th>
+													<th width="120" align="left">Category</th>
+													<th width="190" align="center">Sub Category</th>
+													<th width="270" align="center">BMS ROL Qty</th>
+ 
+													<th width="270" align="center">Store ROL Qty</th>
+											     	<th width="40" align="center">SGST %</th> 
+												 	<th width="40" align="center">CGST %</th> 
+	                                                <th width="40" align="center">IGST %</th> 
+													<th class="col-sm-1"> Is Critical</th>
+													<th width="245" align="left"> Action</th>
+												 
+
+												</tr>
+
+											</thead>
+
+											<tbody>
+
+												<c:forEach items="${RawmaterialList}" var="RawmaterialList"
+													varStatus="count">
+
+													<tr>
+														<td><c:out value="${count.index+1}" /></td>
+
+														<td align="left"><c:out
+																value="${RawmaterialList.rmName}" /></td>
+
+
+														<td align="left"><c:out
+																value="${RawmaterialList.catName}" /></td>
+
+														<td align="center"><c:out
+																value="${RawmaterialList.sunCatName}" /></td>
+
+														<td align="center"><c:out value="${RawmaterialList.bmsRolQty}" /></td>
+
+														<td align="center"><c:out value="${RawmaterialList.storeRolQty}" /></td>
+
+														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.sgstPer}" /></td>
+														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.cgstPer}" /></td>
+														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.igstPer}" /></td>
+														<c:choose>
+														<c:when test="${RawmaterialList.rmIsCritical==0}">
+														<td class="col-sm-1" align="center"><c:out
+																value="Low" /></td>
+														</c:when>
+														<c:when test="${RawmaterialList.rmIsCritical==1}">
+														<td class="col-sm-1" align="center"><c:out
+																value="Normal" /></td>
+														</c:when>
+														<c:when test="${RawmaterialList.rmIsCritical==2}">
+														<td class="col-sm-1" align="center"><c:out
+																value="High" /></td>
+														</c:when>
+														</c:choose>
+														
+					<td  class="col-md-1" ><a href="${pageContext.request.contextPath}/getRawMaterialDetails?selectedRmId=${RawmaterialList.rmId}" class="action_btn" >
+						<abbr title="Details"><i class="fa fa-edit fa-lg"></i></abbr></a>
+						
+					<a href="${pageContext.request.contextPath}/deleteRawMaterial/${RawmaterialList.rmId}/${grpId}"
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove fa-lg"></span></a>	
+						<a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${RawmaterialList.rmId}" class="action_btn" >
+						<abbr title="Rate Verification"><i class="fa fa-list"></i></abbr></a>
+						</td>
+
+												</tr>
+												</c:forEach>
+
+											</tbody>
+										</table>
+										</c:when>
+										<c:when test="${grpId==2 || grpId==3}">
+										
+										
+									
+										<table id="table1" class="table table-advance">
+										<thead style="background-color: #f3b5db;">
+												<tr class="bgpink">
+											<!-- 	<th class="col-md-1">SELECT</th> -->
+													<th class="col-md-1">Sr No</th>
+											<th class="col-md-1">Item Id</th>
+											<th class="col-md-3">Item Name</th>
+<!-- 											<th class="col-md-2">Image</th>
+ -->											<th class="col-md-1">Rate</th>
+											<th class="col-md-1">MRP</th>
+										
+												<th class="col-md-1">Min Qty</th>
+											<th class="col-md-1">Max Qty</th>
+											<th class="col-md-1">Reorder Qty</th>
+												<th class="col-md-1">Status</th>
+											<th class="col-md-2">Action</th>
+												</tr>
+												</thead>
+												<tbody>
+											
+	<c:forEach items="${itemList}" var="itemsList" varStatus="count">
+											<tr>
+									<%-- 	<td><input type="checkbox" class="chk" name="select_to_print" id="${itemsList.id}"	value="${itemsList.id}"/></td> --%>
+
+												<td><c:out value="${count.index+1}" /></td>
+												<td align="left"><c:out value="${itemsList.itemId}" /></td>
+												<td align="left"><c:out value="${itemsList.itemName}"/></td>
+												
+											<%-- 	<td align="left">
+												<img
+													src="${url}${itemsList.itemImage}" width="120" height="100"
+													onerror="this.src='${pageContext.request.contextPath}/resources/img/No_Image_Available.jpg';"/>
+													
+												</td> --%>
+												<td align="left"><c:out value="${itemsList.itemRate1}" /></td>
+												<td align="left"><c:out value="${itemsList.itemMrp1}" /></td>
+												
+												<td align="left"><c:out value="${itemsList.minQtyStock}" /></td>
+												<td align="left"><c:out value="${itemsList.maxQty}" /></td>
+												<td align="left"><c:out value="${itemsList.reorderQty}" /></td>
+												<td align="left">
+												<c:choose>
+												<c:when test="${itemsList.itemIsUsed==1}">
+													<c:out value="Active" />
+												</c:when>
+												<c:when test="${itemsList.itemIsUsed==2}"><c:out value="Special Days"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==3}"><c:out value="Sp Day Cake"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==4}"><c:out value="InActive"/></c:when>
+												</c:choose>
+											
+												</td>
+												
+												
+
+													<td align="left"><a href="updateItem/${itemsList.id}" ><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                                     
+													<a href="${pageContext.request.contextPath}/deleteItem/${itemsList.id}" 
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a>
+														
+<a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${itemsList.id}" class="action_btn" >
+						<abbr title="Rate Verification" style="  cursor: default;"><i class="fa fa-list fa-lg"></i></abbr></a></td>
+											</tr>
+
+										</c:forEach>
+
+
+							</tbody>
+
+						</table>
+					
+										</c:when>
+										<c:otherwise>
+											<table width="100%" class="table table-advance" id="table1">
+											<thead style="background-color: #f3b5db;">
 												<tr>
 
 													<th width="100"  align="left">Sr No</th>
@@ -204,7 +366,8 @@
 					<a href="${pageContext.request.contextPath}/deleteRawMaterial/${RawmaterialList.rmId}/${grpId}"
 													onClick="return confirm('Are you sure want to delete this record');"><span
 														class="glyphicon glyphicon-remove fa-lg"></span></a>	
-						
+						<a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${RawmaterialList.rmId}" class="action_btn" >
+						<abbr title="Rate Verification"><i class="fa fa-list fa-lg"></i></abbr></a>
 						</td>
 
 												</tr>
@@ -212,6 +375,8 @@
 
 											</tbody>
 										</table>
+										</c:otherwise>
+									 </c:choose>
 									</div>
 								</div>
 							

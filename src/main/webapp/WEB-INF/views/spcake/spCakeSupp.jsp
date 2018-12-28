@@ -243,16 +243,16 @@
 									<div id="table-scroll" class="table-scroll">
 
 										<div id="faux-table" class="faux-table" aria="hidden">
-											<table id="table2" class="main-table">
+											<table id="table2" class="table table-advance">
 												<thead>
 													<tr class="bgpink">
 														<th width="45" style="width: 18px">Sr.No.</th>
-														<th width="100" align="left">SP Code</th>
-														<th width="100" align="left">Special Cake</th>
-														<th width="100" align="left">HSN Code</th>
-														<th width="100" align="left">CESS(%)</th>
-														<th width="100" align="left">UOM</th>
-														<th width="81" align="left">Action</th>
+														<th class="col-md-2" align="left">SP Code</th>
+														<th class="col-md-2" align="left">Special Cake</th>
+														<th class="col-md-2" align="left">HSN Code</th>
+														<th class="col-md-2" align="left">CESS(%)</th>
+														<th class="col-md-2" align="left">UOM</th>
+														<th class="col-md-2" align="left">Action</th>
 													</tr>
 												</thead>
 											</table>
@@ -264,13 +264,13 @@
 												<thead>
 													<tr class="bgpink">
 														<th width="45" style="width: 18px">Sr.No.</th>
-														<th width="100" align="left">SP Code</th>
+														<th class="col-md-2" align="left">SP Code</th>
 
-														<th width="100" align="left">Special Cake</th>
-														<th width="100" align="left">HSN Code</th>
-														<th width="100" align="left">CESS(%)</th>
-														<th width="100" align="left">UOM</th>
-														<th width="81" align="left">Action</th>
+														<th class="col-md-2" align="left">Special Cake</th>
+														<th class="col-md-2" align="left">HSN Code</th>
+														<th class="col-md-2" align="left">CESS(%)</th>
+														<th class="col-md-2" align="left">UOM</th>
+														<th class="col-md-2" align="left">Action</th>
 													</tr>
 												</thead>
 
@@ -300,7 +300,7 @@
 																<c:otherwise>
 																	<td align="left"><a
 																		href="${pageContext.request.contextPath}/updateSpSupp/${spSuppList.id}"
-																		class="disableClick"><span
+																		><span
 																			class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;</td>
 																</c:otherwise>
 															</c:choose>

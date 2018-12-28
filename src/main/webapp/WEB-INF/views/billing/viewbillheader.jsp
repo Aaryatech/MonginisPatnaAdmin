@@ -3,7 +3,11 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
+<style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
 
@@ -27,14 +31,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>View Your Bills
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<c:set var="isEdit" value="0">
@@ -99,7 +103,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Search Bill List
+								<i class="fa fa-bars"></i> View Your Bills
 							</h3>
 							<div class="box-tool">
 								<!-- <a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -142,7 +146,7 @@
 
 									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Select
 										Franchise </label>
-									<div class="col-sm-9 col-lg-10 controls">
+									<div class="col-sm-9 col-lg-4 controls">
 
 										<select class="form-control chosen" multiple="multiple"
 											tabindex="6" name="fr_id" id="fr_id">
@@ -158,12 +162,11 @@
 									</div>
 
 
-									<h4 align="center">OR</h4>
 
 
-									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Select
-										Route </label>
-									<div class="col-sm-9 col-lg-10 controls">
+									<label for="textfield2" class="col-xs-1 col-lg-1 control-label">
+										OR </label> 
+									<div class="col-sm-9 col-lg-3 controls">
 
 
 										<select class="form-control chosen" tabindex="6"
@@ -177,7 +180,7 @@
 
 										</select>
 									</div>
-								</div>
+								<!-- </div>
 
 
 
@@ -189,7 +192,7 @@
 
 								<div align="center" class="form-group">
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
 										<input type="button" class="btn btn-primary" value="Search"
 											id="callSubmit" onclick="callSearch()">
 
@@ -234,15 +237,15 @@
 										<div id="table-scroll" class="table-scroll">
 
 											<div id="faux-table" class="faux-table" aria="hidden">
-												<table id="table2" class="main-table">
+												<table id="table2" class="table table-advance" border="1" >
 													<thead>
 														<tr class="bgpink">
 															<th class="col-sm-1" align="left">Sr No</th>
-															<th class="col-md-2" align="left">Invoice No</th>
-															<th class="col-md-2" align="left">Date</th>
+															<th class="col-md-1" align="left">Inv No</th>
+															<th class="col-md-1" align="left">Date</th>
 															<th class="col-md-2" align="left">Franchise Name</th>
-															<th class="col-md-1" align="left">Taxable Amt</th>
-															<th class="col-md-1" align="left">Total tax</th>
+															<th class="col-md-2" align="left">Taxable Amt</th>
+															<th class="col-md-2" align="left">Total tax</th>
 															<th class="col-md-1" align="left">Total</th>
 															<th class="col-md-1" align="left">Status</th>
 															<th class="col-md-2" align="left">Action</th>
@@ -253,15 +256,15 @@
 											</div>
 											<div class="table-wrap">
 
-												<table id="table1" class="table table-advance">
+												<table id="table1" class="table table-advance" border="1" >
 													<thead>
 														<tr class="bgpink">
 															<th class="col-sm-1" align="left">Sr No</th>
-															<th class="col-md-2" align="left">Invoice No</th>
-															<th class="col-md-2" align="left">Date</th>
+															<th class="col-md-1" align="left">Inv No</th>
+															<th class="col-md-1" align="left">Date</th>
 															<th class="col-md-2" align="left">Franchise Name</th>
-															<th class="col-md-1" align="left">Taxable Amt</th>
-															<th class="col-md-1" align="left">Total tax</th>
+															<th class="col-md-2" align="left">Taxable Amt</th>
+															<th class="col-md-2" align="left">Total tax</th>
 															<th class="col-md-1" align="left">Total</th>
 															<th class="col-md-1" align="left">Status</th>
 															<th class="col-md-1" align="left">Action</th>
@@ -298,11 +301,11 @@
 
 																<td class="col-md-2" align="left"><c:out
 																		value="${billHeadersList.frName}" /></td>
-																<td class="col-md-1" align="left"><c:out
+																<td class="col-md-1" style="text-align:right;"><c:out
 																		value="${billHeadersList.taxableAmt}" /></td>
-																<td class="col-md-1" align="left"><c:out
+																<td class="col-md-1" style="text-align:right;"><c:out
 																		value="${billHeadersList.totalTax}" /></td>
-																<td align="left"><c:out
+																<td style="text-align:right;"><c:out
 																		value="${billHeadersList.grandTotal}" /></td>
 																<td align="left"><c:out
 																		value="${billHeadersList.status}" /></td>
@@ -592,19 +595,19 @@
 
 													tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-1" style="text-align:right;"></td>')
 																	.html(
 																			bill.taxableAmt));
 
 													tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-1" style="text-align:right;"></td>')
 																	.html(
 																			bill.totalTax));
 
 													tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-1" style="text-align:right;"></td>')
 																	.html(
 																			bill.grandTotal));
 

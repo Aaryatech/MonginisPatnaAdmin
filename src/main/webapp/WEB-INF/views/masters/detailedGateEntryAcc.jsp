@@ -364,7 +364,7 @@
 								<div style="overflow:scroll;height:100%;width:100%;overflow:auto">
 									<table width="100%" border="0" class="table table-bordered table-striped fill-head "
 										style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color:#f3b5db; ">
 									<tr>
 												<th>Sr.No.</th>
 												<th>Item</th>

@@ -221,7 +221,7 @@ select {
 											<div class="col-sm-9 col-lg-5 controls">
 												<select data-placeholder="Select Item" name="items"
 													class="form-control chosen" tabindex="-1" id="items"
-													data-rule-required="true">
+													data-rule-required="true" >
                                                    	<option value="0">Select Item </option>
 												</select>
 												
@@ -261,7 +261,7 @@ select {
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th style="text-align:center;">Sr.No.</th>
 										<th style="text-align:center;">Item Name</th>
@@ -414,7 +414,9 @@ $(document).ready(function() {
  	var frId = $('#fr_id option:selected').val();
 	var menuId = $('#menu option:selected').val();
 	var itemId=$('#items option:selected').val();
-	var qty=$("#qty").val();add
+	var qty=$("#qty").val();
+	
+
 	 $('#loader').show();
 
 	$.getJSON('${insertItem}', {
@@ -455,20 +457,22 @@ $(document).ready(function() {
 	 }); 
 	
 	});
-	document.getElementById("fr_id").selectedIndex = "0";
-	$("#fr_id").trigger("chosen:updated");
-	document.getElementById("menu").selectedIndex = "0";
-	$('#menu')
-    .find('option')
-    .remove()
-    .end()
-	$("#menu").trigger("chosen:updated");
+	//document.getElementById("fr_id").selectedIndex = "0";
+	//$("#fr_id").trigger("chosen:updated");
+	//document.getElementById("menu").selectedIndex = "0";
+	//$('#menu')
+   // .find('option')
+   // .remove()
+   // .end()
+	//$("#menu").trigger("chosen:updated");
 	document.getElementById("items").selectedIndex = "0";
-	$('#items')
+/* 	$('#items')
     .find('option')
     .remove()
-    .end()
+    .end() */
 	$("#items").trigger("chosen:updated");
+	
+
 	document.getElementById("qty").value =0;
 
 

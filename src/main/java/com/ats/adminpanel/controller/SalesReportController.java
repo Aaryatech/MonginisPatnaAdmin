@@ -56,6 +56,8 @@ import com.ats.adminpanel.model.PDispatchReport;
 import com.ats.adminpanel.model.PDispatchReportList;
 import com.ats.adminpanel.model.POrder;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.Tax1Report;
+import com.ats.adminpanel.model.Tax2Report;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.franchisee.Menu;
@@ -179,7 +181,225 @@ public class SalesReportController {
 		return model;
 
 	}
+	@RequestMapping(value = "/showTaxReport", method = RequestMethod.GET)
+	public ModelAndView showTaxReport(HttpServletRequest request, HttpServletResponse response) {
 
+		ModelAndView model = new ModelAndView("reports/tax/tax1Report");
+		// Constants.mainAct =2;
+		// Constants.subAct =20;
+		List<Tax1Report> taxReportList=null;
+       String fromDate="";String toDate="";
+		try {
+			
+			RestTemplate restTemplate = new RestTemplate();
+			
+			fromDate=request.getParameter("fromDate");
+			toDate=request.getParameter("toDate");
+			
+			if(fromDate==null && toDate==null)
+			{
+				Date date = new Date();  
+			    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
+			    fromDate= formatter.format(date);  
+			    toDate= formatter.format(date);  
+			}
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("fromDate", fromDate);
+			map.add("toDate", toDate);
+			
+			ParameterizedTypeReference<List<Tax1Report>> typeRef = new ParameterizedTypeReference<List<Tax1Report>>() {
+			};
+			ResponseEntity<List<Tax1Report>> responseEntity = restTemplate.exchange(
+					Constants.url + "getTax1Report", HttpMethod.POST, new HttpEntity<>(map),
+					typeRef);
+
+			taxReportList = responseEntity.getBody();
+			model.addObject("taxReportList", taxReportList);
+			model.addObject("fromDate", fromDate);
+			model.addObject("toDate", toDate);
+			
+			// exportToExcel
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
+
+			rowData.add("Sr.No.");
+			rowData.add("Invoice No");
+			rowData.add("Bill No");
+			rowData.add("Bill Date");
+			rowData.add("Franchisee Name");
+			rowData.add("Franchisee Gst No");
+			
+			rowData.add("cgst %");rowData.add("sgst %");
+			
+			rowData.add("cgst Amt");rowData.add("sgst Amt");
+			rowData.add("Taxable Amt");
+			rowData.add("Total Tax");
+			rowData.add("Grand Total");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			for (int i = 0; i < taxReportList.size(); i++) {
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add((i+1)+"");
+				rowData.add("" + taxReportList.get(i).getInvoiceNo());
+				rowData.add("" + taxReportList.get(i).getBillNo());
+				rowData.add("" + taxReportList.get(i).getBillDate());
+
+				rowData.add("" + taxReportList.get(i).getFrName());
+				rowData.add("" + taxReportList.get(i).getFrGstNo());
+
+				
+				rowData.add("" + taxReportList.get(i).getCgstPer());
+				rowData.add("" + taxReportList.get(i).getSgstPer());
+				rowData.add("" + taxReportList.get(i).getCgstAmt());
+				rowData.add("" + taxReportList.get(i).getSgstAmt());
+				rowData.add("" + taxReportList.get(i).getTaxableAmt());
+				rowData.add("" + taxReportList.get(i).getTotalTax());
+				rowData.add("" + taxReportList.get(i).getGrandTotal());
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+
+			}
+
+			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelList", exportToExcelList);
+			session.setAttribute("excelName", "Tax_Repot1");
+
+		} catch (Exception e) {
+			System.out.println("Exc in Tax Report" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return model;
+
+	}
+	@RequestMapping(value = "/showTax2Report", method = RequestMethod.GET)
+	public ModelAndView showTax2Report(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("reports/tax/tax2Report");
+		// Constants.mainAct =2;
+		// Constants.subAct =20;
+		List<Tax2Report> taxReportList=null;
+       String fromDate="";String toDate="";
+		try {
+			
+			RestTemplate restTemplate = new RestTemplate();
+			
+			fromDate=request.getParameter("fromDate");
+			toDate=request.getParameter("toDate");
+			
+			if(fromDate==null && toDate==null)
+			{
+				Date date = new Date();  
+			    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
+			    fromDate= formatter.format(date);  
+			    toDate= formatter.format(date);  
+			}
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("fromDate", fromDate);
+			map.add("toDate", toDate);
+			
+			ParameterizedTypeReference<List<Tax2Report>> typeRef = new ParameterizedTypeReference<List<Tax2Report>>() {
+			};
+			ResponseEntity<List<Tax2Report>> responseEntity = restTemplate.exchange(
+					Constants.url + "getTax2Report", HttpMethod.POST, new HttpEntity<>(map),
+					typeRef);
+
+			taxReportList = responseEntity.getBody();
+			model.addObject("taxReportList", taxReportList);
+			model.addObject("fromDate", fromDate);
+			model.addObject("toDate", toDate);
+			
+			// exportToExcel
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
+
+			rowData.add("Sr.No.");
+			rowData.add("Invoice No");
+			rowData.add("Bill No");
+			rowData.add("Bill Date");
+			rowData.add("Party Name");
+			rowData.add("GSTIN");
+			
+			rowData.add("Sell @ 28%");
+			rowData.add("Sell @ 18%");
+			rowData.add("Sell @ 12%");
+			rowData.add("Sell @ 5%");
+			rowData.add("Sell @ 0%");
+			rowData.add("Taxable Value");
+			rowData.add("SGST @ 14%");
+			rowData.add("CGST @ 14%");
+			rowData.add("SGST @ 9%");
+			rowData.add("CGST @ 9%");
+			rowData.add("SGST @ 6%");
+			rowData.add("CGST @ 6%");
+			rowData.add("SGST @ 2.5%");
+			rowData.add("CGST @ 2.5%");
+			rowData.add("SGST @ 0%");
+			rowData.add("CGST @ 0%");
+			rowData.add("SGST Value");
+			rowData.add("CGST Value");
+			rowData.add("GROSS BILL");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			for (int i = 0; i < taxReportList.size(); i++) {
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add((i+1)+"");
+				rowData.add("" + taxReportList.get(i).getInvoiceNo());
+				rowData.add("" + taxReportList.get(i).getBillNo());
+				rowData.add("" + taxReportList.get(i).getBillDate());
+
+				rowData.add("" + taxReportList.get(i).getFrName());
+				rowData.add("" + taxReportList.get(i).getFrGstNo());
+
+				
+				rowData.add("" + taxReportList.get(i).getTaxableAmtTwentyEight());
+				rowData.add("" + taxReportList.get(i).getTaxableAmtEighteen());
+				rowData.add("" + taxReportList.get(i).getTaxableAmtTwelve());
+				rowData.add("" + taxReportList.get(i).getTaxableAmtFive());
+				rowData.add("" + taxReportList.get(i).getTaxableAmtZero());
+				float taxableAmt=Math.round((taxReportList.get(i).getTaxableAmtTwentyEight()+taxReportList.get(i).getTaxableAmtEighteen()+taxReportList.get(i).getTaxableAmtTwelve()+taxReportList.get(i).getTaxableAmtFive()+taxReportList.get(i).getTaxableAmtZero()));
+				rowData.add("" + taxableAmt);
+				rowData.add("" + taxReportList.get(i).getSgstAmtTwentyEight());
+				rowData.add("" + taxReportList.get(i).getCgstAmtTwentyEight());
+				rowData.add("" + taxReportList.get(i).getSgstAmtEighteen());
+				rowData.add("" + taxReportList.get(i).getCgstAmtEighteen());
+				rowData.add("" + taxReportList.get(i).getSgstAmtTwelve());
+				rowData.add("" + taxReportList.get(i).getCgstAmtTwelve());
+				rowData.add("" + taxReportList.get(i).getSgstAmtFive());
+				rowData.add("" + taxReportList.get(i).getCgstAmtFive());
+				rowData.add("" + taxReportList.get(i).getSgstAmtZero());
+				rowData.add("" + taxReportList.get(i).getCgstAmtZero());
+				float sgstSum=Math.round((taxReportList.get(i).getSgstAmtTwentyEight()+ taxReportList.get(i).getSgstAmtEighteen()+taxReportList.get(i).getSgstAmtTwelve()+taxReportList.get(i).getSgstAmtFive()+taxReportList.get(i).getSgstAmtZero()));
+				float cgstSum=Math.round((taxReportList.get(i).getCgstAmtTwentyEight()+ taxReportList.get(i).getCgstAmtEighteen()+taxReportList.get(i).getCgstAmtTwelve()+taxReportList.get(i).getCgstAmtFive()+taxReportList.get(i).getCgstAmtZero()));
+                float grossSell=Math.round((taxableAmt+sgstSum+cgstSum));
+				rowData.add("" + sgstSum);
+				rowData.add("" + cgstSum);
+				rowData.add(""+grossSell);
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+
+			}
+
+			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelList", exportToExcelList);
+			session.setAttribute("excelName", "Tax_Repot2");
+
+		} catch (Exception e) {
+			System.out.println("Exc in Tax Report" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return model;
+
+	}
 	@RequestMapping(value = "/getSaleBillwise", method = RequestMethod.GET)
 	public @ResponseBody List<SalesReportBillwise> saleReportBillWise(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -419,7 +639,8 @@ public class SalesReportController {
 		}
 
 		model.addObject("fromDate", fDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("toDate", tDate);
 
 		model.addObject("report", saleList);
@@ -762,7 +983,9 @@ public class SalesReportController {
 			model.addObject("fromDate", fromDate);
 
 			model.addObject("toDate", toDate);
-
+			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
+			
 			model.addObject("report", saleListForPdf);
 		} catch (Exception e) {
 			System.out.println("get sale Report Bill Wise1 " + e.getMessage());
@@ -1085,7 +1308,8 @@ public class SalesReportController {
 
 		}
 		model.addObject("fromDate", fromDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("toDate", toDate);
 
 		model.addObject("report", saleListForPdf);
@@ -1401,7 +1625,8 @@ public class SalesReportController {
 		model.addObject("fromDate", fromDate);
 
 		model.addObject("toDate", toDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("report", saleListForPdf);
 		return model;
 	}
@@ -1766,7 +1991,8 @@ public class SalesReportController {
 		model.addObject("fromDate", fromDate);
 
 		model.addObject("toDate", toDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("catList", staticRoyaltyBean.getCategoryList());
 		model.addObject("royaltyList", staticRoyaltyBean.getSalesReportRoyalty());
 		return model;
@@ -2079,7 +2305,8 @@ model.addObject("royPer",getRoyPer());
 		model.addObject("fromDate", fromDate);
 
 		model.addObject("toDate", toDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("report", staticRoyaltyFrList);
 		
 		
@@ -2375,7 +2602,8 @@ model.addObject("royPer",getRoyPer());
 		model.addObject("fromDate", fromDate);
 
 		model.addObject("toDate", toDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("report", staticSaleListItemWise);
 
 		return model;
@@ -2679,7 +2907,8 @@ model.addObject("royPer",getRoyPer());
 		model.addObject("fromDate", fromDate);
 
 		model.addObject("toDate", toDate);
-
+		model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+		model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 		model.addObject("report", staticSaleByAllFr);
 
 		return model;
@@ -2804,7 +3033,8 @@ model.addObject("royPer",getRoyPer());
 
 			model.addObject("todaysDate", todaysDate);
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
+			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 			model.addObject("routeList", routeList);
 
 		} catch (Exception e) {
@@ -3696,7 +3926,212 @@ model.addObject("royPer",getRoyPer());
 	@RequestMapping(value = "pdf/getDispatchPReportPdfForBill/{billDate}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
 	public ModelAndView getDispatchPReportPdfForBill(@PathVariable String billDate, @PathVariable String routeId,
 			@PathVariable String selectedCat,@PathVariable int frId, HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("reports/sales/dispatchReportPPdfBill");
+		ModelAndView model = new ModelAndView("reports/sales/dispatchReportPPdfBill");/*dispatchReportPPdfBill*/
+		RestTemplate restTemplate = new RestTemplate();
+
+		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
+		PDispatchReportList dispatchReports = new PDispatchReportList();
+		try {
+			String convertedDate="";
+			try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");   
+			Calendar cal = Calendar.getInstance();    
+			cal.setTime( dateFormat.parse(billDate));    
+			cal.add( Calendar.DATE, 1 );    
+			 convertedDate=dateFormat.format(cal.getTime());  
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("Inside get Dispatch Report");
+			// String billDate = request.getParameter("bill_date");
+			// String routeId = request.getParameter("route_id");
+			// String selectedCat=request.getParameter("cat_id_list");
+			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+					AllRoutesListResponse.class);
+
+			List<Route> routeList = new ArrayList<Route>();
+
+			routeList = allRouteListResponse.getRoute();
+			String routeName = "def";
+			for (int i = 0; i < routeList.size(); i++) {
+
+				if (routeList.get(i).getRouteId() == Integer.parseInt(routeId)) {
+					routeName = routeList.get(i).getRouteName();
+					break;
+
+				}
+			}
+			boolean isAllCatSelected = false;
+			String selectedFr = null;
+
+			if (selectedCat.contains("-1")) {
+				isAllCatSelected = true;
+			} else {
+				// selectedCat = selectedCat.substring(1, selectedCat.length() - 1);
+				// selectedCat = selectedCat.replaceAll("\"", "");
+				// System.out.println("selectedCat"+selectedCat.toString());
+			}
+			List<String> catList = new ArrayList<>();
+			catList = Arrays.asList(selectedCat);
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			map.add("routeId", routeId);
+
+			FranchiseForDispatch[] frNameId = restTemplate.postForObject(Constants.url + "getFranchiseForDispatch", map,
+					FranchiseForDispatch[].class);
+
+			List<FranchiseForDispatch> frNameIdByRouteIdList =new ArrayList<>(Arrays.asList(frNameId));
+
+			System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+
+			StringBuilder sbForRouteFrId = new StringBuilder();
+			for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
+
+				sbForRouteFrId = sbForRouteFrId.append(frNameIdByRouteIdList.get(i).getFrId()+ ",");
+
+			}
+
+			String strFrIdRouteWise = sbForRouteFrId.toString();
+			selectedFr = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+			System.out.println("fr Id Route WISE = " + selectedFr);
+
+			if (selectedCat.contains("-1")) {
+				isAllCatSelected = true;
+			}
+
+			map = new LinkedMultiValueMap<String, Object>();
+
+			allFrIdNameList = new AllFrIdNameList();
+			try {
+
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
+			}
+
+			if (isAllCatSelected) {
+				map = new LinkedMultiValueMap<String, Object>();
+
+				CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				List<MCategoryList> categoryList = categoryListResponse.getmCategoryList();
+				
+				StringBuilder cateList = new StringBuilder();
+				//List<String> cateList = new ArrayList<>();
+				for (MCategoryList mCategoryList : categoryList) {
+					cateList = cateList.append(mCategoryList.getCatId().toString() + ",");
+					//cateList.add("" + mCategoryList.getCatId());
+				}
+				System.err.println(cateList);
+				String catlist = cateList.toString();
+				selectedCat = catlist.substring(0, catlist.length() - 1);
+				map.add("categories",selectedCat);
+				map.add("productionDate", billDate);
+				map.add("frId", selectedFr);
+
+				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
+				};
+
+				ResponseEntity<List<PDispatchReport>> responseEntity = restTemplate.exchange(
+						Constants.url + "getPDispatchItemReport", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+
+				dispatchReportList = responseEntity.getBody();
+				System.err.println("dispatchReportList = " + dispatchReportList.toString());
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("catIdList", selectedCat);
+				ParameterizedTypeReference<List<Item>> typeRef1 = new ParameterizedTypeReference<List<Item>>() {
+				};
+
+				ResponseEntity<List<Item>> responseEntity1 = restTemplate.exchange(
+						Constants.url + "getItemsByCatIdForDisp", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+
+				SubCategory[] subCatList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+						SubCategory[].class);
+
+				ArrayList<SubCategory> subCatAList = new ArrayList<SubCategory>(Arrays.asList(subCatList));
+
+				/*
+				 * if(!dispatchReportList.isEmpty()&&!responseEntity1.getBody().isEmpty()&&!
+				 * frNameIdByRouteIdList.isEmpty()) { for(int
+				 * j=0;j<responseEntity1.getBody().size();j++) { for(int
+				 * i=0;i<frNameIdByRouteIdList.size();i++) { boolean flag=false; for(int
+				 * k=0;k<dispatchReportList.size();k++) {
+				 * if(dispatchReportList.get(k).getFrId()==frNameIdByRouteIdList.get(i).getFrId(
+				 * ) &&
+				 * dispatchReportList.get(k).getItemId()==responseEntity1.getBody().get(j).getId
+				 * ()) { flag=true; break;
+				 * 
+				 * } } if(flag==false) { DispatchReport dispachReport=new DispatchReport();
+				 * dispachReport.setBillDetailNo(0);
+				 * dispachReport.setFrId(frNameIdByRouteIdList.get(i).getFrId());
+				 * dispachReport.setItemId(responseEntity1.getBody().get(j).getId());
+				 * dispachReport.setBillQty(0); dispatchReportList.add(dispachReport); } } } }
+				 */
+				model.addObject("dispatchReportList", dispatchReportList);
+				model.addObject("frList", frNameIdByRouteIdList);
+				model.addObject("itemList", responseEntity1.getBody());
+				model.addObject("subCatList", subCatAList);
+
+			} else {
+				System.out.println("selectedCat" + selectedCat.toString());
+				System.out.println("selectedFr" + selectedFr.toString());
+
+				map.add("categories", selectedCat);
+				map.add("productionDate", billDate);
+				map.add("frId", selectedFr);
+
+				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
+				};
+
+				ResponseEntity<List<PDispatchReport>> responseEntity = restTemplate.exchange(
+						Constants.url + "getPDispatchItemReport", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+
+				dispatchReportList = responseEntity.getBody();
+				System.err.println("dispatchReportList = " + dispatchReportList.toString());
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("catIdList", selectedCat);
+				ParameterizedTypeReference<List<Item>> typeRef1 = new ParameterizedTypeReference<List<Item>>() {
+				};
+
+				ResponseEntity<List<Item>> responseEntity1 = restTemplate.exchange(
+						Constants.url + "getItemsByCatIdForDisp", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("catId", selectedCat);
+				ParameterizedTypeReference<List<SubCategory>> typeRef2 = new ParameterizedTypeReference<List<SubCategory>>() {
+				};
+
+				ResponseEntity<List<SubCategory>> responseEntity2 = restTemplate
+						.exchange(Constants.url + "getSubCatList", HttpMethod.POST, new HttpEntity<>(map), typeRef2);
+
+
+				model.addObject("dispatchReportList", dispatchReportList);
+				model.addObject("frList", frNameIdByRouteIdList);
+				model.addObject("itemList", responseEntity1.getBody());
+				model.addObject("subCatList", responseEntity2.getBody());
+			}
+			model.addObject("routeName", routeName);
+			model.addObject("frId", frId);
+			model.addObject("convertedDate", convertedDate);
+		} catch (Exception e) {
+			System.out.println("get Dispatch Report Exception: " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		return model;
+
+	}
+	@RequestMapping(value = "pdf/getDispatchPReportPdfForDispatch/{billDate}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
+	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String routeId,
+			@PathVariable String selectedCat,@PathVariable int frId, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView("reports/sales/dispatchMini");/*dispatchReportPPdfBill*/
 		RestTemplate restTemplate = new RestTemplate();
 
 		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
@@ -4413,7 +4848,8 @@ model.addObject("royPer",getRoyPer());
 				model.addObject("royaltyList", royaltyBean);
 				model.addObject("fromDate", fromDate);
 				model.addObject("toDate", toDate);
-				
+				model.addObject("FACTORYNAME", Constants.FACTORYNAME);
+				model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 				model.addObject("royPer",getRoyPer());
 
 
@@ -4449,8 +4885,8 @@ model.addObject("royPer",getRoyPer());
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-			File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		// File f = new File("/opt/tomcat-latest/webapps/uploads/report.pdf");
+			File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
+		// File f = new File("/home/ats-12/report.pdf");
 
 		try {
 			runConverter(Constants.ReportURL + url, f, request, response);
@@ -4464,9 +4900,9 @@ model.addObject("royPer",getRoyPer());
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		 String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
+		 String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
 
-	// String filePath = "/opt/tomcat-latest/webapps/uploads/report.pdf";
+		 //String filePath = "/home/ats-12/report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -4557,8 +4993,9 @@ model.addObject("royPer",getRoyPer());
 		System.out.println("Inside PDf For Report URL ");
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
-
-		File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
+		
+		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
+		//File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
 		//File f = new File("/home/ats-12/Report.pdf");
 
 		try {
@@ -4573,7 +5010,7 @@ model.addObject("royPer",getRoyPer());
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
+		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
 
 		// String filePath = "/home/ats-12/Report.pdf";
 
@@ -4639,7 +5076,10 @@ model.addObject("royPer",getRoyPer());
                    } catch (Exception e) {
                       e.printStackTrace();
                    }
-                     
+
+			/*	Dimension landscapeA4 = pd4ml.changePageOrientation(PD4Constants.A4);
+				pd4ml.setPageSize(landscapeA4);
+                     */
 				PD4PageMark footer = new PD4PageMark();
 
 				footer.setPageNumberTemplate("Page $[page] of $[total]");

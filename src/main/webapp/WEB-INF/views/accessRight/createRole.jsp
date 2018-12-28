@@ -103,7 +103,7 @@
 					<!-- <table class=" " -->
 					<table class="table table-bordered table-striped fill-head "
 							style="width: 70%" id="table_grid">
-							<thead>
+							<thead style="background-color: #f3b5db;">
 								<tr>
 									<td width="50">Sr.No.</td>
 									<td width="200">Modules</td>

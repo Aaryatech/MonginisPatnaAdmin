@@ -48,8 +48,8 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-	<h3 align="center">Galdhar Foods Pvt Ltd</h3>
-	<p align="center">A-89, Shendra M.I.D.C., Aurangabad</p>
+	<h3 align="center">${FACTORYNAME}</h3>
+	<p align="center">${FACTORYADDRESS}</p>
 
 	<div align="center">
 		<h5>Royalty Report (Category/Item wise ) &nbsp;&nbsp;&nbsp;&nbsp;

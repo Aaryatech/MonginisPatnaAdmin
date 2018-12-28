@@ -144,9 +144,12 @@
 
 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genPdfBill()">PDF</button>
+							onclick="genPdfBill()">Franchise PDF</button>
 							
-							
+							&nbsp;
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genDispatchPdf()">Dispatch PDF</button>
+						
 							</div>
 							
 					<div align="center" id="loader" style="display: none">
@@ -182,7 +185,7 @@
 							
 								<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-									<thead>
+									<thead style="background-color: #f3b5db;">
 										<tr>
 											<!-- <th>Sr.No.</th>
 											<th>Franchisee Name</th>
@@ -749,8 +752,21 @@
 						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
 
 			}
+			</script>	<script type="text/javascript">
+			function genDispatchPdf()
+			{
+				var billDate = $("#billDate").val();
+				var routeId = $("#selectRoute").val();
+				var selectedCat = $("#selectCat").val();
+				var frId = $("#fraId").val();
+				
+				window.open('pdf/getDispatchPReportPdfForDispatch/'
+						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
+
+				
+			}
+	
 		</script>
-		
 		<!--basic scripts-->
 		<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

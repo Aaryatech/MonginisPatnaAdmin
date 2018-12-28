@@ -42,7 +42,16 @@ public class MaterialRecNoteDetails {
 		private float other3; 
 		private float other4;
 		private float varifiedRate;
+		private int grpId;
 		
+        
+		public int getGrpId() {
+			return grpId;
+		}
+
+		public void setGrpId(int grpId) {
+			this.grpId = grpId;
+		}
 
 		public int getMrnDetailId() {
 			return mrnDetailId;
@@ -363,9 +372,11 @@ public class MaterialRecNoteDetails {
 					+ ", sgstRs=" + sgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", cessPer=" + cessPer
 					+ ", cessRs=" + cessRs + ", amount=" + amount + ", directorApproved=" + directorApproved
 					+ ", delStatus=" + delStatus + ", status=" + status + ", other1=" + other1 + ", other2=" + other2
-					+ ", other3=" + other3 + ", other4=" + other4 + ", varifiedRate=" + varifiedRate + "]";
+					+ ", other3=" + other3 + ", other4=" + other4 + ", varifiedRate=" + varifiedRate + ", grpId="
+					+ grpId + "]";
 		}
-	   
+
+	
 	}
 
 

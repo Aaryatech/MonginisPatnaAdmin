@@ -37,6 +37,8 @@ import com.ats.adminpanel.model.Order;
 import com.ats.adminpanel.model.RegularSpCkOrder;
 import com.ats.adminpanel.model.RegularSpCkOrdersResponse;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.SpCakeOrderUpdate;
+import com.ats.adminpanel.model.SpCakeOrders;
 import com.ats.adminpanel.model.SpCakeOrdersBean;
 import com.ats.adminpanel.model.SpCakeOrdersBeanResponse;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeList;
@@ -46,6 +48,7 @@ import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.fasterxml.jackson.annotation.JsonFormat.Value;
+
 import com.sun.org.apache.bcel.internal.generic.ALOAD;
 
 
@@ -126,7 +129,7 @@ public class OrderController {
 		String menuId = request.getParameter("item_id_list");
 		String frIdString = request.getParameter("fr_id_list");
 		String date = request.getParameter("date");
-		int routeId = Integer.parseInt(request.getParameter("route_id"));
+		int routeId = 0;//Integer.parseInt(request.getParameter("route_id"));
 		
 		menuId=menuId.substring(1, menuId.length()-1);
 		menuId=menuId.replaceAll("\"", "");
@@ -799,6 +802,55 @@ public class OrderController {
 				}
 			}
 		}
+		return spCakeOrderList;
+	}
+	@RequestMapping(value = "/saveSpOrder",method = RequestMethod.GET)
+	public  @ResponseBody List<SpCakeOrdersBean> saveSpOrder(HttpServletRequest request, HttpServletResponse response) {
+	
+		System.out.println("/inside Save Sporder process  ");
+  try {
+		int spOrderNo = Integer.parseInt(request.getParameter("sp_order_no"));
+		
+		int box = Integer.parseInt(request.getParameter("box"));
+		int addon = Integer.parseInt(request.getParameter("addon"));
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("spOrderNo", spOrderNo);
+
+		RestTemplate restTemp = new RestTemplate();
+
+		SpCakeOrders spCakeOrderRes = restTemp.postForObject(Constants.url + "/getSpOrderBySpOrderNo",
+				map, SpCakeOrders.class);
+		SpCakeOrderUpdate orderJson=new SpCakeOrderUpdate();
+
+		if(spCakeOrderRes!=null) {
+		orderJson.setSpOrderNo(spCakeOrderRes.getSpOrderNo()); 
+		orderJson.setSpBookedForName(""+box);
+		orderJson.setIsAllocated(addon);
+		
+		SpCakeOrderUpdate orderSaveRes=restTemp.postForObject(Constants.url + "/updateSpCakeOrder",
+				orderJson, SpCakeOrderUpdate.class);
+	
+		  if(orderSaveRes!=null) {
+			
+			  if(!spCakeOrderList.isEmpty())
+				{
+					for(int i=0;i<spCakeOrderList.size();i++)
+					{
+						if(spCakeOrderList.get(i).getSpOrderNo()==spOrderNo)
+						{
+							spCakeOrderList.get(i).setSpBookedForName(""+box);
+							spCakeOrderList.get(i).setIsAllocated(addon);
+						}
+					}
+				}
+		  }
+		}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return spCakeOrderList;
 	}
 	@RequestMapping(value = "/deleteRegSpOrder/{rspId}",method = RequestMethod.GET)

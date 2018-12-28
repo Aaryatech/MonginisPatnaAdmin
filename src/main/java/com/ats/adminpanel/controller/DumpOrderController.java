@@ -2,6 +2,7 @@ package com.ats.adminpanel.controller;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -96,7 +97,7 @@ public class DumpOrderController {
 		
 		for(int i=0;i<menuList.size();i++)
 		{
-			if(menuList.get(i).getMenuId()==26||menuList.get(i).getMenuId()==31||menuList.get(i).getMenuId()==33||menuList.get(i).getMenuId()==34)
+			if(menuList.get(i).getMenuId()==26||menuList.get(i).getMenuId()==31||menuList.get(i).getMenuId()==33||menuList.get(i).getMenuId()==34||menuList.get(i).getMenuId()==66||menuList.get(i).getMenuId()==67||menuList.get(i).getMenuId()==68)
 			{
 				selectedMenuList.add(menuList.get(i));
 			}
@@ -286,7 +287,7 @@ public class DumpOrderController {
 		//After submit order
 		
 		@RequestMapping(value = "/submitDumpOrder", method = RequestMethod.POST)
-		public String submitDumpOrders(HttpServletRequest request, HttpServletResponse response) {
+		public String submitDumpOrders(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 			ModelAndView model = new ModelAndView("orders/dumporders");
 			Orders order=new Orders();
 			System.out.println("In Submit order call");
@@ -298,7 +299,16 @@ public class DumpOrderController {
 		System.out.println(dateFormat.format(utilDate)); //2016/11/16 12:08:43
 		
 		java.sql.Date date=new java.sql.Date(utilDate.getTime());
-		java.sql.Date deliveryDate=new java.sql.Date(tomarrow().getTime());
+	//	java.sql.Date deliveryDate=new java.sql.Date(tomarrow().getTime());
+		
+		//--------------------------Date Added--------------------------------------------------
+		String dateStr = request.getParameter("order_date");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date udate = sdf1.parse(dateStr);
+		java.sql.Date sqlCurrDate = new java.sql.Date(udate.getTime()); 
+		java.sql.Date deliveryDate = new java.sql.Date(tomarrowDate(udate).getTime());
+		System.err.println("deliveryDate"+deliveryDate+"sqlCurrDate"+sqlCurrDate);
+		//-----------------------------------------------------------------------------
 		//java.sql.Date deliveryDate=new java.sql.Date(tomarrow1().getTime());
 		
 		//get all Franchisee details
@@ -339,8 +349,9 @@ public class DumpOrderController {
 					order.setRefId(items.get(j).getId());
 					order.setItemId(String.valueOf(items.get(j).getId()));
 					order.setOrderQty(qty);
-					order.setProductionDate(date);
-					order.setOrderDate(date);
+					order.setEditQty(qty);
+					order.setProductionDate(sqlCurrDate);
+					order.setOrderDate(sqlCurrDate);
 					order.setDeliveryDate(deliveryDate);
 					//order.setMenuId(0);
 					order.setGrnType(3);
@@ -435,7 +446,14 @@ public class DumpOrderController {
 			dt = c.getTime();
 		return dt;
 		}
-		
+		public java.util.Date tomarrowDate(java.util.Date date) {
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			c.add(Calendar.DATE, 1);
+			java.util.Date dateRes = c.getTime();
+			return dateRes;
+		}
 		/*public java.util.Date tomarrow1()
 		{
 			

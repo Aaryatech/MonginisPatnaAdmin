@@ -194,7 +194,7 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
 											<th class="col-md-1">SELECT</th>
@@ -214,8 +214,10 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" style="">
 											<thead>
+											
+											
 												<tr class="bgpink">
 												<th class="col-md-1">SELECT</th>
 													<th class="col-md-1">Sr No</th>

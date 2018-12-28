@@ -284,7 +284,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_rate3" id="item_rate3"
 											placeholder="Item Rate3" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+											data-rule-required="true" data-rule-number="true" value="0" />
 									</div>
 								</div>
 								<div class="form-group">

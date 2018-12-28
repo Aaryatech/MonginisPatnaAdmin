@@ -8,6 +8,13 @@
 
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+   	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 	<c:url var="varianceDetailedCalculation" value="/varianceDetailedCalculation"></c:url>
 
@@ -31,13 +38,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Variance Detailed
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -59,20 +66,20 @@
 								action="${pageContext.request.contextPath}/updateOrderQtyinPlan"
 								method="post">
 								<div class="box-content">
-									<div class="col-md-2">Production Date</div>
+									<div class="col-md-2"><b>Production Date</b></div>
 
-									<div class="col-md-3">
+									<div class="col-md-2">
 									<c:out value="${postProdPlanHeader.productionDate}" />  
 									</div>
 
 
 
-								</div>
+								<!-- </div>
 								<br>
 
 								
 
-								<div class="box-content">
+								<div class="box-content"> 
 
 
 									<div class="col-md-2">Time Slot</div>
@@ -83,10 +90,10 @@
 								</div>
 								<br>
 
-								<div class="box-content">
+								<div class="box-content">-->
 
-									<div class="col-md-2">Cat Id</div>
-									<div class="col-md-3">
+									<div class="col-md-2"><b>Cat Id</b></div>
+									<div class="col-md-2">
 									<c:forEach items="${categoryList}" var="categoryList">
 									 	<c:choose>
 									 		<c:when test="${postProdPlanHeader.itemGrp1==categoryList.catId}"> 
@@ -99,14 +106,14 @@
 											class="form-control" readonly>
 
 									</div>
-								</div>
+								<!-- </div>
 								<br>
-							<div class="box-content">
+							<div class="box-content"> -->
 
 								<c:choose>
 									<c:when test="${flag==0}">
-										<div class="col-md-2">Sorted by Franchisee</div>
-										<div class="col-md-3"> 
+										<div class="col-md-2"><b>Sorted by Franchisee</b></div>
+										<div class="col-md-2"> 
 										
 										<c:forEach items="${frId}" var="frId" varStatus="count"> 
 											<c:choose>
@@ -128,7 +135,7 @@
 									</div>
 									</c:when>
 									<c:otherwise>
-									<div class="col-md-2">Sorted by Route</div>
+									<div class="col-md-2"><b>Sorted by Route</b></div>
 										<div class="col-md-3">
 												<c:forEach items="${rtid}" var="rtid" varStatus="count">  
 													 <c:forEach items="${routeList}" var="routeList" >
@@ -152,19 +159,20 @@
 									<div class="clearfix"></div> 
 									<div id="table-scroll" class="table-scroll"> 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table_grid" class="main-table">
+									<table id="table_grid" class="table table-advance" border="1">
 								 
 												<thead>
 													<tr class="bgpink">
 														<th>Sr.No.</th>
 														<th class="col-md-3">Item Name</th> 
-														<th >Opening Qty</th> 
-														<th>plan Qty</th>
-														<th>production Qty</th>
+														<!-- <th >Opening Qty</th>  -->
 														<th>Current Stock</th> 
+														<th>plan Qty</th>
+														<!-- <th>production Qty</th> -->
+														 <th>Total</th>
 														<th>Order Qty</th>
-														<th>Rejected Qty</th>
-														<th>Remaining Production</th>
+													<!-- 	<th>Rejected Qty</th> -->
+														<th>P2 Production</th>
 														
 
 
@@ -173,19 +181,21 @@
 												</table>
 									</div>
 									<div class="table-wrap">
-									<table id="table1" class="table table-advance">
+									<table id="table1" class="table table-advance" border="1">
 										 
 												<thead>
 													<tr class="bgpink">
 														<th>Sr.No.</th>
-														<th>Item Name</th> 
-														<th>Opening Qty</th> 
-														<th>plan Qty</th>
-														<th>production Qty</th>
+														<th class="col-md-3">Item Name</th> 
+														<!-- <th >Opening Qty</th>  -->
 														<th>Current Stock</th> 
+														<th>plan Qty</th>
+														<!-- <th>production Qty</th> -->
+														 <th>Total</th>
 														<th>Order Qty</th>
-														<th>Rejected Qty</th>
-														<th>Remaining Production</th>
+													<!-- 	<th>Rejected Qty</th> -->
+														<th>P2 Production</th>
+														
 														
 
 
@@ -208,13 +218,15 @@
 																	 
 																</c:choose>
 															</c:forEach>
-															 <td><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td>
-															 <td><c:out value="${postProdPlanHeaderDetailed.planQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.productionQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.curOpeQty}" /></td> 
-															<td><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.rejectedQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
+															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td> 
+															
+															<%--  <td><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td> --%>
+															 <td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.planQty}" /></td>
+															  <td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.curClosingQty+postProdPlanHeaderDetailed.planQty}" /></td>
+<%-- 															<td><c:out value="${postProdPlanHeaderDetailed.productionQty}" /></td>
+ --%>															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
+<%-- 															<td><c:out value="${postProdPlanHeaderDetailed.rejectedQty}" /></td>
+ --%>															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
 														</tr>
 													</c:forEach>
 													
@@ -229,14 +241,14 @@
 														<tr>
 															<td><c:out value="${srNo+1}" /></td>
 															<c:set var="srNo" value="${srNo+1}" />
-															<td><c:out value="${getVarianceorderlistforsort.itemName}" /></td>
-															<td><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${getVarianceorderlistforsort.curOpeQty}" /></td> 
-															<td><c:out value="${getVarianceorderlistforsort.orderQty}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${getVarianceorderlistforsort.remainingQty}" /></td>
+															<td ><c:out value="${getVarianceorderlistforsort.itemName}" /></td>
+															<td style="text-align:right;"><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td> 
+<%-- 															<td><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
+ --%>															<td  style="text-align:right;"><c:out value="${0}" /></td>
+															<td  style="text-align:right;"><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
+															<td  style="text-align:right;"><c:out value="${getVarianceorderlistforsort.orderQty}" /></td>
+															<%-- <td><c:out value="${0}" /></td> --%>
+															<td  style="text-align:right;">0<c:out value="${getVarianceorderlistforsort.remainingQty}" /></td>
 															
 															
 															
@@ -262,7 +274,7 @@
 									<div class="col-md-12" style="text-align: center">
 
 												<input type="submit" class="btn btn-primary"
-													value="complet Production">
+													value="Complete Production">
 													<a href="${pageContext.request.contextPath}/insertProductionPlanWithoutCompletProd">
 													<input type="button" class="btn btn-primary" value="P 2 Production"></a>
 													<a href="${pageContext.request.contextPath}/showVariencePdf"
@@ -276,24 +288,21 @@
 											
 										</div>
 				 
-								<div class="box-content"></div>
-								<br>
-								<br>
-								<br> 
+							
 						</div> 
 					</div> 
 				</div> 
 			</div>
 			
-		</div>
+		
 		<!-- END Main Content -->
 		<footer>
-		<p>2017 © MONGINIS.</p>
+		<p>2018 © MONGINIS.</p>
 		</footer>
 
 		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 			class="fa fa-chevron-up"></i></a>
-
+</div>
 		<!-- END Content -->
 	</div>
 	<!-- END Container -->

@@ -185,7 +185,8 @@ select {
 													class="form-control chosen" tabindex="-1" id="fr_id"
 													data-rule-required="true" multiple="multiple">
 													<optgroup label="All Franchisee">
-														<c:forEach
+									<option value="0">ALL</option>
+															<c:forEach
 															items="${allFranchiseeAndMenuList.getAllFranchisee()}"
 															var="franchiseeList">
 															<option value="${franchiseeList.frId}">${franchiseeList.frName}</option>

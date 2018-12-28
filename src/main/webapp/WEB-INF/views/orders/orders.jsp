@@ -6,8 +6,9 @@
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <style>
-table {
-	overflow: hidden;
+table{
+  width:100%;
+  border:1px solid #ddd;
 }
 
 tr:hover {
@@ -18,7 +19,7 @@ td, th {
 	position: relative;
 }
 
-td:hover::after, th:hover::after {
+/* td:hover::after, th:hover::after {
 	content: "";
 	position: absolute;
 	background-color: #ffa;
@@ -27,7 +28,7 @@ td:hover::after, th:hover::after {
 	height: 10000px;
 	width: 100%;
 	z-index: -1;
-}
+} */
 </style>
 
 
@@ -61,14 +62,14 @@ td:hover::after, th:hover::after {
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Orders
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -139,7 +140,7 @@ td:hover::after, th:hover::after {
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search Order
+								<i class="fa fa-bars"></i>Search Orders
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -161,9 +162,9 @@ td:hover::after, th:hover::after {
 
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Franchisee
+									<label class="col-sm-3 col-lg-1 control-label">Franchisee
 									</label>
-									<div class="col-sm-3 col-lg-4 controls">
+									<div class="col-sm-3 col-lg-3 controls">
 
 										<select data-placeholder="Select Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
@@ -182,25 +183,25 @@ td:hover::after, th:hover::after {
 									<!-- 	</div>
 							
                         <div class="form-group"> -->
-									<label class="col-sm-1 col-lg-1 control-label"> <b>OR</b></label><label
+									<!-- <label class="col-sm-1 col-lg-1 control-label"> <b>OR</b></label><label
 										class="col-sm-1 col-lg-1 control-label">Route</label>
-									<div class="col-sm-1 col-lg-4 controls">
-										<select data-placeholder="Select Route"
-											class="form-control chosen" name="selectRoute"
+									<div class="col-sm-1 col-lg-4 controls"> -->
+										<input data-placeholder="Select Route" type="hidden"
+										 name="selectRoute"
 											id="selectRoute" onchange="disableFr()">
-											<option value="0">Select Route</option>
-											<c:forEach items="${routeList}" var="route" varStatus="count">
+											<%--<option value="0">Select Route</option>
+											 <c:forEach items="${routeList}" var="route" varStatus="count">
 												<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
 
-											</c:forEach>
-										</select>
+											</c:forEach> --%>
+									<!-- 	</select> -->
 
-									</div>
+								<!-- 	</div>
 								</div>
 
-								<div class="form-group">
-									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Menu</label>
-									<div class="col-sm-9 col-lg-10 controls">
+								<div class="form-group"> -->
+									<label for="textfield2" class="col-xs-3 col-lg-1 control-label">Menu</label>
+									<div class="col-sm-9 col-lg-3 controls">
 										<select class="form-control chosen" multiple="multiple"
 											tabindex="6" name="item_id" id="item_id">
 
@@ -211,20 +212,20 @@ td:hover::after, th:hover::after {
 
 										</select>
 									</div>
-								</div>
+								<!-- </div>
 
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
+								<div class="form-group"> -->
+									<label class="col-sm-3 col-lg-1 control-label">Date</label>
+									<div class="col-sm-5 col-lg-2 controls">
 										<input class="form-control date-picker" id="date" size="16"
 											type="text" name="date" value="${date}" required />
 									</div>
-								</div>
+								<!-- </div>
 
 
 								<div align="center" class="form-group">
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
 										<input type="button" class="btn btn-primary" value="Submit"
 											id="callSubmit" onclick="callSearch()">
 
@@ -240,7 +241,7 @@ td:hover::after, th:hover::after {
 											class="l-3"></span> <span class="l-4"></span> <span
 											class="l-5"></span> <span class="l-6"></span>
 									</div>
-								</div>
+								
 
 
 
@@ -250,24 +251,24 @@ td:hover::after, th:hover::after {
 
 
 								<div class="box">
-									<div class="box-title">
+							<!-- 		<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Order List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
 									</div>
-
+ -->
 									<div class="box-content">
 
 										<div class="clearfix"></div>
 										<div id="table-scroll" class="table-scroll">
 
 											<div id="faux-table" class="faux-table" aria="hidden">
-												<table id="table2" class="main-table">
+												<table id="table2" class="table table-advance"  border="1">
 													<thead>
 														<tr class="bgpink">
 															<th width="148" style="width: 18px" align="left">No</th>
@@ -283,7 +284,7 @@ td:hover::after, th:hover::after {
 											</div>
 											<div class="table-wrap">
 
-												<table id="table1" class="table table-advance">
+												<table id="table1" class="table table-advance" border="1">
 													<thead>
 														<tr class="bgpink">
 															<th width="148" style="width: 18px" align="left">No</th>
@@ -390,15 +391,15 @@ td:hover::after, th:hover::after {
 												value="EXPORT TO Excel" onclick="exportToExcel();"
 												disabled="disabled">
 										</div>
-									</div>
+									</div></div>
 							</form>
 						</div>
 					</div>
 				</div>
-			</div>
+			</div></div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -533,10 +534,10 @@ $.getJSON('${callSearchOrdersProcess}', {
   	tr.append($('<td></td>').html(orders.catName));
   	
 	if(isEdit==1){
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
   		
   	}else{
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
   		
   	}
 

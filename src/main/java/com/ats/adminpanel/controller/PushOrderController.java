@@ -2,6 +2,7 @@ package com.ats.adminpanel.controller;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -94,8 +95,8 @@ public class PushOrderController {
 		selectedMenuList = new ArrayList<Menu>();
 
 		for (int i = 0; i < menuList.size(); i++) {
-			if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
-					|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34) {
+			if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 66
+					|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34 || menuList.get(i).getMenuId() ==81) {
 				selectedMenuList.add(menuList.get(i));
 			}
 		}
@@ -300,7 +301,7 @@ public class PushOrderController {
 	// After submit order
 
 	@RequestMapping(value = "/submitPushOrder", method = RequestMethod.POST)
-	public String submitPushOrders(HttpServletRequest request, HttpServletResponse response) {
+	public String submitPushOrders(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 		ModelAndView model = new ModelAndView("orders/pushorders");
 		
 		Orders order = new Orders();
@@ -313,9 +314,16 @@ public class PushOrderController {
 		System.out.println(dateFormat.format(utilDate)); // 2016/11/16 12:08:43
 
 		java.sql.Date date = new java.sql.Date(utilDate.getTime());
-		java.sql.Date deliveryDate = new java.sql.Date(tomarrow().getTime());
+	//	java.sql.Date deliveryDate = new java.sql.Date(tomarrow().getTime());
 		// java.sql.Date deliveryDate=new java.sql.Date(tomarrow1().getTime());
-
+		//--------------------------Date Added--------------------------------------------------
+		String dateStr = request.getParameter("date");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date udate = sdf1.parse(dateStr);
+		java.sql.Date sqlCurrDate = new java.sql.Date(udate.getTime()); 
+		java.sql.Date deliveryDate = new java.sql.Date(tomarrowDate(udate).getTime());
+		System.err.println("deliveryDate"+deliveryDate+"sqlCurrDate"+sqlCurrDate);
+		//-----------------------------------------------------------------------------
 		// get all Franchisee details
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -370,8 +378,9 @@ public class PushOrderController {
 								order.setRefId(items.get(j).getId());
 								order.setItemId(String.valueOf(items.get(j).getId()));
 								order.setOrderQty(qty);
-								order.setProductionDate(date);
-								order.setOrderDate(date);
+								order.setEditQty(qty);
+								order.setProductionDate(sqlCurrDate);//date var removed
+								order.setOrderDate(sqlCurrDate);//date var removed
 								order.setDeliveryDate(deliveryDate);
 								order.setMenuId(0);
 								order.setGrnType(4);
@@ -383,11 +392,11 @@ public class PushOrderController {
 									for (int k = 0; k < franchaseeList.size(); k++) {
 										if (selectedFrIdList.get(l) == franchaseeList.get(k).getFrId()) {
 											if (franchaseeList.get(k).getFrRateCat() == 1) {
-												order.setOrderRate(items.get(j).getItemRate1());
-												order.setOrderMrp(items.get(j).getItemMrp1());
+												order.setOrderRate(items.get(j).getItemRate3());
+												order.setOrderMrp(items.get(j).getItemMrp3());
 											} else if (franchaseeList.get(k).getFrRateCat() == 2) {
-												order.setOrderRate(items.get(j).getItemRate2());
-												order.setOrderMrp(items.get(j).getItemMrp2());
+												order.setOrderRate(items.get(j).getItemRate3());
+												order.setOrderMrp(items.get(j).getItemMrp3());
 											} else if (franchaseeList.get(k).getFrRateCat() == 3) {
 												order.setOrderRate(items.get(j).getItemRate3());
 												order.setOrderMrp(items.get(j).getItemMrp3());
@@ -441,8 +450,9 @@ public class PushOrderController {
 						order.setRefId(items.get(j).getId());
 						order.setItemId(String.valueOf(items.get(j).getId()));
 						order.setOrderQty(qty);
-						order.setProductionDate(date);
-						order.setOrderDate(date);
+						order.setEditQty(qty);
+						order.setProductionDate(sqlCurrDate);//date var removed
+						order.setOrderDate(sqlCurrDate);//date var removed
 						order.setDeliveryDate(deliveryDate);
 						order.setMenuId(0);
 						order.setGrnType(4);
@@ -454,11 +464,11 @@ public class PushOrderController {
 							for (int k = 0; k < franchaseeList.size(); k++) {
 								if (selectedFrIdList.get(l) == franchaseeList.get(k).getFrId()) {
 									if (franchaseeList.get(k).getFrRateCat() == 1) {
-										order.setOrderRate(items.get(j).getItemRate1());
-										order.setOrderMrp(items.get(j).getItemMrp1());
+										order.setOrderRate(items.get(j).getItemRate3());
+										order.setOrderMrp(items.get(j).getItemMrp3());
 									} else if (franchaseeList.get(k).getFrRateCat() == 2) {
-										order.setOrderRate(items.get(j).getItemRate2() );
-										order.setOrderMrp(items.get(j).getItemMrp2());
+										order.setOrderRate(items.get(j).getItemRate3() );
+										order.setOrderMrp(items.get(j).getItemMrp3());
 									} else if (franchaseeList.get(k).getFrRateCat() == 3) {
 										order.setOrderRate(items.get(j).getItemRate3());
 										order.setOrderMrp(items.get(j).getItemMrp3());
@@ -531,7 +541,14 @@ public class PushOrderController {
 		dt = c.getTime();
 		return dt;
 	}
+	public java.util.Date tomarrowDate(java.util.Date date) {
 
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DATE, 1);
+		java.util.Date dateRes = c.getTime();
+		return dateRes;
+	}
 	/*
 	 * public java.util.Date tomarrow1() {
 	 * 

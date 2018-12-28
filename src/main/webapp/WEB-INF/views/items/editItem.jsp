@@ -231,7 +231,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_rate3" id="item_rate3"
 											value="${item.itemRate3}" placeholder="Item Rate3"
-											class="form-control" data-rule-required="true" data-rule-number="true" readonly/>
+											class="form-control" data-rule-required="true" data-rule-number="true" />
 									</div>
 								</div>
 <div> <input type="hidden" name="prevImage" value="${item.itemImage}"></div>

@@ -1,14 +1,8 @@
 package com.ats.adminpanel.model.stock;
 
- 
 
- 
-
- 
 public class GetStoreCurrentStock {
 
-	
- 
 	private int storeStockDetailId;
 	 
 	float storeOpeningStock;
@@ -23,8 +17,56 @@ public class GetStoreCurrentStock {
 	 
 	private float purRecQty;
 	
-	 
+	private String rmCode;
+
+    private float rmMinQty;
+	
+	private float rmMaxQty;
+	
+	private float rmRolQty;
+	
 	private float bmsIssueQty;
+
+
+	
+	public String getRmCode() {
+		return rmCode;
+	}
+
+
+	public void setRmCode(String rmCode) {
+		this.rmCode = rmCode;
+	}
+
+
+	public float getRmMinQty() {
+		return rmMinQty;
+	}
+
+
+	public void setRmMinQty(float rmMinQty) {
+		this.rmMinQty = rmMinQty;
+	}
+
+
+	public float getRmMaxQty() {
+		return rmMaxQty;
+	}
+
+
+	public void setRmMaxQty(float rmMaxQty) {
+		this.rmMaxQty = rmMaxQty;
+	}
+
+
+	public float getRmRolQty() {
+		return rmRolQty;
+	}
+
+
+	public void setRmRolQty(float rmRolQty) {
+		this.rmRolQty = rmRolQty;
+	}
 
 
 	public int getStoreStockDetailId() {
@@ -111,15 +153,11 @@ public class GetStoreCurrentStock {
 	public String toString() {
 		return "GetStoreCurrentStock [storeStockDetailId=" + storeStockDetailId + ", storeOpeningStock="
 				+ storeOpeningStock + ", storeClosingStock=" + storeClosingStock + ", storeStockDate=" + storeStockDate
-				+ ", rmId=" + rmId + ", rmName=" + rmName + ", purRecQty=" + purRecQty + ", bmsIssueQty=" + bmsIssueQty
-				+ "]";
+				+ ", rmId=" + rmId + ", rmName=" + rmName + ", purRecQty=" + purRecQty + ", rmCode=" + rmCode
+				+ ", rmMinQty=" + rmMinQty + ", rmMaxQty=" + rmMaxQty + ", rmRolQty=" + rmRolQty + ", bmsIssueQty="
+				+ bmsIssueQty + "]";
 	}
 
-
-	 
-
-
-	 
-	
+    
 	
 }

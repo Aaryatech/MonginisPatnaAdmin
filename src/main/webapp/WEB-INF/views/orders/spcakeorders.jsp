@@ -6,11 +6,18 @@
   <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 
 
 	<c:url var="callspCakeOrderProcess" value="/spCakeOrderProcess" />
-
+ <c:url var="saveSpOrder" value="/saveSpOrder" />
       <c:url var="deleteSpOrder" value="/deleteSpOrder" />
 
 	 
@@ -33,14 +40,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i> Special Cake Orders
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -108,7 +115,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search Order
+								<i class="fa fa-bars"></i>Search Special Cake Orders
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -189,18 +196,18 @@
 										<input class="form-control date-picker" value="${todayDate }" id="dp2" size="16"
 											type="text" name="prod_date" data-rule-required="true" />
 									</div>
-								</div>
+								<!-- </div>
 
 
 								
-								<div align="center" class="form-group">
-									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-										<input  class="btn btn-primary" value="Submit"
+								<div align="center" class="form-group"> -->
+								<!-- 	<div
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
+										<input  class="btn btn-primary"  type="button" value="Submit"
 											id="callSubmit" onclick="callSearch()" >
 
 										
-									</div>
+									<!-- </div> -->
 								</div>
 								
 									<div align="center" id="loader" style="display:none">
@@ -225,43 +232,43 @@
 								</div>
  -->
 								<div class="box">
-									<div class="box-title">
+									<!-- <div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Order List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
 									</div>
-									
+									 -->
 									<c:set var="dis" value="none"/>
 									
 									<div class="box-content">
 
 										<div class="clearfix"></div>
-										<div class="table-responsive" style="border: 0">
-											<table width="100%" class="table table-advance" id="table1">
-												<thead>
+										<div class="table-responsive" style="">
+											<table width="100%" class="table table-advance" id="table1" border="1">
+												<thead style="background-color: #f3b5db; ">
 													<tr>
-														<th width="130" align="left">Sr No</th>
-																											<th width="87" align="left">Action</th>
-														
+														<th width="130" align="left">Sr</th>
 														<th width="208" align="left">Franchisee</th>
-														<th width="203" align="left">Delivery Date</th>
+														<th width="183" align="left">DeliveryOn</th>
 														<th width="159" align="left"><span
 															style="width: 130px;">Name</span></th>	
 														<th width="159" align="left"><span
-															style="width: 130px;">Sp Code</span></th>
+															style="width: 50px;">Code</span></th>
 														<th width="105" align="left">Weight</th>
 														<th width="168" align="left">Flavour</th>
-														<th width="140" align="left">Event</th>
-														<th width="105" align="left">Rate</th>
-														<th width="75" align="left">Add Rate</th>
+													 	<th width="140" align="left">No.Of Boxes</th>
+														<th width="125" align="left">Is AddonAcc</th>
+													<!--	<th width="75" align="left">Add Rate</th> -->
 														<th width="91" align="left">Total</th>
-													  <th width="87" align="left">View</th>  
-														<th width="87" align="left">PDF</th>
+													  <th width="47" align="left">View</th>  
+														<th width="47" align="left">PDF</th>
+														<th width="87" align="left">Action</th>
+														
 														
 													</tr>
 												</thead>
@@ -345,7 +352,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -458,31 +465,25 @@
 									var tr = $('<tr></tr>');
 
 								  	tr.append($('<td></td>').html(key+1));
-								  	  tr.append($('<td></td>').html('<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+');><abbr title=Delete><i class="glyphicon glyphicon-remove"></i></abbr></a>')); 
-
-
 								  	tr.append($('<td></td>').html(spCakeOrder.frName));
 								 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
 								 	tr.append($('<td></td>').html(spCakeOrder.spName));
 								  	tr.append($('<td></td>').html(spCakeOrder.itemId));
 								 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
 								  	tr.append($('<td></td>').html(spCakeOrder.spfName));
-								  	tr.append($('<td></td>').html(spCakeOrder.spEvents));
-								  	tr.append($('<td></td>').html(spCakeOrder.spPrice));
-								  	tr.append($('<td></td>').html(spCakeOrder.spTotalAddRate));
+								  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
+								  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+
 									var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
 								  	tr.append($('<td></td>').html(totalValue));
 								  	
+								  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 								  	
-								  	
-								  	
-								  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:24px;"></i></a>'));  
-								  	
-								  	  tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:24px;"></i></a>'));  
+								    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
+								  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
-								
 									$('#table1 tbody').append(tr);
-									
+									document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 									})
 
 								});
@@ -513,7 +514,7 @@
 	</script>
     <script type="text/javascript">
 		function deleteSpOrder(spOrderNo) {
-			
+			$('#loader').show();
 			 if (confirm("Do you want to Delete this order?") == true) {
 			$.getJSON('${deleteSpOrder}',
 					{
@@ -531,34 +532,29 @@
 							document.getElementById("expExcel").disabled=false;
 							document.getElementById('range').style.display = 'block';
 							var len=data.length
-							
+			
 							var tr = $('<tr></tr>');
 
 						  	tr.append($('<td></td>').html(key+1));
-						  	
-						  	  tr.append($('<td></td>').html('<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+');><abbr title=Delete><i class="glyphicon glyphicon-remove"></i></abbr></a>')); 
-
 						  	tr.append($('<td></td>').html(spCakeOrder.frName));
 						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
 						 	tr.append($('<td></td>').html(spCakeOrder.spName));
 						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
 						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
 						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
-						  	tr.append($('<td></td>').html(spCakeOrder.spEvents));
-						  	tr.append($('<td></td>').html(spCakeOrder.spPrice));
-						  	tr.append($('<td></td>').html(spCakeOrder.spTotalAddRate));
-						  	
-							var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
+						  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
+						  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
 
+							var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
 						  	tr.append($('<td></td>').html(totalValue));
 						  	
-						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:24px;"></i></a>'));  
+						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 						  	
+						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
+						  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
-						  	  tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:24px;"></i></a>'));  
-
-						
 							$('#table1 tbody').append(tr);
+							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 							
 							})
 
@@ -566,6 +562,64 @@
 			 }
 		}
 		
+		
+	</script>
+	 <script type="text/javascript">
+		function saveSpOrder(spOrderNo) {
+			$('#loader').show();
+			 if (confirm("Do you want to Save this order?") == true) {
+				 
+				 var box=$("#box"+spOrderNo).val();
+				 var addon=$("#addon"+spOrderNo).val();
+				
+			$.getJSON('${saveSpOrder}',
+					{
+			        	sp_order_no:spOrderNo,
+			        	box:box,
+			        	addon:addon,
+						ajax : 'true',
+					},
+					function(data) {
+						$('#table1 td').remove();
+						$('#loader').hide();
+						if(data==""){
+							alert("No Orders Found");
+							document.getElementById("expExcel").disabled=true;
+						}
+						$.each(data,function(key, spCakeOrder) {
+							document.getElementById("expExcel").disabled=false;
+							document.getElementById('range').style.display = 'block';
+							var len=data.length
+			
+							var tr = $('<tr></tr>');
+
+						  	tr.append($('<td></td>').html(key+1));
+						  	tr.append($('<td></td>').html(spCakeOrder.frName));
+						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
+						 	tr.append($('<td></td>').html(spCakeOrder.spName));
+						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
+						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
+						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
+						  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
+						  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+
+							var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
+						  	tr.append($('<td></td>').html(totalValue));
+						  	
+						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
+						  	
+						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
+						  
+						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+
+							$('#table1 tbody').append(tr);
+							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
+							
+							})
+
+					});
+			 }
+		}
 		
 	</script>
 		<script>

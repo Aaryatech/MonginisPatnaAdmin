@@ -32,12 +32,12 @@
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
 			<div class="page-title">
-				<div>
+			<!-- 	<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Variance Detailed
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -59,9 +59,9 @@
 								action="${pageContext.request.contextPath}/varianceDetailedCalculation"
 								method="post">
 								<div class="box-content">
-									<div class="col-md-2">Production Date</div>
+								<div class="col-md-2">Production Date</div>
 
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" id="productionDate" name="productionDate"
 											value="${postProdPlanHeader.productionDate}"
 											class="form-control" readonly>
@@ -69,28 +69,28 @@
 
 
 
-								</div>
-								<br>
+								<!-- </div> -->
+								
 
 								
 
-								<div class="box-content">
+								<!-- <div class="box-content">
 
 
 									<div class="col-md-2">Time Slot</div>
-									<div class="col-md-3">
-										<input class="form-control" id="time_slot" size="16"
-											type="text" name="time_slot" value="${postProdPlanHeader.timeSlot}"
-											readonly />
-									</div>
+									<div class="col-md-3"> -->
+										<input class="form-control"  id="time_slot" size="16"
+											type="hidden" name="time_slot" value="${postProdPlanHeader.timeSlot}"
+											 />
+									<!-- </div>
 
 								</div>
-								<br>
+								<br> -->
 
-								<div class="box-content">
+							<!-- 	<div class="box-content"> -->
 
-									<div class="col-md-2">Cat Id</div>
-									<div class="col-md-3">
+									<div class="col-md-1">Category</div>
+									<div class="col-md-2">
 									<c:forEach items="${categoryList}" var="categoryList">
 									 	<c:choose>
 									 		<c:when test="${postProdPlanHeader.itemGrp1==categoryList.catId}">
@@ -107,23 +107,39 @@
 											class="form-control" readonly>
 
 									</div>
-								</div>
-								<br>
+								<!-- </div>
+								
+								
+								<div class="box-content">  -->
+								<div class="col-md-1">Menu :</div>
+									<div class="col-md-4">
+									
+									<select name="menu_id[]" id="menu_id" class="form-control chosen" tabindex="6" multiple="multiple" data-placeholder="Select Menu" >
+											 <option  value="0">All</option> 
+											<c:forEach items="${menuList}" var="menuList"> 
+												<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"></c:out> </option>
+											 </c:forEach>
+										</select>
+									 
+									</div>
+									</div>
+									<br><br>
 
 								<div class="box-content"> 
-								<div class="col-md-2">select Franchisee </div>
-									<div class="col-md-3">
+								<div class="col-md-2">Select Franchisee </div>
+									<div class="col-md-4">
 									
 									<select name="fr_id[]" id="fr_id" class="form-control chosen" tabindex="6" multiple="multiple" data-placeholder="Select Franchisee" >
-											 <option  value="0">all</option> 
+											 <option  value="0">All</option> 
 											<c:forEach items="${allFrIdNameList}" var="allFrIdNameList"> 
 												<option value="${allFrIdNameList.frId}"><c:out value="${allFrIdNameList.frName}"></c:out> </option>
 											 </c:forEach>
 										</select>
 									 
 									</div>
-								<div class="col-md-2">Select Route</div>
-									<div class="col-md-3">
+										<div class="col-md-1"><b>OR</b></div>
+								<div class="col-md-1"> Route</div>
+									<div class="col-md-4">
 									<select name="rtid[]" id="rtid" class="form-control chosen" multiple="multiple" data-placeholder="Select Route" tabindex="6">
 											 
 											<c:forEach items="${routeList}" var="routeList"> 
@@ -133,7 +149,7 @@
 									</div>
 								
 				 
-							</div><br>
+							</div><br><br>
 							
 							<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
@@ -326,14 +342,20 @@
 			 //alert("ala");
 		var fr_id = $("#fr_id").val();
 		var rtid = $("#rtid").val();
+		var menu_id = $("#menu_id").val();
 		//alert("fr_id"+fr_id);
 		//alert("rtid"+rtid);
-			if (fr_id ==null && rtid == null) 
+			if (fr_id ==null && rtid == null ) 
 			{ 
-				alert("select any one");
+				alert("Select Franchise Or Route");
 				return false;
 			} 
-			else 
+			else  if(menu_id == null)
+				{
+				alert("Select Menu");
+				return false;
+				}
+			else
 			{
 				return true;
 				

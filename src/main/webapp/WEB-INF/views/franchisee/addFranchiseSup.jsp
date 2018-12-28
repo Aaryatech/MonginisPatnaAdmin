@@ -267,10 +267,10 @@
 									<div id="table-scroll" class="table-scroll">
 
 										<div id="faux-table" class="faux-table" aria="hidden">
-											<table id="table2" class="main-table">
+											<table id="table2" class="table table-advance"border="1" >
 												<thead>
 													<tr class="bgpink">
-														<th width="45" style="width: 18px">Sr.No.</th>
+														<!-- <th width="45" style="width: 18px">Sr.No.</th>
 														<th width="100" align="left">Franchisee</th>
 														<th width="100" align="left">PAN No.</th>
 														<th width="100" align="left">State</th>
@@ -282,7 +282,7 @@
 														<th width="70" align="left">Pass2</th>
 														<th width="70" align="left">Pass3</th>
 
-														<th width="81" align="left">Action</th>
+														<th width="81" align="left">Action</th> -->
 													</tr>
 												</thead>
 											</table>
@@ -290,7 +290,7 @@
 										</div>
 										<div class="table-wrap">
 
-											<table id="table1" class="table table-advance">
+											<table id="table1" class="table table-advance" border="1">
 												<thead>
 													<tr class="bgpink">
 														<th width="45" style="width: 18px">Sr.No.</th>

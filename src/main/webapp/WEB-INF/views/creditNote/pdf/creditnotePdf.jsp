@@ -15,9 +15,8 @@ contentType="text/html; charset=ISO8859_1"%>
 <body>
   	<c:forEach items="${crnPrint}" var="headerH" varStatus="count">
 						<h4 align="center">Credit Note</h4>
-    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">Galdhar Foods Pvt.Ltd</h4>
-   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667 <br />
-Phone:0240-2466217, Email: aurangabad@monginis.net</p>
+    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">${factoryName}</h4>
+   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">${factoryAddress}</p>
 <br></br> 
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-left:1px solid #313131;border-right:1px solid #313131;">
   <tr>
@@ -168,10 +167,10 @@ Phone:0240-2466217, Email: aurangabad@monginis.net</p>
   </tr>
    <tr>
    
-    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-        <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Grand Total:</b></td>
-    <td align="right" style="border-left:1px solid #313131;border-bottom:0px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+    <td align="right" style="border-left:1px solid #313131;padding:4px;color:white; font-size:10px;">-</td>
+        <td align="right" style="border-left:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td style=" font-size:0px;">-</td><td style=" font-size:10px;">-</td><td style="font-size:0px;">-</td><td style="padding:4px;color:#000; font-size:0px;">-</td><td style="font-size:0px;">-</td><td style="padding:4px;color:#000; font-size:0px;">-</td><td style="font-size:0px;">-</td><td style="font-size:10px;"><b>Grand Total:</b></td>
+    <td align="right" style="border-left:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
 								maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
   </tr>
 </table>
@@ -200,7 +199,7 @@ Phone:0240-2466217, Email: aurangabad@monginis.net</p>
   
   <tr>
     <td colspan="6"  width="50%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000; font-size:11px;">
-     <p style="color:#000; font-size:11px; text-align:left;margin:0px;">Subject to Aurangabad Jurisdiction &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's Signature</p>
+     <p style="color:#000; font-size:11px; text-align:left;margin:0px;">Subject to PATNA Jurisdiction &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's Signature</p>
 </td>
     <td  align="center" colspan="5" width="38%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000;font-size:11px;">Authorised Signature</td>
   </tr>

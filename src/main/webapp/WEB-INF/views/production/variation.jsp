@@ -30,13 +30,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Variation
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -59,14 +59,14 @@
 					<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 												<th class="col-md-1">Sr.No.</th>
 										
 										<th class="col-md-2">Production Date</th>
-										<th class="col-md-2">Cat Id</th>
-										<th class="col-md-2">Time Slot</th>
+										<th class="col-md-6">Cat Name</th>
+									<!-- 	<th class="col-md-2">Time Slot</th> -->
 										
 										<th class="col-md-2">Action</th>
 										
@@ -77,14 +77,14 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table_grid1" class="table table-advance">
+										<table id="table_grid1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
 												<th class="col-md-1">Sr.No.</th>
 										
-										<th class="col-md-2">Production Date</th>
-										<th class="col-md-2">Cat Id</th>
-										<th class="col-md-2">Time Slot</th>
+										<th class="col-md-2">Plan Date</th>
+										<th class="col-md-6">Cat Name</th>
+									<!-- 	<th class="col-md-2">Time Slot</th> -->
 										
 										<th class="col-md-2">Action</th>
 										
@@ -144,15 +144,15 @@
 														</c:forEach> --%>
 														
 															
-															<td align="left"><c:out	
+															<%-- <td align="left"><c:out	
 																value="${postProdPlanHeaderList.timeSlot}" />
 																</td>
-																
+																 --%>
 																
 														
 																
 																
-						<td><a href="${pageContext.request.contextPath}/varianceDetailed?productionHeaderId=${postProdPlanHeaderList.productionHeaderId}" class="action_btn" >
+						<td style="text-align: center;"><a href="${pageContext.request.contextPath}/varianceDetailed?productionHeaderId=${postProdPlanHeaderList.productionHeaderId}" class="action_btn" >
 						<abbr title="Edit"><i class="fa fa-list"></i></abbr></a></td>
 						
 																</tr>

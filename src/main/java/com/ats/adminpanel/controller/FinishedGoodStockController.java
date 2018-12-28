@@ -131,10 +131,13 @@ public class FinishedGoodStockController {
 			DateFormat dfYmd = new SimpleDateFormat("dd-MM-yyyy");
 
 			if (stockHeader != null) {
+				
+				
 				showFinStockDetail = new ArrayList<FinishedGoodStockDetail>();
 				showStockHeader = stockHeader;
 				sDate = dfYmd.format(stockHeader.getFinGoodStockDate());
-
+			}//closing bracket added for stock date get
+			/*
 				System.out.println("s Date ===" + sDate);
 				map = new LinkedMultiValueMap<String, Object>();
 				map.add("stockDate", sDate);
@@ -187,9 +190,9 @@ public class FinishedGoodStockController {
 			// model.addObject("itemsList", itemsList);
 
 			model.addObject("itemsList", showFinStockDetail);
-			model.addObject("sDate", sDate);// mahesh code (3 march)
+		*/	model.addObject("sDate", sDate);// mahesh code (3 march)
 
-			try {
+			/*try {
 
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -227,7 +230,7 @@ public class FinishedGoodStockController {
 				e.printStackTrace();
 				System.out.println("Exception in generate excel ");
 			}
-
+*/
 			globalItemList = new ArrayList<>();
 			globalItemList = itemsList;
 		} catch (Exception e) {
@@ -939,9 +942,6 @@ public class FinishedGoodStockController {
 
 		System.out.println("Inside Finished Good Day End ");
 		
-		
-		System.err.println("in day end Global Item List " +globalItemList.toString());
-
 		// Constants.mainAct = 12;
 		// Constants.subAct = 123;
 		RestTemplate restTemplate = new RestTemplate();
@@ -1307,7 +1307,7 @@ public class FinishedGoodStockController {
 			selectedCat = catId;
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			int subCatId = Integer.parseInt(request.getParameter("item_grp2"));
-			map.add("subCatId", subCatId);
+			map.add("subCatId",subCatId);
 			List<Item> itemsList = new ArrayList<Item>();
 			/*
 			 * List<Item> items = restTemplate.postForObject(Constants.url +
@@ -1315,14 +1315,14 @@ public class FinishedGoodStockController {
 			 * +items.toString());
 			 */
 
-			System.err.println(" first Hi");
+			System.err.println(" first Hi"+subCatId);
 
 			Item[] itemList1 = restTemplate.postForObject(Constants.url + "getItemsBySubCatId", map, Item[].class);
 
 			ArrayList<Item> items = new ArrayList<Item>(Arrays.asList(itemList1));
 
 			System.err.println("Hi");
-			System.err.println("items  " + itemList1.toString());
+			System.err.println("items  " + items.toString());
 			globalItemList.clear();
 			globalItemList = new ArrayList<>();
 			globalItemList = items;
@@ -1487,6 +1487,46 @@ public class FinishedGoodStockController {
 			// model.addObject("itemsList", showFinStockDetail);
 			// model.addObject("sDate", sDate);// mahesh code (3 march)
 			System.err.println("Stock Detail  " + showFinStockDetailRes.toString());
+			
+			
+			try {
+
+				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+				ExportToExcel expoExcel = new ExportToExcel();
+				List<String> rowData = new ArrayList<String>();
+
+				rowData.add("Sr.No.");
+				rowData.add("Item Name");
+				rowData.add("T1");
+				rowData.add("T2");
+				rowData.add("T3");
+
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				for (int i = 0; i < showFinStockDetailRes.size(); i++) {
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+
+					rowData.add("" + (i + 1));
+					rowData.add("" + showFinStockDetailRes.get(i).getItemName());
+					rowData.add("" + showFinStockDetailRes.get(i).getOpT1());
+					rowData.add("" + showFinStockDetailRes.get(i).getOpT2());
+					rowData.add("" + showFinStockDetailRes.get(i).getOpT3());
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+
+				}
+
+				HttpSession session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "finishGoodStock");
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Exception in generate excel ");
+			}
 		} catch (Exception e) {
 			System.err.println("exception in show fi good stock selectd subcat " + e.getMessage());
 			e.printStackTrace();

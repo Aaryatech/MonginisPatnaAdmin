@@ -43,15 +43,66 @@
 				method="post" id="validation">
 
 				<div class="form-group">
-					<label class="col-sm-4 col-lg-1 control-label">Type</label>
-					<div class="col-sm-5 col-lg-3 controls">
-						<select class="form-control" name="selectType" id="selectType">
+					<label class="col-sm-4 col-lg-1 control-label"><b>Type</b></label>
+					<div class="col-sm-5 col-lg-2 controls">
+						<select class="form-control" name="selectType" id="selectType" required>
+						<c:choose>
+						<c:when test="${type==0}">
+						
+							<option value="1">GRN Credit Note</option>
+							<option value="0" selected>GVN Credit Note</option>
+						</c:when>
+						<c:when test="${type==1}">
+						
+							<option value="1" selected>GRN Credit Note</option>
+							<option value="0">GVN Credit Note</option>
+						</c:when>
+						<c:otherwise>
+						
 							<option value="1">GRN Credit Note</option>
 							<option value="0">GVN Credit Note</option>
+						</c:otherwise>
+						</c:choose>
+							
 						</select>
 					</div>
+					
+						<label class="col-sm-3 col-lg-2 control-label"><b>
+							Franchisee</b></label>
+						<div class="col-sm-6 col-lg-3">
+
+							<select data-placeholder="Choose Franchisee"
+								class="form-control chosen" multiple="multiple" tabindex="6"
+								id="selectFr" name="selectFr" required >
+
+								
+                                
+								<c:forEach items="${franchiseeList}" var="fr"
+									varStatus="count">
+									      <c:set var = "flag"  value = "0"/>
+									
+									<c:forEach items="${frList}" var="frId"
+									varStatus="cnt">
+									<c:choose>
+									<c:when test="${frId==fr.frId}">
+									 <c:set var = "flag"  value = "1"/>
+									 <option value="${fr.frId}" selected><c:out value="${fr.frName}"/></option>
+									</c:when>
+									
+									</c:choose>
+									</c:forEach>
+									<c:choose>
+									<c:when test="${flag==0}">
+									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									</c:when>
+									</c:choose>
+									
+								</c:forEach>
+							</select>
+
+						</div>
 					<section>
-						<div class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+						<div class="col-sm-25 col-sm-offset-3 col-lg-4 col-lg-offset-0">
 							<input type="button" value="Search" onclick="getGrnGvnDetail()"
 								class="btn btn-primary">&nbsp;&nbsp; <input
 								type="button" value="View Credit Notes"
@@ -91,7 +142,7 @@
 
 								<div class="table-responsive" style="border: 0">
 									<table width="100%" class="table table-advance" id="table1">
-										<thead>
+										<thead style="background-color:#f3b5db; ">
 											<tr>
 												<th width="50" align="left"><input type="checkbox"
 													onClick="selectcreditnote(this)" /> Select All<br /></th>
@@ -183,7 +234,7 @@
 			</form>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -270,11 +321,14 @@
 	function getGrnGvnDetail(){
 		
 		var selectedType = $("#selectType").val();
-		//alert("Hi "+selectedType);
+		if(validate()){
+		
 	        var form = document.getElementById("validation");
 	        form.action ="${pageContext.request.contextPath}/insertCreNoteProcess";
 	        form.submit();
 	        $("#selectType").value=selectedType;
+	    	
+		}
 
 
 	}
@@ -292,6 +346,21 @@ function viewCreditNotes(){
 	}
 	
 	</script>
+<script type="text/javascript">
+		function validate() {
 
+			var selectedFr = $("#selectFr").val();
+		
+			var isValid = true;
+
+			if (selectedFr == "" || selectedFr == null  ) {
+ 					alert("Please Select Franchisee");
+					isValid = false;
+				}
+ 
+			return isValid;
+
+		}
+	</script>
 </body>
 </html>
