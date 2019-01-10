@@ -107,7 +107,7 @@
 														</c:when>
 
 													</c:choose>
-													<c:set var="total"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${planDetailForBom.total}" /></c:set>
+													<c:set var="total"><fmt:formatNumber type="number" groupingUsed="false" minFractionDigits="2" maxFractionDigits="2" value="${planDetailForBom.total}" /></c:set>
 													<td align="left"><c:out
 															value="${total}" /></td>
 

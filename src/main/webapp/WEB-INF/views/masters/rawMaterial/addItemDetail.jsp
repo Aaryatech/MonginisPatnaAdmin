@@ -22,7 +22,8 @@
 <c:url var="redirectToItemList" value="/redirectToItemList"/>
 	<c:url var="getRmCategory" value="/getRmCategory" />
 	<c:url var="getRmListByCatId" value="/getRmListByCatId" />
-
+<c:url var="getRmGroupFromStore" value="/getRmGroupFromStore" />
+<c:url var="getRmListByCatIdFromStore" value="/getRmListByCatIdFromStore" />
 
 	<div class="container" id="main-container">
 
@@ -117,7 +118,7 @@
 									
 								   </select>									
 								   </div>
-                        <label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
+                        <%-- <label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
 									<div class="col-sm-6 col-lg-2 controls">
 										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
 										<option value="0" disabled="disabled" selected="selected">Select RM Group</option>
@@ -130,6 +131,22 @@
  											 
 									
 							</c:choose>			</c:forEach>
+						
+
+										</select>
+									</div> --%>
+									
+									<label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
+									<div class="col-sm-6 col-lg-2 controls">
+										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
+										<option value="0" disabled="disabled" selected="selected">Select RM Group</option>
+											 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList"
+							varStatus="count">
+							 
+							 
+							   <option value="${rmItemGroupList.catId}"><c:out value="${rmItemGroupList.catDesc}"/></option>
+ 								  
+							 		</c:forEach>
 						
 
 										</select>
@@ -851,7 +868,7 @@ function deleteItemDetail(key){
 </script>
 
 <script type="text/javascript">
-$(document).ready(function() { 
+/* $(document).ready(function() { 
 	$('#rm_group').change(
 			function() {
 				$.getJSON('${getRmCategory}', {
@@ -871,8 +888,31 @@ $(document).ready(function() {
 
 				});
 			});
-});
+}); */
+
 $(document).ready(function() { 
+	$('#rm_group').change(
+			function() {
+				$.getJSON('${getRmGroupFromStore}', {
+					grpId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					var html = '<option value="" disabled="disabled" selected >Select Category</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].grpId + '">'
+								+ data[i].grpCode +' &nbsp; '+data[i].grpDesc +'</option>';
+					}
+					html += '</option>';
+					$('#rm_cat').html(html);
+					$('#rm_cat').formcontrol('refresh');
+
+				});
+			});
+});
+
+/* $(document).ready(function() { 
 	$('#rm_cat').change(
 			function() {
 				$.getJSON('${getRmListByCatId}', {
@@ -885,6 +925,28 @@ $(document).ready(function() {
 					for ( var i = 0; i < len; i++) {
 						html += '<option value="' + data[i].rmId + '">'
 								+ data[i].rmName + '</option>';
+					}
+					html += '</option>';
+					$('#rm_id').html(html);
+					$("#rm_id").trigger("chosen:updated");
+
+				});
+			});
+}); */
+
+$(document).ready(function() { 
+	$('#rm_cat').change(
+			function() {
+				$.getJSON('${getRmListByCatIdFromStore}', {
+					catId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					var html = '<option value="" disabled="disabled" selected >Select Category</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].itemId + '">'
+								+ data[i].itemDesc + '</option>';
 					}
 					html += '</option>';
 					$('#rm_id').html(html);

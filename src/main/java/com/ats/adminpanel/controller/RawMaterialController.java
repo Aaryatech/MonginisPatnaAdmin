@@ -31,6 +31,10 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.RawMaterial.ItemDetail;
 import com.ats.adminpanel.model.RawMaterial.ItemDetailList;
+import com.ats.adminpanel.model.Category;
+import com.ats.adminpanel.model.GetItem;
+import com.ats.adminpanel.model.GetItemGroup;
+import com.ats.adminpanel.model.ItemList;
 import com.ats.adminpanel.model.StockItem;
 import com.ats.adminpanel.model.RawMaterial.GetRawMaterialDetailList;
 import com.ats.adminpanel.model.RawMaterial.GetRawmaterialByGroup;
@@ -57,7 +61,7 @@ import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.ErrorMessage;
 import com.ats.adminpanel.model.item.Item;
-import com.ats.adminpanel.model.supplierMaster.SupplierDetails;
+import com.ats.adminpanel.model.supplierMaster.SupplierDetails; 
 
 @Controller
 @Scope("session")
@@ -1505,8 +1509,8 @@ public class RawMaterialController {
 
 			ItemDetailList itemDetailsList = rest.postForObject(Constants.url + "rawMaterial/getItemDetails", map,
 					ItemDetailList.class);
-			List<RmItemGroup> rmItemGroupList = rest.getForObject(Constants.url + "rawMaterial/getAllRmItemGroup",
-					List.class);
+			Category[] category = rest.getForObject(Constants.storeUrl + "/getAllCategoryByIsUsed", Category[].class);
+			List<Category> rmItemGroupList = new ArrayList<Category>(Arrays.asList(category)); 
 
 			for (int i = 0; i < itemDetailsList.getItemDetailList().size(); i++) {
 				ItemDetail itemDetail = new ItemDetail();
@@ -1529,8 +1533,63 @@ public class RawMaterialController {
 			model.addObject("rmItemGroupList", rmItemGroupList);
 		} catch (Exception e) {
 			System.err.println();
+			e.printStackTrace();
 		}
 		return model;
+	}
+	
+	@RequestMapping(value = "/getRmGroupFromStore", method = RequestMethod.GET)
+	public @ResponseBody List<GetItemGroup> getRmGroupFromStore(HttpServletRequest request, HttpServletResponse response) {
+
+		 
+		RestTemplate rest = new RestTemplate();
+		
+		List<GetItemGroup> itemGrpList = new ArrayList<>();
+		
+		try {
+			
+			MultiValueMap<String,Object > map = new LinkedMultiValueMap<>();
+			 
+			int catId = Integer.parseInt(request.getParameter("grpId"));
+			map.add("catId", catId);
+			GetItemGroup[] getItemGroup = rest.postForObject(Constants.storeUrl + "getgroupListByCatId", map, GetItemGroup[].class);
+			itemGrpList = new ArrayList<>(Arrays.asList(getItemGroup));
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return itemGrpList;
+	}
+	
+	@RequestMapping(value = "/getRmListByCatIdFromStore", method = RequestMethod.GET)
+	public @ResponseBody List<GetItem> getRmListByCatIdFromStore(HttpServletRequest request, HttpServletResponse response) {
+
+		 
+		//RestTemplate rest = new RestTemplate();
+		
+		ItemList resList = new ItemList();
+		
+		try {
+			
+			MultiValueMap<String,Object > map = new LinkedMultiValueMap<>();
+			 
+			int grpId = Integer.parseInt(request.getParameter("catId"));
+		  
+			map.add("groupId", grpId);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			 resList = restTemplate.postForObject(Constants.storeUrl + "itemListByGroupId", map, ItemList.class);
+			 
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return resList.getItems();
 	}
 	// ----------------------------------------END-------------------------------------------------------------
 
@@ -1569,17 +1628,19 @@ public class RawMaterialController {
 		if (rmType == 1) {
 			System.out.println("inside if");
 			try {
-				RawMaterialDetailsList rawMaterialDetailsList = rest
-						.getForObject(Constants.url + "rawMaterial/getAllRawMaterial", RawMaterialDetailsList.class);
+				
+				 GetItem[] item = rest.getForObject(Constants.storeUrl + "/getAllItems",  GetItem[].class); 
+				 List<GetItem> rawMaterialDetailsList = new ArrayList<GetItem>(Arrays.asList(item));
+				 
 
 				System.out.println("RM Details : " + rawMaterialDetailsList.toString());
 
-				for (RawMaterialDetails rawMaterialDetails : rawMaterialDetailsList.getRawMaterialDetailsList()) {
+				for (GetItem rawMaterialDetails : rawMaterialDetailsList) {
 					CommonConf commonConf = new CommonConf();
 
-					commonConf.setId(rawMaterialDetails.getRmId());
-					commonConf.setName(rawMaterialDetails.getRmName());
-					commonConf.setRmUomId(rawMaterialDetails.getRmUomId());
+					commonConf.setId(rawMaterialDetails.getItemId());
+					commonConf.setName(rawMaterialDetails.getItemDesc());
+					commonConf.setRmUomId(Integer.parseInt(rawMaterialDetails.getItemUom2()));
 
 					commonConfList.add(commonConf);
 					commonConfs.add(commonConf);
