@@ -140,6 +140,8 @@ body{
 
 								<div class="row">
 									<div class="col-md-12">
+									
+									<form id="frConfForm" method="post">
 
 										<div class="box">
 											<div class="box-title">
@@ -157,7 +159,7 @@ body{
 
 
 												<div class="clearfix"></div>
-
+<input type="button" onClick="callDeleteAction()" value="Delete" class="btn btn-primary" />
 
 												<div id="table-scroll" class="table-scroll">
 
@@ -182,7 +184,8 @@ body{
 														<table id="table1" class="table table-advance" border="1">
 															<thead>
 																<tr class="bgpink">
-																	<th width="27" style="width: 28px"id="sr">#</th>
+																	<th width="35" style="width: 28px"id="sr">#<input type="checkbox"
+															onClick="selectFrConf(this)" /></th>
 																	<th width="124" align="left"id="fr">Franchisee Name</th>
 																	<th width="202" align="left"id="menu">Menu Title</th>
 																	<th width="106" align="left"id="cat">Category Name</th>
@@ -197,7 +200,9 @@ body{
 
 
 																	<tr>
-																		<td><c:out value="${count.index+1}"></c:out></td>
+																		<td><c:out value="${count.index+1}"></c:out>
+																		<input type=checkbox name="settingIdList"   value="${configureFrList.settingId}">
+																		</td>
 																		<td align="left"><c:out
 																				value="${configureFrList.frName}"></c:out> <!-- <img src="http://monginisaurangabad.com/admin/uploads/cakes/0L6KEg55AhP18.jpg" alt="" width="150" height="100" /> -->
 																		</td>
@@ -336,7 +341,9 @@ body{
 												</form>
 											</div> --%>
 										</div>
+										</form>
 									</div>
+									
 								</div>
 
 							</div>
@@ -514,6 +521,44 @@ function myFunction() {
    
     
   }
+}
+
+function selectFrConf(source) {
+	checkboxes = document.getElementsByName('settingIdList');
+	
+	for (var i = 0, n = checkboxes.length; i < n; i++) {
+		checkboxes[i].checked = source.checked;
+	}
+	
+}
+
+function callDeleteAction() {
+	
+	
+	checkboxes = document.getElementsByName('settingIdList');
+	var okay=false;
+	for (var i = 0, n = checkboxes.length; i < n; i++) {
+		if(checkboxes[i].checked ==true){
+			okay=true;
+		break;
+	}
+		
+	}
+	
+	if(okay==true){
+		
+		var x=confirm("Are you sure to delete ")
+		if(x==true){
+	var form=document.getElementById("frConfForm");
+	form.action=("deleteMultiFrConfig");
+	form.submit();
+	}
+	}
+	else{
+		
+		alert("Please select some configurations to delete");
+	}
+	
 }
 </script>
 </body>

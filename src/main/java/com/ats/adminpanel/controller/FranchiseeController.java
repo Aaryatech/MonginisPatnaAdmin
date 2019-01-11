@@ -372,6 +372,54 @@ public class FranchiseeController {
 
 		return mav;
 	}
+	
+	//deleteMultiFrConfig
+	//3900 in Rest
+	//11
+	@RequestMapping(value = "/deleteMultiFrConfig", method = RequestMethod.POST)
+	public String deleteMultiFrConfig(HttpServletRequest request, HttpServletResponse response) {
+
+		String[] settingIdList=request.getParameterValues("settingIdList");
+
+		//System.err.println("Seeing id list " +settingIdList[1]);
+		//ModelAndView mav = new ModelAndView("franchisee/listAllFranchisee");
+		
+		try {
+			String settingString = new String();
+
+			for(int i=0;i<settingIdList.length;i++) {
+				
+				settingString = settingString+","+settingIdList[i]; 
+
+			}
+			
+			//System.err.println(  "settingString1 "+settingString);
+
+			settingString = settingString.substring(1, settingString.length());
+			//System.err.println( " post settingString" +settingString);
+
+			RestTemplate rest = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("settingIdList", settingString);
+
+
+			Info info = rest.postForObject(Constants.url + "deleteMultiFrConfig", map, Info.class);
+			System.out.println(info.toString());
+
+			/*if (errorResponse.getError()) {
+				return "redirect:/configureFranchiseesList";
+
+			} else {
+				return "redirect:/configureFranchiseesList";
+
+			}*/
+		} catch (Exception e) {
+			System.out.println("Exc In Del Fr");
+		}
+		return "redirect:/configureFranchiseesList";
+	}
+	
+	
 
 	// ----------------------------------------END--------------------------------------------
 	@RequestMapping(value = "/configureItems", method = RequestMethod.POST)

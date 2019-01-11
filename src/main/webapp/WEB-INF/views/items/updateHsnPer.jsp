@@ -23,6 +23,12 @@
 <body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
  <c:url var="getItemsByCatId" value="/getItemByIdUpdateHsn"></c:url>
+  <c:url var="getGroup2ByCatId" value="/getGroup2ByCatId"></c:url>
+ 
+   <c:url var="itemsBysubCatId" value="/itemsBysubCatId"></c:url>
+ 
+ 
+ 
 
 	<div class="container" id="main-container">
 
@@ -137,12 +143,29 @@
 												
 								</select>	
 									</div>
+									<!-- <button class="buttonload" id="loader">
+                                   <i class="fa fa-spinner fa-spin"></i>Loading
+                                   </button> -->
+								</div>
+								
+								 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
+									<div class="col-sm-9 col-lg-3 controls">
+									<select name="sub_cat_id" id="sub_cat_id" class="form-control" placeholder="Select SubCategory" onchange="subCatChange(this.value)">
+											<option value="-1">Select SubCatId</option>
+										<%--  <c:forEach items="${mCategoryList}" var="mCategoryList">
+										            	  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+										</c:forEach> 
+												 --%>
+								</select>	
+									</div>
 									<button class="buttonload" id="loader">
                                    <i class="fa fa-spinner fa-spin"></i>Loading
                                    </button>
 								</div>
+								
                               <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Item</label>
+									<label class="col-sm-3 col-lg-2 control-label">Items</label>
 									<div class="col-sm-9 col-lg-10 controls">
 									<select name="items[]" id="items" multiple="multiple"       data-rule-required="true" class="form-control chosen" multiplaceholder="Select Item">
 										<%-- <c:forEach items="${itemsList}" var="item">
@@ -316,10 +339,10 @@
 	</script>
 <script type="text/javascript">
 
-			function catChange(cat_id) {
+			function subCatChange(subCatId) {
 				$('#loader').show();
-				$.getJSON('${getItemsByCatId}', {
-					catId : cat_id,
+				$.getJSON('${itemsBysubCatId}', {
+					subCatId : subCatId,
 					ajax : 'true'
 				}, function(data) {
 					var html = '';
@@ -335,6 +358,32 @@
 
 				});
 			}
+			 
+			
+			
+			
+			function catChange(cat_id) {
+				$('#loader').show();
+				$.getJSON('${getGroup2ByCatId}', {
+					catId : cat_id,
+					ajax : 'true'
+				}, function(data) {
+					var html = '';
+					$('#loader').hide();
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].subCatId + '">'
+								+ data[i].subCatName + '</option>';
+					}
+					html += '</option>';
+					$('#sub_cat_id').html(html);
+					   $("#sub_cat_id").trigger("chosen:updated");
+
+				});
+			}
+			
+			
+			
 </script>
 </body>
 </html>
