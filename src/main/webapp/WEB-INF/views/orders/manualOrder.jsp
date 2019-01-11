@@ -220,7 +220,7 @@ select {
 											<label class="col-sm-3 col-lg-2 control-label">Item</label>
 											<div class="col-sm-9 col-lg-5 controls">
 												<select data-placeholder="Select Item" name="items"
-													class="form-control chosen" tabindex="-1" id="items"
+													class="form-control" tabindex="-1" id="items"
 													data-rule-required="true" >
                                                    	<option value="0">Select Item </option>
 												</select>
@@ -427,7 +427,8 @@ $(document).ready(function() {
 		ajax : 'true',
 		
 	},  function(data) { 
- 
+		document.getElementById("items").focus();
+		
 		 $('#loader').hide();
 		var len = data.length;
 		document.getElementById("Submit").disabled = false;

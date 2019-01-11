@@ -159,8 +159,8 @@ body{
 
 
 												<div class="clearfix"></div>
-<input type="button" onClick="callDeleteAction()" value="Delete" class="btn btn-primary" />
-
+<input type="button" onClick="callDeleteAction()" value="Delete" class="btn btn-danger" />
+<div class="clearfix"></div>
 												<div id="table-scroll" class="table-scroll">
 
 												<!-- 	<div id="faux-table" class="faux-table" aria="hidden">
@@ -264,6 +264,7 @@ body{
 														</table>
 													</div>
 												</div>
+<input type="button" onClick="callDeleteAction()" value="Delete" class="btn btn-danger" />
 
 											</div>
 											<%-- <div class="box-content">

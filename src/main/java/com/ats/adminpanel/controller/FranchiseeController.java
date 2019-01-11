@@ -453,7 +453,7 @@ public class FranchiseeController {
 			}
 			String items = sb.toString();
 			items = items.substring(0, items.length() - 1);
-			System.out.println("items" + items);
+			System.out.println("items for conf" + items);
 
 			StringBuilder sb1 = new StringBuilder();
             if(frId[0].equals("0"))
@@ -470,7 +470,7 @@ public class FranchiseeController {
             }
 			String frIdList = sb1.toString();
 			frIdList = frIdList.substring(0, frIdList.length() - 1);
-			System.err.println(frIdList.toString());
+			System.err.println("selected fr "+frIdList.toString());
 			RestTemplate rest=new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("itemIdList", items);

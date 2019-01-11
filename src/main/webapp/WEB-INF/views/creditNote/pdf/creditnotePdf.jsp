@@ -22,7 +22,7 @@ contentType="text/html; charset=ISO8859_1"%>
   <tr>
     <td width="54.8%" colspan="5" style="border-top:1px solid #313131;padding:8px;color:#FFF; font-size:14px;">
        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">To, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.frName}</b>&nbsp;${headerH.creditHeader.frAddress}</p>
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;27 Maharashtra </span> </p>
+        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;10 Bihar </span> </p>
     </td>
 
     <td width="50%" colspan="5" style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#FFF; font-size:15px;">
