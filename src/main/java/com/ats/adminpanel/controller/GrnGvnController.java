@@ -62,9 +62,9 @@ public class GrnGvnController {
 
 	GetAllRemarksList getAllRemarksList = new GetAllRemarksList();
 
-	public static String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
+	public  String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
 
-	public static String gateGvnFromDate, gateGvnToDate, storeGvnFromDate, storeGvnToDate, accGvnFromDate, accGvnToDate;
+	public  String gateGvnFromDate, gateGvnToDate, storeGvnFromDate, storeGvnToDate, accGvnFromDate, accGvnToDate;
 
 	public String gateGrnHeaderFromDate, gateGrnHeaderToDate;
 
@@ -445,7 +445,9 @@ public class GrnGvnController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		//return "redirect:/getGateGrnDetail";
+		return "redirect:/getGrnHeaderForGate";
 
 	}
 
@@ -591,7 +593,10 @@ public class GrnGvnController {
 		}
 		System.out.println("INSERT GATE GRN DISAPPROVE : STATUS =3");
 
-		return "redirect:/getGateGrnDetail";
+		//return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+
+		return "redirect:/getGrnHeaderForGate";
 
 	}
 
@@ -612,7 +617,7 @@ public class GrnGvnController {
 
 			String[] grnIdList = request.getParameterValues("select_to_agree");
 
-			System.out.println("first GRN ID " + grnIdList[0]);
+			//System.out.println("first GRN ID " + grnIdList[0]);
 
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -747,7 +752,10 @@ public class GrnGvnController {
 
 		}
 
-		return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+
+		//return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
+		return "redirect:/getGrnHeaderForGate";
 	}
 	// Acc Grn Started
 
@@ -1410,9 +1418,10 @@ public class GrnGvnController {
 			e.printStackTrace();
 
 		}
-
-		return "redirect:/getAccGrnDetail";
-
+		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
+		//return "redirect:/getAccGrnDetail";
+		return "redirect:/getGrnHeaderForAcc";
+		
 	}
 
 	// B] --//insertAccGrnProcessDisAgree
@@ -1740,8 +1749,11 @@ public class GrnGvnController {
 			e.printStackTrace();
 
 		}
+		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
 
-		return "redirect:/getAccGrnDetail";
+		//return "redirect:/getAccGrnDetail";
+		return "redirect:/getGrnHeaderForAcc";
+
 
 	}
 
@@ -2086,7 +2098,11 @@ public class GrnGvnController {
 
 		}
 
-		return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
+		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
+		//return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
+		
+		return "redirect:/getGrnHeaderForAcc";
+
 	}
 
 }

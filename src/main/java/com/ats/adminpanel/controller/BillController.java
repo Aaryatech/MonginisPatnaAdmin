@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.jasper.tagplugins.jstl.core.Catch;
+//import org.apache.jasper.tagplugins.jstl.core.Catch;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1397,6 +1397,197 @@ public class BillController {
 
 			String selectedBill = request.getParameter("select_to_print");
 			String[] selectedBills = request.getParameterValues("select_to_print");
+			
+
+			for (int i = 0; i < selectedBills.length; i++) {
+				billList = selectedBills[i] + "," + billList;
+			}
+
+			billList = billList.substring(0, billList.length() - 1);
+
+			System.out.println("selected bills for Printing " + billList);
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			map.add("billNoList", billList);
+
+			ParameterizedTypeReference<List<GetBillDetailPrint>> typeRef = new ParameterizedTypeReference<List<GetBillDetailPrint>>() {
+			};
+			ResponseEntity<List<GetBillDetailPrint>> responseEntity = restTemplate.exchange(
+					Constants.url + "getBillDetailsForPrint", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			// List<GetBillDetailPrint> billDetailsResponse =new ArrayList<>();
+
+			List<GetBillDetailPrint> billDetailsResponse = responseEntity.getBody();
+
+			System.out.println("bill No in Header " + billHeadersListForPrint.toString());
+
+			System.out.println("selected bills for Printing " + billList);
+			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
+			billHeadersListForPrint = new ArrayList<>();
+
+			// billHeadersListForPrint=getBillListProcessForPrint(request, response);
+			// List<FrBillHeaderForPrint> getBillListProcessForPrint
+
+			/*
+			 * List<String> billing=Arrays.asList(billList);
+			 * 
+			 * for(int a=0;a<billing.size();a++) {
+			 * 
+			 * if(billHeadersListForPrint.get(a).getBillNo()!=Integer.parseInt(billing.get(a
+			 * )) ){
+			 * 
+			 * System.out.println("billHeader print removing bill"+billHeadersListForPrint.
+			 * get(a));
+			 * 
+			 * billHeadersListForPrint.remove(a);
+			 * 
+			 * }
+			 * 
+			 * }
+			 */
+
+			/*
+			 * List<GetBillDetail> billDetailsResponse =
+			 * restTemplate.postForObject(Constants.url + "getBillDetailsForPrint", map,
+			 * List.class);
+			 * 
+			 * 
+			 */
+			/*
+			 * List<FrBillHeaderForPrint> tempList=new ArrayList<>();
+			 * tempList=billHeadersListForPrint;
+			 * System.out.println("temp List Before"+tempList); for(int
+			 * p=0;p<selectedBills.length;p++) { System.out.println("selected Bill List "+p
+			 * +""+selectedBills[p]);
+			 * if(Integer.parseInt(selectedBills[p])==billHeadersListForPrint.get(p).
+			 * getBillNo()) {
+			 * 
+			 * tempList.remove(p); }
+			 * 
+			 * } System.out.println("temp List After"+tempList); billHeadersListForPrint=new
+			 * ArrayList<>(); billHeadersListForPrint=tempList;
+			 */
+
+			map = new LinkedMultiValueMap<String, Object>();
+
+			map.add("billNoList", billList);
+
+			ParameterizedTypeReference<List<FrBillHeaderForPrint>> typeRef2 = new ParameterizedTypeReference<List<FrBillHeaderForPrint>>() {
+			};
+			ResponseEntity<List<FrBillHeaderForPrint>> responseEntity2 = restTemplate.exchange(
+					Constants.url + "getFrBillHeaderForPrintSelectedBill", HttpMethod.POST, new HttpEntity<>(map),
+					typeRef2);
+			billHeadersListForPrint = new ArrayList<>();
+			// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
+			billHeadersListForPrint = responseEntity2.getBody();
+
+			System.out.println("in new BHLFP" + billHeadersListForPrint.toString());
+			/*
+			 * List<FrBillHeaderForPrint> temHeaderList=billHeadersListForPrint;
+			 * 
+			 * System.out.println("length of bil String "+selectedBills.length); for(int
+			 * k=0;k<selectedBills.length;k++) { System.out.println("Inside for Loop 1 ");
+			 * 
+			 * for(int y=0;y<temHeaderList.size();y++) {
+			 * System.out.println("Inside for Loop 2 ");
+			 * 
+			 * 
+			 * int bNo=Integer.valueOf(selectedBills[k]);
+			 * 
+			 * System.out.println("bill No "+bNo);
+			 * if(temHeaderList.get(y).getBillNo()==bNo){
+			 * 
+			 * System.out.println("Inside If Loop ");
+			 * 
+			 * System.out.println("billHeader print removing bill"+temHeaderList.get(k));
+			 * billHeadersListForPrint.remove(y);
+			 * 
+			 * } } }
+			 */
+
+			billDetailsListForPrint = new ArrayList<GetBillDetailPrint>();
+			billDetailsListForPrint = billDetailsResponse;
+			System.out.println(" *** get Bill detail for Print response :: " + billDetailsListForPrint.toString());
+
+			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
+
+			FrBillPrint billPrint;
+			for (int i = 0; i < billHeadersListForPrint.size(); i++) {
+				System.out.println("Inside outer for " + i);
+				billPrint = new FrBillPrint();
+				List<GetBillDetailPrint> billDetails = new ArrayList<>();
+
+				for (int j = 0; j < billDetailsListForPrint.size(); j++) {
+					System.out.println("Inside inner for " + j);
+					System.out.println("Header bill no  " + billHeadersListForPrint.get(i).getBillNo());
+					System.out.println("detail bill no " + billDetailsListForPrint.get(j).getBillNo());
+
+					if (billHeadersListForPrint.get(i).getBillNo().equals(billDetailsListForPrint.get(j).getBillNo())) {
+
+						System.out.println("Inside If  Bill no  = " + billHeadersListForPrint.get(i).getBillNo());
+
+						billPrint.setBillNo(billHeadersListForPrint.get(i).getBillNo());
+						billPrint.setFrAddress(billHeadersListForPrint.get(i).getFrAddress());
+						billPrint.setFrId(billHeadersListForPrint.get(i).getFrId());
+						billPrint.setFrName(billHeadersListForPrint.get(i).getFrName());
+						billPrint.setInvoiceNo(billHeadersListForPrint.get(i).getInvoiceNo());
+						billPrint.setIsSameState(billHeadersListForPrint.get(i).getIsSameState());
+						billPrint.setBillDate(billHeadersListForPrint.get(i).getBillDate());
+
+						billDetails.add(billDetailsListForPrint.get(j));
+
+						// FrBillTax billTax=new FrBillTax(); not used
+
+					} // end of if
+
+				}
+				billPrint.setBillDetailsList(billDetails);
+				// billPrintList=new ArrayList<>();
+
+				if (billPrint != null)
+					billPrintList.add(billPrint);
+
+			}
+
+			System.out.println(" after adding detail List : bill Print List " + billPrintList.toString());
+			model.addObject("billDetails", billPrintList);
+			// HttpSession ses= request.getSession();
+			// ses.setAttribute("billDetails", billPrintList);
+			model.addObject("vehicleNo", vehicleNo);
+			model.addObject("transportMode", transportMode);
+			model.addObject("selectedBills", billList);
+		} catch (Exception e) {
+			System.out.println("Exce in getting bill Detail for Print " + e.getMessage());
+			e.printStackTrace();
+
+		}
+		return model;
+
+	}
+	
+	@RequestMapping(value = "/getBillDetailForPrint1/{vehicleNo}/{transportMode}/{selectedBills}", method = RequestMethod.GET)
+	public ModelAndView getBillDetailForPrint1(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable String vehicleNo,@PathVariable String transportMode,
+			@PathVariable String[] selectedBills) {
+
+		ModelAndView model = new ModelAndView("billing/billDetailPdf");
+		billPrintList = new ArrayList<>();
+		String billList = new String();
+		// Constants.mainAct = 8;
+		// Constants.subAct = 83;
+		try {
+
+			//vehicleNo = request.getParameter("vehicle_no");
+			//transportMode = request.getParameter("transport_mode");
+			transportMode = transportMode.replaceAll("\\s", "-");
+			System.out.println("Vehicle No " + vehicleNo + "Transport Mode = " + transportMode);
+
+			System.out.println("Inside new form action ");
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			String selectedBill = request.getParameter("select_to_print");
+			//String[] selectedBills = request.getParameterValues("select_to_print");
 			
 
 			for (int i = 0; i < selectedBills.length; i++) {

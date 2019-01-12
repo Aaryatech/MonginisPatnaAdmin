@@ -441,7 +441,10 @@ public class GvnController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/getGateGvnDetail";
+		gateGvnHeaderFromDate=null; gateGvnHeaderToDate=null;
+		//return "redirect:/getGateGvnDetail";
+		return "redirect:/getGvnHeaderForGate";
+		
 
 	}
 
@@ -576,8 +579,10 @@ public class GvnController {
 			System.out.println("Error in insert Gat eGrn Process Agree " + e.getMessage());
 			e.printStackTrace();
 		}
-
-		return "redirect:/getGateGvnDetail";
+		gateGvnHeaderFromDate=null; gateGvnHeaderToDate=null;
+		//return "redirect:/getGateGvnDetail";
+		
+		return "redirect:/getGvnHeaderForGate";
 
 	}
 
@@ -731,8 +736,10 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
-
-		return "redirect:/getGateGvnDetail/" + globalGvnGateHeaderId;
+		gateGvnHeaderFromDate=null; gateGvnHeaderToDate=null;
+		//return "redirect:/getGateGvnDetail/" + globalGvnGateHeaderId;
+		
+		return "redirect:/getGvnHeaderForGate";
 
 	}
 
@@ -1136,7 +1143,9 @@ public class GvnController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/getStoreGvnDetail";
+		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
+		//return "redirect:/getStoreGvnDetail";
+		return "redirect:/getGvnHeaderForStore/"+0;
 
 	}
 
@@ -1290,8 +1299,10 @@ public class GvnController {
 			System.out.println("Error in insert Gat eGrn Process Agree " + e.getMessage());
 			e.printStackTrace();
 		}
+		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
+		//return "redirect:/getStoreGvnDetail";
+		return "redirect:/getGvnHeaderForStore/"+0;
 
-		return "redirect:/getStoreGvnDetail";
 
 	}
 
@@ -1471,8 +1482,12 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
+		
+		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
 
-		return "redirect:/getStoreGvnDetail/" + globalGvnStoreHeaderId;
+		//return "redirect:/getStoreGvnDetail/" + globalGvnStoreHeaderId;
+		return "redirect:/getGvnHeaderForStore/"+0;
+
 
 	}
 
@@ -2108,8 +2123,13 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
+		
+		accGvnHeaderFromDate=null;accGvnHeaderToDate=null;
 
-		return "redirect:/getAccGvnDetail";
+		//return "redirect:/getAccGvnDetail";
+		return "redirect:/getGvnHeaderForAcc";
+
+		
 
 	}
 
@@ -2417,8 +2437,12 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
+		
+		accGvnHeaderFromDate=null;accGvnHeaderToDate=null;
 
-		return "redirect:/getAccGvnDetail";
+		//return "redirect:/getAccGvnDetail";
+		
+		return "redirect:/getGvnHeaderForAcc";
 
 	}
 
@@ -2738,8 +2762,12 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
+		
+		accGvnHeaderFromDate=null;accGvnHeaderToDate=null;
 
-		return "redirect:/getAccGvnDetail/" + globalGvnAccHeaderId;
+		//return "redirect:/getAccGvnDetail/" + globalGvnAccHeaderId;
+		
+		return "redirect:/getGvnHeaderForAcc";
 	}
 
 	public static float roundUp(float d) {

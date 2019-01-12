@@ -187,7 +187,7 @@
 										<br>	<label class="col-sm-3 col-lg-2 control-label">Transport
 												Mode </label>
 											<div class="col-sm-5 col-lg-3 controls">
-												<input type="text" class="form-control"
+												<input type="text" class="form-control" id="transport_mode"
 													name="transport_mode" value="By Road"
 													data-rule-required="true" />
 											</div>
@@ -195,6 +195,7 @@
 												</label>
 											<div class="col-sm-5 col-lg-3 controls">
 												<input type="text" class="form-control" name="vehicle_no"
+												id="vehicle_no"
 													value="0" data-rule-required="true" />
 											</div>
 														</div>
@@ -349,11 +350,18 @@
 		function submitBill() {
 			//submitBillForm.submit();
 			// window.open("${pageContext.request.contextPath}/pdf?url=showBillPdf");
-
-			// window.open("${pageContext.request.contextPath}/showBillListForPrint");
-var form = document.getElementById("validation-form")
+//alert("In submit bill-pppp");
+			//window.open("${pageContext.request.contextPath}/getBillDetailForPrint");
+var form = document.getElementById("validation-form").target="_blank";
 form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
 form.submit();
+		}
+		function submitBill1(selectedBills){
+			//alert("selectedBills " +selectedBills);
+			var vehicleNo = document.getElementById("vehicle_no").value;
+			var transportMode = document.getElementById("transport_mode").value;
+			
+			window.open("${pageContext.request.contextPath}/getBillDetailForPrint1/"+vehicleNo+'/'+transportMode+'/'+selectedBills);
 		}
 		$('#btn_submit')
 				.click(
@@ -515,7 +523,7 @@ form.submit();
 													//tr.append($('<td></td>').html("<a href='${pageContext.request.contextPath}/updateBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='update' value='Update'/></a><a href='${pageContext.request.contextPath}/viewBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='view' value='View'/></a><a href='${pageContext.request.contextPath}/deleteBill/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='deleteBill' value='Delete'/></a>"));
 													
 													
-													tr.append($('<td class="col-md-2"></td>').html("<input type='button' id='btn_submit' name='btn_submit' onClick='submitBill()' value='BillDetail'  class='btn btn-primary'/> &nbsp;&nbsp; <input type='button' id='btn_submit_pdf' value='PDF'  class='btn btn-primary' onClick='submitBillPdf()'/>"));
+													tr.append($('<td class="col-md-2"></td>').html("<input type='button' id='btn_submit' name='btn_submit' onClick='submitBill1("+bill.billNo+")' value='BillDetail'  class='btn btn-primary'/> &nbsp;&nbsp; <input type='button' id='btn_submit_pdf' value='PDF'  class='btn btn-primary' onClick='submitBillPdf()'/>"));
 
 													$('#table1 tbody').append(
 															tr);
