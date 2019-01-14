@@ -2386,6 +2386,8 @@ model.addObject("royPer",getRoyPer());
 			String toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
 
+			int catId=Integer.parseInt(request.getParameter("catId"));
+			
 			boolean isAllFrSelected = false;
 			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
 			selectedFr = selectedFr.replaceAll("\"", "");
@@ -2436,6 +2438,7 @@ model.addObject("royPer",getRoyPer());
 
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
+				map.add("catId", catId);
 
 			} else {
 				System.out.println("Inside else Few fr Selected ");
@@ -2443,6 +2446,7 @@ model.addObject("royPer",getRoyPer());
 				map.add("frIdList", selectedFr);
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
+				map.add("catId", catId);
 
 				ParameterizedTypeReference<List<SalesReportItemwise>> typeRef = new ParameterizedTypeReference<List<SalesReportItemwise>>() {
 				};

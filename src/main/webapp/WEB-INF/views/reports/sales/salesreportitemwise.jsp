@@ -126,7 +126,9 @@
 				<div class="row">
 					<div class="col-md-12" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
-							 Report</button>
+							 Report All</button>
+							 	<button class="btn btn-info" onclick="searchReportExceptTP()">Search
+							 Report Except T&P</button>
 							
 							
 																			<button class="btn btn-primary" value="PDF" id="PDFButton" onclick="genPdf()">PDF</button>
@@ -225,7 +227,7 @@
 				
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
-
+var catId=0;
 				$('#loader').show();
 
 				$
@@ -237,6 +239,94 @@
 									fromDate : from_date,
 									toDate : to_date,
 									route_id:routeId,
+									catId : catId,
+									ajax : 'true'
+
+								},
+								function(data) {
+
+									$('#table_grid td').remove();
+									$('#loader').hide();
+
+									if (data == "") {
+										alert("No records found !!");
+										  document.getElementById("expExcel").disabled=true;
+
+									}
+//alert("Length " +data.length);
+									$
+											.each(
+													data,
+													function(key, report) {
+														  document.getElementById("expExcel").disabled=false;
+															document.getElementById('range').style.display = 'block';
+														var index = key + 1;
+														//var tr = "<tr>";
+														var tr = $('<tr></tr>');
+													  	tr.append($('<td></td>').html(key+1));
+													  	tr.append($('<td></td>').html(report.itemName));
+													  	tr.append($('<td></td>').html(report.itemHsncd));
+													  	
+													  	tr.append($('<td></td>').html(report.itemTax1 + report.itemTax2));
+													  	tr.append($('<td></td>').html(report.billQtySum));
+													  	
+														/* if(report.isSameState==1){
+														  	tr.append($('<td></td>').html(report.cgstSum));
+														  	tr.append($('<td></td>').html(report.sgstSum));
+														  	tr.append($('<td></td>').html(0));
+														}
+														else{
+															tr.append($('<td></td>').html(0));
+														  	tr.append($('<td></td>').html(0));
+														  	tr.append($('<td></td>').html(report.igstSum));
+														} */
+													  	//tr.append($('<td></td>').html(report.igstSum));
+														tr.append($('<td></td>').html(report.taxableAmtSum.toFixed(2)));
+														tr.append($('<td></td>').html(report.cgstRsSum.toFixed(2)));
+														tr.append($('<td></td>').html(report.sgstRsSum.toFixed(2)));
+														tr.append($('<td></td>').html(report.igstRsSum.toFixed(2)));
+														
+														var total=report.sgstRsSum+report.cgstRsSum;
+														total=total.toFixed(2);
+														
+													  	tr.append($('<td></td>').html(total));
+
+														$('#table_grid tbody')
+																.append(
+																		tr);
+														
+
+													})
+
+								});
+
+			
+		}
+	</script>
+	
+	
+		<script type="text/javascript">
+		function searchReportExceptTP() {
+		//	var isValid = validate();
+
+				var selectedFr = $("#selectFr").val();
+				var routeId=$("#selectRoute").val();
+				
+				var from_date = $("#fromDate").val();
+				var to_date = $("#toDate").val();
+var catId=-3;
+				$('#loader').show();
+
+				$
+						.getJSON(
+								'${getBillList}',
+
+								{
+									fr_id_list : JSON.stringify(selectedFr),
+									fromDate : from_date,
+									toDate : to_date,
+									route_id:routeId,
+									catId : catId,
 									ajax : 'true'
 
 								},
@@ -251,6 +341,7 @@
 
 									}
 
+								//	alert("Length " +data.length);
 									$
 											.each(
 													data,
