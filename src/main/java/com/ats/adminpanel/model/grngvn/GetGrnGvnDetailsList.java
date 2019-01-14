@@ -1,20 +1,21 @@
 package com.ats.adminpanel.model.grngvn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ats.adminpanel.model.Info;
 
 public class GetGrnGvnDetailsList {
 	
-	List<GetGrnGvnDetails> grnGvnDetails;
+	ArrayList<GetGrnGvnDetails> grnGvnDetails;
 	
 	Info info;
 
-	public List<GetGrnGvnDetails> getGrnGvnDetails() {
+	public ArrayList<GetGrnGvnDetails> getGrnGvnDetails() {
 		return grnGvnDetails;
 	}
 
-	public void setGrnGvnDetails(List<GetGrnGvnDetails> grnGvnDetails) {
+	public void setGrnGvnDetails(ArrayList<GetGrnGvnDetails> grnGvnDetails) {
 		this.grnGvnDetails = grnGvnDetails;
 	}
 
@@ -30,6 +31,7 @@ public class GetGrnGvnDetailsList {
 	public String toString() {
 		return "GetGrnGvnDetailsList [grnGvnDetails=" + grnGvnDetails + ", info=" + info + "]";
 	}
+
 	
 	
 }

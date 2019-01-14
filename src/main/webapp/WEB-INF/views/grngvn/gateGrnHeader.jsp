@@ -103,20 +103,20 @@
 											<c:forEach items="${unSelectedFrList}" var="fr"
 												varStatus="count2">
 
-											<%--	<c:forEach items="${selectedFr}" var="selFr"
+												<c:forEach items="${selectedFr}" var="selFr"
 													varStatus="count2">
 													 <c:choose>
-														<c:when test="${selFr==fr.frId}">
+														<c:when test="${selFr eq fr.frId}">
 															<option selected value="${fr.frId}"><c:out value="${fr.frName}"/></option>
 														</c:when>
-														<c:otherwise> --%>
+														<c:otherwise>
 															<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
 
 
-														<%-- </c:otherwise>
+														</c:otherwise>
 														</c:choose>
 												</c:forEach>
- --%>
+
 											</c:forEach>
 
 										</select>

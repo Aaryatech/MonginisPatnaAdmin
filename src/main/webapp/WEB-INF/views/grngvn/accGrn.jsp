@@ -82,6 +82,8 @@
 								action="${pageContext.request.contextPath}/insertAccGrnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
 
+								<input type="hidden" value="${headerId}" id="headerId" name="headerId">
+
 								<div class="box">
 									<div class="box-title">
 										<h3>
@@ -745,6 +747,7 @@ function callSubmit(){
 
 
 function insertGrnDisAgree(grnGvnId){
+	var headerId=$("#headerId").val();
 
 var grnId=grnGvnId;
 var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
@@ -764,6 +767,7 @@ else{
 			approveAccLogin : approve_acc_login,
 			accRemark : acc_remark,	
 			acc_grn_qty:acc_grn_qty,
+			headerId : headerId,
 				ajax : 'true',
 
 			}
@@ -802,6 +806,7 @@ var grnId=grnGvnId;
 var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
 var acc_remark=$("#acc_remark"+grnGvnId).val();
 var acc_grn_qty=$("#acc_grn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 	$.getJSON('${insertAccGrnProcessAgree}',
 							{
@@ -809,6 +814,7 @@ var acc_grn_qty=$("#acc_grn_qty"+grnGvnId).val();
 							grnId : grnId,
 							approveAccLogin:approve_acc_login,
 							acc_grn_qty:acc_grn_qty,
+							headerId : headerId,
 								
 								ajax : 'true',
 							
