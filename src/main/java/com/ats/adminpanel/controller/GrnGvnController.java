@@ -88,6 +88,9 @@ public class GrnGvnController {
 	String accGrnHeaderFromDate, accGrnHeaderToDate;
 
 	int globalGateHeaderId, globalAccHeaderId;
+	
+	LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>> hashMap=new LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>>();
+
 
 	@RequestMapping(value = "/getDateForGateHeader", method = RequestMethod.GET)
 	public String getDateForGateHeader(HttpServletRequest request, HttpServletResponse response) {
@@ -113,7 +116,6 @@ public class GrnGvnController {
 	}
 
 	
-	LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>> hashMap=new LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>>();
 	
 	@RequestMapping(value = "/getGrnHeaderForGate", method = RequestMethod.GET)
 	public ModelAndView getGrnHeaderForGate(HttpServletRequest request, HttpServletResponse response) {
@@ -833,13 +835,13 @@ public class GrnGvnController {
 				Calendar cal = Calendar.getInstance();
 
 				String curTimeStamp = dateFormat.format(cal.getTime());
-				System.out.println("Cur time Stamp= " + curTimeStamp);
+			//	System.out.println("Cur time Stamp= " + curTimeStamp);
 
 				cal.set(Calendar.HOUR, 0);
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
 				String initialTimeStamp = dateFormat.format(cal.getTime());
-				System.out.println("initialTime time Stamp= " + initialTimeStamp);
+				//System.out.println("initialTime time Stamp= " + initialTimeStamp);
 
 				String statusList = new String();
 
@@ -850,7 +852,7 @@ public class GrnGvnController {
 				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 				accGrnHeaderFromDate = df.format(date);
 				accGrnHeaderToDate = df.format(date);
-				System.out.println("From Date And :" + accGrnHeaderFromDate + "ToDATE" + accGrnHeaderToDate);
+				//System.out.println("From Date And :" + accGrnHeaderFromDate + "ToDATE" + accGrnHeaderToDate);
 
 				map = new LinkedMultiValueMap<String, Object>();
 
@@ -868,7 +870,7 @@ public class GrnGvnController {
 
 				grnAccHeaderList = headerList.getGrnGvnHeader();
 
-				System.out.println("Grn Acc Header List ON load  " + grnAccHeaderList.toString());
+				
 
 			} // end of if onload call
 
@@ -898,11 +900,11 @@ public class GrnGvnController {
 
 					grnAccHeaderList = headerList.getGrnGvnHeader();
 
-					System.out.println("Grn Acc Header List  All FR" + grnAccHeaderList.toString());
+					//System.out.println("Grn Acc Header List  All FR" + grnAccHeaderList.toString());
 
 				} else {
 
-					System.out.println("Specific Fr Selected ");
+					//System.out.println("Specific Fr Selected ");
 
 					map = new LinkedMultiValueMap<String, Object>();
 
@@ -918,11 +920,11 @@ public class GrnGvnController {
 
 					grnAccHeaderList = headerList.getGrnGvnHeader();
 
-					System.out.println("Grn Acc Header List  specific FR " + grnAccHeaderList.toString());
+					//System.out.println("Grn Acc Header List  specific FR " + grnAccHeaderList.toString());
 				}
 
 			} // End of else
-
+			System.out.println("Grn Acc Header List SIZE ON Load  " + grnAccHeaderList.size());
 			model.addObject("fromDate", accGrnHeaderFromDate);
 			model.addObject("toDate", accGrnHeaderToDate);
 			model.addObject("grnList", grnAccHeaderList);
