@@ -38,7 +38,7 @@
 														
 <table width="100%" style="font-family:arial; font-size:12px; border:1px solid #000000; margin-bottom:40px;">
   <tr bgcolor=lightgrey >
-    <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >AURANGABAD MONGINIS</td>
+    <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >PATNA MONGINIS</td>
   </tr>
   <tr >
   
@@ -68,7 +68,7 @@
   <tr>
     <td  style=" font-size:12px;padding:5px 7px;font-weight:bold;border-bottom:1px solid #000000;">Date of Delivery </td>
     <td style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">${spCakeOrder.spDeliveryDate}</td>
-    <td  style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Place of Delivery-- ${spCakeOrder.spDeliveryPlace}</td>
+    <td  style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Order No-- ${spCakeOrder.spDeliveryPlace}</td>
   </tr>
 
 <c:set var="from" value="${from+1}"/>
