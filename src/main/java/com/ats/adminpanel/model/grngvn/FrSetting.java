@@ -11,6 +11,37 @@ public class FrSetting {
 	private int sellBillNo;
 	
 	private int grnGvnNo;
+	
+	private String orderDate;
+	private String prodDate;
+	
+	private int spNo;
+	
+	
+
+	public int getSpNo() {
+		return spNo;
+	}
+
+	public void setSpNo(int spNo) {
+		this.spNo = spNo;
+	}
+
+	public String getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public String getProdDate() {
+		return prodDate;
+	}
+
+	public void setProdDate(String prodDate) {
+		this.prodDate = prodDate;
+	}
 
 	public int getFrSettingId() {
 		return frSettingId;
@@ -55,7 +86,8 @@ public class FrSetting {
 	@Override
 	public String toString() {
 		return "FrSetting [frSettingId=" + frSettingId + ", frId=" + frId + ", frCode=" + frCode + ", sellBillNo="
-				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + "]";
+				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + ", orderDate=" + orderDate + ", prodDate=" + prodDate
+				+ ", spNo=" + spNo + "]";
 	}
 	
 
