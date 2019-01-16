@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,9 +58,9 @@ public class GvnController {
 	// GVN DATE
 
 	// GVN Detail List
-	List<GetGrnGvnDetails> gvnGateDetailList = new ArrayList<>();
-	List<GetGrnGvnDetails> gvnStoreDetailList = new ArrayList<>();
-	List<GetGrnGvnDetails> gvnAccDetailList = new ArrayList<>();
+	ArrayList<GetGrnGvnDetails> gvnGateDetailList = new ArrayList<>();
+	ArrayList<GetGrnGvnDetails> gvnStoreDetailList = new ArrayList<>();
+	ArrayList<GetGrnGvnDetails> gvnAccDetailList = new ArrayList<>();
 	// GVN Detail List
 
 	public AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
@@ -72,6 +73,9 @@ public class GvnController {
 	int globalGvnGateHeaderId, globalGvnStoreHeaderId, globalGvnAccHeaderId;
 
 	// private String gateGrnHeaderToDate;
+
+	
+	LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>> hashMap=new LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>>();
 
 	@RequestMapping(value = "/getDateForGateGvnHeader", method = RequestMethod.GET)
 	public String getDateForGateGvnHeader(HttpServletRequest request, HttpServletResponse response) {
@@ -258,6 +262,7 @@ public class GvnController {
 			gvnGateDetailList = new ArrayList<>();
 
 			gvnGateDetailList = detailList.getGrnGvnDetails();
+			hashMap.put(headerId, gvnGateDetailList);
 
 			System.out.println("GRN Detail   " + gvnGateDetailList.toString());
 
@@ -293,6 +298,9 @@ public class GvnController {
 			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
 
 			modelAndView.addObject("grnDate", gateHeader.getGrngvnDate());
+			
+			modelAndView.addObject("headerId", headerId);
+
 
 		} catch (Exception e) {
 
@@ -355,6 +363,11 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnGateDetailList=hashMap.get(key);
+			globalGvnGateHeaderId=key;
 
 			if (info.getError() == false) {
 
@@ -494,6 +507,10 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnGateDetailList=hashMap.get(key);
+			globalGvnGateHeaderId=key;
 
 			if (info.getError() == false) {
 
@@ -651,6 +668,11 @@ public class GvnController {
 			System.out.println("GIDS " + gIds);
 
 			Info updateGateGrn = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
+
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnGateDetailList=hashMap.get(key);
+			globalGvnGateHeaderId=key;
 
 			if (updateGateGrn.getError() == false) {
 
@@ -945,8 +967,9 @@ public class GvnController {
 			gvnStoreDetailList = new ArrayList<>();
 
 			gvnStoreDetailList = detailList.getGrnGvnDetails();
+			hashMap.put(headerId, gvnStoreDetailList);
 
-			System.out.println("GRN Detail   " + gvnStoreDetailList.toString());
+			System.out.println("GVN Detail   " + gvnStoreDetailList.toString());
 
 			// Ganesh Remrk
 			map = new LinkedMultiValueMap<String, Object>();
@@ -976,6 +999,7 @@ public class GvnController {
 				}
 			}
 			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
+			modelAndView.addObject("headerId", headerId);
 
 
 		} catch (Exception e) {
@@ -999,12 +1023,14 @@ public class GvnController {
 	public String insertStoreGvnProcessAgree(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView modelAndView = new ModelAndView("grngvn/storeGvn");
-
+		int typeValue=0;
 		try {
 
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 			int storeApproveLogin = userResponse.getUser().getId();
+			
+			typeValue = Integer.parseInt(request.getParameter("typeValue"));
 
 			int grnId = Integer.parseInt(request.getParameter("grnId"));
 			int storeGvnQty = Integer.parseInt(request.getParameter("store_gvn_qty"));
@@ -1037,6 +1063,12 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateStoreGvn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnStoreDetailList=hashMap.get(key);
+			globalGvnStoreHeaderId=key;
+
 
 			if (info.getError() == false) {
 
@@ -1145,7 +1177,7 @@ public class GvnController {
 
 		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
 		//return "redirect:/getStoreGvnDetail";
-		return "redirect:/getGvnHeaderForStore/"+0;
+		return "redirect:/getGvnHeaderForStore/"+typeValue;
 
 	}
 
@@ -1155,9 +1187,9 @@ public class GvnController {
 	public String insertStoreGvnProcessDisAgree(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView modelAndView = new ModelAndView("grngvn/storeGvn");
-
+		int typeValue=0;
 		try {
-
+			typeValue = Integer.parseInt(request.getParameter("typeValue"));
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 			int storeApproveLogin = userResponse.getUser().getId();
@@ -1194,6 +1226,10 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateStoreGvn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnStoreDetailList=hashMap.get(key);
+			globalGvnStoreHeaderId=key;
 
 			if (info.getError() == false) {
 
@@ -1301,7 +1337,7 @@ public class GvnController {
 		}
 		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
 		//return "redirect:/getStoreGvnDetail";
-		return "redirect:/getGvnHeaderForStore/"+0;
+		return "redirect:/getGvnHeaderForStore/"+typeValue;
 
 
 	}
@@ -1313,12 +1349,12 @@ public class GvnController {
 		System.out.println("in checkboxes for Gate GVN  ");
 
 		ModelAndView model = new ModelAndView("grngvn/storeGvn");
-
+		int typeValue=0;
 		ModelAndView modelAndView = null;
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-
+			typeValue = Integer.parseInt(request.getParameter("typeValue"));
 			// Integer.parseInt(request.getParameter("approveGateLogin"));
 
 			HttpSession session = request.getSession();
@@ -1368,6 +1404,12 @@ public class GvnController {
 			System.out.println("GIDS " + gIds);
 
 			Info updateStoreGvn = restTemplate.postForObject(Constants.url + "updateStoreGvn", dataList, Info.class);
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnStoreDetailList=hashMap.get(key);
+			globalGvnStoreHeaderId=key;
+
 
 			if (updateStoreGvn.getError() == false) {
 
@@ -1486,7 +1528,7 @@ public class GvnController {
 		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
 
 		//return "redirect:/getStoreGvnDetail/" + globalGvnStoreHeaderId;
-		return "redirect:/getGvnHeaderForStore/"+0;
+		return "redirect:/getGvnHeaderForStore/"+typeValue;
 
 
 	}
@@ -1675,6 +1717,7 @@ public class GvnController {
 			gvnAccDetailList = new ArrayList<>();
 
 			gvnAccDetailList = detailList.getGrnGvnDetails();
+			hashMap.put(headerId, gvnAccDetailList);
 
 			System.out.println("GRN Detail   " + gvnAccDetailList.toString());
 
@@ -1809,6 +1852,7 @@ public class GvnController {
 		modelAndView.addObject("gvnList", gvnAccDetailList);
 		modelAndView.addObject("grnDate", grnDate);
 		modelAndView.addObject("url",Constants.GVN_IMAGE_URL);
+		modelAndView.addObject("headerId", headerId);
 
 		return modelAndView;
 
@@ -1956,6 +2000,13 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
 
 			// new code
+			
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnAccDetailList=hashMap.get(key);
+			globalGvnAccHeaderId=key;
+
 
 			if (info.getError() == false) {
 
@@ -2272,6 +2323,12 @@ public class GvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
 
 			// new code
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnAccDetailList=hashMap.get(key);
+			globalGvnAccHeaderId=key;
+
 
 			if (info.getError() == false) {
 
@@ -2594,6 +2651,13 @@ public class GvnController {
 
 			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
 
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			gvnAccDetailList=hashMap.get(key);
+			globalGvnAccHeaderId=key;
+
+			
 			if (updateAccGrn.getError() == false) {
 
 				for (int i = 0; i < grnIdList.length; i++) {

@@ -60,6 +60,11 @@
 							<form
 								action="${pageContext.request.contextPath}/insertStoreGvnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
+<input type="hidden" value="${headerId}" id="headerId" name="headerId">
+typeValue
+
+<input type="hidden" value="${type}" id="typeValue" name="typeValue">
+
 
 								<div class="box">
 									<div class="box-title">
@@ -847,6 +852,9 @@ var grnId=grnGvnId;
 var approve_store_login=$("#approve_store_login"+grnGvnId).val();
 var store_remark=$("#store_remark"+grnId).val();
 var store_gvn_qty=$("#store_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
+
+var typeValue = $("#typeValue").val();
 
 if($("#store_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
@@ -862,7 +870,8 @@ else{
 			approveStoreLogin : approve_store_login,
 			storeRemark : store_remark,	
 			store_gvn_qty : store_gvn_qty,
-
+			headerId : headerId,
+			typeValue : typeValue,
 				ajax : 'true',
 			
 
@@ -911,6 +920,8 @@ var grnId=grnGvnId;
 var approve_store_login=$("#approve_store_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
 var store_gvn_qty=$("#store_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
+var typeValue = $("#typeValue").val();
 
 
 /* alert(grnId);
@@ -924,8 +935,8 @@ alert(approve_gate_login); */
 							grnId : grnId,
 							approveStoreLogin:approve_store_login,
 							store_gvn_qty : store_gvn_qty,
-
-								
+							headerId : headerId,
+							typeValue : typeValue,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -1008,7 +1019,7 @@ for (i = 0; i < acc.length; i++) {
 
 function showGateGvnDetails(){
 	
-	alert("hi");
+	//alert("hi");
 		var fromDate=$("#from_date").val();
 	
 		var toDate=$("#to_date").val();

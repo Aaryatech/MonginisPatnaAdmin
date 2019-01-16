@@ -70,6 +70,8 @@
 								action="${pageContext.request.contextPath}/insertGateGvnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
 
+<input type="hidden" value="${headerId}" id="headerId" name="headerId">
+
 								<div class="box">
 									<div class="box-title">
 										<h3>
@@ -767,6 +769,7 @@ var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnId).val();
 var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 if($("#gate_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
@@ -782,6 +785,7 @@ else{
 			approveGateLogin : approve_gate_login,
 			gateRemark : gate_remark,		
 			gate_gvn_qty : gate_gvn_qty,
+			headerId : headerId,
 				ajax : 'true',
 			
 
@@ -830,6 +834,7 @@ var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
 var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 
 /* alert(grnId);
@@ -843,6 +848,7 @@ alert(approve_gate_login); */
 							grnId : grnId,
 							approveGateLogin:approve_gate_login,
 							gate_gvn_qty:gate_gvn_qty,	
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -925,7 +931,7 @@ for (i = 0; i < acc.length; i++) {
 
 function showGateGvnDetails(){
 	
-	alert("hi");
+	//alert("hi");
 		var fromDate=$("#from_date").val();
 	
 		var toDate=$("#to_date").val();
