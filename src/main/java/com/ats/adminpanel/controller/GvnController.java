@@ -921,7 +921,7 @@ public class GvnController {
 
 					gvnStoreHeaderList = headerList.getGrnGvnHeader();
 
-					System.out.println("Grn Gate Header List  specific FR " + gvnStoreHeaderList.toString());
+					//System.out.println("Grn Gate Header List  specific FR " + gvnStoreHeaderList.toString());
 				}
 
 			} // End of else
@@ -942,9 +942,9 @@ public class GvnController {
 
 	// getStoreGvnDetail
 
-	@RequestMapping(value = "/getStoreGvnDetail/{headerId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getStoreGvnDetail/{headerId}/{type}", method = RequestMethod.GET)
 	public ModelAndView getStoreGvnDetail(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("headerId") int headerId) {
+			@PathVariable("headerId") int headerId,@PathVariable("type") int type) {
 		ModelAndView modelAndView = null;
 
 		modelAndView = new ModelAndView("grngvn/storeGvn");
@@ -1012,6 +1012,9 @@ public class GvnController {
 		String grnDate = gvnStoreDetailList.get(0).getGrnGvnDate();
 		modelAndView.addObject("gvnList", gvnStoreDetailList);
 		modelAndView.addObject("grnDate", grnDate);
+		
+		modelAndView.addObject("type", type);
+
 		modelAndView.addObject("url",Constants.GVN_IMAGE_URL);
 
 		return modelAndView;
@@ -1670,7 +1673,7 @@ public class GvnController {
 
 					gvnAccHeaderList = headerList.getGrnGvnHeader();
 
-					System.out.println("Grn Acc Header List  specific FR " + gvnAccHeaderList.toString());
+					//System.out.println("Grn Acc Header List  specific FR " + gvnAccHeaderList.toString());
 				}
 
 			} // End of else

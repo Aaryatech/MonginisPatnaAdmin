@@ -226,7 +226,7 @@
 																</c:when>
 
 															</c:choose>
-<td class="col-md-1"><a href="${pageContext.request.contextPath}/getStoreGvnDetail/${grnList.grnGvnHeaderId}"class="btn bnt-primary"> <i class="fa fa-list"></i></a></td>
+<td class="col-md-1"><a href="${pageContext.request.contextPath}/getStoreGvnDetail/${grnList.grnGvnHeaderId}/${type}"class="btn bnt-primary"> <i class="fa fa-list"></i></a></td>
 
 														</tr>
 													

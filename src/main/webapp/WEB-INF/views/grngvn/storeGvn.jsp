@@ -61,7 +61,7 @@
 								action="${pageContext.request.contextPath}/insertStoreGvnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
 <input type="hidden" value="${headerId}" id="headerId" name="headerId">
-typeValue
+
 
 <input type="hidden" value="${type}" id="typeValue" name="typeValue">
 
