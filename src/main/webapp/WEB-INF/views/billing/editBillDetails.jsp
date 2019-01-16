@@ -106,7 +106,7 @@
 									<div class="clearfix"></div>
 									<div class="table-responsive" style="border: 0">
 										<table width="100%" class="table table-advance" id="table1">
-											<thead>
+											<thead style=" background-color: pink;">
 												<tr>
 
 													<th width="140" style="width: 30px" align="left">Sr No</th>

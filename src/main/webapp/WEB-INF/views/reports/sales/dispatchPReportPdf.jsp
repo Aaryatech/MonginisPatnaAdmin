@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -44,7 +45,7 @@ h6  {
 th {
 	background-color: #EA3291;
 	color: white;
-	
+	 
 }
 </style>
 </head>
@@ -61,7 +62,10 @@ th {
 				<th height="25">Sr.No.</th>
 				<th>Item Name</th>
 			<c:forEach items="${frList}" var="fr" varStatus="count">
-			<th style="font-size: 12px">${fr.frName}</th>
+			<th style="font-size: 10px; ">
+			${fn:toUpperCase(fn:substring(fr.frName, 0, 1))}${fn:toLowerCase(fn:substring(fr.frName, 1,fn:length(fr.frName)))}
+			
+			</th>
 			</c:forEach>
 				<th>Total</th>
 			</tr>

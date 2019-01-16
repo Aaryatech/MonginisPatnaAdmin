@@ -120,12 +120,13 @@
 						<%-- <a
 							href="${pageContext.request.contextPath}/pdfForReport?url=showSaleRoyaltyByCatPdf"
 							target="_blank">PDF</a>
- --%>
+ --%><button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdfHTML()">HTML Report</button>
 					</div>
 
 
 
-				</div>
+				</div>	
 				<div class="row">
 
 					<div class="form-group">
@@ -225,7 +226,7 @@
 		<!-- END Main Content -->
 
 		<footer>
-			<p>2017 © Monginis.</p>
+			<p>2018 © Monginis.</p>
 		</footer>
 
 		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -733,6 +734,15 @@
 				var selectedCat = $("#selectCat").val();
 				
 				window.open('pdfForDisReport?url=pdf/getPDispatchReportPdf/'
+						+ billDate + '/'+routeId+'/'+selectedCat);
+
+			}
+			function genPdfHTML() {
+				var billDate = $("#billDate").val();
+				var routeId = $("#selectRoute").val();
+				var selectedCat = $("#selectCat").val();
+				
+				window.open('pdf/getPDispatchReportPdf/'
 						+ billDate + '/'+routeId+'/'+selectedCat);
 
 			}

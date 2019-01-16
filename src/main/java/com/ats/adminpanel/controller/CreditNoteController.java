@@ -36,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.CreditNoteList;
 import com.ats.adminpanel.model.ExportToExcel;
@@ -838,9 +839,9 @@ public class CreditNoteController {
 
 				System.out.println("Fr List Final " + frList);
 
-				map.add("fromDate", fromDate);
+				map.add("fromDate", DateConvertor.convertToDMY(fromDate));
 
-				map.add("toDate", toDate);
+				map.add("toDate", DateConvertor.convertToDMY(toDate));
 				if (frList.contains("-1")) {
 					isAllFrSelected = true;
 

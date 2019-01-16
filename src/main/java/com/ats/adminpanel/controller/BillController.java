@@ -294,6 +294,8 @@ public class BillController {
 						String billQty = request
 								.getParameter("" + "billQty" + tempGenerateBillList.get(j).getOrderId());
 
+						String expDate= request
+								.getParameter("" + "expDate" + tempGenerateBillList.get(j).getOrderId());
 						// billQty = String.valueOf(gBill.getOrderQty());
 						Float orderRate = (float) gBill.getOrderRate();
 						Float tax1 = (float) gBill.getItemTax1();
@@ -387,7 +389,7 @@ public class BillController {
 						header.setCgstSum(header.getCgstSum() + billDetail.getCgstRs());
 						header.setIgstSum(header.getIgstSum() + billDetail.getIgstRs());
 
-						int itemShelfLife = gBill.getItemShelfLife();
+						/*int itemShelfLife = gBill.getItemShelfLife();
 
 						String deliveryDate = gBill.getDeliveryDate();
 
@@ -399,12 +401,12 @@ public class BillController {
 							calculatedDate = incrementDate(calculatedDate, 1);
 
 						}
-
-						DateFormat Df = new SimpleDateFormat("dd-MM-yyyy");
+                    */
+						DateFormat Df = new SimpleDateFormat("yyyy-MM-dd");//prev dd-MM-yyyy and above comment added on 16 jan 4:11am
 
 						Date expiryDate = null;
 						try {
-							expiryDate = Df.parse(calculatedDate);
+							expiryDate = Df.parse(expDate);//calculatedDate removed expDate added
 						} catch (ParseException e) {
 
 							e.printStackTrace();
