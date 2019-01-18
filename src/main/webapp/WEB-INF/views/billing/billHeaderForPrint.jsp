@@ -275,7 +275,7 @@
 								style="margin-right: 5px;" onclick="submitBill()">Get
 								PDF</button> -->
 
-										<input type="button" margin-right: 5px;" id="btn_submit"
+										<input type="button"  id="btn"
 											class="btn btn-primary" onclick="submitBill()"
 											value="BillDetail" />
 											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="createExel();" >
@@ -353,6 +353,7 @@
 //alert("In submit bill-pppp");
 			//window.open("${pageContext.request.contextPath}/getBillDetailForPrint");
 var form = document.getElementById("validation-form").target="_blank";
+var form = document.getElementById("validation-form");
 form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
 form.submit();
 		}

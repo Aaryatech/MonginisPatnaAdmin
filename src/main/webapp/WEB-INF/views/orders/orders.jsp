@@ -215,7 +215,7 @@ td, th {
 								<!-- </div>
 
 								<div class="form-group"> -->
-									<label class="col-sm-3 col-lg-1 control-label">Date</label>
+									<label class="col-sm-3 col-lg-1 control-label">Prod.Date</label>
 									<div class="col-sm-5 col-lg-2 controls">
 										<input class="form-control date-picker" id="date" size="16"
 											type="text" name="date" value="${date}" required />
@@ -226,7 +226,7 @@ td, th {
 								<div align="center" class="form-group">
 									<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
-										<input type="button" class="btn btn-primary" value="Submit"
+										<input type="button" class="btn btn-primary" value="Search"
 											id="callSubmit" onclick="callSearch()">
 
 

@@ -1196,9 +1196,9 @@ public class BillController {
 		ModelAndView model = new ModelAndView("billing/billDetailPdf");
 		billPrintList = new ArrayList<>();
 		String billList = new String();
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
 		try {
+			int isSinglePdf = Integer.parseInt(request.getParameter("issinglepdf"));
+			int billnumber = Integer.parseInt(request.getParameter("billnumber"));
 
 			vehicleNo = request.getParameter("vehicle_no");
 			transportMode = request.getParameter("transport_mode");
@@ -1208,11 +1208,14 @@ public class BillController {
 			System.out.println("Inside new form action ");
 
 			RestTemplate restTemplate = new RestTemplate();
-
-			String selectedBill = request.getParameter("select_to_print");
+           
 			String[] selectedBills = request.getParameterValues("select_to_print");
 			
-
+			 if(isSinglePdf==1)
+			 {
+				 selectedBills=new String[1];
+				 selectedBills[0]=""+billnumber;
+			 }
 			for (int i = 0; i < selectedBills.length; i++) {
 				billList = selectedBills[i] + "," + billList;
 			}
