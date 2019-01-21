@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,6 +90,7 @@ import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.franchisee.SubCategory;
+import com.ats.adminpanel.model.grngvn.GetGrnGvnDetails;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfiResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfigure;
@@ -783,7 +785,7 @@ public class BillController {
 	public ModelAndView showBillList(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("billing/viewbillheader");
-
+		frIdString=null;
 		Constants.mainAct = 2;
 		Constants.subAct = 20;
 		try {
@@ -817,13 +819,15 @@ public class BillController {
 			map.add("toDate", todaysDate);
 			// System.out.println("Inside is All fr Selected " + isAllFrSelected);
 
+
 			GetBillHeaderResponse billHeaderResponse = restTemplate
 					.postForObject(Constants.url + "getBillHeaderForAllFr", map, GetBillHeaderResponse.class);
 
 			billHeadersList = billHeaderResponse.getGetBillHeaders();
-
 			model.addObject("routeList", routeList);
-			model.addObject("todaysDate", todaysDate);
+			model.addObject("fromDate", todaysDate);
+			model.addObject("toDate", todaysDate);
+
 			model.addObject("menuList", menuList);
 			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
 			model.addObject("billHeadersList", billHeadersList);
@@ -2013,6 +2017,9 @@ public class BillController {
 
 	}
 
+	String fromDate,toDate;
+	String routeId = "0";
+	String frIdString = "";
 	// List<GetBillHeader> billHeadersList;
 	@RequestMapping(value = "/getBillListProcess", method = RequestMethod.GET)
 	public @ResponseBody List<GetBillHeader> getBillListProcess(HttpServletRequest request,
@@ -2029,14 +2036,14 @@ public class BillController {
 
 			RestTemplate restTemplate = new RestTemplate();
 
-			String routeId = "0";
-			String frIdString = "";
+			 routeId = "0";
+			 frIdString = "";
 
 			System.out.println("inside getBillListProcess ajax call");
 
 			frIdString = request.getParameter("fr_id_list");
-			String fromDate = request.getParameter("from_date");
-			String toDate = request.getParameter("to_date");
+			 fromDate = request.getParameter("from_date");
+			 toDate = request.getParameter("to_date");
 			routeId = request.getParameter("route_id");
 
 			System.out.println("routeId= " + routeId);
@@ -2116,6 +2123,155 @@ public class BillController {
 		return billHeadersList;
 
 	}
+	
+	//new call after submit update Bill Details Page
+	
+	@RequestMapping(value = "/getSelectedBillHeader", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView getSelectedBillHeader(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		// Constants.mainAct = 8;
+		// Constants.subAct = 83;
+		ModelAndView model = new ModelAndView("billing/viewbillheader");
+
+		billHeadersList = new ArrayList<>();
+
+		try {
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			/* routeId = "0";
+			 frIdString = "";
+
+			System.out.println("inside getBillListProcess ajax call");
+
+			frIdString = request.getParameter("fr_id_list");
+			 fromDate = request.getParameter("from_date");
+			 toDate = request.getParameter("to_date");
+			routeId = request.getParameter("route_id");
+
+			System.out.println("routeId= " + routeId);
+*/
+			boolean isAllFrSelected = false;
+			System.out.println("frIdString= " + frIdString);
+			
+			/*frIdString = frIdString.substring(1, frIdString.length() - 1);
+			frIdString = frIdString.replaceAll("\"", "");
+*/
+			ZoneId z = ZoneId.of("Asia/Calcutta");
+
+
+			LocalDate date = LocalDate.now(z);
+					DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+					String todaysDate = date.format(formatters);
+			if(frIdString!=null) {
+				
+				System.err.println("frIdString  not null so some ajax call performed before  ");
+			List<String> franchIds = new ArrayList();
+			franchIds = Arrays.asList(frIdString);
+
+			System.out.println("fr Id ArrayList " + franchIds.toString());
+
+			if (franchIds.contains("-1")) {
+				isAllFrSelected = true;
+
+			}
+
+			if (!routeId.equalsIgnoreCase("0")) {
+
+				map.add("routeId", routeId);
+
+				FrNameIdByRouteIdResponse frNameId = restTemplate.postForObject(Constants.url + "getFrNameIdByRouteId",
+						map, FrNameIdByRouteIdResponse.class);
+
+				List<FrNameIdByRouteId> frNameIdByRouteIdList = frNameId.getFrNameIdByRouteIds();
+
+				System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+
+				StringBuilder sbForRouteFrId = new StringBuilder();
+				for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
+
+					sbForRouteFrId = sbForRouteFrId.append(frNameIdByRouteIdList.get(i).getFrId().toString() + ",");
+
+				}
+
+				String strFrIdRouteWise = sbForRouteFrId.toString();
+				frIdString = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+				System.out.println("fr Id Route WISE = " + frIdString);
+
+			} // end of if
+
+			if (isAllFrSelected) {
+
+				map.add("fromDate", fromDate);
+				map.add("toDate", toDate);
+				System.out.println("Inside is All fr Selected " + isAllFrSelected);
+
+				GetBillHeaderResponse billHeaderResponse = restTemplate
+						.postForObject(Constants.url + "getBillHeaderForAllFr", map, GetBillHeaderResponse.class);
+
+				billHeadersList = billHeaderResponse.getGetBillHeaders();
+
+				System.out.println("bill header  " + billHeadersList.toString());
+
+			} else { // few franchisee selected
+
+				map.add("frId", frIdString);
+				map.add("fromDate", fromDate);
+				map.add("toDate", toDate);
+				
+				
+
+				GetBillHeaderResponse billHeaderResponse = restTemplate.postForObject(Constants.url + "getBillHeader",
+						map, GetBillHeaderResponse.class);
+
+				billHeadersList = billHeaderResponse.getGetBillHeaders();
+
+			}
+			model.addObject("fromDate", fromDate);
+			model.addObject("toDate", toDate);
+
+			}//end of frIdString not null;
+			else {
+				System.err.println("On load call default data edited ");
+				
+				map.add("fromDate", todaysDate);
+				map.add("toDate", todaysDate);
+				// System.out.println("Inside is All fr Selected " + isAllFrSelected);
+
+				model.addObject("fromDate", todaysDate);
+				model.addObject("toDate", todaysDate);
+
+				GetBillHeaderResponse billHeaderResponse = restTemplate
+						.postForObject(Constants.url + "getBillHeaderForAllFr", map, GetBillHeaderResponse.class);
+
+				billHeadersList = billHeaderResponse.getGetBillHeaders();
+			}
+			System.out.println("bill header  " + billHeadersList.toString());
+			
+			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+					AllRoutesListResponse.class);
+
+			List<Route> routeList = new ArrayList<Route>();
+
+			routeList = allRouteListResponse.getRoute();
+			
+			model.addObject("routeList", routeList);
+			model.addObject("menuList", menuList);
+			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+			model.addObject("billHeadersList", billHeadersList);
+			
+		} catch (Exception e) {
+
+			System.out.println("Ex in getting getSelectedBillHeader List " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return model;
+
+	}
 
 	@RequestMapping(value = "/viewBillDetails/{billNo}/{frName}", method = RequestMethod.GET)
 	public ModelAndView viewBillDetails(@PathVariable int billNo, @PathVariable String frName) {
@@ -2161,6 +2317,7 @@ public class BillController {
 		return model;
 
 	}
+	LinkedHashMap<Integer,ArrayList<GetBillDetail>> hashMap=new LinkedHashMap<Integer,ArrayList<GetBillDetail>>();
 
 	@RequestMapping(value = "/updateBillDetails/{billNo}/{frName}", method = RequestMethod.GET)
 	public ModelAndView updateBillDetails(@PathVariable int billNo, @PathVariable String frName) {
@@ -2180,7 +2337,7 @@ public class BillController {
 
 			billDetailsList = new ArrayList<GetBillDetail>();
 			billDetailsList = billDetailsResponse.getGetBillDetails();
-
+			hashMap.put(billNo, (ArrayList<GetBillDetail>) billDetailsList);
 			System.out.println(" *** get Bill response  " + billDetailsResponse.getGetBillDetails().toString());
 
 			model.addObject("frName", frName);
@@ -2200,7 +2357,7 @@ public class BillController {
 
 	@RequestMapping(value = "/updateBillDetailsProcess", method = RequestMethod.POST)
 	public String updateBillDetailsProcess(HttpServletRequest request, HttpServletResponse response) {
-		// ModelAndView model = new ModelAndView("billing/editBillDetails");
+		ModelAndView model = new ModelAndView("billing/viewbillheader");
 		 
 		DecimalFormat df = new DecimalFormat("#.00");
 		try {
@@ -2215,6 +2372,10 @@ public class BillController {
 
 			PostBillDetail postBillDetail = new PostBillDetail();
 			PostBillHeader postBillHeader = new PostBillHeader();
+			
+			int key=Integer.parseInt(request.getParameter("bill_no"));
+			System.err.println("Key " +key);
+			billDetailsList=hashMap.get(key);
 			for (int i = 0; i < billDetailsList.size(); i++) {
 
 				Integer newBillQty = Integer
@@ -2226,10 +2387,10 @@ public class BillController {
 				float newCgstPer =  Float
 						.parseFloat(request.getParameter("cgstPer" + billDetailsList.get(i).getBillDetailNo()));
 
-				System.out.println("new bill qty = " + newBillQty);
-				System.out.println("new BillRate = " + newBillRate);
-				System.out.println("new  SgstPer = " + newSgstPer);
-				System.out.println("new  CgstPer = " + newCgstPer);
+				//System.out.println("new bill qty = " + newBillQty);
+				//System.out.println("new BillRate = " + newBillRate);
+				//System.out.println("new  SgstPer = " + newSgstPer);
+				//System.out.println("new  CgstPer = " + newCgstPer);
 
 				GetBillDetail getBillDetail = billDetailsList.get(i);
 
@@ -2290,12 +2451,12 @@ public class BillController {
 					postBillDetail.setTaxableAmt(Float.valueOf(df.format(taxableAmt)));
 					postBillDetail.setTotalTax(Float.valueOf(df.format(totalTax)));
 					postBillDetail.setGrandTotal(Float.valueOf(df.format(grandTotal)));
-					System.out.println("base rate " + baseRate);
-					System.out.println("set rate " + postBillDetail.getRate() + "new rate " + newBillRate);
-					System.out.println("set getTaxableAmt " + postBillDetail.getTaxableAmt()+ "new taxableAmt " + taxableAmt);
-					System.out.println("set sgst " + postBillDetail.getSgstPer() + "new newSgstPer " + newSgstPer);
-					System.out.println("set cgst " + postBillDetail.getCgstPer() + "new newCgstPer " + newCgstPer);
-					System.out.println("set grandTotal " + grandTotal);
+					//System.out.println("base rate " + baseRate);
+					//System.out.println("set rate " + postBillDetail.getRate() + "new rate " + newBillRate);
+					//System.out.println("set getTaxableAmt " + postBillDetail.getTaxableAmt()+ "new taxableAmt " + taxableAmt);
+					//System.out.println("set sgst " + postBillDetail.getSgstPer() + "new newSgstPer " + newSgstPer);
+					//System.out.println("set cgst " + postBillDetail.getCgstPer() + "new newCgstPer " + newCgstPer);
+					////System.out.println("set grandTotal " + grandTotal);
 				 
 				postBillDetailsList.add(postBillDetail);
 
@@ -2306,12 +2467,14 @@ public class BillController {
 			
 			for (int j = 0; j < billHeadersList.size(); j++) {
 
-				if (billHeadersList.get(j).getBillNo() == postBillDetailsList.get(0).getBillNo()) {
+				if (billHeadersList.get(j).getBillNo() == key) {
+					System.err.println("Key matched ");
 
 					DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 					Date billDate = null;
 					try {
 						billDate = formatter.parse(billHeadersList.get(j).getBillDate());
+						System.err.println("Bill Date " +billDate);
 					} catch (ParseException e) {
 						System.out.println("exc in formatting bill Date " + e.getMessage());
 						e.printStackTrace();
@@ -2319,6 +2482,7 @@ public class BillController {
 					postBillHeader.setBillDate(billDate);
 
 					postBillHeader.setBillNo(billHeadersList.get(j).getBillNo());
+					System.err.println("bill no setted " +postBillHeader.getBillNo());
 					postBillHeader.setDelStatus(0);
 					postBillHeader.setFrCode(billHeadersList.get(j).getFrCode());
 					postBillHeader.setFrId(billHeadersList.get(j).getFrId());
@@ -2341,6 +2505,8 @@ public class BillController {
 			postBillHeader.setPostBillDetailsList(postBillDetailsList);
 			postBillHeadersList.add(postBillHeader);
 			postBillDataCommon.setPostBillHeadersList(postBillHeadersList);
+			
+			System.err.println("PBH "+postBillHeader.toString());
 			 
 				Info info = restTemplate.postForObject(Constants.url + "updateBillData", postBillDataCommon, Info.class);
 			 
@@ -2351,7 +2517,11 @@ public class BillController {
 			System.out.println("exce in  Bill update " + e.getMessage());
 			e.printStackTrace();
 		}
-		return "redirect:/showBillList";
+		//return "redirect:/showBillList";
+		
+		return "redirect:/getSelectedBillHeader";
+		//return model;
+		
 	}
 
 	// delete Bill

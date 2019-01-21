@@ -129,7 +129,7 @@
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
 										<input class="form-control date-picker" id="dp1" size="16"
-											value="${todaysDate}" type="text" name="from_date" required />
+											value="${fromDate}" type="text" name="from_date" required />
 									</div>
 
 
@@ -138,7 +138,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
 										<input class="form-control date-picker" id="dp2" size="16"
-											value="${todaysDate}" type="text" name="to_date" required />
+											value="${toDate}" type="text" name="to_date" required />
 
 									</div>
 
@@ -156,6 +156,7 @@
 											tabindex="6" name="fr_id" id="fr_id">
 
 											<option value="-1">All</option>
+											
 											<c:forEach items="${allFrIdNameList}" var="allFrIdNameList"
 												varStatus="count">
 												<option value="${allFrIdNameList.frId}">${allFrIdNameList.frName}</option>
