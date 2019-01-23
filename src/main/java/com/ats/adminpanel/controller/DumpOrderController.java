@@ -33,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.ConfigureFrBean;
@@ -292,17 +293,32 @@ public class DumpOrderController {
 		 * 
 		 * // get all Franchisee details
 		 */
-
+		java.util.Date utilDate;
+		String utilDate2 = null;
 		int isTemplateOrder = 0;
 		try {
 			isTemplateOrder = Integer.parseInt(request.getParameter("isTemplateOrder"));
+			utilDate2 = request.getParameter("ord_date");
+			// utilDate2.replaceAll("-", "/");
+			System.err.println("FORM DATE RECE " + utilDate2);
+			utilDate = DateConvertor.convertToSqlDate(utilDate2);
+			System.err.println("FORM DATE CONV TO SQL  " + utilDate2);
+
+			System.err.println("uDate " + utilDate);
 		} catch (Exception e) {
 			isTemplateOrder = 0;
+			utilDate = new java.util.Date();
 		}
 		String todaysDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		java.util.Date utilDate = new java.util.Date();
+		// utilDate = new java.util.Date();
+		System.err.println("Util date 1" + utilDate);
+
+		// utilDate=dateFormat.parse(utilDate2);
+
+		System.err.println("Util date 2 " + utilDate);
+
 		System.out.println(dateFormat.format(utilDate)); // 2016/11/16 12:08:43
 
 		java.sql.Date date = new java.sql.Date(utilDate.getTime());
@@ -337,8 +353,11 @@ public class DumpOrderController {
 
 				if (qty != 0) {
 					List<Orders> oList = new ArrayList<>();
+					if (isTemplateOrder == 0)
+						order.setOrderDatetime(todaysDate);
+					else
+						order.setOrderDatetime(DateConvertor.convertToYMD(utilDate2));
 
-					order.setOrderDatetime(todaysDate);
 					order.setFrId(selectedFrIdList.get(i));
 					order.setRefId(items.get(j).getId());
 					order.setItemId(String.valueOf(items.get(j).getId()));
@@ -346,7 +365,11 @@ public class DumpOrderController {
 					order.setEditQty(qty);
 					order.setProductionDate(date);
 					order.setOrderDate(date);
-					order.setDeliveryDate(deliveryDate);
+					if (isTemplateOrder == 0)
+						order.setDeliveryDate(deliveryDate);
+					else
+						order.setDeliveryDate(date);
+
 					// order.setMenuId(0);
 					order.setGrnType(3);
 					order.setIsEdit(0);
@@ -507,16 +530,16 @@ public class DumpOrderController {
 		RestTemplate restTemplate = new RestTemplate();
 		FrSetting frSetting = null;
 		try {
-			
-			//String[] frIdString =request.getParameterValues("frId");
-			
+
+			// String[] frIdString =request.getParameterValues("frId");
+
 			String selectedFr = request.getParameter("frId");
-			
+
 			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
 			selectedFr = selectedFr.replaceAll("\"", "");
 
 			List<String> frList = Arrays.asList(selectedFr);
-			
+
 			int frId = Integer.parseInt(frList.get(0));
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
@@ -621,18 +644,17 @@ public class DumpOrderController {
 		return frSetting;
 
 	}
-	
-	
+
 	@RequestMapping(value = "/getFrListForOrderTemplate", method = RequestMethod.GET)
 	public @ResponseBody List<AllFrIdName> getFrListForOrderTemplate(HttpServletRequest request,
 			HttpServletResponse response) {
 
-	allFrIdNameList = new AllFrIdNameList();
-	RestTemplate restTemplate = new RestTemplate();
+		allFrIdNameList = new AllFrIdNameList();
+		RestTemplate restTemplate = new RestTemplate();
 
-	allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
-	
-	return allFrIdNameList.getFrIdNamesList();
+		allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+		return allFrIdNameList.getFrIdNamesList();
 
 	}
 }

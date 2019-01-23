@@ -141,7 +141,7 @@ table {
 
 							</select>
 						</div>
-					
+					<input type="hidden" id="ord_date" name="ord_date"/>
 
 						<label class=" col-md-2 control-label menu_label"> Date </label>
 						<div class=" col-md-4 controls menu_select">
@@ -292,6 +292,8 @@ $("#selectFr").append( $("<option ></option>").attr(
 			//alert(data);
 			$("#selectFr").trigger("chosen:updated");
 			document.getElementById("dp2").value=data.prodDate;
+			document.getElementById("ord_date").value=data.prodDate;
+
 
 		});
 		
@@ -566,6 +568,8 @@ function getDumpDate(){
 		
 		//alert(" Sachin "+JSON.stringify(data));
 		document.getElementById("dp2").value=data.orderDate;
+		document.getElementById("ord_date").value=data.orderDate;
+
 		
 		//alert(data);
 	});
