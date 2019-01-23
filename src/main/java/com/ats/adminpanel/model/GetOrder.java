@@ -18,7 +18,7 @@ public class GetOrder {
     
     private int id;
    
-    private Date deliveryDate;
+    private String deliveryDate;
     
     private Integer isEdit;
     
@@ -76,11 +76,11 @@ public class GetOrder {
 		this.id = id;
 	}
 
-	public Date getDeliveryDate() {
+	public String getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(Date deliveryDate) {
+	public void setDeliveryDate(String deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 

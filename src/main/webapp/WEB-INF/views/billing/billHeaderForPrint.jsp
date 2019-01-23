@@ -68,7 +68,9 @@
 
 						<div class="box-content">
 							<form class="form-horizontal" method="get" id="validation-form">
-
+          					<input type="hidden" class="form-control" name="billnumber" id="billnumber"	value="0"  />
+							<input type="hidden" class="form-control" name="issinglepdf" id="issinglepdf" 	value="0" />
+						
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
@@ -258,7 +260,7 @@
 															class="btn btn-primary" onclick="submitBill()"
 															value="BillDetail" />&nbsp;&nbsp;<input type="button"  id="btn_submit_pdf"
 															class="btn btn-primary"
-															value="PDF" /></div></td>
+															value="PDF" onclick="generateSinglePdf(${billHeadersList.billNo})"  /></div></td>
 
 																
 
@@ -376,25 +378,25 @@ form.submit();
 
 
 	<script type="text/javascript">
+	function submitBillPdf() {
+		document.getElementById("validation-form").target = "_blank";
+
+		var form = document.getElementById("validation-form");
+
+		form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+		form.submit();
+	}
+	function generateSinglePdf(billNo) {
 		
-		$('#btn_submit_pdf')
-				.click(
-						function() {
-							document.getElementById("validation-form").target = "_blank";
+		document.getElementById("billnumber").value=billNo;
+		document.getElementById("issinglepdf").value=1;
+		document.getElementById("validation-form").target = "_blank";
 
-							var form = document.getElementById("validation-form");
+		var form = document.getElementById("validation-form");
 
-							form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
-							form.submit();
-						});
-		function submitBillPdf() {
-			document.getElementById("validation-form").target = "_blank";
-
-			var form = document.getElementById("validation-form");
-
-			form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
-			form.submit();
-		}
+		form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+		form.submit();
+	}
 		
 	</script>
 
@@ -524,7 +526,7 @@ form.submit();
 													//tr.append($('<td></td>').html("<a href='${pageContext.request.contextPath}/updateBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='update' value='Update'/></a><a href='${pageContext.request.contextPath}/viewBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='view' value='View'/></a><a href='${pageContext.request.contextPath}/deleteBill/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='deleteBill' value='Delete'/></a>"));
 													
 													
-													tr.append($('<td class="col-md-2"></td>').html("<input type='button' id='btn_submit' name='btn_submit' onClick='submitBill1("+bill.billNo+")' value='BillDetail'  class='btn btn-primary'/> &nbsp;&nbsp; <input type='button' id='btn_submit_pdf' value='PDF'  class='btn btn-primary' onClick='submitBillPdf()'/>"));
+													tr.append($('<td class="col-md-2"></td>').html("<input type='button' id='btn_submit' name='btn_submit' onClick='submitBill1("+bill.billNo+")' value='BillDetail'  class='btn btn-primary'/> &nbsp;&nbsp; <input type='button' id='btn_submit_pdf' value='PDF'  class='btn btn-primary'   onclick=generateSinglePdf("+ bill.billNo+") '/>"));
 
 													$('#table1 tbody').append(
 															tr);

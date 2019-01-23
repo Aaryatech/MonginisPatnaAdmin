@@ -804,6 +804,32 @@ public class OrderController {
 		}
 		return spCakeOrderList;
 	}
+	@RequestMapping(value = "/updateOrderDetails",method = RequestMethod.GET)
+	public  @ResponseBody Info updateOrderDetails(HttpServletRequest request, HttpServletResponse response) {
+			
+		String  ids= request.getParameter("ids");
+		String delDate =request.getParameter("delDate");
+		
+		/*StringBuilder sb1 = new StringBuilder();
+		for (int i = 0; i < ids.length; i++) {
+			sb1 = sb1.append(ids[i] + ",");
+
+		}
+		String orderIds = sb1.toString();
+		orderIds = orderIds.substring(0, orderIds.length() - 1);
+		*/
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("orderIds", ids);
+		map.add("delDate", delDate);
+		System.err.println(map.toString());
+		RestTemplate restTemp = new RestTemplate();
+
+		Info info= restTemp.postForObject(Constants.url + "updateOrderDetails", map, Info.class);
+		
+	
+		return info;
+	}
+	
 	@RequestMapping(value = "/saveSpOrder",method = RequestMethod.GET)
 	public  @ResponseBody List<SpCakeOrdersBean> saveSpOrder(HttpServletRequest request, HttpServletResponse response) {
 	
