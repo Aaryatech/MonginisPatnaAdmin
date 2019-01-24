@@ -404,7 +404,7 @@ public class DumpOrderController {
 		model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 		model.addObject("unSelectedMenuList", selectedMenuList);
 		if (isTemplateOrder == 0)
-			return "redirect:/showdumporders";
+			return "redirect:/useDumpOrdTempl";
 		else
 			return "redirect:/createOrdProdTempl";
 	}
@@ -533,14 +533,27 @@ public class DumpOrderController {
 
 			// String[] frIdString =request.getParameterValues("frId");
 
-			String selectedFr = request.getParameter("frId");
+			int isSingleFr = 0;
+			try {
+				isSingleFr = Integer.parseInt(request.getParameter("isSingleFr"));
+			} catch (Exception e) {
+				isSingleFr = 0;
+			}
 
-			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
-			selectedFr = selectedFr.replaceAll("\"", "");
+			int frId;
+			if (isSingleFr == 0) {
+				String selectedFr = request.getParameter("frId");
 
-			List<String> frList = Arrays.asList(selectedFr);
+				selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
+				selectedFr = selectedFr.replaceAll("\"", "");
 
-			int frId = Integer.parseInt(frList.get(0));
+				List<String> frList = Arrays.asList(selectedFr);
+
+				frId = Integer.parseInt(frList.get(0));
+			} else {
+				frId = Integer.parseInt(request.getParameter("frId"));
+
+			}
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 			map.add("frId", frId);

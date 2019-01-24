@@ -299,12 +299,13 @@ $("#selectFr").append( $("<option ></option>").attr(
 		
 		
 	}else{
-		
+		getDumpDate();
+
 		$.getJSON('${getFrListForOrderTemplate}', {
 			ajax : 'true'
 		}, function(data) {
 			//alert(data);
-			var html = '<option value="-1"><c:out value=""/></option>';
+			var html = '<option value="-1"><c:out value="Select Fr"/></option>';
 
 			
 			var len = data.length;
@@ -338,6 +339,8 @@ $("#selectFr").append( $("<option ></option>").attr(
 
 		});
 		
+		
+		
 	}
 }
 </script>
@@ -352,7 +355,7 @@ $("#selectFr").append( $("<option ></option>").attr(
 						ajax : 'true'
 					}, function(data) {
 						//alert(data);
-						var html = '<option value="-1"><c:out value=""/></option>';
+						var html = '<option value="-1"><c:out value="Select Fr"/></option>';
 
 						
 
@@ -556,20 +559,20 @@ $("#selectFr").append( $("<option ></option>").attr(
 	<script type="text/javascript">
 
 function getDumpDate(){
-	//alert("fr Id ");
+	//alert("In get dump date fr Id ");
 	
 	var frId = $("#selectFr").val();
 	//alert("fr Id " +frId);
 	
 	$.getJSON('${getFrSettingForTemplate}', {
 		frId : frId,
+		isSingleFr :1,
 		ajax : 'true'
 	}, function(data) {
 		
 		//alert(" Sachin "+JSON.stringify(data));
 		document.getElementById("dp2").value=data.orderDate;
 		document.getElementById("ord_date").value=data.orderDate;
-
 		
 		//alert(data);
 	});
