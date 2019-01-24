@@ -346,6 +346,8 @@
 					ajax : 'true'
 				}, function(data) {
 					var html = '';
+					var html = '<option value="-1">ALL</option>';
+
 					$('#loader').hide();
 					var len = data.length;
 					for ( var i = 0; i < len; i++) {
@@ -359,8 +361,6 @@
 				});
 			}
 			 
-			
-			
 			
 			function catChange(cat_id) {
 				$('#loader').show();
@@ -381,9 +381,46 @@
 
 				});
 			}
+			</script>
+			<script type="text/javascript">
+			$(document).ready(function() { // if all label selected set all items selected
+				
+			$('#items').change(
+					function () {
+						 var selected=$('#items').val();
+						 var subCatId=$('#sub_cat_id').val();
+				
+			        if(selected==-1){
+						$.getJSON('${itemsBysubCatId}', {
+							subCatId : subCatId,
+							ajax : 'true'
+						}, function(data) {
+							var html = '<option value="">Items</option>';
+						
+							var len = data.length;
+							
+							$('#items')
+						    .find('option')
+						    .remove()
+						    .end()
+						
+							for ( var i = 0; i < len; i++) {
+			    
+			                   $("#items").append(
+			                           $("<option selected></option>").attr(
+			                               "value", data[i].id).text(data[i].itemName)
+			                       );
+							}
+					
+							   $("#items").trigger("chosen:updated");
+						});
+			  }
+			});
+			});
+
+
+
+			</script>
 			
-			
-			
-</script>
 </body>
 </html>
