@@ -32,15 +32,11 @@ import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.Route;
-import com.ats.adminpanel.model.SalesVoucherList;
-import com.ats.adminpanel.model.billing.FrBillHeaderForPrint;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.ggreports.GGReportByDateAndFr;
 import com.ats.adminpanel.model.ggreports.GGReportGrpByFrId;
 import com.ats.adminpanel.model.ggreports.GGReportGrpByMonthDate;
-import com.ats.adminpanel.model.mastexcel.TallyItem;
-import com.ats.adminpanel.model.salesreport.SalesReportBillwise;
 
 @Controller
 @Scope("session")

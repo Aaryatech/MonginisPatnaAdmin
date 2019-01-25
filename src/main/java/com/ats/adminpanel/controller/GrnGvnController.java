@@ -228,6 +228,8 @@ public class GrnGvnController {
 			model.addObject("selectedFr", frList);
 			
 			System.err.println("grnGateHeaderList size  " +grnGateHeaderList.size());
+			
+			gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
 
 		} catch (Exception e) {
 
@@ -310,7 +312,11 @@ public class GrnGvnController {
 		
 		modelAndView.addObject("remarkList", getAllRemarks);
 
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		
 		return modelAndView;
+		
+		
 
 	}
 
@@ -929,6 +935,9 @@ public class GrnGvnController {
 			model.addObject("toDate", accGrnHeaderToDate);
 			model.addObject("grnList", grnAccHeaderList);
 			model.addObject("selectedFr", frList);
+			
+			accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
+
 
 		} catch (Exception e) {
 
@@ -1100,6 +1109,9 @@ public class GrnGvnController {
 		modelAndView.addObject("grnList", grnAccDetailList);
 		modelAndView.addObject("grnDate", grnDate);
 		modelAndView.addObject("remarkList", getAllRemarks);
+		
+		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
+
 
 		return modelAndView;
 	}

@@ -225,6 +225,7 @@ public class GvnController {
 			model.addObject("toDate", gateGvnHeaderToDate);
 			model.addObject("grnList", gvnGateHeaderList);
 			model.addObject("selectedFr", frList);
+			gateGvnHeaderFromDate=null; gateGvnHeaderToDate=null;
 
 		} catch (Exception e) {
 
@@ -313,6 +314,9 @@ public class GvnController {
 		modelAndView.addObject("gvnList", gvnGateDetailList);
 		
 		modelAndView.addObject("url",Constants.GVN_IMAGE_URL);
+		
+		gateGvnHeaderFromDate=null; gateGvnHeaderToDate=null;
+
 
 		return modelAndView;
 
@@ -931,6 +935,8 @@ public class GvnController {
 			model.addObject("grnList", gvnStoreHeaderList);
 			model.addObject("selectedFr", frList);
 			model.addObject("type", type);
+			storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
+
 		} catch (Exception e) {
 
 			System.out.println("Excep in Gate Header List /getGvnHeaderForStore " + e.getMessage());
@@ -1016,6 +1022,7 @@ public class GvnController {
 		modelAndView.addObject("type", type);
 
 		modelAndView.addObject("url",Constants.GVN_IMAGE_URL);
+		storeGvnHeaderFromDate=null;storeGvnHeaderToDate=null;
 
 		return modelAndView;
 
@@ -1682,6 +1689,8 @@ public class GvnController {
 			model.addObject("toDate", accGvnHeaderToDate);
 			model.addObject("gvnList", gvnAccHeaderList);
 			model.addObject("selectedFr", frList);
+			
+			accGvnHeaderFromDate=null;accGvnHeaderToDate=null;
 
 		} catch (Exception e) {
 
@@ -1842,7 +1851,7 @@ public class GvnController {
 			}
 			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
 
-		
+			accGvnHeaderFromDate=null;accGvnHeaderToDate=null;
 
 		} catch (Exception e) {
 
