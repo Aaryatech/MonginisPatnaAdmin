@@ -10,6 +10,7 @@
 	<body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getBillList" value="/getSaleBillwiseByFr"></c:url>
+		<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
 
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse">
@@ -53,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale By Fr
+					<i class="fa fa-bars"></i>View Billwise Sale By Franchise
 				</h3>
 
 			</div>
@@ -126,7 +127,22 @@
 
 				<br>
 				<div class="row">
-					<div class="col-md-12" style="text-align: center;">
+				
+				<div class="col-md-2">Select Category</div>
+					<div class="col-md-4" style="text-align: left;">
+						<select data-placeholder="Select Group"
+											class="form-control chosen" name="item_grp1" tabindex="-1"
+											id="item_grp1" data-rule-required="true" onchange="setCatOptions(this.value)" multiple="multiple">
+											<option value="-1" >Select All</option>
+
+											<c:forEach items="${mCategoryList}" var="mCategoryList">
+												<option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+											</c:forEach>
+
+
+										</select>
+					</div>
+					<div class="col-md-6" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Billwise Report</button>
 									    <button class="btn search_btn" onclick="showChart()" >Graph</button>
@@ -244,6 +260,40 @@
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
+		
+		
+		<script type="text/javascript">
+
+function setCatOptions(catId){
+	if(catId==-1){
+		$.getJSON('${getAllCatByAjax}', {
+			ajax : 'true'
+		}, function(data) {
+			var len = data.length;
+			$('#item_grp1')
+		    .find('option')
+		    .remove()
+		    .end()
+		    
+		      $("#item_grp1").append(
+                       $("<option ></option>").attr(
+                           "value", -1).text("Select All")
+                   );
+		
+			for ( var i = 0; i < len; i++) {
+
+               $("#item_grp1").append(
+                       $("<option selected></option>").attr(
+                           "value", data[i].catId).text(data[i].catName)
+                   );
+			}
+	
+			   $("#item_grp1").trigger("chosen:updated");
+		});
+	}
+}
+
+</script>
 
 	<script type="text/javascript">
 		function searchReport() {
@@ -251,7 +301,8 @@
 	document.getElementById('chart').style.display ="display:none";
 		   document.getElementById("table_grid").style= "block";
 	
-		 
+			var selectedCat = $("#item_grp1").val();
+
 				var selectedFr = $("#selectFr").val();
 				var routeId=$("#selectRoute").val();
 				
@@ -266,6 +317,8 @@
 
 								{
 									fr_id_list : JSON.stringify(selectedFr),
+									cat_id_list :JSON.stringify(selectedCat),
+
 									fromDate : from_date,
 									toDate : to_date,
 									route_id:routeId,
@@ -297,17 +350,17 @@
 													  	tr.append($('<td></td>').html(report.frName));
 													  	tr.append($('<td></td>').html(report.frCity));
 													  	tr.append($('<td></td>').html(report.frGstNo));
-													  	tr.append($('<td></td>').html(report.taxableAmt));
+													  	tr.append($('<td></td>').html(report.taxableAmt.toFixed(2)));
 													  	
 														if(report.isSameState==1){
-														  	tr.append($('<td></td>').html(report.cgstSum));
-														  	tr.append($('<td></td>').html(report.sgstSum));
+														  	tr.append($('<td></td>').html(report.cgstSum.toFixed(2)));
+														  	tr.append($('<td></td>').html(report.sgstSum.toFixed(2)));
 														  	tr.append($('<td></td>').html(0));
 														}
 														else{
 															tr.append($('<td></td>').html(0));
 														  	tr.append($('<td></td>').html(0));
-														  	tr.append($('<td></td>').html(report.igstSum));
+														  	tr.append($('<td></td>').html(report.igstSum.toFixed(2)));
 														}
 													  	//tr.append($('<td></td>').html(report.igstSum));
 														tr.append($('<td></td>').html(report.roundOff));
@@ -321,7 +374,7 @@
 															 total=report.taxableAmt+report.igstSum;
 														}
 
-													  	tr.append($('<td></td>').html(total));
+													  	tr.append($('<td></td>').html(total.toFixed(2)));
 
 														$('#table_grid tbody')
 																.append(
@@ -420,7 +473,8 @@ function showChart(){
 		 
 		   var selectedFr = $("#selectFr").val();
 			var routeId=$("#selectRoute").val();
-			
+			var selectedCat = $("#item_grp1").val();
+
 			var from_date = $("#fromDate").val();
 			var to_date = $("#toDate").val();
 			
@@ -431,6 +485,7 @@ function showChart(){
 
 					{
 						fr_id_list : JSON.stringify(selectedFr),
+						cat_id_list : JSON.stringify(selectedCat),
 						fromDate : from_date,
 						toDate : to_date,
 						route_id:routeId,
@@ -581,7 +636,9 @@ function genPdf()
 
 	var selectedFr = $("#selectFr").val();
 	var routeId=$("#selectRoute").val();
-	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleBillwiseByFrPdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
+	var selectedCat = $("#item_grp1").val();
+
+	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleBillwiseByFrPdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/'+selectedCat+'/');
 	
 	}
 function exportToExcel()
