@@ -1,10 +1,6 @@
 package com.ats.adminpanel.model;
 
-import java.io.Serializable;
 import java.sql.Date;
-
-
-
 
 public class Orders {
 
@@ -76,7 +72,17 @@ public class Orders {
 
 	private int menuId;
 
+	private int minQty;//extra for manual order at admin bean only
 	
+	
+	public int getMinQty() {
+		return minQty;
+	}
+
+	public void setMinQty(int minQty) {
+		this.minQty = minQty;
+	}
+
 	public String getItemName() {
 		return itemName;
 	}
@@ -239,19 +245,14 @@ public class Orders {
 
 	@Override
 	public String toString() {
-		return "Orders [orderId=" + orderId + ", orderDate=" + orderDate + ", frId=" + frId + ", orderType=" + orderType
-				+ ", orderSubType=" + orderSubType + ", refId=" + refId + ", itemId=" + itemId + ", orderQty="
-				+ orderQty + ", orderRate=" + orderRate + ", orderMrp=" + orderMrp + ", orderStatus=" + orderStatus
-				+ ", grnType=" + grnType + ", orderDatetime=" + orderDatetime + ", productionDate=" + productionDate
-				+ ", deliveryDate=" + deliveryDate + ", isEdit=" + isEdit + ", editQty=" + editQty + ", userId="
-				+ userId + ", isPositive=" + isPositive + ", menuId=" + menuId + "]";
+		return "Orders [itemName=" + itemName + ", orderId=" + orderId + ", orderDate=" + orderDate + ", frId=" + frId
+				+ ", orderType=" + orderType + ", orderSubType=" + orderSubType + ", refId=" + refId + ", itemId="
+				+ itemId + ", orderQty=" + orderQty + ", orderRate=" + orderRate + ", orderMrp=" + orderMrp
+				+ ", orderStatus=" + orderStatus + ", grnType=" + grnType + ", orderDatetime=" + orderDatetime
+				+ ", productionDate=" + productionDate + ", deliveryDate=" + deliveryDate + ", isEdit=" + isEdit
+				+ ", editQty=" + editQty + ", userId=" + userId + ", isPositive=" + isPositive + ", menuId=" + menuId
+				+ ", minQty=" + minQty + "]";
 	}
 
-	
-		
-	
-	
-		
-	
-	
+    
 }

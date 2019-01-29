@@ -216,11 +216,11 @@ select {
 											</div>
 										</div>
 
-										<div class="form-group">
+									<!-- 	<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Item</label>
 											<div class="col-sm-9 col-lg-5 controls">
 												<select data-placeholder="Select Item" name="items"
-													class="form-control" tabindex="-1" id="items"
+													class="form-control chosen" tabindex="-1" id="items"
 													data-rule-required="true" >
                                                    	<option value="0">Select Item </option>
 												</select>
@@ -233,30 +233,30 @@ select {
 											<input type="text" name="qty" value="0"	id="qty" class="form-control"/>
 												
 											</div>
-										</div>
+										</div> 
 										<div class="form-group">
 											<div
 												class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
 												<input type="button" class="btn btn-primary"
 													value="Add Item" id="add">
-												<!-- <button type="button" class="btn">Cancel</button> -->
+												
 											</div>
-										</div>
-									</form>
-                                    						<div align="center" id="loader" style="display: none">
+										</div>-->
+									</form>	</div>
+                <div align="center" id="loader" style="background-color:white;display: none; ">
 
-					<span>
-						<h4>
-							<font color="#343690">Loading</font>
-						</h4>
+					<span style="background-color:white;font-size: 15px;text-align: center;" >
+							<font color="#343690" style="background-color:white;">Loading</font>
+					
 					</span> <span class="l-1"></span> <span class="l-2"></span> <span
 						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 					<span class="l-6"></span>
 				</div>
-								</div>
+							
 				
-								<br>
-									<div class=" box-content">
+		<form action="${pageContext.request.contextPath}/generateManualBill" class="form-horizontal"
+										id="validation-form" method="post">
+		<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
@@ -265,11 +265,11 @@ select {
 									<tr>
 										<th style="text-align:center;">Sr.No.</th>
 										<th style="text-align:center;">Item Name</th>
+										<th style="text-align:center;">Min Qty</th>
 										<th style="text-align:center;">Qty</th>
 										<th style="text-align:center;">MRP</th>
 										<th style="text-align:center;">Rate</th>
 										<th style="text-align:center;">Total</th>
-										<th style="text-align:center;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -279,15 +279,15 @@ select {
 						</div>
 				
 					</div>
-						  <div class="row">
+					<div class="row">
 						<div class="col-md-12" style="text-align: center">
-							<input type="button" class="btn btn-info" value="Submit" name="Submit" id="Submit" onclick="generateBill()" disabled>
+							<input type="submit" class="btn btn-info" value="Submit" name="Submit" id="Submit"  disabled>
 
 						</div>
 					</div>
 
-				</div>
-								<div align="center" id="loader1" style="display: none">
+	</div></form>
+								<!-- <div align="center" id="loader1" style="display: none">
 
 					<span>
 						<h4>
@@ -296,7 +296,7 @@ select {
 					</span> <span class="l-1"></span> <span class="l-2"></span> <span
 						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 					<span class="l-6"></span>
-				</div>	
+				</div>	 -->
 							</div>
 						</div>
 					</div>
@@ -324,15 +324,75 @@ $(function() {
     });
 });
 </script>
-<script>
-$('#select_all').click(function() {
-	alert("alert");
-    $('#items option').prop('selected', true);
-    $('#items').chosen('destroy').val(["hola","mundo","cruel"]).chosen();
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+    $('#menu').change(
+            function() {$('#table_grid td').remove();
+          	 $('#loader').show();
+          	
+                $.getJSON('${findItemsByCatId}', {
+                    menuId : $(this).val(),
+                    frId : $('#fr_id').val(),
+                    ajax : 'true'
+                }, function(data) {
+                		 $('#loader').hide();
+             		var len = data.length;
+             		document.getElementById("Submit").disabled = false;
+
+             		$('#table_grid td').remove();
+
+             		$.each(data,function(key, item) {
+
+
+             			var tr = $('<tr></tr>');
+
+             		  	tr.append($('<td></td>').html(key+1));
+
+             		  	tr.append($('<td></td>').html(item.itemName));
+             		  	tr.append($('<td></td>').html(item.minQty+'<input type="hidden" value='+item.minQty+'	id=minqty'+item.itemId+'  />'));
+             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value=0 > '));
+             		  	
+             		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderMrp.toFixed(2)));
+             		  	
+             		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderRate.toFixed(2)));
+             		  	var total=item.orderQty*item.orderRate;
+             		  	tr.append($('<td style="text-align:right;" id=total'+item.itemId+' ></td>').html(total.toFixed(2)));
+             		  	
+             		  
+             			$('#table_grid tbody').append(tr);
+             		}); });
+            });
 });
-</script>
+</script> 
 
 <script type="text/javascript">
+		function onChange(rate,id) {
+
+			//calculate total value  
+			var qty = $('#qty'+id).val();
+			
+			
+			var minqty = $('#minqty'+id).val();
+			
+			if(qty % minqty==0){
+			    var total = rate * qty;
+			
+			   $('#total'+id).html(total);
+			}else
+			{
+				 var total =0;
+				 
+				alert("Please Enter Qty Multiple of Minimum Qty");
+				$('#qty'+id).val(0);
+				
+				$('#total'+id).html(total);
+				$('#qty'+id).focus();
+			}
+		}
+	</script>
+<!-- <script type="text/javascript">
 $(document).ready(function() {
 	
 	
@@ -366,14 +426,15 @@ $(document).ready(function() {
                 });
             });
 });
-</script>
+</script> -->
 
 
 <script type="text/javascript">
 $(document).ready(function() { 
 	$('#fr_id').change(
-			
-			function() {
+		
+			function() {	
+				$('#table_grid td').remove();
 				$.getJSON('${findAllMenus}', {
 					fr_id : $(this).val(),
 					ajax : 'true'
@@ -427,8 +488,7 @@ $(document).ready(function() {
 		ajax : 'true',
 		
 	},  function(data) { 
-		document.getElementById("items").focus();
-		
+ 
 		 $('#loader').hide();
 		var len = data.length;
 		document.getElementById("Submit").disabled = false;
@@ -447,7 +507,7 @@ $(document).ready(function() {
 	  	
 	  	tr.append($('<td style="text-align:right;"></td>').html(item.orderMrp));
 	  	
-	  	tr.append($('<td style="text-align:right;"></td>').html(item.orderRate));
+	  	tr.append($('<td style="text-align:right;"></td>').html(item.orderRate+'<input type="hidden" value='+item.minQty+' id=minqty'+item.itemId+' />'));
 	  	var total=item.orderQty*item.orderRate;
 	  	tr.append($('<td style="text-align:right;"></td>').html(total.toFixed(2)));
 	  	
@@ -505,7 +565,7 @@ function validation() {
 		alert("Please Enter Valid Item Qty.");
 	}
 	return isValid;
-}0
+}
 </script>
 <script type="text/javascript">
 function deleteItem(key){
