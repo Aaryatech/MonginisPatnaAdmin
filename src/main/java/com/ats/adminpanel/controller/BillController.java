@@ -381,7 +381,21 @@ public class BillController {
 						billDetail.setIgstRs(igstRs);
 						billDetail.setTotalTax(totalTax);
 						billDetail.setGrandTotal(grandTotal);
-						billDetail.setRemark("");
+						if(gBill.getCatId()==5) {
+							
+							//System.out.println("cat id is 5");
+							System.out.println("cat id is 5:::"+gBill.getSpDeliveryPlace());
+							
+							billDetail.setRemark(gBill.getSpDeliveryPlace());
+							//billDetail.setRemark("");
+							
+						}else {
+							System.out.println("cat id is not 5");
+							billDetail.setRemark("");
+						}
+						
+						
+					
 						billDetail.setDelStatus(0);
 						billDetail.setIsGrngvnApplied(0);
 
@@ -673,6 +687,9 @@ public class BillController {
 					generateBillList = restTemplate.postForObject(Constants.url + "generateBillForAllFrAllMenu", map,
 							GenerateBillList.class);
 					System.out.println("generate bill list All Fr All Menu " + generateBillList.toString());
+/*					System.out.println("generate bill list All Fr All place " + generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
+*/					
+					
 
 				} else if (isAllMenuSelected) {
 
@@ -684,6 +701,8 @@ public class BillController {
 					System.out.println("generate bill list  All Menu " + generateBillList.toString());
 
 					System.out.println("g bill first size " + generateBillList.getGenerateBills().size());
+/*					System.out.println("generate bill list All Fr All place " + generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
+*/
 
 				} else if (isAllFrSelected) {
 
@@ -693,6 +712,8 @@ public class BillController {
 					generateBillList = restTemplate.postForObject("" + Constants.url + "generateBillForAllFr", map,
 							GenerateBillList.class);
 					System.out.println("generate bill list All Fr" + generateBillList.toString());
+/*					System.out.println("generate bill list All Fr All place " + generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
+*/
 
 				} else {
 
@@ -705,6 +726,8 @@ public class BillController {
 					System.out.println("generate bill list " + generateBillList.toString());
 
 					System.out.println("g bill first size " + generateBillList.getGenerateBills().size());
+/*					System.out.println("generate bill list All Fr All place " + generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
+*/
 
 				}
 
@@ -2697,9 +2720,9 @@ public class BillController {
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
 		 // File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		  File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf");
+		  //File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
-
+		 File f = new File("E:\\bill.pdf");
 		System.out.println("I am here " + f.toString());
 		try {
 			isTwice =false;
@@ -2714,11 +2737,12 @@ public class BillController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filename = "ordermemo221.pdf";
+	     String filename = "ordermemo221.pdf";
+		//String filename = "E:\\bill.pdf";
 		//String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
-		   String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf";
+		 //  String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
-
+		String filePath = "E:\\bill.pdf";
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
 		File downloadFile = new File(filePath);

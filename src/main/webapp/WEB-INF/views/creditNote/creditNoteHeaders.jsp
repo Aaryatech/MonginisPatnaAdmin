@@ -123,6 +123,30 @@
 									</div> -->
 								</div>
 
+ 
+ 
+ 
+ 
+							<%-- 	<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">From
+										Date</label>
+									<div class="col-sm-5 col-lg-3 controls">
+										<input class="form-control date-picker" id="dp1" size="16"
+											value="${fromDate}" type="text" name="from_date" required />
+									</div>
+
+
+
+
+									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
+									<div class="col-sm-5 col-lg-3 controls">
+										<input class="form-control date-picker" id="dp2" size="16"
+											value="${toDate}" type="text" name="to_date" required />
+
+									</div>
+
+								</div>
+  --%>
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Franchise</label>
 

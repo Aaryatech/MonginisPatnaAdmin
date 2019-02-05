@@ -2,6 +2,8 @@ package com.ats.adminpanel.model;
 
 import java.util.Date;
 
+
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class GenerateBill {
@@ -50,6 +52,24 @@ public class GenerateBill {
 	
 	
 	String  deliveryDate;//newlyAdded
+	
+	
+	
+	String spDeliveryPlace;
+	
+	
+	
+	
+	
+
+
+	public String getSpDeliveryPlace() {
+		return spDeliveryPlace;
+	}
+
+	public void setSpDeliveryPlace(String spDeliveryPlace) {
+		this.spDeliveryPlace = spDeliveryPlace;
+	}
 	
 	//@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public String getDeliveryDate() {
@@ -238,7 +258,11 @@ public class GenerateBill {
 				+ catId + ", frCode=" + frCode + ", rateType=" + rateType + ", subCatId=" + subCatId + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", grnType=" + grnType
 				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", deliveryDate=" + deliveryDate
-				+ "]";
+				+ ", spDeliveryPlace=" + spDeliveryPlace + "]";
 	}
 
+	
+	
+
+	
 }

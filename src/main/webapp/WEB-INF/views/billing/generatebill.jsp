@@ -288,6 +288,7 @@
 
 								},
 								function(data) {
+									alert("data is"+data);
 
 									$('#table_grid td').remove();
 									$('#loader').hide();

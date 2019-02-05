@@ -451,8 +451,12 @@ page-break-inside: auto !important
 								style="border-left: 1px solid #313131; padding: 3px 5px; color: #000; font-size: 12px;">${billDetails.itemName} [NR]
 								<c:choose>
 									<c:when test="${billDetails.remark ne '0'}">
+								------ ${billDetails.remark} 
+								</c:when> 
+								 	<%-- <c:when test="${frDetails.catId ne '5'}">
 								------ ${billDetails.remark} Kg
-								</c:when>
+								</c:when>  --%>
+								
 								</c:choose>
 								
 								</td>
