@@ -395,7 +395,12 @@ td, th {
 				<div class="col-md-1">
 				<input type="button" class="btn btn-primary"  value="Update"  disabled="disabled" id="callupdate" onclick="updateDetails()">
 						
-</div>	</div>
+</div>
+
+				
+
+
+	</div>
 										</div>
 
 
@@ -410,6 +415,13 @@ td, th {
 												value="EXPORT TO Excel" onclick="exportToExcel();"
 												disabled="disabled">
 										</div>
+										
+											    
+				<div class="col-md-1">
+				<input type="button" class="btn btn-primary"  value="PDF"  disabled="disabled" id="callPDF" onclick="genPdf()">
+						
+</div>
+										
 									</div></div>
 							</form>
 						</div>
@@ -571,6 +583,7 @@ $.getJSON('${callSearchOrdersProcess}', {
 
 }, function(data) {
 	document.getElementById("expExcel").disabled=true;
+	document.getElementById("callPDF").disabled=true;
 	document.getElementById("callupdate").disabled=false;
 
 	$("#opt").css("display","block");
@@ -582,6 +595,7 @@ $.getJSON('${callSearchOrdersProcess}', {
 
 	$.each(data,function(key, orders) {
 		document.getElementById("expExcel").disabled=false;
+		document.getElementById("callPDF").disabled=false;
 		document.getElementById('range').style.display = 'block';
 	var tr = $('<tr></tr>');
 	tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
@@ -774,6 +788,17 @@ function disableRoute(){
 		 //document.getElementById("pets").options[2].disabled = true;
 	}
 //document.getElementById("selectRoute").disabled = true;
+
+}
+
+
+function genPdf() {
+	var frId = $("#fr_id").val();
+	var itemId = $("#item_id").val();
+	var date = $("#date").val();
+	
+	window.open('pdfForDisReport?url=pdf/getOrderPdf/'
+			+ frId + '/'+itemId+'/'+date);
 
 }
 

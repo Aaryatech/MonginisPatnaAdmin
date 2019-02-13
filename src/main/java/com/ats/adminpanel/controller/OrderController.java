@@ -234,6 +234,10 @@ public class OrderController {
 
 		}// end of else
 		
+		
+		
+		
+		
 
 		
 	List<ExportToExcel> exportToExcelList=new ArrayList<ExportToExcel>();
@@ -286,8 +290,143 @@ public class OrderController {
 		return orderList;
 	}
 
-	//special cake orders
 	
+	
+	@RequestMapping(value = "pdf/getOrderPdf/{frId}/{itemId}/{date}", method = RequestMethod.GET)
+	public ModelAndView getOrderAllPdf(@PathVariable String frIdString, @PathVariable String menuId,
+			@PathVariable String date, HttpServletRequest request, HttpServletResponse response) {
+	
+		
+		ModelAndView model = new ModelAndView("reports/sales/orderListPdf");
+		RestTemplate restTemplate = new RestTemplate();
+		/*System.out.println("/inside search order process  ");
+		//model.addObject("franchiseeList", franchiseeList);
+		try {
+		model.addObject("menuList", menuList);
+		
+		
+		
+		int routeId = 0;//Integer.parseInt(request.getParameter("route_id"));
+		
+		menuId=menuId.substring(1, menuId.length()-1);
+		menuId=menuId.replaceAll("\"", "");
+		System.out.println("menu Ids New ="+menuId);
+		
+		frIdString=frIdString.substring(1, frIdString.length()-1);
+		frIdString=frIdString.replaceAll("\"", "");
+		System.out.println("frIds  New ="+frIdString);
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		orderList = new ArrayList<GetOrder>();
+		
+		List<String> franchIds=new ArrayList();
+		franchIds=Arrays.asList(frIdString);
+		
+		System.out.println("fr Id ArrayList "+franchIds.toString());
+		
+		if (routeId!=0) {
+
+			MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			mvm.add("routeId", routeId);
+
+			FrNameIdByRouteIdResponse frNameId = restTemplate.postForObject(Constants.url + "getFrNameIdByRouteId",
+					mvm, FrNameIdByRouteIdResponse.class);
+
+			List<FrNameIdByRouteId> frNameIdByRouteIdList = frNameId.getFrNameIdByRouteIds();
+
+			System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+
+			StringBuilder sbForRouteFrId = new StringBuilder();
+			for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
+
+				sbForRouteFrId = sbForRouteFrId.append(frNameIdByRouteIdList.get(i).getFrId().toString() + ",");
+
+			}
+
+			String strFrIdRouteWise = sbForRouteFrId.toString();
+			frIdString = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+			System.out.println("fr Id Route WISE = " + frIdString);
+
+		}
+		else
+		if(franchIds.contains("0")) {
+			
+			System.out.println("all fr selected");
+			System.out.println("Date"+date);
+			map.add("date",  date);
+			map.add("menuId", menuId);
+			
+			RestTemplate restTemplate1 = new RestTemplate();
+
+			GetOrderListResponse orderListResponse = restTemplate1.postForObject(Constants.url + 
+					"getOrderListForAllFr", map,GetOrderListResponse.class);
+
+			
+			orderList = orderListResponse.getGetOder();
+
+			System.out.println("order list is " + orderList.toString());
+			System.out.println("order list count is" + orderList.size());
+			
+			model.addObject("orderList", orderList);
+			
+			
+			model.addObject("franchIds",franchIds);
+			model.addObject("allOtherFrList",tempFrList);
+			model.addObject("selectedFrList",selectedFrList);
+			model.addObject("franchiseeList",franchiseeList);
+		
+			
+			System.out.println("Fr selected all "+franchIds.toString());
+
+		}// end of if
+		
+		if(!franchIds.contains("0")||routeId!=0) {
+			
+			System.out.println("few Fr selected: FrId  ArrayList "+franchIds.toString());
+			
+			
+			System.out.println("few fra selected");
+
+			map.add("frId", frIdString);
+			map.add("menuId", menuId);
+			map.add("date", date);
+
+			
+			RestTemplate restTemplate1 = new RestTemplate();
+
+			GetOrderListResponse orderListResponse = restTemplate1.postForObject(Constants.url + 
+					"getOrderList",map, GetOrderListResponse.class);
+
+			
+			orderList = orderListResponse.getGetOder();
+
+			System.out.println("order list is " + orderList.toString());
+			System.out.println("order list count is" + orderList.size());
+			model.addObject("orderList", orderList);
+			model.addObject("franchiseeList",franchiseeList);
+			
+			
+		}// end of else
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	
+	*/
+		
+		System.out.println("/inside search order process pdf........  ");
+		System.out.println("order list is " + orderList.toString());
+		System.out.println("order list count is" + orderList.size());
+		model.addObject("orderList", orderList);
+		
+		
+		return model;	
+	
+	}
 	
 	@RequestMapping(value = "/spCakeOrders")
 	public ModelAndView searchSpCakeOrder(HttpServletRequest request, HttpServletResponse response) {
