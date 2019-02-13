@@ -2720,9 +2720,9 @@ public class BillController {
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
 		 // File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		  //File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf");
+		  File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
-		 File f = new File("E:\\bill.pdf");
+		  // File f = new File("E:\\bill.pdf");
 		System.out.println("I am here " + f.toString());
 		try {
 			isTwice =false;
@@ -2740,9 +2740,9 @@ public class BillController {
 	     String filename = "ordermemo221.pdf";
 		//String filename = "E:\\bill.pdf";
 		//String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
-		 //  String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf";
+		   String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
-		String filePath = "E:\\bill.pdf";
+		//String filePath = "E:\\bill.pdf";
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
 		File downloadFile = new File(filePath);
