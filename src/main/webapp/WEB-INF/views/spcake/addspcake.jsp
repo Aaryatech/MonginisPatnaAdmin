@@ -418,7 +418,7 @@
 												</select>
 											</div>
 										</div>
-
+<!-- 
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">ERP
 												Link Code </label>
@@ -428,7 +428,7 @@
 													data-rule-required="true"/>
 
 											</div>
-										</div>
+										</div> -->
 
                                          <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Is Customer Choice Cake?</label>

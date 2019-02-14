@@ -298,7 +298,7 @@ public class SpecialCakeController {
 		
 		System.out.println("event type array is" + eventtypes[0]);
 
-		String erplinkcode = request.getParameter("erplinkcode");
+		//String erplinkcode = request.getParameter("erplinkcode");
 		
 		int isCustChoiceCk = Integer.parseInt(request.getParameter("is_cust_choice_ck"));
 		
@@ -379,7 +379,7 @@ public class SpecialCakeController {
 		map.add("spTax2", tx2);
 		map.add("spTax3", tx3);
 		map.add("speIdlist", strEvents);
-		map.add("erpLinkcode", erplinkcode);
+		map.add("erpLinkcode", 1);
 		map.add("timeTwoappli", type2app);
 		map.add("isUsed", isused);
 		map.add("spPhoupload", allowphupload);
