@@ -59,7 +59,7 @@ public class OrderController {
 	  public List<FranchiseeList> tempFrList= new ArrayList<FranchiseeList>();
 	  public  List<FranchiseeList> selectedFrList= new ArrayList<FranchiseeList>();
 	public List<SpCakeOrdersBean> spCakeOrderList = new ArrayList<SpCakeOrdersBean>();
-	List<GetOrder> orderList=null;
+	List<GetOrder> orderList=null; 
 	public List<Menu> menuList;
 	SpCakeOrdersBeanResponse orderListResponse;
 	RegularSpCkOrdersResponse regOrderListResponse ;
@@ -303,8 +303,6 @@ public class OrderController {
 		//model.addObject("franchiseeList", franchiseeList);
 		try {
 		model.addObject("menuList", menuList);
-		
-		
 		
 		int routeId = 0;//Integer.parseInt(request.getParameter("route_id"));
 		

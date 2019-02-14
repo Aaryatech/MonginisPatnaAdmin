@@ -663,10 +663,10 @@ public class ItemController {
 
 		int itemIsUsed = Integer.parseInt(request.getParameter("is_used"));
 
-		String itemSortId = request.getParameter("item_sort_id");
+		/*String itemSortId = request.getParameter("item_sort_id");*/
 
-		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
-
+		/*int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
+*/
 		int itemShelfLife = Integer.parseInt(request.getParameter("item_shelf_life"));
 
 		logger.info("Add new item request mapping.");
@@ -720,8 +720,8 @@ public class ItemController {
 		map.add("itemTax3", itemTax3);
 		map.add("itemIsUsed", itemIsUsed);
 
-		map.add("itemSortId", itemSortId);
-		map.add("grnTwo", grnTwo);
+		map.add("itemSortId", 1);
+		map.add("grnTwo", -1);
 		map.add("itemShelfLife", itemShelfLife);
 		try {
 			Item itemRes = rest.postForObject("" + Constants.url + "insertItem", map, Item.class);
@@ -1146,9 +1146,9 @@ public class ItemController {
 
 		int itemIsUsed = Integer.parseInt(request.getParameter("is_used"));
 
-		double itemSortId = Double.parseDouble(request.getParameter("item_sort_id"));
+		/*double itemSortId = Double.parseDouble(request.getParameter("item_sort_id"));
 
-		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
+		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));*/
 		int id = Integer.parseInt(request.getParameter("itemId"));
 		int shelfLife = Integer.parseInt(request.getParameter("item_shelf_life"));
 
@@ -1200,8 +1200,8 @@ public class ItemController {
 		map.add("itemTax2", itemTax2);
 		map.add("itemTax3", itemTax3);
 		map.add("itemIsUsed", itemIsUsed);
-		map.add("itemSortId", itemSortId);
-		map.add("grnTwo", grnTwo);
+		map.add("itemSortId", 1);
+		map.add("grnTwo", -1);
 		map.add("id", id);
 
 		map.add("itemShelfLife", shelfLife);
@@ -1323,9 +1323,9 @@ public class ItemController {
 
 			String uom = request.getParameter("uom");
 
-			float actualWeight = Float.parseFloat(request.getParameter("actual_weight"));
+			/*float actualWeight = Float.parseFloat(request.getParameter("actual_weight"));
 
-			float baseWeight = Float.parseFloat(request.getParameter("base_weight"));
+			float baseWeight = Float.parseFloat(request.getParameter("base_weight"));*/
 
 			float inputPerQty = Float.parseFloat(request.getParameter("input_per_qty"));
 			int trayType = Integer.parseInt(request.getParameter("tray_type"));
@@ -1337,9 +1337,9 @@ public class ItemController {
 			int isGateSaleDisc = Integer.parseInt(request.getParameter("is_gate_sale_disc"));
 
 			int isAllowBday = Integer.parseInt(request.getParameter("is_allow_bday"));
-			int cutSection = Integer.parseInt(request.getParameter("cut_section"));
-			String shortName = request.getParameter("short_name");
-			System.err.println("Short Name " + shortName);
+			/*int cutSection = Integer.parseInt(request.getParameter("cut_section"));
+			String shortName = request.getParameter("short_name");*/
+		/*	System.err.println("Short Name " + shortName);*/
 			ItemSup itemSup = new ItemSup();
 			itemSup.setId(id);
 			itemSup.setItemId(itemId);
@@ -1347,8 +1347,8 @@ public class ItemController {
 			itemSup.setItemUom(uom);
 			itemSup.setItemHsncd(itemHsncd);
 			itemSup.setIsGateSale(isGateSale);
-			itemSup.setActualWeight(actualWeight);
-			itemSup.setBaseWeight(baseWeight);
+			itemSup.setActualWeight(0);
+			itemSup.setBaseWeight(0);
 			itemSup.setInputPerQty(inputPerQty);
 			itemSup.setIsGateSaleDisc(isGateSaleDisc);
 			itemSup.setIsAllowBday(isAllowBday);
@@ -1356,8 +1356,8 @@ public class ItemController {
 			itemSup.setTrayType(trayType);
 			itemSup.setDelStatus(0);
 			itemSup.setIsTallySync(0);
-			itemSup.setCutSection(cutSection);
-			itemSup.setShortName(shortName);
+			itemSup.setCutSection(-1);
+			itemSup.setShortName("NA");
 
 			RestTemplate restTemplate = new RestTemplate();
 

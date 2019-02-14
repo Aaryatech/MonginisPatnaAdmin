@@ -10,7 +10,7 @@ table{
   width:100%;
   border:1px solid #ddd;
 }
-
+ 
 tr:hover {
 	background-color: #ffa;
 }

@@ -374,7 +374,7 @@
 								</select>
 									</div>
 								</div>
-								
+								<%-- 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										SortId</label>
@@ -383,7 +383,7 @@
 											value="${item.itemSortId}" placeholder="Item Sort Id"
 											class="form-control" data-rule-required="true" data-rule-number="true"/>
 									</div>
-								</div>
+								</div> --%>
 								
 								<%-- <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">GRN 2
@@ -401,7 +401,7 @@
 								
 								
 								
-								
+								<%-- 
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">GRN Type</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -472,7 +472,7 @@
 												</c:choose>
 
 											</div>
-										</div>
+										</div> --%>
 										
 										 <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item Shelf Life</label>

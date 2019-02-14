@@ -365,7 +365,7 @@
 									</div>
 								</div>
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										SortId</label>
 									<div class="col-sm-9 col-lg-10 controls">
@@ -373,8 +373,8 @@
 											placeholder="Item Sort Id" class="form-control"
 											data-rule-number="true" value="0" />
 									</div>
-								</div>
-								<div class="form-group">
+								</div> -->
+							<!-- 	<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">GRN Type</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<label class="radio-inline"> <input type="radio"
@@ -388,7 +388,7 @@
 											data-rule-required="false" />GRN3
 										</label>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										Shelf Life</label>
@@ -561,7 +561,7 @@
 <script type="text/javascript">
 function calMrp()
 {
-	var mrp1 = parseFloat($("#item_mrp1").val());
+	var mrp1 = parseFloat($("#item_mrp1").val());//local mrp
 	var mrp2 = parseFloat($("#item_mrp2").val());
 	var mrp3 = parseFloat($("#item_mrp3").val());
 	var margin= parseFloat($("#margin").val());
@@ -569,7 +569,7 @@ function calMrp()
 	var calRate1=((mrp1*100)/(100+margin));      
 	var calRate2=((mrp2*100)/(100+margin));  
 	var calRate3=((mrp3*100)/(100+margin));  
-	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2));
+	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2)); //local rate
 	document.getElementById("item_rate2").setAttribute('value', (calRate2).toFixed(2));
 	document.getElementById("item_rate3").setAttribute('value', (calRate3).toFixed(2));
 }

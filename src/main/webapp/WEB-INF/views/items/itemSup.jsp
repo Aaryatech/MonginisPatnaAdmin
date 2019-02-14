@@ -164,7 +164,7 @@
 									</div>
 							  </div>
 							  <input type="hidden" name="uom" id="uom" value="${itemSupp.itemUom}"/> 
-							  <div class="col2">
+							  <%-- <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Actual Weight</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="actual_weight" id="actual_weight"
@@ -179,15 +179,15 @@
 											placeholder="Base Weight" class="form-control"
 											data-rule-required="true" data-rule-number="true" value="${itemSupp.baseWeight}"/>
 									</div>
-							  </div>
-							   <div class="col2">
+							  </div> --%>
+							<%--    <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Short Name</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="short_name" id="short_name"
 											placeholder="Short Name" class="form-control"
 											data-rule-required="true"  value="${itemSupp.shortName}"/>
 									</div>
-							  </div> 
+							  </div>  --%>
 							 <!--  <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Input Per Unit</label>
 									<div class="col-sm-9 col-lg-3 controls"> -->
@@ -196,7 +196,7 @@
 											data-rule-required="true"  data-rule-number="true" value="1"/>
 									<!-- </div>
 							  </div> -->
-							    <div class="form-group">
+							  <%--   <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Cut Section</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<select name="cut_section" id="cut_section" class="form-control"
@@ -227,7 +227,7 @@
 										</c:choose>
 										</select>
 									</div>
-							  </div>
+							  </div> --%>
 						    <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Type Of Tray</label>
 									<div class="col-sm-9 col-lg-3 controls">

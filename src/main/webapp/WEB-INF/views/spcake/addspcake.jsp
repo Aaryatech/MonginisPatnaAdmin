@@ -263,13 +263,30 @@
 											</div>
 										</div>
 
-										
+										 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="20" onchange="calMrp()"/>
+									</div>
+								</div>
+										  <div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Local MRP
+											</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<input type="text" name="mrp_rate1" id="mrp_rate1"
+													 placeholder="MRP Rate 1" class="form-control"
+													 data-rule-required="true" value="0"
+													data-rule-number="true"  onchange="calMrp()"  />
+											</div>
+										</div>
                                       <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Local Rate
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate1" id="sp_rate1"
-													 placeholder="Special Cake Rate 1" class="form-control" onchange="calMrp()" value="0"
+													 placeholder="Special Cake Rate 1" class="form-control" value="0"
 													 data-rule-required="true"
 													data-rule-number="true" />
 											</div>
@@ -294,24 +311,7 @@
 													data-rule-number="true" />
 											</div>
 										</div>
-										 <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="margin" id="margin"
-											placeholder="Enter Margin %" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="20" onchange="calMrp()"/>
-									</div>
-								</div>
-										  <div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Local MRP
-											</label>
-											<div class="col-sm-9 col-lg-10 controls">
-												<input type="text" name="mrp_rate1" id="mrp_rate1"
-													 placeholder="MRP Rate 1" class="form-control"
-													 data-rule-required="true"
-													data-rule-number="true" />
-											</div>
-										</div>
+										
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Out Station MRP
 											</label>
@@ -622,18 +622,20 @@
 <script type="text/javascript">
 function calMrp()
 {
-	var rate1 = parseFloat($("#sp_rate1").val());
+	var rate1 = parseFloat($("#mrp_rate1").val());
 	var rate2 = parseFloat($("#sp_rate2").val());
 	var rate3 = parseFloat($("#sp_rate3").val());
 	var margin= parseFloat($("#margin").val());
 	
-	var calRate1=rate1+(rate1*margin/100);
+	var calRate1=((rate1*100)/(100+margin));  
 	var calRate2=rate2+(rate2*margin/100);
 	var calRate3=rate3+(rate3*margin/100);
-	document.getElementById("mrp_rate1").setAttribute('value', calRate1);
+	
+	document.getElementById("sp_rate1").setAttribute('value', calRate1);
 	document.getElementById("mrp_rate2").setAttribute('value', calRate2);
 	document.getElementById("mrp_rate3").setAttribute('value', calRate3);
 }
+
 </script>
 <script>
 function eventChange()

@@ -48,8 +48,7 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-
-
+  
 <div align="center"> Order List &nbsp;&nbsp;&nbsp;&nbsp; </div>
 	
 	<table  align="center" border="1" cellspacing="0" cellpadding="1" 
