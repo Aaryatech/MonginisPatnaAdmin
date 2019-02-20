@@ -32,7 +32,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getGroup2ByCatId" value="/getGroup2ByCatId" />
-
+    <c:url var="taxHsnForAddNewItemOnSubCatChange" value="/taxHsnForAddNewItemOnSubCatChange"></c:url>
 
 	<div class="container" id="main-container">
 
@@ -191,7 +191,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Group2</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<select data-placeholder="Select Group"
-											class="form-control chosen-select" name="item_grp2"
+											class="form-control chosen-select" name="item_grp2" onchange="callData(this.value)"
 											tabindex="-1" id="item_grp2" data-rule-required="true">
 
 										</select>
@@ -543,6 +543,58 @@
 																});
 											});
 						});
+		
+		
+function callData(subCatId){
+			
+			$.getJSON('${taxHsnForAddNewItemOnSubCatChange}', {
+				subCatId : subCatId,
+				ajax : 'true'
+			}, function(data) {
+				//alert(data);
+				//$('#hsn_code').value=data.hsnCode;
+				if(data.taxHsnId==0){
+					//alert("In IF")
+					var x="0";
+					//document.getElementById("hsn_code").value=x
+						document.getElementById("item_tax1").setAttribute('value', x);
+
+					document.getElementById("item_tax2").setAttribute('value',
+							x);
+					document.getElementById("item_tax3").setAttribute('value',
+							x);
+					
+					// document.getElementById("hsn_code").readOnly = true; 
+					 document.getElementById("item_tax1").readOnly = true; 
+					document.getElementById("item_tax2").readOnly = true; 
+					 document.getElementById("item_tax3").readOnly = true; 
+					 calTotalGst();
+				}else{
+					//alert("In Else");
+					
+					//
+					
+					// var x=data.hsnCode;
+						//document.getElementById("hsn_code").value=x;
+						var sgst=data.sgstPer;
+						var cgst=data.cgstPer;
+						var igst=data.igstPer;
+						document.getElementById("item_tax1").setAttribute('value', sgst);
+
+						document.getElementById("item_tax2").setAttribute('value',
+								cgst);
+						document.getElementById("item_tax3").setAttribute('value',
+								igst);
+						
+						// document.getElementById("hsn_code").readOnly = true; 
+						 document.getElementById("item_tax1").readOnly = true; 
+						 document.getElementById("item_tax2").readOnly = true; 
+						 document.getElementById("item_tax3").readOnly = true; 
+						 calTotalGst(); 
+				}
+			});
+			
+		}
 	</script>
 
 	<script>

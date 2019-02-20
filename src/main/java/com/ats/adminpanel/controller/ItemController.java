@@ -3,6 +3,7 @@ package com.ats.adminpanel.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.bouncycastle.cert.ocsp.Req;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,8 +42,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.ExportToExcel;
+import com.ats.adminpanel.model.GetTaxHsn;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.StockItem;
+import com.ats.adminpanel.model.TaxHsn;
 import com.ats.adminpanel.model.TrayType;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUom;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
@@ -118,10 +122,65 @@ public class ItemController {
 			}
 			model.addObject("itemsList", itemsList);
 			model.addObject("mCategoryList", resCatList);
+
 		} catch (Exception e) {
 			System.out.println("" + e.getMessage());
 		}
 		return model;
+	}
+	ArrayList<GetTaxHsn> taxHsnList;
+	@RequestMapping(value = "/showAddTaxHsn", method = RequestMethod.GET)
+	public ModelAndView showAddTaxHsn(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView("items/tax_hsn");
+
+		/*
+		 * Constants.mainAct =1; Constants.subAct =4;
+		 */
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+					CategoryListResponse.class);
+			mCategoryList = categoryListResponse.getmCategoryList();
+			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+			for (MCategoryList mCat : mCategoryList) {
+				if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+					resCatList.add(mCat);
+				}
+			}
+			model.addObject("mCategoryList", resCatList);
+			
+			
+			GetTaxHsn[] taxHsnArray = restTemplate.getForObject(Constants.url + "getAllTaxHsnList",  GetTaxHsn[].class);
+
+			 taxHsnList = new ArrayList<GetTaxHsn>(Arrays.asList(taxHsnArray));
+
+			model.addObject("taxHsnList", taxHsnList);
+			
+			
+		} catch (Exception e) {
+			System.out.println("" + e.getMessage());
+		}
+		return model;
+	}
+
+	// Sac 18 Feb
+	@RequestMapping(value = "/getSubCatForTaxHsn", method = RequestMethod.GET)
+	public @ResponseBody List<SubCategory> getSubCatForTaxHsn(
+			@RequestParam(value = "catId", required = true) int catId) {
+		logger.debug("finding Items for menu " + catId);
+
+		List<SubCategory> subCatList;
+		System.out.println("CatId" + mCategoryList.size());
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("catId", catId);
+		RestTemplate restTemplate = new RestTemplate();
+
+		SubCategory[] subArray = restTemplate.postForObject(Constants.url + "getSubCatForTaxHsn", map,
+				SubCategory[].class);
+		subCatList = new ArrayList<>(Arrays.asList(subArray));
+
+		return subCatList;
 	}
 
 	@RequestMapping(value = "/updateHsnAndTaxPerc", method = RequestMethod.POST)
@@ -162,6 +221,120 @@ public class ItemController {
 		return "redirect:/itemList";
 	}
 
+	// 18 FEB 2019
+	// insertTaxHsn
+
+	@RequestMapping(value = "/insertTaxHsn", method = RequestMethod.POST)
+	public String insertTaxHsn(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			int catId = Integer.parseInt(request.getParameter("cat_id"));
+			int subCatId = Integer.parseInt(request.getParameter("sub_cat_id"));
+
+			int hsnTaxId = 0;
+			try {
+				hsnTaxId = Integer.parseInt(request.getParameter("hsn_tax_id"));
+			} catch (Exception e) {
+				hsnTaxId = 0;
+			}
+
+			float itemTax1 = Float.parseFloat(request.getParameter("item_tax1"));
+
+			float itemTax2 = Float.parseFloat(request.getParameter("item_tax2"));
+
+			float itemTax3 = Float.parseFloat(request.getParameter("item_tax3"));
+
+			String itemHsncd = request.getParameter("hsn_code");
+
+			TaxHsn txHsn = new TaxHsn();
+
+			txHsn.setAddDate(new Date());
+			;
+
+			txHsn.setCatId(catId);
+			txHsn.setCgstPer(itemTax1);
+			txHsn.setDelStatus(0);
+			txHsn.setEditDate(new Date());
+			txHsn.setHsnCode(itemHsncd);
+			txHsn.setIgstPer(itemTax3);
+			txHsn.setSgstPer(itemTax2);
+			txHsn.setSubCatId(subCatId);
+			txHsn.setTaxHsnId(hsnTaxId);
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			TaxHsn info = restTemplate.postForObject(Constants.url + "insertTaxHsn", txHsn, TaxHsn.class);
+
+			System.err.println(info.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/showAddTaxHsn";
+	}
+
+	
+	@RequestMapping(value = "/deleteTaxHsn/{idList}", method = RequestMethod.GET)
+	public String deleteTaxHsn(@PathVariable String[] idList) {
+
+		// String id=request.getParameter("id");
+		try {
+
+			RestTemplate rest = new RestTemplate();
+
+			String strItemIds = new String();
+			for (int i = 0; i < idList.length; i++) {
+				strItemIds = strItemIds + "," + idList[i];
+			}
+			strItemIds = strItemIds.substring(1);
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("taxHsnIdList", strItemIds);
+
+			Info info = rest.postForObject("" + Constants.url + "deleteTaxHsn", map, Info.class);
+			//System.out.println(info.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/showAddTaxHsn";
+	}
+
+	//updateTaxHsn/${txList.taxHsnId}/index Ajax call set record..
+	
+	
+	
+	
+	@RequestMapping(value = "/getTaxHsnForEdit", method = RequestMethod.GET)
+	public @ResponseBody GetTaxHsn getTaxHsnForEdit(HttpServletRequest request, HttpServletResponse response) {
+		
+		int key = Integer.parseInt(request.getParameter("key"));
+		
+		taxHsn=taxHsnList.get(key);
+
+		return taxHsn;
+
+	}
+	
+	
+	@RequestMapping(value = "/getGrp2ByCatId", method = RequestMethod.GET)
+	public @ResponseBody List<SubCategory> getSubCateListByCatId(
+			@RequestParam(value = "catId", required = true) int catId) {
+
+		List<SubCategory> subCatList;
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("catId", catId);
+		RestTemplate restTemplate = new RestTemplate();
+
+		SubCategory[] subArray = restTemplate.postForObject(Constants.url + "getSubCateListByCatId", map,
+				SubCategory[].class);
+		subCatList = new ArrayList<>(Arrays.asList(subArray));
+
+		return subCatList;
+	}
+
+	
+	
 	@RequestMapping(value = "/addItem", method = RequestMethod.GET)
 	public ModelAndView addItem(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("items/addnewitem");
@@ -213,26 +386,57 @@ public class ItemController {
 
 		return subCatList;
 	}
-	
-	
+
+	GetTaxHsn taxHsn = null;
+
 	@RequestMapping(value = "/itemsBysubCatId", method = RequestMethod.GET)
 	public @ResponseBody List<Item> itemsBysubCatId(@RequestParam(value = "subCatId", required = true) int subCatId) {
 		logger.debug("finding Items for  " + subCatId);
 
 		RestTemplate restTemplate = new RestTemplate();
-		
+
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		map.add("subCatId", subCatId);
-		
-		Item[] itemList = restTemplate.postForObject(Constants.url + "getItemsBySubCatId",map,
-				Item[].class);
+
+		Item[] itemList = restTemplate.postForObject(Constants.url + "getItemsBySubCatId", map, Item[].class);
 
 		ArrayList<Item> items = new ArrayList<Item>(Arrays.asList(itemList));
+
+		// sachin 18 FEB
+		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
+		//System.err.println("Tax Hsn Found " + taxHsn);
+		if (taxHsn == null) {
+			taxHsn = new GetTaxHsn();
+		}
+
 		return items;
 	}
-	
-	
+
+	// sachin 19FEB
+	@RequestMapping(value = "/taxHsnForAddNewItemOnSubCatChange", method = RequestMethod.GET)
+	public @ResponseBody GetTaxHsn taxHsnForAddNewItemOnSubCatChange(
+			@RequestParam(value = "subCatId", required = true) int subCatId) {
+		//logger.debug("finding Items for  " + subCatId);
+		RestTemplate restTemplate = new RestTemplate();
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+		map.add("subCatId", subCatId);
+
+		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
+		//System.err.println("Tax Hsn Found " + taxHsn);
+		if (taxHsn == null) {
+			taxHsn = new GetTaxHsn();
+		}
+		return taxHsn;
+	}
+
+	@RequestMapping(value = "/getTaxHsnForSubCat", method = RequestMethod.GET)
+	public @ResponseBody GetTaxHsn getTaxHsnForSubCat() {
+
+		return taxHsn;
+
+	}
 
 	// end
 
@@ -663,9 +867,9 @@ public class ItemController {
 
 		int itemIsUsed = Integer.parseInt(request.getParameter("is_used"));
 
-		/*String itemSortId = request.getParameter("item_sort_id");*/
+		/*String itemSortId = request.getParameter("item_sort_id");
 
-		/*int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
+		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
 */
 		int itemShelfLife = Integer.parseInt(request.getParameter("item_shelf_life"));
 
@@ -918,7 +1122,7 @@ public class ItemController {
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			List<TallyItem> excelItems = itemResponse.getItemList();
-			//System.err.println("Excel Items 888 " +excelItems.toString());
+			// System.err.println("Excel Items 888 " +excelItems.toString());
 			for (int i = 0; i < excelItems.size(); i++) {
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
@@ -1273,6 +1477,25 @@ public class ItemController {
 		return itemsList;
 	}
 
+	@RequestMapping(value = "/getTaxHsnForItemSupItem", method = RequestMethod.GET)
+	public @ResponseBody GetTaxHsn getTaxHsnForItemSupItem(@RequestParam(value = "id", required = true) int id) {
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("id", id);
+		RestTemplate restTemplate = new RestTemplate();
+		Item item = restTemplate.postForObject("" + Constants.url + "getItem", map, Item.class);
+		map = new LinkedMultiValueMap<String, Object>();
+		map.add("subCatId", item.getItemGrp2());
+		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
+		// System.err.println("Tax Hsn Found " +taxHsn);
+		if (taxHsn == null) {
+			taxHsn = new GetTaxHsn();
+		}
+
+		return taxHsn;
+
+	}
+
 	@RequestMapping(value = "/showItemSupList", method = RequestMethod.GET)
 	public ModelAndView itemSupList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView("items/itemSupList");
@@ -1338,8 +1561,8 @@ public class ItemController {
 
 			int isAllowBday = Integer.parseInt(request.getParameter("is_allow_bday"));
 			/*int cutSection = Integer.parseInt(request.getParameter("cut_section"));
-			String shortName = request.getParameter("short_name");*/
-		/*	System.err.println("Short Name " + shortName);*/
+			String shortName = request.getParameter("short_name");
+			System.err.println("Short Name " + shortName);*/
 			ItemSup itemSup = new ItemSup();
 			itemSup.setId(id);
 			itemSup.setItemId(itemId);

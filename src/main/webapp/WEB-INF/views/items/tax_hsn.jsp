@@ -2,35 +2,34 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 .buttonload {
-    background-color: white; /* Green background */
-    border: none; /* Remove borders */
-    color: #ec268f; /* White text */
-    padding: 12px 20px; /* Some padding */
-    font-size: 15px; /* Set a font-size */
-    display:none;
+	background-color: white; /* Green background */
+	border: none; /* Remove borders */
+	color: #ec268f; /* White text */
+	padding: 12px 20px; /* Some padding */
+	font-size: 15px; /* Set a font-size */
+	display: none;
 }
 
 /* Add a right margin to each icon */
 .fa {
-    margin-left: -12px;
-    margin-right: 8px;
+	margin-left: -12px;
+	margin-right: 8px;
 }
 </style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
- <c:url var="getItemsByCatId" value="/getItemByIdUpdateHsn"></c:url>
-  <c:url var="getGroup2ByCatId" value="/getGroup2ByCatId"></c:url>
- 
-   <c:url var="itemsBysubCatId" value="/itemsBysubCatId"></c:url>
- 
-    <c:url var="getTaxHsnForSubCat" value="/getTaxHsnForSubCat"></c:url>
- 
- 
- 
+	<c:url var="getItemsByCatId" value="/getItemByIdUpdateHsn"></c:url>
+	<c:url var="getSubCatForTaxHsn" value="/getSubCatForTaxHsn"></c:url>
+
+	<c:url var="itemsBysubCatId" value="/itemsBysubCatId"></c:url>
+		<c:url var="getTaxHsnForEdit" value="/getTaxHsnForEdit"></c:url>
+	  <c:url var="getGrp2ByCatId" value="/getGrp2ByCatId"></c:url>
+	
 
 	<div class="container" id="main-container">
 
@@ -52,7 +51,7 @@
 			<div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i> Update Items
+						<i class="fa fa-file-o"></i> HSN And Tax %
 					</h1>
 
 					<c:set var="isEdit" value="0">
@@ -115,7 +114,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Update Items HSN And Tax%
+								<i class="fa fa-bars"></i> HSN And Tax % for SubCategory
 							</h3>
 							<div class="box-tool">
 
@@ -125,59 +124,65 @@
 
 
 							</div>
-							
+
 						</div>
 
 
 						<div class="box-content">
-							<form action="${pageContext.request.contextPath}/updateHsnAndTaxPerc" class="form-horizontal"
-								method="post" id="validation-form" enctype="multipart/form-data">
+							<form action="${pageContext.request.contextPath}/insertTaxHsn"
+								class="form-horizontal" method="post" id="validation-form"
+								enctype="multipart/form-data">
 
 
-                          <div class="form-group">
+								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
 									<div class="col-sm-9 col-lg-3 controls">
-									<select name="cat_id" id="cat_id" class="form-control" placeholder="Select Category" onchange="catChange(this.value)">
+										<select name="cat_id" id="cat_id" class="form-control"
+											placeholder="Select Category"
+											onchange="catChange(this.value)">
 											<option value="">Select Category</option>
-										 <c:forEach items="${mCategoryList}" var="mCategoryList">
-										            	  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
-										</c:forEach> 
-												
-								</select>	
+											<c:forEach items="${mCategoryList}" var="mCategoryList">
+												<option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+											</c:forEach>
+
+										</select>
 									</div>
 									<!-- <button class="buttonload" id="loader">
                                    <i class="fa fa-spinner fa-spin"></i>Loading
                                    </button> -->
 								</div>
-								
-								 <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
+
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Sub
+										Category</label>
 									<div class="col-sm-9 col-lg-3 controls">
-									<select name="sub_cat_id" id="sub_cat_id" class="form-control" placeholder="Select SubCategory" onchange="subCatChange(this.value)">
+										<select name="sub_cat_id" id="sub_cat_id" class="form-control"
+											placeholder="Select SubCategory">
 											<option value="-1">Select SubCatId</option>
-										<%--  <c:forEach items="${mCategoryList}" var="mCategoryList">
+											<%--  <c:forEach items="${mCategoryList}" var="mCategoryList">
 										            	  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
 										</c:forEach> 
 												 --%>
-								</select>	
+										</select>
 									</div>
 									<button class="buttonload" id="loader">
-                                   <i class="fa fa-spinner fa-spin"></i>Loading
-                                   </button>
+										<i class="fa fa-spinner fa-spin"></i>Loading
+									</button>
 								</div>
-								
-                              <div class="form-group">
+
+								<%--  <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Items</label>
 									<div class="col-sm-9 col-lg-10 controls">
 									<select name="items[]" id="items" multiple="multiple"       data-rule-required="true" class="form-control chosen" multiplaceholder="Select Item">
-										<%-- <c:forEach items="${itemsList}" var="item">
+										<c:forEach items="${itemsList}" var="item">
 												<option value="${item.id}"><c:out value="${item.itemName}"></c:out></option>
-										</c:forEach> --%>
+										</c:forEach>
 								   </select>	
 									</div>
-								</div>
+								</div> --%>
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label" for="hsn_code">Hsn Code</label>
+									<label class="col-sm-3 col-lg-2 control-label" for="hsn_code">Hsn
+										Code</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="hsn_code" id="hsn_code"
 											placeholder="Hsn Code" class="form-control"
@@ -212,6 +217,7 @@
 									</div>
 								</div>
 
+												<input type="hidden"  id="hsn_tax_id" name="hsn_tax_id" value="0">
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Total
@@ -245,6 +251,147 @@
 								</div>
 							</form>
 						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="box">
+						<div class="box-title">
+							<h3>
+								<i class="fa fa-table"></i> Hsn Tax List
+							</h3>
+							<!-- <div class="box-tool">
+								<a data-action="collapse" href="#"><i
+									class="fa fa-chevron-up"></i></a>
+								<a data-action="close" href="#"><i class="fa fa-times"></i></a>
+							</div> -->
+						</div>
+
+						<div class="box-content">
+							<div class="col-md-9"></div>
+							<label for="search" class="col-md-3" id="search"> <i
+								class="fa fa-search" style="font-size: 20px"></i> <input
+								type="text" id="myInput" onkeyup="myFunction()"
+								placeholder="Search items by Name or Code"
+								title="Type in a name">
+							</label>
+
+							<div class="clearfix"></div>
+
+							<div id="table-scroll" class="table-scroll">
+
+								<!-- <div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2" class="table table-advance">
+										<thead>
+											<tr class="bgpink">
+												<th class="col-md-1">SELECT</th>
+												<th class="col-md-1">Sr No</th>
+												<th class="col-md-1">SubCategory</th>
+												<th class="col-md-1">Category Name</th>
+												<th class="col-md-1">HSN Code</th>
+												<th class="col-md-1">SGST %</th>
+												<th class="col-md-1">CGST %</th>
+												<th class="col-md-1">IGST %</th>
+												<th class="col-md-1">Action</th>
+											</tr>
+										</thead>
+									</table>
+
+								</div> -->
+								<div class="table-wrap">
+
+									<table id="table1" class="table table-advance" style="">
+										<thead>
+
+
+											<tr class="bgpink">
+												<th class="col-md-1">SELECT</th>
+												<th class="col-md-1">Sr No</th>
+												<th class="col-md-1">SubCategory</th>
+												<th class="col-md-1">Category</th>
+												<th class="col-md-1">HSN Code</th>
+												<th class="col-md-1">SGST %</th>
+												<th class="col-md-1">CGST %</th>
+												<th class="col-md-1">IGST %</th>
+												<th class="col-md-1">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+
+											<c:forEach items="${taxHsnList}" var="txList"
+												varStatus="count">
+												<tr>
+													<td><input type="checkbox" class="chk"
+														name="select_to_print" id="${txList.taxHsnId}"
+														value="${txList.taxHsnId}" /></td>
+
+													<td><c:out value="${count.index+1}" /></td>
+													<td align="left"><c:out value="${txList.subCatName}" /></td>
+													<td align="left"><c:out value="${txList.catName}" /></td>
+
+													<%-- 	<td align="left">
+												<img
+													src="${url}${itemsList.itemImage}" width="120" height="100"
+													onerror="this.src='${pageContext.request.contextPath}/resources/img/No_Image_Available.jpg';"/>
+													
+												</td> --%>
+													<td align="left"><c:out value="${txList.hsnCode}" /></td>
+
+												<td align="left"><c:out value="${txList.sgstPer}" /></td>
+													<td align="left"><c:out value="${txList.cgstPer}" /></td>
+
+											<td align="left"><c:out value="${txList.igstPer}" /></td>
+											
+													
+															<td align="left"><a
+																href="#" onclick="getEditData(${txList.taxHsnId},${count.index})"><span
+																	class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp; &nbsp;&nbsp; <a
+																href="deleteTaxHsn/${txList.taxHsnId}"
+																onClick="return confirm('Are you sure want to delete this record');"><span
+																	class="glyphicon glyphicon-remove"></span></a></td>
+
+														
+														
+
+													<%-- <td align="left"><a href="updateItem/${itemsList.id}"><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                             <a href="showItemDetail/${itemsList.id}"><span
+														class="glyphicon glyphicon-list"></span></a>
+													&nbsp;&nbsp;
+													<a href="deleteItem/${itemsList.id}" class="disableClick"
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a></td>
+														 --%>
+
+												</tr>
+
+											</c:forEach>
+
+
+										</tbody>
+
+									</table>
+								</div>
+							</div>
+
+						</div>
+
+
+						<div class="form-group" id="range">
+
+						<!-- 	<input type="button" id="expExcel" class="btn btn-primary"
+								value="EXPORT TO Excel" onclick="exportToExcel();">  --><input
+								type="button" margin-right: 5px;" id="btn_delete"
+								class="btn btn-primary" onclick="deleteById()" value="Delete" />
+						<!-- 	<input type="button" margin-right: 5px;" id="btn_delete"
+								class="btn btn-primary" onclick="inactiveById()"
+								value="InActive" /> -->
+						</div>
+
 					</div>
 				</div>
 			</div>
@@ -339,7 +486,7 @@
 					totGst);
 		}
 	</script>
-<script type="text/javascript">
+	<script type="text/javascript">
 
 			function subCatChange(subCatId) {
 				$('#loader').show();
@@ -347,8 +494,6 @@
 					subCatId : subCatId,
 					ajax : 'true'
 				}, function(data) {
-					
-					callData();
 					var html = '';
 					var html = '<option value="-1">ALL</option>';
 
@@ -363,61 +508,12 @@
 					   $("#items").trigger("chosen:updated");
 
 				});
-				
-				
-			}			 
-			
-			function callData(){
-				
-				$.getJSON('${getTaxHsnForSubCat}', {
-					ajax : 'true'
-				}, function(data) {
-					//alert(data);
-					//$('#hsn_code').value=data.hsnCode;
-					if(data.taxHsnId==0){
-						//alert("In IF")
-						var x=""
-						document.getElementById("hsn_code").value=x
-							document.getElementById("item_tax1").setAttribute('value', x);
-
-						document.getElementById("item_tax2").setAttribute('value',
-								x);
-						document.getElementById("item_tax3").setAttribute('value',
-								x);
-						
-						// document.getElementById("hsn_code").readOnly = true; 
-						// document.getElementById("item_tax1").readOnly = true; 
-						// document.getElementById("item_tax2").readOnly = true; 
-						// document.getElementById("item_tax3").readOnly = true; 
-					
-					}else{
-						//alert("In Else");
-						
-						//
-						
-						 var x=data.hsnCode;
-							document.getElementById("hsn_code").value=x;
-							var sgst=data.sgstPer;
-							var cgst=data.cgstPer;
-							var igst=data.igstPer;
-							document.getElementById("item_tax1").setAttribute('value', sgst);
-
-							document.getElementById("item_tax2").setAttribute('value',
-									cgst);
-							document.getElementById("item_tax3").setAttribute('value',
-									igst);
-							
-							// document.getElementById("hsn_code").readOnly = true; 
-							// document.getElementById("item_tax1").readOnly = true; 
-							// document.getElementById("item_tax2").readOnly = true; 
-							// document.getElementById("item_tax3").readOnly = true; 
-					}
-				});
 			}
+			 
 			
 			function catChange(cat_id) {
 				$('#loader').show();
-				$.getJSON('${getGroup2ByCatId}', {
+				$.getJSON('${getSubCatForTaxHsn}', {
 					catId : cat_id,
 					ajax : 'true'
 				}, function(data) {
@@ -434,8 +530,35 @@
 
 				});
 			}
+			
+			
+			
+			function catChangeForEdit(cat_id,subCatId) {
+				$('#loader').show();
+				$.getJSON('${getGrp2ByCatId}', {
+					catId : cat_id,
+					ajax : 'true'
+				}, function(data) {
+					var html = '';
+					$('#loader').hide();
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						if(data[i].subCatId==subCatId){
+						html += '<option value="' + data[i].subCatId + '" selected>'
+								+ data[i].subCatName + '</option>';
+						}else{
+							html += '<option value="' + data[i].subCatId + '">'
+							+ data[i].subCatName + '</option>';
+						}
+					}
+					html += '</option>';
+					$('#sub_cat_id').html(html);
+					$("#sub_cat_id").trigger("chosen:updated");
+
+				});
+			}
 			</script>
-			<script type="text/javascript">
+	<script type="text/javascript">
 			$(document).ready(function() { // if all label selected set all items selected
 				
 			$('#items').change(
@@ -473,5 +596,47 @@
 
 			</script>
 			
+			<script type="text/javascript">
+function deleteById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert(" Please Select At least one checkbox ");
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteTaxHsn/'+checkedVals;
+
+	}
+
+}
+
+function getEditData(taxHsnId,key){
+	$.getJSON('${getTaxHsnForEdit}', {
+		taxHsnId : taxHsnId,
+		key : key,
+		ajax : 'true'
+	}, function(data) {
+		document.getElementById("hsn_tax_id").setAttribute('value', data.taxHsnId);
+		
+		$("#cat_id").prop('selectedIndex', data.catId);		
+		
+		$("#cat_id").trigger("chosen:updated");
+		catChangeForEdit(data.catId,data.subCatId);
+		//alert("data.subCatId" +data.subCatId);
+		//$("#sub_cat_id").prop('selectedIndex', data.subCatId);
+		// $("#sub_cat_id").trigger("chosen:updated");
+	
+	});
+	
+}
+</script>
+
 </body>
 </html>

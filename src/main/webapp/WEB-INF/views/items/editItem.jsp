@@ -9,7 +9,7 @@
 	
 	
 	<c:url var="getGroup2ByCatId" value="/getGroup2ByCatId" />
-
+    <c:url var="taxHsnForAddNewItemOnSubCatChange" value="/taxHsnForAddNewItemOnSubCatChange"></c:url>
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -116,7 +116,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Group2</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<select data-placeholder="Select Group" name="item_grp2"
+										<select data-placeholder="Select Group" name="item_grp2" onchange="callData(this.value)"
 											class="form-control chosen-select" tabindex="-1"
 											id="item_grp2" data-rule-required="true">
 											<option selected value="${selectedItemId}"><c:out value="${selectedItem}"></c:out></option>
@@ -266,7 +266,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">IGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax3" id="item_tax3"
+										<input type="text" name="item_tax3" id="item_tax3" readonly
 											value="${item.itemTax3}" placeholder="IGST"
 											class="form-control" data-rule-required="true" data-rule-number="true"value="0.0"onchange="calTotalGst()"/>
 									</div>
@@ -274,7 +274,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">CGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax2" id="item_tax2"
+										<input type="text" name="item_tax2" id="item_tax2" readonly
 											value="${item.itemTax2}" placeholder="CGST"
 											class="form-control" data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
 									</div>
@@ -283,7 +283,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">SGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax1" id="item_tax1"
+										<input type="text" name="item_tax1" id="item_tax1" readonly
 											value="${item.itemTax1}" placeholder="SGST"
 											class="form-control" data-rule-required="true" data-rule-number="true" value="0.0" />
 									</div>
@@ -591,6 +591,58 @@ $(document).ready(function() {
 				});
 			});
 });
+
+
+function callData(subCatId){
+	
+	$.getJSON('${taxHsnForAddNewItemOnSubCatChange}', {
+		subCatId : subCatId,
+		ajax : 'true'
+	}, function(data) {
+		//alert(data);
+		//$('#hsn_code').value=data.hsnCode;
+		if(data.taxHsnId==0){
+			//alert("In IF")
+			var x="0";
+			//document.getElementById("hsn_code").value=x
+				document.getElementById("item_tax1").setAttribute('value', x);
+
+			document.getElementById("item_tax2").setAttribute('value',
+					x);
+			document.getElementById("item_tax3").setAttribute('value',
+					x);
+			
+			// document.getElementById("hsn_code").readOnly = true; 
+			 document.getElementById("item_tax1").readOnly = true; 
+			document.getElementById("item_tax2").readOnly = true; 
+			 document.getElementById("item_tax3").readOnly = true; 
+			 calTotalGst();
+		}else{
+			//alert("In Else");
+			
+			//
+			
+			// var x=data.hsnCode;
+				//document.getElementById("hsn_code").value=x;
+				var sgst=data.sgstPer;
+				var cgst=data.cgstPer;
+				var igst=data.igstPer;
+				document.getElementById("item_tax1").setAttribute('value', sgst);
+
+				document.getElementById("item_tax2").setAttribute('value',
+						cgst);
+				document.getElementById("item_tax3").setAttribute('value',
+						igst);
+				
+				// document.getElementById("hsn_code").readOnly = true; 
+				 document.getElementById("item_tax1").readOnly = true; 
+				 document.getElementById("item_tax2").readOnly = true; 
+				 document.getElementById("item_tax3").readOnly = true; 
+				 calTotalGst(); 
+		}
+	});
+	
+}
 </script>
 
 <script>

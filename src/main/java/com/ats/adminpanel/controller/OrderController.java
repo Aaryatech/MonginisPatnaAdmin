@@ -651,7 +651,7 @@ public class OrderController {
 	public String[] frIds=null;
 	public String prodDate=null;
 	public int routeId=0;
-	@RequestMapping(value = "/regularSpCkOrderProcess",method = RequestMethod.POST)
+	/*@RequestMapping(value = "/regularSpCkOrderProcess",method = RequestMethod.POST)
 	public ModelAndView regularSpCkOrderProcess(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = null;
 		System.out.println("/inside search sp cake order process  ");
@@ -876,7 +876,7 @@ public class OrderController {
 		session.setAttribute("excelName", "RegSpCakeOrders");
 		
 		return model;
-	}
+	}*/
 
 	//ganesh 24-10-2017
 	

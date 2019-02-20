@@ -10,7 +10,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	
 	<c:url var="getItemsByCatId" value="/getItemsByCatId" />
-
+	<c:url var="getTaxHsnForItemSupItem" value="/getTaxHsnForItemSupItem" />
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -495,6 +495,27 @@ $(document).ready(function() {
 				document.getElementById('sel_item_id').value=$(this).val();
 				
 				document.getElementById('item_name').value=$('#item_id option:selected').text();
+				
+				
+
+				$.getJSON('${getTaxHsnForItemSupItem}', {
+					id : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					
+					if(data.taxHsnId==0){
+						//alert("In IF")
+						var x=""
+						document.getElementById("item_hsncd").value=x
+					}else{
+						
+						 var x=data.hsnCode;
+							document.getElementById("item_hsncd").value=x;
+					}
+					
+					
+				});
+				
 
 			});
 });

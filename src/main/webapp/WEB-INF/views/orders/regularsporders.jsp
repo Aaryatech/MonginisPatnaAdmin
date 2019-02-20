@@ -18,6 +18,7 @@
  </style>
  </head>
 <body onload="searchOrder(${isDelete})">
+	<c:url var="regularSpCkOrderProcess" value="/regularSpCkOrderProcess" />
 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
@@ -116,7 +117,8 @@
 								method="post" id="validation-form">
 
 
-
+<input type="hidden" id="isDelete" value="${isDelete}"> 
+			<input type="hidden" id="isEdit" value="${isView}">
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Franchisee
@@ -193,18 +195,55 @@
 											id="dp2" size="16" type="text" name="prod_date"
 											id="prod_date" required />
 									</div>
-								<!-- </div>
+									
+									<label class="col-sm-3 col-lg-2 control-label">Menu
+										</label>
+									<div class="col-sm-5 col-lg-4 controls">
+										<select data-placeholder="Select Menus" multiple
+											class="form-control chosen" tabindex="6"
+											name="menu_id" id="menu_id">
 
-								<div class="form-group"> -->
+											<option value="-1">All</option>
+											<c:forEach items="${menuList}" var="menu">
+												<option value="${menu.menuId}">${menu.menuTitle}</option>
+
+
+											</c:forEach>
+											<c:forEach items="${menuIdList}" var="menu2">
+												<option value="${menu2.menuId}" selected>${menu2.menuTitle}</option>
+
+
+											</c:forEach>
+
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-2 col-lg-2 col-lg-offset-1">
-										<button type="submit" class="btn btn-primary">
+										<!-- <button type="submit" class="btn btn-primary">
 											<i class="fa fa-check"></i> Search
 										</button>
+										 -->
+										<input  class="btn btn-primary"  type="button" value="Submit"
+											id="callSubmit" onclick="callSearch()" >
 										<!--<button type="button" class="btn">Cancel</button>-->
 									</div>
 								</div>
 
-								<div class="box">
+
+
+									<div align="center" id="loader" style="display:none">
+
+	<span>
+	<h4><font color="#343690">Loading</font></h4></span>
+	<span class="l-1"></span>
+	<span class="l-2"></span>
+	<span class="l-3"></span>
+	<span class="l-4"></span>
+	<span class="l-5"></span>
+	<span class="l-6"></span>
+	</div>								<div class="box">
 								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Order List
@@ -439,6 +478,88 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript">
+function callSearch() {
+			
+			
+			var isDelete=document.getElementById("isDelete").value;
+			var isEdit=document.getElementById("isEdit").value;
+			
+			var menuIds=$("#menu_id").val();
+
+			var frIds=$("#fr_id").val();
+			var array=[];
+			var routeIds=$("#selectRoute").val();
+
+			var prodDate = document.getElementById("dp2").value;
+			$('#loader').show();
+					
+			$.getJSON('${regularSpCkOrderProcess}',
+							{
+								fr_id : JSON.stringify(frIds),
+								menu_id : JSON.stringify(menuIds),
+								prod_date : prodDate,
+								selectRoute:routeIds,
+								ajax : 'true',
+							},
+							function(data) {
+								$('#table1 td').remove();
+								$('#loader').hide();
+								if(data==""){
+									alert("No Orders Found");
+									document.getElementById("expExcel").disabled=true;
+								}
+								$.each(data,function(key, spCakeOrder) {
+									document.getElementById("expExcel").disabled=false;
+									document.getElementById('range').style.display = 'block';
+									var len=data.length
+					
+									var tr = $('<tr></tr>');
+
+								  	tr.append($('<td></td>').html(key+1));
+								  	tr.append($('<td></td>').html(spCakeOrder.frName));
+								 	tr.append($('<td></td>').html(spCakeOrder.rspDeliveryDt));
+								 	tr.append($('<td></td>').html(spCakeOrder.itemName));
+								  	tr.append($('<td></td>').html(spCakeOrder.rspEvents));
+								  	tr.append($('<td></td>').html(spCakeOrder.rate));
+								  
+									var totalValue=parseFloat(spCakeOrder.qty) + parseFloat(spCakeOrder.rate);
+								  	tr.append($('<td></td>').html(spCakeOrder.qty));
+								  	tr.append($('<td></td>').html(totalValue));
+								  	
+								  	if(isEdit==1){
+								  		
+								  		tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewRegSpcakeOrder/'+spCakeOrder.rspId+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
+									  	
+									    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showRegSpcakeOrderPdf/'+spCakeOrder.rspId+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));
+									    
+								  	}else{
+								  		
+								  		tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewRegSpcakeOrder/'+spCakeOrder.rspId+'" target="blank" class="disableClick"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
+									  	
+									    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showRegSpcakeOrderPdf/'+spCakeOrder.rspId+'" target="blank" class="disableClick"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));
+									    
+								  	}
+								  	
+								  	
+								  	//tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewRegSpcakeOrder/'+spCakeOrder.rspId+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
+								  	
+								   // tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showRegSpcakeOrderPdf/'+spCakeOrder.rspId+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));
+								    
+								    if(isDelete==1)
+								    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/deleteRegSpOrder/'+spCakeOrder.rspId+'" target="blank" ><i class="glyphicon glyphicon-remove" style="font-size:15px;"></i></a>'));  
+								    else
+									    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/deleteRegSpOrder/'+spCakeOrder.rspId+'" target="blank"  class="disableClick"><i class="glyphicon glyphicon-remove" style="font-size:15px;"></i></a>'));  
+
+									$('#table1 tbody').append(tr);
+									//document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
+									})
+
+								});
+
+								}
+</script>
+
 
 	<script>
 		function inRangePdf()
