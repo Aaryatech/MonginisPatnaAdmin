@@ -68,7 +68,7 @@ th {
 			
 			<c:forEach items="${orderList}" var="report" varStatus="count">
 				<tr>
-					<td><c:out value="${count.index+1}" /></td>
+					<td width="30"><c:out value="${count.index+1}" /></td>
 					<td width="100"><c:out value="${report.frName}" /></td>
 					<td width="150"><c:out value="${report.itemName}" /></td>
 					<td width="200"><c:out value="${report.catName}" /></td>

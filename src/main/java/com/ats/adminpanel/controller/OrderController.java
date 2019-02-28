@@ -63,6 +63,10 @@ public class OrderController {
 	public List<Menu> menuList;
 	SpCakeOrdersBeanResponse orderListResponse;
 	RegularSpCkOrdersResponse regOrderListResponse ;
+	//--------------------------------------------------
+	public String menuId = null;
+	public String frIds = null;
+	public String prodDate = null;
 	
 	@RequestMapping(value = "/showOrders")
 	public ModelAndView searchOrder(HttpServletRequest request, HttpServletResponse response) {
@@ -292,12 +296,11 @@ public class OrderController {
 
 	
 	
-	@RequestMapping(value = "pdf/getOrderPdf/{frId}/{itemId}/{date}", method = RequestMethod.GET)
-	public ModelAndView getOrderAllPdf(@PathVariable String frIdString, @PathVariable String menuId,
-			@PathVariable String date, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "pdf/getOrderPdf", method = RequestMethod.GET)
+	public ModelAndView getOrderAllPdf(HttpServletRequest request, HttpServletResponse response) {
 	
 		
-		ModelAndView model = new ModelAndView("reports/sales/orderListPdf");
+		ModelAndView model = new ModelAndView("reports/sales/pdf/orderListPdf");
 		RestTemplate restTemplate = new RestTemplate();
 		/*System.out.println("/inside search order process  ");
 		//model.addObject("franchiseeList", franchiseeList);
@@ -480,7 +483,17 @@ public class OrderController {
 
 		routeList = allRouteListResponse.getRoute();
 		model.addObject("routeList",routeList);
-				
+		AllMenuResponse allMenuResponse=restTemplate.getForObject(
+				Constants.url+"getAllMenu",
+				AllMenuResponse.class);
+		
+		menuList= new ArrayList<Menu>();
+		menuList=allMenuResponse.getMenuConfigurationPage();
+		
+		System.out.println("MENU LIST= "+menuList.toString());
+		model.addObject("menuList",menuList);
+		model.addObject("menuIdList", new ArrayList<Menu>());
+
 		model.addObject("todayDate",new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 		model.addObject("franchiseeList",franchiseeList);
 		
@@ -647,9 +660,9 @@ public class OrderController {
 		return spCakeOrderList;
 	}
 	
-	boolean isDelete=false;
+	boolean isDelete=false;/* change
 	public String[] frIds=null;
-	public String prodDate=null;
+	public String prodDate=null;*/
 	public int routeId=0;
 	/*@RequestMapping(value = "/regularSpCkOrderProcess",method = RequestMethod.POST)
 	public ModelAndView regularSpCkOrderProcess(HttpServletRequest request, HttpServletResponse response) {
@@ -1206,5 +1219,223 @@ public class OrderController {
 		model.addObject("from",from);
 		return model;
 	}
-	
+	@RequestMapping(value = "/regularSpCkOrderProcess", method = RequestMethod.GET)
+	public @ResponseBody List<RegularSpCkOrder> regularSpCkOrderProcess(HttpServletRequest request,
+			HttpServletResponse response) {
+		ModelAndView model = null;
+		System.out.println("/inside search reg sp cake order process  ");
+		List<RegularSpCkOrder> regularSpCkOrderList = new ArrayList<RegularSpCkOrder>();
+
+		model = new ModelAndView("orders/regularsporders");
+
+		// model.addObject("menuList", franchiseeAndMenuList.getAllMenu());
+		model.addObject("isDelete", 0);
+
+		try {
+
+			menuId = request.getParameter("menu_id");
+
+			frIds = request.getParameter("fr_id");
+			System.out.println("frIds:" + frIds);
+			routeId = Integer.parseInt(request.getParameter("selectRoute"));
+			System.out.println("routeId:" + routeId);
+			prodDate = request.getParameter("prod_date");
+			System.out.println("prodDate:" + prodDate);
+			String strFrId = "";
+			String strMenuId = "";
+
+			List<String> frIdList = new ArrayList<>();
+			if (frIds != null) {
+				frIds = frIds.substring(1, frIds.length() - 1);
+				frIds = frIds.replaceAll("\"", "");
+				System.out.println("frIds  New =" + frIds);
+
+				frIdList = (List) Arrays.asList(frIds);
+
+				StringBuilder sb = new StringBuilder();
+
+				
+			}
+
+			List<String> menuIdList = new ArrayList<>();
+			if (menuId != null) {
+
+				menuId = menuId.substring(1, menuId.length() - 1);
+				menuId = menuId.replaceAll("\"", "");
+				System.out.println("frIds  New =" + menuId);
+				menuIdList = (List) Arrays.asList(menuId);
+
+				StringBuilder sb = new StringBuilder();
+
+				
+			}
+
+			System.out.println("menu array is=" + strMenuId);
+
+			System.out.println("frid array is=" + strFrId);
+			RestTemplate restTemplate = new RestTemplate();
+
+			List<FranchiseeList> selectedFrList = new ArrayList<>();
+			List<Menu> selectedMenuList = new ArrayList<>();
+			List<Menu> remMenuList = new ArrayList<Menu>();
+			remMenuList = menuList;
+
+			List<FranchiseeList> remFrList = new ArrayList<FranchiseeList>();
+			
+			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+					AllRoutesListResponse.class);
+
+			List<Route> routeList = new ArrayList<Route>();
+
+			routeList = allRouteListResponse.getRoute();
+			model.addObject("routeList", routeList);
+			model.addObject("routeId", routeId);
+			model.addObject("todayDate", prodDate);
+			model.addObject("frIdList", selectedFrList);
+			model.addObject("franchiseeList", remFrList);
+
+			model.addObject("menuIdList", selectedMenuList);
+			model.addObject("menuList", remMenuList);
+
+			if (routeId != 0) {
+
+				MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
+
+				mvm.add("routeId", routeId);
+
+				FrNameIdByRouteIdResponse frNameId = restTemplate.postForObject(Constants.url + "getFrNameIdByRouteId",
+						mvm, FrNameIdByRouteIdResponse.class);
+
+				List<FrNameIdByRouteId> frNameIdByRouteIdList = frNameId.getFrNameIdByRouteIds();
+
+				System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+
+				StringBuilder sbForRouteFrId = new StringBuilder();
+				for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
+
+					sbForRouteFrId = sbForRouteFrId.append(frNameIdByRouteIdList.get(i).getFrId().toString() + ",");
+
+				}
+
+				String strFrIdRouteWise = sbForRouteFrId.toString();
+				strFrId = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+				System.out.println("fr Id Route WISE = " + strFrId);
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();//
+
+				map.add("frId", frIds);
+				map.add("prodDate", prodDate);
+				map.add("menuId", menuId);
+
+				RestTemplate restTemp = new RestTemplate();
+
+				regOrderListResponse = restTemp.postForObject(Constants.url + "getRegSpCkOrderList", map,
+						RegularSpCkOrdersResponse.class);
+
+				regularSpCkOrderList = new ArrayList<RegularSpCkOrder>();
+				regularSpCkOrderList = regOrderListResponse.getRegularSpCkOrdersList();
+
+				System.out.println("order list count is" + regularSpCkOrderList.size());
+				model.addObject("regularSpCkOrderList", regularSpCkOrderList);
+
+				if (menuId.toString().equals("-1")) {
+					System.out.println("all menu selected");
+					model.addObject("menuIdList", menuList);
+				}
+			} else if (frIds.toString().equals("0")) {
+				System.out.println("all fr selected");
+				model.addObject("frIdList", franchiseeList);
+				if (menuId.toString().equals("-1")) {
+					System.out.println("all menu selected");
+					model.addObject("menuIdList", menuList);
+				}
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+				map.add("menuId", menuId);
+				map.add("prodDate", prodDate);
+
+				RestTemplate restTemplate1 = new RestTemplate();
+
+				regOrderListResponse = restTemplate1.postForObject(Constants.url + "getAllFrRegSpCakeOrders", map,
+						RegularSpCkOrdersResponse.class);
+
+				regularSpCkOrderList = new ArrayList<RegularSpCkOrder>();
+				regularSpCkOrderList = regOrderListResponse.getRegularSpCkOrdersList();
+
+				System.out.println("order list count is" + regularSpCkOrderList.toString());
+				model.addObject("regularSpCkOrderList", regularSpCkOrderList);
+
+			} // end of if
+			else {
+
+				System.out.println("few fr selected");
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();//
+
+				map.add("frId", frIds);
+				map.add("prodDate", prodDate);
+				map.add("menuId", menuId);
+				RestTemplate restTemp = new RestTemplate();
+
+				model.addObject("menuIdList", menuList);
+				regOrderListResponse = restTemp.postForObject(Constants.url + "getRegSpCkOrderList", map,
+						RegularSpCkOrdersResponse.class);
+
+				regularSpCkOrderList = new ArrayList<RegularSpCkOrder>();
+				regularSpCkOrderList = regOrderListResponse.getRegularSpCkOrdersList();
+
+				System.out.println("order list count is" + regularSpCkOrderList.size());
+				model.addObject("regularSpCkOrderList", regularSpCkOrderList);
+
+			} // end of else
+				// model.addObject("menuId", 0);
+		} catch (Exception e) {
+			System.out.println("exception in order display" + e.getMessage());
+		}
+
+		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+		ExportToExcel expoExcel = new ExportToExcel();
+		List<String> rowData = new ArrayList<String>();
+
+		rowData.add("Franchisee Name");
+
+		rowData.add("Item Id");
+		rowData.add("Item Name");
+
+		rowData.add("Mrp");
+		rowData.add("Rate");
+
+		rowData.add("Quantity");
+
+		rowData.add("Sub Total");
+
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+		for (int i = 0; i < regOrderListResponse.getRegularSpCkOrdersList().size(); i++) {
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+
+			rowData.add(regOrderListResponse.getRegularSpCkOrdersList().get(i).getFrName());
+
+			rowData.add("" + regOrderListResponse.getRegularSpCkOrdersList().get(i).getId());
+
+			rowData.add(regOrderListResponse.getRegularSpCkOrdersList().get(i).getItemName());
+
+			rowData.add("" + regOrderListResponse.getRegularSpCkOrdersList().get(i).getMrp());
+			rowData.add("" + regOrderListResponse.getRegularSpCkOrdersList().get(i).getRate());
+			rowData.add("" + regOrderListResponse.getRegularSpCkOrdersList().get(i).getQty());
+			rowData.add("" + regOrderListResponse.getRegularSpCkOrdersList().get(i).getRspSubTotal());
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+		}
+
+		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelList", exportToExcelList);
+		session.setAttribute("excelName", "RegSpCakeOrders");
+		System.err.println("res Ajx " + regularSpCkOrderList.toString());
+		return regularSpCkOrderList;
+	}
 }

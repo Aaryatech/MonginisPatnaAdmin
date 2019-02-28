@@ -1,4 +1,4 @@
-package com.ats.adminpanel.controller;
+/*package com.ats.adminpanel.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,8 +45,8 @@ public class OrdController {
 	public String prodDate = null;
 	public int routeId = 0;
 	public String menuId = null;
-	@RequestMapping(value = "/regularSpCkOrderProcess", method = RequestMethod.GET)
-	public @ResponseBody List<RegularSpCkOrder> regularSpCkOrderProcess(HttpServletRequest request,
+	@RequestMapping(value = "/regularSpCkOrderProcessd", method = RequestMethod.GET)
+	public @ResponseBody List<RegularSpCkOrder> regularSpCkOrderProcessd(HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView model = null;
 		System.out.println("/inside search reg sp cake order process  ");
@@ -265,3 +265,4 @@ public class OrdController {
 		return regularSpCkOrderList;
 	}
 }
+*/

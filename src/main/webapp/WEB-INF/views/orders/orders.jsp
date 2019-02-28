@@ -797,9 +797,8 @@ function genPdf() {
 	var itemId = $("#item_id").val();
 	var date = $("#date").val();
 	
-	window.open('pdfForDisReport?url=pdf/getOrderPdf/'
-			+ frId + '/'+itemId+'/'+date);
-
+	window.open('pdf/getOrderPdf');
+///+ frId + '/'+itemId+'/'+date
 }
 
 </script>

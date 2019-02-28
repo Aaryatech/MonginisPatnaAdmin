@@ -14,7 +14,7 @@
 														
 <table width="100%" style="font-family:arial; font-size:12px; border:1px solid #000000; margin-bottom:40px;">
   <tr >
-    <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >AURANGABAD MONGINIS</td>
+    <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >PATNA MONGINIS</td>
   </tr>
   <tr >
   

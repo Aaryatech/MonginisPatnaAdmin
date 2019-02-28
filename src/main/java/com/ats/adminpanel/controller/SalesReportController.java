@@ -5018,8 +5018,8 @@ public class SalesReportController {
 
 		//File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		// File f = new File("/home/ats-12/Report.pdf");
-		File f = new File("E:\\bill.pdf");
+		 File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report2.pdf");
+		 //File f = new File("E:\\bill.pdf");
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
 			// runConverter("www.google.com", f,request,response);
@@ -5033,8 +5033,8 @@ public class SalesReportController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		//String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
-
-		 String filePath = "E:\\bill.pdf";
+		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report2.pdf";
+		// String filePath = "E:\\bill.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
