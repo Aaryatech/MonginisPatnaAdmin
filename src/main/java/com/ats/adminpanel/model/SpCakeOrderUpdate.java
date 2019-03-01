@@ -8,6 +8,8 @@ public class SpCakeOrderUpdate{
 	private String spBookedForName;
 	
 	private int isAllocated;
+	
+	private String spInstructions;
 
 	public int getSpOrderNo() {
 		return spOrderNo;
@@ -32,11 +34,21 @@ public class SpCakeOrderUpdate{
 	public void setIsAllocated(int isAllocated) {
 		this.isAllocated = isAllocated;
 	}
+	
+	
+
+	public String getSpInstructions() {
+		return spInstructions;
+	}
+
+	public void setSpInstructions(String spInstructions) {
+		this.spInstructions = spInstructions;
+	}
 
 	@Override
 	public String toString() {
 		return "SpCakeOrderUpdate [spOrderNo=" + spOrderNo + ", spBookedForName=" + spBookedForName + ", isAllocated="
-				+ isAllocated + "]";
+				+ isAllocated + ", spInstructions=" + spInstructions + "]";
 	}
 	
 	

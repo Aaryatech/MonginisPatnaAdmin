@@ -3,24 +3,24 @@
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
- <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
- <style>
- table{
-  width:100%;
- 
-  border:1px solid #ddd;
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+table {
+	width: 100%;
+	border: 1px solid #ddd;
 }
- </style>
+</style>
 <body>
 
 
 	<c:url var="callspCakeOrderProcess" value="/spCakeOrderProcess" />
- <c:url var="saveSpOrder" value="/saveSpOrder" />
-      <c:url var="deleteSpOrder" value="/deleteSpOrder" />
+	<c:url var="saveSpOrder" value="/saveSpOrder" />
+	<c:url var="deleteSpOrder" value="/deleteSpOrder" />
 
-	 
+
 
 
 	<div class="container" id="main-container">
@@ -40,7 +40,7 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-		<!-- 	<div class="page-title">
+			<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i> Special Cake Orders
@@ -52,7 +52,7 @@
 
 
 
-<c:set var="isEdit" value="0">
+			<c:set var="isEdit" value="0">
 			</c:set>
 			<c:set var="isView" value="0">
 			</c:set>
@@ -106,8 +106,8 @@
 				</c:forEach>
 			</c:forEach>
 
-			<input type="hidden" id="isDelete" value="${isDelete}"> 
-			<input type="hidden" id="isEdit" value="${isEdit}">
+			<input type="hidden" id="isDelete" value="${isDelete}"> <input
+				type="hidden" id="isEdit" value="${isEdit}">
 
 			<!-- BEGIN Main Content -->
 			<div class="row">
@@ -154,21 +154,23 @@
 
 										</select>
 									</div>
-								<label class="col-sm-1 col-lg-1 control-label">
-							<b>OR</b></label><label class="col-sm-1 col-lg-1 control-label">Route</label>
-						<div class="col-sm-1 col-lg-4 controls">
-							<select data-placeholder="Select Route"
-								class="form-control chosen" name="selectRoute" id="selectRoute"
-								onchange="disableFr()">
-								<option value="0">Select Route</option>
-								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<label class="col-sm-1 col-lg-1 control-label"> <b>OR</b></label><label
+										class="col-sm-1 col-lg-1 control-label">Route</label>
+									<div class="col-sm-1 col-lg-4 controls">
+										<select data-placeholder="Select Route"
+											class="form-control chosen" name="selectRoute"
+											id="selectRoute" onchange="disableFr()">
+											<option value="0">Select Route</option>
+											<c:forEach items="${routeList}" var="route" varStatus="count">
+												<option value="${route.routeId}"><c:out
+														value="${route.routeName}" />
+												</option>
 
-								</c:forEach>
-							</select>
-							
-						</div>
-						</div>
+											</c:forEach>
+										</select>
+
+									</div>
+								</div>
 
 								<%-- <div class="form-group">
 										<label for="textfield2"
@@ -193,34 +195,34 @@
 									<label class="col-sm-3 col-lg-2 control-label">Production
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" value="${todayDate }" id="dp2" size="16"
-											type="text" name="prod_date" data-rule-required="true" />
+										<input class="form-control date-picker" value="${todayDate }"
+											id="dp2" size="16" type="text" name="prod_date"
+											data-rule-required="true" />
 									</div>
-								<!-- </div>
+									<!-- </div>
 
 
 								
 								<div align="center" class="form-group"> -->
-								<!-- 	<div
+									<!-- 	<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
-										<input  class="btn btn-primary"  type="button" value="Submit"
-											id="callSubmit" onclick="callSearch()" >
+									<input class="btn btn-primary" type="button" value="Submit"
+										id="callSubmit" onclick="callSearch()">
 
-										
+
 									<!-- </div> -->
 								</div>
-								
-									<div align="center" id="loader" style="display:none">
 
-	<span>
-	<h4><font color="#343690">Loading</font></h4></span>
-	<span class="l-1"></span>
-	<span class="l-2"></span>
-	<span class="l-3"></span>
-	<span class="l-4"></span>
-	<span class="l-5"></span>
-	<span class="l-6"></span>
-	</div>
+								<div align="center" id="loader" style="display: none">
+
+									<span>
+										<h4>
+											<font color="#343690">Loading</font>
+										</h4>
+									</span> <span class="l-1"></span> <span class="l-2"></span> <span
+										class="l-3"></span> <span class="l-4"></span> <span
+										class="l-5"></span> <span class="l-6"></span>
+								</div>
 
 								<!-- <div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
@@ -243,42 +245,47 @@
 										</div>
 									</div>
 									 -->
-									<c:set var="dis" value="none"/>
-									
+									<c:set var="dis" value="none" />
+
 									<div class="box-content">
 
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="">
-											<table width="100%" class="table table-advance" id="table1" border="1">
-												<thead style="background-color: #f3b5db; ">
+											<table width="100%" class="table table-advance" id="table1"
+												border="1">
+												<thead style="background-color: #f3b5db;">
 													<tr>
-														<th width="130" align="left">Sr</th>
-														<th width="208" align="left">Franchisee</th>
-														<th width="183" align="left">DeliveryOn</th>
-														<th width="159" align="left"><span
-															style="width: 130px;">Name</span></th>	
-														<th width="159" align="left"><span
+														<th style="text-align: center; width: 5%;">Sr</th>
+														<th style="text-align: center; width: 10%;">Franchisee</th>
+														<th style="text-align: center; width: 5%;">DelDate</th>
+														<th style="text-align: center; width: 10%;"><span
+															style="width: 130px;">Name</span></th>
+														<th style="text-align: center; width: 5%;"><span
 															style="width: 50px;">Code</span></th>
-														<th width="105" align="left">Weight</th>
-														<th width="168" align="left">Flavour</th>
-													 	<th width="140" align="left">No.Of Boxes</th>
-														<th width="125" align="left">Is AddonAcc</th>
-													<!--	<th width="75" align="left">Add Rate</th> -->
-														<th width="91" align="left">Total</th>
-													  <th width="47" align="left">View</th>  
-														<th width="47" align="left">PDF</th>
-														<th width="87" align="left">Action</th>
-														
-														
+														<th style="text-align: center; width: 5%;">Weight</th>
+														<th style="text-align: center; width: 10%;">Flavour</th>
+														<th style="text-align: center; width: 5%;">No.of
+															Boxes</th>
+														<th style="text-align: center; width: 5%;">Is
+															AddonAcc</th>
+														<!--	<th width="75" align="left">Add Rate</th> -->
+
+														<th style="text-align: center; width: 27%;">SP
+															Instructions</th>
+														<th style="text-align: center; width: 5%;">Total</th>
+
+														<th style="text-align: center; width: 8%;">Action</th>
+
+
 													</tr>
 												</thead>
 												<tbody>
-												
+
 													<c:forEach items="${spCakeOrderList}" var="spCakeOrder"
 														varStatus="count">
-														<c:set var="dis" value="block"/>
+														<c:set var="dis" value="block" />
 														<tr>
-														
+
 															<td><c:out value="${count.index+1}" /></td>
 															<td align="left"><c:out
 																	value="${spCakeOrder.frName}"></c:out></td>
@@ -295,7 +302,7 @@
 
 															<td align="left"><c:out
 																	value="${spCakeOrder.spDeliveryDate}"></c:out></td>
-	                                                  <td align="left"><c:out
+															<td align="left"><c:out
 																	value="${spCakeOrder.spSelectedWeight}"></c:out></td>
 															<td align="left"><c:out
 																	value="${spCakeOrder.spPrice}"></c:out></td>
@@ -323,28 +330,34 @@
 
 													</c:forEach>
 												</tbody>
-												
+
 											</table>
-											
-											
+
+
 										</div>
 									</div>
 								</div>
-								<div class="form-group" style="display: <c:out value="${dis}" />;" id="range">
-								<div class="col-sm-2  controls">
-											<input type="text" class="form-control"  id="from"  placeholder="to no"  >
-											</div>
-											<div class="col-sm-2  controls">
-											<input type="text"  class="form-control" id="to" placeholder="from no" >
-											</div>
-											<div class="col-sm-3  controls">
-											<input type="button" id="from" class="btn btn-primary" value="EXPORT TO PDF IN RANGE" onclick="inRangePdf();">
-											</div>
-											<div class="col-sm-3  controls">
-											<%-- <a onclick="exportToExcel()" id="expExcel" href="${pageContext.request.contextPath}/download" disabled="true" class="btn btn-primary">EXPORT TO Excel</a> --%>
-											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
+								<div class="form-group"
+									style="display: <c:out value="${dis}" />;" id="range">
+									<div class="col-sm-2  controls">
+										<input type="text" class="form-control" id="from"
+											placeholder="to no">
+									</div>
+									<div class="col-sm-2  controls">
+										<input type="text" class="form-control" id="to"
+											placeholder="from no">
+									</div>
+									<div class="col-sm-3  controls">
+										<input type="button" id="from" class="btn btn-primary"
+											value="EXPORT TO PDF IN RANGE" onclick="inRangePdf();">
+									</div>
+									<div class="col-sm-3  controls">
+										<%-- <a onclick="exportToExcel()" id="expExcel" href="${pageContext.request.contextPath}/download" disabled="true" class="btn btn-primary">EXPORT TO Excel</a> --%>
+										<input type="button" id="expExcel" class="btn btn-primary"
+											value="EXPORT TO Excel" onclick="exportToExcel();"
+											disabled="disabled">
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -429,230 +442,409 @@
 
 	<script type="text/javascript">
 		function callSearch() {
-			
-			
-			var isDelete=document.getElementById("isDelete").value;
-			var isEdit=document.getElementById("isEdit").value;
-			
-			
 
-			var frIds=$("#fr_id").val();
-			var array=[];
-			var routeIds=$("#selectRoute").val();
+			var isDelete = document.getElementById("isDelete").value;
+			var isEdit = document.getElementById("isEdit").value;
+
+			var frIds = $("#fr_id").val();
+			var array = [];
+			var routeIds = $("#selectRoute").val();
 
 			var prodDate = document.getElementById("dp2").value;
 			$('#loader').show();
-					
-			$.getJSON('${callspCakeOrderProcess}',
+
+			$
+					.getJSON(
+							'${callspCakeOrderProcess}',
 							{
 								fr_id_list : JSON.stringify(frIds),
 								prod_date : prodDate,
-								route_id:routeIds,
+								route_id : routeIds,
 								ajax : 'true',
 							},
 							function(data) {
 								$('#table1 td').remove();
 								$('#loader').hide();
-								if(data==""){
+								if (data == "") {
 									alert("No Orders Found");
-									document.getElementById("expExcel").disabled=true;
+									document.getElementById("expExcel").disabled = true;
 								}
-								$.each(data,function(key, spCakeOrder) {
-									document.getElementById("expExcel").disabled=false;
-									document.getElementById('range').style.display = 'block';
-									var len=data.length
-					
-									var tr = $('<tr></tr>');
+								$
+										.each(
+												data,
+												function(key, spCakeOrder) {
+													document
+															.getElementById("expExcel").disabled = false;
+													document
+															.getElementById('range').style.display = 'block';
+													var len = data.length
 
-								  	tr.append($('<td></td>').html(key+1));
-								  	tr.append($('<td></td>').html(spCakeOrder.frName));
-								 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-								 	tr.append($('<td></td>').html(spCakeOrder.spName));
-								  	tr.append($('<td></td>').html(spCakeOrder.itemId));
-								 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
-								  	tr.append($('<td></td>').html(spCakeOrder.spfName));
-								  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
-								  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+													var tr = $('<tr></tr>');
 
-									var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
-								  	tr.append($('<td></td>').html(totalValue));
-								  	
-								  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
-								  	
-								    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-								  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+													tr.append($('<td></td>')
+															.html(key + 1));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.frName));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.spDeliveryDate));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.spName));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.itemId));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.spSelectedWeight));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			spCakeOrder.spfName));
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			"<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
 
-									$('#table1 tbody').append(tr);
-									document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
-									})
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			"<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
 
-								});
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
 
-								}
-		
-		function inRangePdf()
-		{
-			var to=document.getElementById("to").value;
-			
-			var from=document.getElementById("from").value;
-			
-			if(from==null ||from=="")
-			{
-			alert("Enter to from");
-			}
-			else if(to==null ||to=="")
-				{
+													var totalValue = parseFloat(spCakeOrder.spTotalAddRate)
+															+ parseFloat(spCakeOrder.spPrice);
+													tr.append($('<td></td>')
+															.html(totalValue));
+
+													tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			'<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
+																					+ spCakeOrder.spOrderNo
+																					+ '/'
+																					+ (key + 1)
+																					+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('
+																					+ spCakeOrder.spOrderNo
+																					+ '); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
+																					+ spCakeOrder.spOrderNo
+																					+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'));
+
+													$('#table1 tbody').append(
+															tr);
+													document
+															.getElementById("addon"
+																	+ spCakeOrder.spOrderNo).value = spCakeOrder.isAllocated;
+												})
+
+							});
+
+		}
+
+		function inRangePdf() {
+			var to = document.getElementById("to").value;
+
+			var from = document.getElementById("from").value;
+
+			if (from == null || from == "") {
+				alert("Enter to from");
+			} else if (to == null || to == "") {
 				alert("Enter to no");
-				}
-			else{
+			} else {
 
-				window.open("${pageContext.request.contextPath}/showSpcakeOrderPdfInRange/"+from+"/"+to);
-				
+				window
+						.open("${pageContext.request.contextPath}/showSpcakeOrderPdfInRange/"
+								+ from + "/" + to);
+
 			}
 		}
-											
 	</script>
-    <script type="text/javascript">
+	<script type="text/javascript">
 		function deleteSpOrder(spOrderNo) {
 			$('#loader').show();
-			 if (confirm("Do you want to Delete this order?") == true) {
-			$.getJSON('${deleteSpOrder}',
-					{
-			        	sp_order_no:spOrderNo,
-						ajax : 'true',
-					},
-					function(data) {
-						$('#table1 td').remove();
-						$('#loader').hide();
-						if(data==""){
-							alert("No Orders Found");
-							document.getElementById("expExcel").disabled=true;
-						}
-						$.each(data,function(key, spCakeOrder) {
-							document.getElementById("expExcel").disabled=false;
-							document.getElementById('range').style.display = 'block';
-							var len=data.length
-			
-							var tr = $('<tr></tr>');
+			if (confirm("Do you want to Delete this order?") == true) {
+				$
+						.getJSON(
+								'${deleteSpOrder}',
+								{
+									sp_order_no : spOrderNo,
+									ajax : 'true',
+								},
+								function(data) {
+									$('#table1 td').remove();
+									$('#loader').hide();
+									if (data == "") {
+										alert("No Orders Found");
+										document.getElementById("expExcel").disabled = true;
+									}
+									$
+											.each(
+													data,
+													function(key, spCakeOrder) {
+														document
+																.getElementById("expExcel").disabled = false;
+														document
+																.getElementById('range').style.display = 'block';
+														var len = data.length
 
-						  	tr.append($('<td></td>').html(key+1));
-						  	tr.append($('<td></td>').html(spCakeOrder.frName));
-						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-						 	tr.append($('<td></td>').html(spCakeOrder.spName));
-						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
-						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
-						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
-						  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
-						  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+														var tr = $('<tr></tr>');
 
-							var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
-						  	tr.append($('<td></td>').html(totalValue));
-						  	
-						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
-						  	
-						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-						  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				key + 1));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.frName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spDeliveryDate));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.itemId));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spSelectedWeight));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spfName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
 
-							$('#table1 tbody').append(tr);
-							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
-							
-							})
+														var totalValue = parseFloat(spCakeOrder.spTotalAddRate)
+																+ parseFloat(spCakeOrder.spPrice);
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				totalValue));
 
-					});
-			 }
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				'<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
+																						+ spCakeOrder.spOrderNo
+																						+ '/'
+																						+ (key + 1)
+																						+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('
+																						+ spCakeOrder.spOrderNo
+																						+ '); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
+																						+ spCakeOrder.spOrderNo
+																						+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'));
+
+														$('#table1 tbody')
+																.append(tr);
+														document
+																.getElementById("addon"
+																		+ spCakeOrder.spOrderNo).value = spCakeOrder.isAllocated;
+
+													})
+
+								});
+			}
 		}
-		
-		
 	</script>
-	 <script type="text/javascript">
+	<script type="text/javascript">
 		function saveSpOrder(spOrderNo) {
 			$('#loader').show();
-			 if (confirm("Do you want to Save this order?") == true) {
-				 
-				 var box=$("#box"+spOrderNo).val();
-				 var addon=$("#addon"+spOrderNo).val();
-				
-			$.getJSON('${saveSpOrder}',
-					{
-			        	sp_order_no:spOrderNo,
-			        	box:box,
-			        	addon:addon,
-						ajax : 'true',
-					},
-					function(data) {
-						$('#table1 td').remove();
-						$('#loader').hide();
-						if(data==""){
-							alert("No Orders Found");
-							document.getElementById("expExcel").disabled=true;
-						}
-						$.each(data,function(key, spCakeOrder) {
-							document.getElementById("expExcel").disabled=false;
-							document.getElementById('range').style.display = 'block';
-							var len=data.length
-			
-							var tr = $('<tr></tr>');
+			if (confirm("Do you want to Save this order?") == true) {
 
-						  	tr.append($('<td></td>').html(key+1));
-						  	tr.append($('<td></td>').html(spCakeOrder.frName));
-						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-						 	tr.append($('<td></td>').html(spCakeOrder.spName));
-						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
-						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
-						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
-						  	tr.append($('<td></td>').html("<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
-						  	tr.append($('<td></td>').html("<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+				var box = $("#box" + spOrderNo).val();
+				var addon = $("#addon" + spOrderNo).val();
 
-							var totalValue=parseFloat(spCakeOrder.spTotalAddRate) + parseFloat(spCakeOrder.spPrice);
-						  	tr.append($('<td></td>').html(totalValue));
-						  	
-						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
-						  	
-						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-						  
-						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+				$
+						.getJSON(
+								'${saveSpOrder}',
+								{
+									sp_order_no : spOrderNo,
+									box : box,
+									addon : addon,
+									ajax : 'true',
+								},
+								function(data) {
+									$('#table1 td').remove();
+									$('#loader').hide();
+									if (data == "") {
+										alert("No Orders Found");
+										document.getElementById("expExcel").disabled = true;
+									}
+									$
+											.each(
+													data,
+													function(key, spCakeOrder) {
+														document
+																.getElementById("expExcel").disabled = false;
+														document
+																.getElementById('range').style.display = 'block';
+														var len = data.length
 
-							$('#table1 tbody').append(tr);
-							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
-							
-							})
+														var tr = $('<tr></tr>');
 
-					});
-			 }
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				key + 1));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.frName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spDeliveryDate));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.itemId));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spSelectedWeight));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				spCakeOrder.spfName));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<input type=number value="+spCakeOrder.spBookedForName+"  name=box"+spCakeOrder.spOrderNo+" id=box"+spCakeOrder.spOrderNo+" class=form-control />"));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<select class=form-control name=addon"+spCakeOrder.spOrderNo+" id=addon"+spCakeOrder.spOrderNo+" data-rule-required=true > <option value=0>N</option><option value=1>Y</option>	</select>"));
+
+														var totalValue = parseFloat(spCakeOrder.spTotalAddRate)
+																+ parseFloat(spCakeOrder.spPrice);
+
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				totalValue));
+
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				'<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a><a href=# class=action_btn onclick=saveSpOrder('
+																						+ spCakeOrder.spOrderNo
+																						+ ');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
+																						+ spCakeOrder.spOrderNo
+																						+ '/'
+																						+ (key + 1)
+																						+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
+																						+ spCakeOrder.spOrderNo
+																						+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'));
+
+														$('#table1 tbody')
+																.append(tr);
+														document
+																.getElementById("addon"
+																		+ spCakeOrder.spOrderNo).value = spCakeOrder.isAllocated;
+
+													})
+
+								});
+			}
 		}
-		
 	</script>
-		<script>
-	function exportToExcel()
-		{
-			 
+	<script>
+		function exportToExcel() {
+
 			window.open("${pageContext.request.contextPath}/exportToExcel");
-					document.getElementById("expExcel").disabled=true;
+			document.getElementById("expExcel").disabled = true;
 		}
-			</script>
-<script type="text/javascript">
+	</script>
+	<script type="text/javascript">
+		function disableFr() {
 
-function disableFr(){
+			//alert("Inside Disable Fr ");
+			document.getElementById("fr_id").disabled = true;
 
-	//alert("Inside Disable Fr ");
-document.getElementById("fr_id").disabled = true;
+		}
 
-}
+		function disableRoute() {
 
-function disableRoute(){
+			//alert("Inside Disable route ");
+			var x = document.getElementById("selectRoute")
+			//alert(x.options.length);
+			var i;
+			for (i = 0; i < x; i++) {
+				document.getElementById("selectRoute").options[i].disabled;
+				//document.getElementById("pets").options[2].disabled = true;
+			}
+			//document.getElementById("selectRoute").disabled = true;
 
-	//alert("Inside Disable route ");
-	var x=document.getElementById("selectRoute")
-	//alert(x.options.length);
-	var i;
-	for(i=0;i<x;i++){
-		document.getElementById("selectRoute").options[i].disabled;
-		 //document.getElementById("pets").options[2].disabled = true;
-	}
-//document.getElementById("selectRoute").disabled = true;
-
-}
-
-</script>
+		}
+	</script>
 </body>
 </html>
