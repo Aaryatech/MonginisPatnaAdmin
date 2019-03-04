@@ -298,7 +298,7 @@ table {
 																	value="${spCakeOrder.spfName}"></c:out></td>
 
 															<td align="left"><c:out
-																	value="${spCakeOrder.spEvents}"></c:out></td>
+																	value="${spCakeOrder.spInstructions}"></c:out></td>
 
 															<td align="left"><c:out
 																	value="${spCakeOrder.spDeliveryDate}"></c:out></td>
@@ -529,7 +529,7 @@ table {
 															.append($(
 																	'<td></td>')
 																	.html(
-																			"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+																			"<input type=text value="+spCakeOrder.spInstructions+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
 
 													var totalValue = parseFloat(spCakeOrder.spTotalAddRate)
 															+ parseFloat(spCakeOrder.spPrice);
@@ -667,7 +667,7 @@ table {
 																.append($(
 																		'<td></td>')
 																		.html(
-																				"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+																				"<input type=text value="+spCakeOrder.spInstructions+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
 
 														tr
 																.append($(
@@ -702,6 +702,7 @@ table {
 
 				var box = $("#box" + spOrderNo).val();
 				var addon = $("#addon" + spOrderNo).val();
+				var spInstructions = $("#spInstructions" + spOrderNo).val();
 
 				$
 						.getJSON(
@@ -784,7 +785,7 @@ table {
 																.append($(
 																		'<td></td>')
 																		.html(
-																				"<input type=text value="+spCakeOrder.spEvents+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+																				"<input type=text value="+spInstructions+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
 														tr
 																.append($(
 																		'<td></td>')

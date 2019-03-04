@@ -1,112 +1,123 @@
 package com.ats.adminpanel.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class SpCakeOrders  {
-	
+public class SpCakeOrders {
+
 	private int spOrderNo;
 
 	private String frCode;
-	
+
 	private int spType;
-	
+
 	private int spId;
-	
-	private int frId;  
+
+	private int frId;
 
 	private String itemId;
-	 
+
 	private int menuId;
-	
+
 	private int spFlavourId;
-	
+
 	private float spSelectedWeight;
-	
+
 	private String spDeliveryPlace;
-	
+
 	private float spMinWeight;
-	
+
 	private float spMaxWeight;
-	
+
 	private int spProdTime;
-	
+
 	private String spEstDeliDate;
-	
+
 	private String spProdDate;
-	
+
 	private String spEvents;
-	
+
 	private String spEventsName;
-	
 
 	private String spInstructions;
-	
-	
+
 	private String spDeliveryDate;
-	
-	
+
 	private String spCustName;
-	
-	
+
+	// new on 16jan19
+	private String custGstNo;
 
 	private String spCustDob;
-	
-	
+
 	private String spCustMobNo;
-	
 
 	private String spBookedForName;
-	
 
 	private String spBookForDob;
-	
-	
+
 	private String spBookForMobNo;
-	
-	
+
 	private float spGrandTotal;
-	
-	
+
 	private float spPrice;
-	
-	
+
 	private float spTotalAddRate;
-	
-	
+
 	private float spBackendRate;
-	
-	
+
 	private float spSubTotal;
-	
 
 	private float spAdvance;
-	
-	
+
 	private float rmAmount;
-	
+
 	private float tax1;
-	
-	
+
 	private float tax2;
-	
-	
+
 	private float tax1Amt;
-	
-	
+
 	private float tax2Amt;
-	
-	
+
 	private String orderPhoto;
-	
-	
+
 	private String orderDate;
-	
+
 	private String orderPhoto2;
-	
+
 	private int isSlotUsed;
-	
+
 	private int isBillGenerated;
-	
+
 	private int isAllocated;
+
+	private float extraCharges;
+
+	private float disc;
+
+	private int exInt1;
+
+	private int exInt2;
+
+	private String exVar1;
+
+	private String exVar2;
+
+	public String getCustGstNo() {
+		return custGstNo;
+	}
+
+	public void setCustGstNo(String custGstNo) {
+		this.custGstNo = custGstNo;
+	}
+
+	public int getIsAllocated() {
+		return isAllocated;
+	}
+
+	public void setIsAllocated(int isAllocated) {
+		this.isAllocated = isAllocated;
+	}
 
 	public int getSpOrderNo() {
 		return spOrderNo;
@@ -436,12 +447,52 @@ public class SpCakeOrders  {
 		this.isBillGenerated = isBillGenerated;
 	}
 
-	public int getIsAllocated() {
-		return isAllocated;
+	public float getExtraCharges() {
+		return extraCharges;
 	}
 
-	public void setIsAllocated(int isAllocated) {
-		this.isAllocated = isAllocated;
+	public void setExtraCharges(float extraCharges) {
+		this.extraCharges = extraCharges;
+	}
+
+	public float getDisc() {
+		return disc;
+	}
+
+	public void setDisc(float disc) {
+		this.disc = disc;
+	}
+
+	public int getExInt1() {
+		return exInt1;
+	}
+
+	public void setExInt1(int exInt1) {
+		this.exInt1 = exInt1;
+	}
+
+	public int getExInt2() {
+		return exInt2;
+	}
+
+	public void setExInt2(int exInt2) {
+		this.exInt2 = exInt2;
+	}
+
+	public String getExVar1() {
+		return exVar1;
+	}
+
+	public void setExVar1(String exVar1) {
+		this.exVar1 = exVar1;
+	}
+
+	public String getExVar2() {
+		return exVar2;
+	}
+
+	public void setExVar2(String exVar2) {
+		this.exVar2 = exVar2;
 	}
 
 	@Override
@@ -452,16 +503,15 @@ public class SpCakeOrders  {
 				+ spMinWeight + ", spMaxWeight=" + spMaxWeight + ", spProdTime=" + spProdTime + ", spEstDeliDate="
 				+ spEstDeliDate + ", spProdDate=" + spProdDate + ", spEvents=" + spEvents + ", spEventsName="
 				+ spEventsName + ", spInstructions=" + spInstructions + ", spDeliveryDate=" + spDeliveryDate
-				+ ", spCustName=" + spCustName + ", spCustDob=" + spCustDob + ", spCustMobNo=" + spCustMobNo
-				+ ", spBookedForName=" + spBookedForName + ", spBookForDob=" + spBookForDob + ", spBookForMobNo="
-				+ spBookForMobNo + ", spGrandTotal=" + spGrandTotal + ", spPrice=" + spPrice + ", spTotalAddRate="
-				+ spTotalAddRate + ", spBackendRate=" + spBackendRate + ", spSubTotal=" + spSubTotal + ", spAdvance="
-				+ spAdvance + ", rmAmount=" + rmAmount + ", tax1=" + tax1 + ", tax2=" + tax2 + ", tax1Amt=" + tax1Amt
-				+ ", tax2Amt=" + tax2Amt + ", orderPhoto=" + orderPhoto + ", orderDate=" + orderDate + ", orderPhoto2="
-				+ orderPhoto2 + ", isSlotUsed=" + isSlotUsed + ", isBillGenerated=" + isBillGenerated + ", isAllocated="
-				+ isAllocated + "]";
+				+ ", spCustName=" + spCustName + ", custGstNo=" + custGstNo + ", spCustDob=" + spCustDob
+				+ ", spCustMobNo=" + spCustMobNo + ", spBookedForName=" + spBookedForName + ", spBookForDob="
+				+ spBookForDob + ", spBookForMobNo=" + spBookForMobNo + ", spGrandTotal=" + spGrandTotal + ", spPrice="
+				+ spPrice + ", spTotalAddRate=" + spTotalAddRate + ", spBackendRate=" + spBackendRate + ", spSubTotal="
+				+ spSubTotal + ", spAdvance=" + spAdvance + ", rmAmount=" + rmAmount + ", tax1=" + tax1 + ", tax2="
+				+ tax2 + ", tax1Amt=" + tax1Amt + ", tax2Amt=" + tax2Amt + ", orderPhoto=" + orderPhoto + ", orderDate="
+				+ orderDate + ", orderPhoto2=" + orderPhoto2 + ", isSlotUsed=" + isSlotUsed + ", isBillGenerated="
+				+ isBillGenerated + ", isAllocated=" + isAllocated + ", extraCharges=" + extraCharges + ", disc=" + disc
+				+ ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exVar1=" + exVar1 + ", exVar2=" + exVar2 + "]";
 	}
-	
-   
-	
+
 }

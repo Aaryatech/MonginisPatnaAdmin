@@ -925,6 +925,7 @@ public class OrderController {
 				orderJson.setSpBookedForName("" + box);
 				orderJson.setIsAllocated(addon);
 				orderJson.setSpInstructions(spInstructions);
+				System.out.println("-------------------------" + spInstructions);
 
 				SpCakeOrderUpdate orderSaveRes = restTemp.postForObject(Constants.url + "/updateSpCakeOrder", orderJson,
 						SpCakeOrderUpdate.class);
@@ -936,6 +937,7 @@ public class OrderController {
 							if (spCakeOrderList.get(i).getSpOrderNo() == spOrderNo) {
 								spCakeOrderList.get(i).setSpBookedForName("" + box);
 								spCakeOrderList.get(i).setIsAllocated(addon);
+								spCakeOrderList.get(i).setSpInstructions(spInstructions);
 							}
 						}
 					}
