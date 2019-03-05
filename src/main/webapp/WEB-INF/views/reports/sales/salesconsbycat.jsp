@@ -100,7 +100,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -115,11 +117,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -140,10 +142,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectCat" name="selectCat" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${catList}" var="cat" varStatus="count">
-									<option value="${cat.catId}"><c:out value="${cat.catName}"/></option>
+									<option value="${cat.catId}"><c:out
+											value="${cat.catName}" /></option>
 								</c:forEach>
 							</select>
 						</div>
@@ -205,6 +208,8 @@
 											<th>GVN Value</th>
 											<th>Net Qty</th>
 											<th>Net Value</th>
+											<th>Royalty %</th>
+											<th>Royalty Amt</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -213,13 +218,15 @@
 								</table>
 							</div>
 							<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
+
+
+
+								<div class="col-sm-3  controls">
+									<input type="button" id="expExcel" class="btn btn-primary"
+										value="EXPORT TO Excel" onclick="exportToExcel();"
+										disabled="disabled">
+								</div>
+							</div>
 						</div>
 
 					</div>
@@ -277,10 +284,13 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
+									
+									var royPer=${royPer};
+									//alert(royPer);
 
 									if (data == "") {
 										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+										document.getElementById("expExcel").disabled = true;
 
 									}
 
@@ -288,8 +298,10 @@
 											.each(
 													data.categoryList,
 													function(key, cat) {
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
+														document
+																.getElementById("expExcel").disabled = false;
+														document
+																.getElementById('range').style.display = 'block';
 
 														var tr = $('<tr></tr>');
 														tr
@@ -344,6 +356,16 @@
 																		'<td></td>')
 																		.html(
 																				""));
+														tr
+														.append($(
+																'<td></td>')
+																.html(
+																		""));
+														tr
+														.append($(
+																'<td></td>')
+																.html(
+																		""));
 
 														$('#table_grid tbody')
 																.append(tr);
@@ -381,7 +403,8 @@
 																						.append($(
 																								'<td></td>')
 																								.html(
-																										(report.tBillTaxableAmt).toFixed(2)));
+																										(report.tBillTaxableAmt)
+																												.toFixed(2)));
 
 																				tr
 																						.append($(
@@ -424,6 +447,13 @@
 																								'<td></td>')
 																								.html(
 																										netValue));
+																				
+																				tr.append($('<td></td>').html(royPer));
+																			  	
+																			  	rAmt=netValue*royPer/100;
+																			  	rAmt=rAmt.toFixed(2);
+																			  	
+																			  	tr.append($('<td></td>').html(rAmt));
 
 																				$(
 																						'#table_grid tbody')
@@ -440,12 +470,9 @@
 			}
 		</script>
 
-	
+
 		<script type="text/javascript">
 			function showChart() {
-
-			
-				
 
 				$("#PieChart_div").empty();
 				$("#chart_div").empty();
@@ -481,7 +508,7 @@
 								function(data) {
 
 									$('#loader').hide();
-								
+
 									if (data == "") {
 										alert("No records found !!");
 
@@ -731,15 +758,20 @@
 
 				var selectedCat = $("#selectCat").val();
 
-				window.open('pdfForReport?url=pdf/getSaleReportRoyConsoByCatPdf/'
-						+ from_date + '/' + to_date+'/'+selectedFr+'/'+routeId+'/'+selectedCat);
+				window
+						.open('pdfForReport?url=pdf/getSaleReportRoyConsoByCatPdf/'
+								+ from_date
+								+ '/'
+								+ to_date
+								+ '/'
+								+ selectedFr
+								+ '/' + routeId + '/' + selectedCat);
 
 			}
-			function exportToExcel()
-			{
-				 
+			function exportToExcel() {
+
 				window.open("${pageContext.request.contextPath}/exportToExcel");
-						document.getElementById("expExcel").disabled=true;
+				document.getElementById("expExcel").disabled = true;
 			}
 		</script>
 		<!--basic scripts-->

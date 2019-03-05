@@ -1885,6 +1885,7 @@ public class SalesReportController {
 		rowData.add("Royalty %");
 		rowData.add("Royalty Amt");
 		expoExcel.setRowData(rowData);
+		float royPer = getRoyPer();
 		exportToExcelList.add(expoExcel);
 		if (!royaltyBean.getSalesReportRoyalty().isEmpty()) {
 			for (int i = 0; i < royaltyList.size(); i++) {
@@ -1912,7 +1913,7 @@ public class SalesReportController {
 
 				float netValue = royaltyList.get(i).gettBillTaxableAmt()
 						- (royaltyList.get(i).gettGrnTaxableAmt() + royaltyList.get(i).gettGvnTaxableAmt());
-				float royPer = getRoyPer();
+				
 				float rAmt = netValue * royPer / 100;
 
 				rowData.add("" + roundUp(netQty));
@@ -4661,7 +4662,7 @@ public class SalesReportController {
 
 		rowData.add("Net Qty");
 		rowData.add("Net Value");
-
+		float royPer = getRoyPer();
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
 		if (!royaltyBean.getSalesReportRoyalty().isEmpty()) {
@@ -4690,7 +4691,7 @@ public class SalesReportController {
 
 				float netValue = royaltyList.get(i).gettBillTaxableAmt()
 						- (royaltyList.get(i).gettGrnTaxableAmt() + royaltyList.get(i).gettGvnTaxableAmt());
-				float royPer = getRoyPer();
+				
 
 				float rAmt = netValue * royPer / 100;
 
@@ -4844,6 +4845,8 @@ public class SalesReportController {
 			List<MCategoryList> tempList = new ArrayList<>();
 
 			// royaltyBean.setCategoryList(categoryList);
+			float royPerModel= getRoyPer();
+			
 			Map<Integer, String> catNameId = new HashMap<Integer, String>();
 
 			for (int i = 0; i < categoryList.size(); i++) {
@@ -4872,7 +4875,7 @@ public class SalesReportController {
 				model.addObject("toDate", toDate);
 				model.addObject("FACTORYNAME", Constants.FACTORYNAME);
 				model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
-				model.addObject("royPer", getRoyPer());
+				model.addObject("royPer", royPerModel);
 
 			}
 		} catch (Exception e) {
