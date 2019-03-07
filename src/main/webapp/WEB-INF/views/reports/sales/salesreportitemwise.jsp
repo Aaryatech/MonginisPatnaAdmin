@@ -2,9 +2,9 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getBillList" value="/getSaleReportItemwise"></c:url>
@@ -86,7 +86,7 @@
 				<!-- <div class="col-sm-9 col-lg-5 controls">
  -->
 				<div class="row" style="display: none">
-									<div class="form-group">
+					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Select
 							Route</label>
 						<div class="col-sm-6 col-lg-4 controls">
@@ -95,7 +95,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -110,11 +112,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -126,16 +128,17 @@
 				<div class="row">
 					<div class="col-md-12" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
-							 Report All</button>
-							 	<button class="btn btn-info" onclick="searchReportExceptTP()">Search
-							 Report Except T&P</button>
-							
-							
-																			<button class="btn btn-primary" value="PDF" id="PDFButton" onclick="genPdf()">PDF</button>
-							
-							
-							
-<%-- 
+							Report All</button>
+						<button class="btn btn-info" onclick="searchReportExceptTP()">Search
+							Report Except T&P</button>
+
+
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()">PDF</button>
+
+
+
+						<%-- 
 						<a
 							href='${pageContext.request.contextPath}/pdfForReport?url=showSaleReportItemwisePdf'
 							target="_blank">PDF</a> --%>
@@ -167,8 +170,7 @@
 
 			</div>
 
-			<form id="submitBillForm"
-				method="post">
+			<form id="submitBillForm" method="post">
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
@@ -195,13 +197,15 @@
 							</table>
 						</div>
 						<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
+
+
+
+							<div class="col-sm-3  controls">
+								<input type="button" id="expExcel" class="btn btn-primary"
+									value="EXPORT TO Excel" onclick="exportToExcel();"
+									disabled="disabled">
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -211,7 +215,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2017 © Monginis.</p>
+		<p>2017 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -220,175 +224,251 @@
 
 	<script type="text/javascript">
 		function searchReport() {
-		//	var isValid = validate();
+			//	var isValid = validate();
 
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
-var catId=0;
-				$('#loader').show();
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+			var catId = 0;
+			$('#loader').show();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									route_id:routeId,
-									catId : catId,
-									ajax : 'true'
+			$.getJSON('${getBillList}',
 
-								},
-								function(data) {
+			{
+				fr_id_list : JSON.stringify(selectedFr),
+				fromDate : from_date,
+				toDate : to_date,
+				route_id : routeId,
+				catId : catId,
+				ajax : 'true'
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			}, function(data) {
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-									}
-//alert("Length " +data.length);
-									$
-											.each(
-													data,
-													function(key, report) {
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
-														var index = key + 1;
-														//var tr = "<tr>";
-														var tr = $('<tr></tr>');
-													  	tr.append($('<td></td>').html(key+1));
-													  	tr.append($('<td></td>').html(report.itemName));
-													  	tr.append($('<td></td>').html(report.itemHsncd));
-													  	
-													  	tr.append($('<td></td>').html(report.itemTax1 + report.itemTax2));
-													  	tr.append($('<td></td>').html(report.billQtySum));
-													  	
-														/* if(report.isSameState==1){
-														  	tr.append($('<td></td>').html(report.cgstSum));
-														  	tr.append($('<td></td>').html(report.sgstSum));
-														  	tr.append($('<td></td>').html(0));
-														}
-														else{
-															tr.append($('<td></td>').html(0));
-														  	tr.append($('<td></td>').html(0));
-														  	tr.append($('<td></td>').html(report.igstSum));
-														} */
-													  	//tr.append($('<td></td>').html(report.igstSum));
-														tr.append($('<td></td>').html(report.taxableAmtSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.cgstRsSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.sgstRsSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.igstRsSum.toFixed(2)));
-														
-														var total=report.sgstRsSum+report.cgstRsSum;
-														total=total.toFixed(2);
-														
-													  	tr.append($('<td></td>').html(total));
+				var totalQty = 0;
+				var totalBasicValue = 0;
+				var totalCgst = 0;
+				var totalSgst = 0;
+				var totalIgst = 0;
+				var totalGst = 0;
 
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
 
-													})
+				}
+				//alert("Length " +data.length);
+				$.each(data, function(key, report) {
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+					var index = key + 1;
+					//var tr = "<tr>";
 
-								});
+					totalQty = totalQty + report.billQtySum;
 
-			
+					totalBasicValue = totalBasicValue + report.taxableAmtSum;
+					totalCgst = totalCgst + report.cgstRsSum;
+					totalSgst = totalSgst + report.sgstRsSum;
+					totalIgst = totalIgst + report.igstRsSum;
+
+					var tr = $('<tr></tr>');
+					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td></td>').html(report.itemName));
+					tr.append($('<td></td>').html(report.itemHsncd));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.itemTax1 + report.itemTax2));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.billQtySum));
+
+					/* if(report.isSameState==1){
+					  	tr.append($('<td></td>').html(report.cgstSum));
+					  	tr.append($('<td></td>').html(report.sgstSum));
+					  	tr.append($('<td></td>').html(0));
+					}
+					else{
+						tr.append($('<td></td>').html(0));
+					  	tr.append($('<td></td>').html(0));
+					  	tr.append($('<td></td>').html(report.igstSum));
+					} */
+					//tr.append($('<td></td>').html(report.igstSum));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.taxableAmtSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"> </td>').html(
+							report.cgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.sgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.igstRsSum.toFixed(2)));
+
+					var total = report.sgstRsSum + report.cgstRsSum;
+					total = total.toFixed(2);
+
+					totalGst = totalGst + parseFloat(total);
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							total));
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalQty.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalBasicValue.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalCgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalIgst.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalGst.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
 		}
 	</script>
-	
-	
-		<script type="text/javascript">
+
+
+	<script type="text/javascript">
 		function searchReportExceptTP() {
-		//	var isValid = validate();
+			//	var isValid = validate();
 
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
-var catId=-3;
-				$('#loader').show();
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+			var catId = -3;
+			$('#loader').show();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									route_id:routeId,
-									catId : catId,
-									ajax : 'true'
+			$.getJSON('${getBillList}',
 
-								},
-								function(data) {
+			{
+				fr_id_list : JSON.stringify(selectedFr),
+				fromDate : from_date,
+				toDate : to_date,
+				route_id : routeId,
+				catId : catId,
+				ajax : 'true'
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			}, function(data) {
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-									}
+				var totalQty = 0;
+				var totalBasicValue = 0;
+				var totalCgst = 0;
+				var totalSgst = 0;
+				var totalIgst = 0;
+				var totalGst = 0;
 
-								//	alert("Length " +data.length);
-									$
-											.each(
-													data,
-													function(key, report) {
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
-														var index = key + 1;
-														//var tr = "<tr>";
-														var tr = $('<tr></tr>');
-													  	tr.append($('<td></td>').html(key+1));
-													  	tr.append($('<td></td>').html(report.itemName));
-													  	tr.append($('<td></td>').html(report.itemHsncd));
-													  	
-													  	tr.append($('<td></td>').html(report.itemTax1 + report.itemTax2));
-													  	tr.append($('<td></td>').html(report.billQtySum));
-													  	
-														/* if(report.isSameState==1){
-														  	tr.append($('<td></td>').html(report.cgstSum));
-														  	tr.append($('<td></td>').html(report.sgstSum));
-														  	tr.append($('<td></td>').html(0));
-														}
-														else{
-															tr.append($('<td></td>').html(0));
-														  	tr.append($('<td></td>').html(0));
-														  	tr.append($('<td></td>').html(report.igstSum));
-														} */
-													  	//tr.append($('<td></td>').html(report.igstSum));
-														tr.append($('<td></td>').html(report.taxableAmtSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.cgstRsSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.sgstRsSum.toFixed(2)));
-														tr.append($('<td></td>').html(report.igstRsSum.toFixed(2)));
-														
-														var total=report.sgstRsSum+report.cgstRsSum;
-														total=total.toFixed(2);
-														
-													  	tr.append($('<td></td>').html(total));
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
 
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														
+				}
 
-													})
+				//	alert("Length " +data.length);
+				$.each(data, function(key, report) {
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+					var index = key + 1;
+					//var tr = "<tr>";
 
-								});
+					totalQty = totalQty + report.billQtySum;
 
-			
+					totalBasicValue = totalBasicValue + report.taxableAmtSum;
+					totalCgst = totalCgst + report.cgstRsSum;
+					totalSgst = totalSgst + report.sgstRsSum;
+					totalIgst = totalIgst + report.igstRsSum;
+					var tr = $('<tr></tr>');
+					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td></td>').html(report.itemName));
+					tr.append($('<td></td>').html(report.itemHsncd));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.itemTax1 + report.itemTax2));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.billQtySum));
+
+					/* if(report.isSameState==1){
+					  	tr.append($('<td></td>').html(report.cgstSum));
+					  	tr.append($('<td></td>').html(report.sgstSum));
+					  	tr.append($('<td></td>').html(0));
+					}
+					else{
+						tr.append($('<td></td>').html(0));
+					  	tr.append($('<td></td>').html(0));
+					  	tr.append($('<td></td>').html(report.igstSum));
+					} */
+					//tr.append($('<td></td>').html(report.igstSum));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.taxableAmtSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.cgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.sgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.igstRsSum.toFixed(2)));
+
+					var total = report.sgstRsSum + report.cgstRsSum;
+					total = total.toFixed(2);
+
+					totalGst = totalGst + parseFloat(total);
+
+					tr.append($('<td style="text-align:right;"></td>').html(total));
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalQty.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalBasicValue.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalCgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalIgst.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalGst.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
 		}
 	</script>
 
@@ -399,17 +479,16 @@ var catId=-3;
 			var selectedMenu = $("#selectMenu").val();
 			var selectedRoute = $("#selectRoute").val();
 
-
 			var isValid = true;
 
-			if (selectedFr == "" || selectedFr == null  ) {
- 
-				if(selectedRoute=="" || selectedRoute ==null ) {
+			if (selectedFr == "" || selectedFr == null) {
+
+				if (selectedRoute == "" || selectedRoute == null) {
 					alert("Please Select atleast one ");
 					isValid = false;
 				}
 				//alert("Please select Franchise/Route");
- 
+
 			} else if (selectedMenu == "" || selectedMenu == null) {
 
 				isValid = false;
@@ -423,76 +502,77 @@ var catId=-3;
 
 	<script type="text/javascript">
 		function updateTotal(orderId, rate) {
-			
+
 			var newQty = $("#billQty" + orderId).val();
 
 			var total = parseFloat(newQty) * parseFloat(rate);
 
-
-			 $('#billTotal'+orderId).html(total);
+			$('#billTotal' + orderId).html(total);
 		}
 	</script>
 
 	<script>
-$('.datepicker').datepicker({
-    format: {
-        /*
-         * Say our UI should display a week ahead,
-         * but textbox should store the actual date.
-         * This is useful if we need UI to select local dates,
-         * but store in UTC
-         */
-    	 format: 'mm/dd/yyyy',
-    	    startDate: '-3d'
-    }
-});
-
-</script>
+		$('.datepicker').datepicker({
+			format : {
+				/*
+				 * Say our UI should display a week ahead,
+				 * but textbox should store the actual date.
+				 * This is useful if we need UI to select local dates,
+				 * but store in UTC
+				 */
+				format : 'mm/dd/yyyy',
+				startDate : '-3d'
+			}
+		});
+	</script>
 
 	<script type="text/javascript">
+		function disableFr() {
 
-function disableFr(){
+			//alert("Inside Disable Fr ");
+			document.getElementById("selectFr").disabled = true;
 
-	//alert("Inside Disable Fr ");
-document.getElementById("selectFr").disabled = true;
+		}
 
-}
+		function disableRoute() {
 
-function disableRoute(){
+			//alert("Inside Disable route ");
+			var x = document.getElementById("selectRoute")
+			//alert(x.options.length);
+			var i;
+			for (i = 0; i < x; i++) {
+				document.getElementById("selectRoute").options[i].disabled;
+				//document.getElementById("pets").options[2].disabled = true;
+			}
+			//document.getElementById("selectRoute").disabled = true;
 
-	//alert("Inside Disable route ");
-	var x=document.getElementById("selectRoute")
-	//alert(x.options.length);
-	var i;
-	for(i=0;i<x;i++){
-		document.getElementById("selectRoute").options[i].disabled;
-		 //document.getElementById("pets").options[2].disabled = true;
-	}
-//document.getElementById("selectRoute").disabled = true;
+		}
+	</script>
 
-}
+	<script type="text/javascript">
+		function genPdf() {
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
+			window
+					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportItemwisePdf/'
+							+ from_date
+							+ '/'
+							+ to_date
+							+ '/'
+							+ selectedFr
+							+ '/' + routeId + '/');
 
-</script>
+			//window.open('${pageContext.request.contextPath}/pdfForReport?url=showSaleReportItemwisePdf/'+from_date+'/'+to_date);
 
-<script type="text/javascript">
-function genPdf()
-{
-	var from_date = $("#fromDate").val();
-	var to_date = $("#toDate").val();
-	var selectedFr = $("#selectFr").val();
-	var routeId=$("#selectRoute").val();
-	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportItemwisePdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
+		} //window.open('pdfForReport?url=showSaleBillwiseByFrPdf/'+from_date+'/'+to_date);
+		function exportToExcel() {
 
-	//window.open('${pageContext.request.contextPath}/pdfForReport?url=showSaleReportItemwisePdf/'+from_date+'/'+to_date);
-	
-	}	//window.open('pdfForReport?url=showSaleBillwiseByFrPdf/'+from_date+'/'+to_date);
-	function exportToExcel()
-	{
-		 
-		window.open("${pageContext.request.contextPath}/exportToExcel");
-				document.getElementById("expExcel").disabled=true;
-	}
-</script>
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 
 	<!--basic scripts-->
 	<script

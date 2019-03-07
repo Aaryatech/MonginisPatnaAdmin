@@ -239,6 +239,14 @@
 
 								},
 								function(data) {
+									
+								
+									var totalSaleValue = 0;
+									var totalGrnValue = 0;
+									var totalGvnValue = 0;
+									var totalNetValue = 0;
+									var totalRoyAmt=0;
+									
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
@@ -263,26 +271,41 @@
 														//var index = key + 1;
 														 var tr = $('<tr></tr>');
 														//tr.append($('<td></td>').html(cat.catName));
+														
+															
+													 totalSaleValue=totalSaleValue+report.tBillTaxableAmt;
+													totalGrnValue=totalGrnValue+report.tGrnTaxableAmt;
+													totalGvnValue=totalGvnValue+report.tGvnTaxableAmt; 
+														
+														
 													  	tr.append($('<td></td>').html(srNo));
 													  	tr.append($('<td></td>').html(report.frName));
 													  	tr.append($('<td></td>').html(report.frCity));
-													  	tr.append($('<td></td>').html(report.tBillTaxableAmt));
-														tr.append($('<td></td>').html(report.tGrnTaxableAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillTaxableAmt.toFixed(2)));
+														tr.append($('<td style="text-align:right;"></td>').html(report.tGrnTaxableAmt.toFixed(2)));
 														
-													  	tr.append($('<td></td>').html(royPer));
-													  	tr.append($('<td></td>').html(report.tGvnTaxableAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(royPer));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
 
+														
+													  	
 													  	var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
 														netValue=netValue.toFixed(2);
 														
-													  	tr.append($('<td></td>').html(netValue));
+														
+														
+														
+													  	tr.append($('<td style="text-align:right;"></td>').html(netValue));
 													  	//alert("netVAlue"+netValue);
 													  	//alert("Per"+royPer);
 													  	rAmt=parseFloat(netValue) * parseFloat(royPer)/100;
 													  //	alert("Amt="+rAmt)
 													  	rAmt=rAmt.toFixed(2);
 													  	
-													  	tr.append($('<td></td>').html(rAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(rAmt));
+													  	
+													  totalNetValue=totalNetValue+parseFloat(netValue);
+													 	totalRoyAmt=totalRoyAmt+parseFloat(rAmt); 
 													  	
 														$('#table_grid tbody')
 																.append(
@@ -291,6 +314,41 @@
 														
 														
 													})
+													
+													var tr = $('<tr></tr>');
+
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+
+									
+									tr.append($('<td style="font-weight:bold;"></td>')
+											.html("Total"));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalSaleValue.toFixed(2)));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGrnValue.toFixed(2)));
+									
+									tr.append($('<td></td>').html(""));
+									
+								
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGvnValue.toFixed(2)));
+								
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalNetValue.toFixed(2)));
+									
+									
+									
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalRoyAmt.toFixed(2)));
+
+									$('#table_grid tbody')
+									.append(
+											tr);
+							 
 											
 
 								});

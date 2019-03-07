@@ -96,7 +96,7 @@
 
 			<div class=" box-content">
 				<div class="row">
-					<div  style="overflow-x: scroll;">
+					<div style="overflow-x: scroll;">
 						<table class="table table-bordered table-striped fill-head "
 							id="table_grid">
 							<thead style="background-color: #f3b5db;">
@@ -110,22 +110,14 @@
 									<th>Sell @ 28%</th>
 									<th>Sell @ 18%</th>
 									<th>Sell @ 12%</th>
-									<th>Sell @ 5%
-									</th>
-									<th>Sell @ 0%
-									</th>
-									<th>Taxable Value
-									</th>
-									<th>SGST @ 14%
-									</th>
-									<th>CGST @ 14%
-									</th>
-									<th>SGST @ 9%
-									</th>
-									<th>CGST @ 9%
-									</th>
-									<th>SGST @ 6%
-									</th>
+									<th>Sell @ 5%</th>
+									<th>Sell @ 0%</th>
+									<th>Taxable Value</th>
+									<th>SGST @ 14%</th>
+									<th>CGST @ 14%</th>
+									<th>SGST @ 9%</th>
+									<th>CGST @ 9%</th>
+									<th>SGST @ 6%</th>
 									<th>CGST @ 6%</th>
 									<th>SGST @ 2.5%</th>
 									<th>CGST @ 2.5%</th>
@@ -138,8 +130,19 @@
 								</tr>
 							</thead>
 							<tbody>
+
+								<c:set var="totalCgstAmt" value="0" />
+								<c:set var="totalSgstAmt" value="0" />
+								<c:set var="totalTaxableAmt" value="0" />
+
+								<c:set var="totalGrandTotal" value="0" />
+
 								<c:forEach items="${taxReportList}" var="taxList"
 									varStatus="count">
+
+
+
+
 									<tr>
 										<td><c:out value="${count.index+1}" /></td>
 										<td><c:out value="${taxList.invoiceNo}" /></td>
@@ -157,40 +160,108 @@
 												value="${taxList.taxableAmtFive}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.taxableAmtZero}" /></td>
-										<c:set var="taxableAmt"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${(taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight)}" /></c:set>
-										<c:set var="sgstAmt"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${(taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero)}" /></c:set>
-										<c:set var="cgstAmt"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${(taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero)}" /></c:set>
-										<c:set var="total"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${((taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight))+((taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero))+((taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero))}" /></c:set>
-												
+										<c:set var="taxableAmt">
+											<fmt:formatNumber type="number" minFractionDigits="2"
+												maxFractionDigits="2"
+												value="${(taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight)}" />
+										</c:set>
+										<c:set var="sgstAmt">
+											<fmt:formatNumber type="number" minFractionDigits="2"
+												maxFractionDigits="2"
+												value="${(taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero)}" />
+										</c:set>
+										<c:set var="cgstAmt">
+											<fmt:formatNumber type="number" minFractionDigits="2"
+												maxFractionDigits="2"
+												value="${(taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero)}" />
+										</c:set>
+										<c:set var="total">
+											<fmt:formatNumber type="number" minFractionDigits="2"
+												maxFractionDigits="2"
+												value="${((taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight))+((taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero))+((taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero))}" />
+										</c:set>
+
 										<td style="text-align: right;"><c:out
 												value="${taxableAmt}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.sgstAmtTwentyEight}" /></td>
 										<td style="text-align: right;"><c:out
-												value="${taxList.cgstAmtTwentyEight}" /></td>		
-	                                    <td style="text-align: right;"><c:out
+												value="${taxList.cgstAmtTwentyEight}" /></td>
+										<td style="text-align: right;"><c:out
 												value="${taxList.sgstAmtEighteen}" /></td>
-										  <td style="text-align: right;"><c:out
-												value="${taxList.cgstAmtEighteen}" /></td>		
-									   <td style="text-align: right;"><c:out
+										<td style="text-align: right;"><c:out
+												value="${taxList.cgstAmtEighteen}" /></td>
+										<td style="text-align: right;"><c:out
 												value="${taxList.sgstAmtTwelve}" /></td>
 										<td style="text-align: right;"><c:out
-												value="${taxList.cgstAmtTwelve}" /></td>		
+												value="${taxList.cgstAmtTwelve}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.sgstAmtFive}" /></td>
-											<td style="text-align: right;"><c:out
-												value="${taxList.cgstAmtFive}" /></td>		
+										<td style="text-align: right;"><c:out
+												value="${taxList.cgstAmtFive}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.sgstAmtZero}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.cgstAmtZero}" /></td>
-												<td style="text-align: right;"><c:out
-												value="${sgstAmt}" /></td>
-												<td style="text-align: right;"><c:out
-												value="${cgstAmt}" /></td>
-												<td style="text-align: right;"> ${total} </td>
+										<td style="text-align: right;"><c:out value="${sgstAmt}" /></td>
+										<td style="text-align: right;"><c:out value="${cgstAmt}" /></td>
+										<td style="text-align: right;">${total}</td>
+
+										<c:set var="totalCgstAmt"
+											value="${totalCgstAmt+(taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero)}" />
+										<c:set var="totalSgstAmt"
+											value="${totalSgstAmt+(taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero)}" />
+										<c:set var="totalTaxableAmt"
+											value="${totalTaxableAmt+(taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight)}" />
+										<c:set var="totalGrandTotal"
+											value="${totalGrandTotal+((taxList.taxableAmtZero)+(taxList.taxableAmtFive)+(taxList.taxableAmtTwelve)+(taxList.taxableAmtEighteen)+(taxList.taxableAmtTwentyEight))+((taxList.sgstAmtTwentyEight)+(taxList.sgstAmtEighteen)+(taxList.sgstAmtTwelve)+(taxList.sgstAmtFive)+(taxList.sgstAmtZero))+((taxList.cgstAmtTwentyEight)+(taxList.cgstAmtEighteen)+(taxList.cgstAmtTwelve)+(taxList.cgstAmtFive)+(taxList.cgstAmtZero))}" />
 									</tr>
 								</c:forEach>
+
+
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+
+
+									<td style="text-align: left;">Total</td>
+									<td style="text-align: right;"><fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${totalTaxableAmt}" /></td>
+
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+
+									<td style="text-align: right;"><fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${totalSgstAmt}" /></td>
+
+
+									<td style="text-align: right;"><fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${totalCgstAmt}" /></td>
+
+									<td style="text-align: right;"><fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${totalGrandTotal}" /></td>
+
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -361,66 +432,62 @@
 	</script> -->
 
 	<script>
-$('.datepicker').datepicker({
-    format: {
-        /*
-         * Say our UI should display a week ahead,
-         * but textbox should store the actual date.
-         * This is useful if we need UI to select local dates,
-         * but store in UTC
-         */
-    	 format: 'mm/dd/yyyy',
-    	    startDate: '-3d'
-    }
-});
+		$('.datepicker').datepicker({
+			format : {
+				/*
+				 * Say our UI should display a week ahead,
+				 * but textbox should store the actual date.
+				 * This is useful if we need UI to select local dates,
+				 * but store in UTC
+				 */
+				format : 'mm/dd/yyyy',
+				startDate : '-3d'
+			}
+		});
 
-/* function genPdf()
-{
-	var from_date = $("#fromDate").val();
-	var to_date = $("#toDate").val();
-	var selectedFr = $("#selectFr").val();
-	var routeId=$("#selectRoute").val();
+		/* function genPdf()
+		 {
+		 var from_date = $("#fromDate").val();
+		 var to_date = $("#toDate").val();
+		 var selectedFr = $("#selectFr").val();
+		 var routeId=$("#selectRoute").val();
 
-   window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportByDatePdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
+		 window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportByDatePdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
 
-	//window.open("${pageContext.request.contextPath}/pdfForReport?url=showSaleReportByDatePdf/"+from_date+"/"+to_date);
-	
-	} */
-
-
-</script>
+		 //window.open("${pageContext.request.contextPath}/pdfForReport?url=showSaleReportByDatePdf/"+from_date+"/"+to_date);
+		
+		 } */
+	</script>
 
 	<script type="text/javascript">
-/* 
-function disableFr(){
+		/* 
+		 function disableFr(){
 
-	//alert("Inside Disable Fr ");
-document.getElementById("selectFr").disabled = true;
+		 //alert("Inside Disable Fr ");
+		 document.getElementById("selectFr").disabled = true;
 
-}
+		 }
 
-function disableRoute(){
+		 function disableRoute(){
 
-	//alert("Inside Disable route ");
-	var x=document.getElementById("selectRoute")
-	//alert(x.options.length);
-	var i;
-	for(i=0;i<x;i++){
-		document.getElementById("selectRoute").options[i].disabled;
+		 //alert("Inside Disable route ");
+		 var x=document.getElementById("selectRoute")
+		 //alert(x.options.length);
+		 var i;
+		 for(i=0;i<x;i++){
+		 document.getElementById("selectRoute").options[i].disabled;
 		 //document.getElementById("pets").options[2].disabled = true;
-	}
-//document.getElementById("selectRoute").disabled = true;
+		 }
+		 //document.getElementById("selectRoute").disabled = true;
 
-} */
+		 } */
 
-function exportToExcel()
-{
-	 
-	window.open("${pageContext.request.contextPath}/exportToExcel");
-			document.getElementById("expExcel").disabled=true;
-}
+		function exportToExcel() {
 
-</script>
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 
 	<!--basic scripts-->
 	<script

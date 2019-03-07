@@ -2,14 +2,15 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	
-	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
-	
+
 	<c:url var="getGrnGvnByGrpByDate" value="/getGrnGvnByGrpByDate"></c:url>
 
 	<!-- BEGIN Sidebar -->
@@ -84,7 +85,7 @@
 
 				<!-- <div class="col-sm-9 col-lg-5 controls">
  -->
-				<div class="row" style="display: none"> 
+				<div class="row" style="display: none">
 					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Select
 							Route</label>
@@ -94,7 +95,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -109,11 +112,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -123,29 +126,29 @@
 
 				<br>
 				<div class="row">
-			<label class="col-sm-3 col-lg-2 control-label">
-							View Option</label>
-			<div class="col-md-2">
-			
-				<select class="form-control"   name="isGrn" id="isGrn">
-								<option selected value="-1">Select View Option</option>
-				
-				<option value="1">GRN</option>
-				<option value="0">GVN</option>
-				<option value="2">ALL</option>
-				 </select>
-				 </div>
-				
+					<label class="col-sm-3 col-lg-2 control-label"> View Option</label>
+					<div class="col-md-2">
+
+						<select class="form-control" name="isGrn" id="isGrn">
+							<option selected value="-1">Select View Option</option>
+
+							<option value="1">GRN</option>
+							<option value="0">GVN</option>
+							<option value="2">ALL</option>
+						</select>
+					</div>
+
 					<div class="col-md-3" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
-							 Report</button>
-									    <button class="btn search_btn"  onclick="showChart()" >Graph</button>
-							
-												<button class="btn btn-primary" value="PDF" id="PDFButton" onclick="genPdf()">PDF</button>
+							Report</button>
+						<button class="btn search_btn" onclick="showChart()">Graph</button>
+
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()">PDF</button>
 
 					</div>
 
-</div>
+				</div>
 				<div align="center" id="loader" style="display: none">
 
 					<span>
@@ -157,8 +160,8 @@
 					<span class="l-6"></span>
 				</div>
 
-			
-			 </div>
+
+			</div>
 		</div>
 
 		<div class="box">
@@ -169,143 +172,165 @@
 
 			</div>
 
-			<form id="submitBillForm"
-				
-				method="post">
-				
-						<div class="col-md-12 table-responsive">
-							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead style="background-color: #f3b5db;">
-									<tr>
-										<th>Sr.No.</th>
-										
-											<th>Date</th>
-											
-										<th>Type</th>
-									
-										<th>Req Qty</th>
-										<th>Req Value</th>
-										<th>Apr Qty</th>
-										<th>Apr Value</th>
-									</tr>
-								</thead>
-								<tbody>
+			<form id="submitBillForm" method="post">
 
-								</tbody>
-							</table>
-							<div class="form-group" " id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input  type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
-								<div align="center" id="showchart" style="display: none">
+				<div class="col-md-12 table-responsive">
+					<table class="table table-bordered table-striped fill-head "
+						style="width: 100%" id="table_grid">
+						<thead style="background-color: #f3b5db;">
+							<tr>
+								<th>Sr.No.</th>
+
+								<th>Date</th>
+
+								<th>Type</th>
+
+								<th>Req Qty</th>
+								<th>Req Value</th>
+								<th>Apr Qty</th>
+								<th>Apr Value</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+					<div class="form-group" " id="range">
+
+
+
+						<div class="col-sm-3  controls">
+							<input type="button" id="expExcel" class="btn btn-primary"
+								value="EXPORT TO Excel" onclick="exportToExcel();"
+								disabled="disabled">
 						</div>
 					</div>
+					<div align="center" id="showchart" style="display: none"></div>
+				</div>
 
-				<div id="chart"  "> <br><br> <br>
-	<hr>
-        
-    <div id="chart_div" style="width: 100%; height: 100%;"></div>
-     <div id="PieChart_div" style="width: 100%; height: 100%;"></div>
-			 
-				 
+				<div id="chart"">
+					<br> <br> <br>
+					<hr>
+
+					<div id="chart_div" style="width: 100%; height: 100%;"></div>
+					<div id="PieChart_div" style="width: 100%; height: 100%;"></div>
+
+
 				</div>
 			</form>
 		</div>
 	</div>
 	<!-- END Main Content -->
-	
+
 	<footer>
-	<p>2017 © Monginis.</p>
+		<p>2017 © Monginis.</p>
 	</footer>
-	
+
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
 
 	<script type="text/javascript">
 		function searchReport() {
-		//	var isValid = validate();
-	document.getElementById('chart').style.display ="display:none";
-		   document.getElementById("table_grid").style= "block";
+			//	var isValid = validate();
+			document.getElementById('chart').style.display = "display:none";
+			document.getElementById("table_grid").style = "block";
 			var isGrn = $("#isGrn").val();
 			//alert("isGrn " +isGrn);
 
-		 //report 2
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
+			//report 2
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-				$('#loader').show();
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
 
-				$
-						.getJSON(
-								'${getGrnGvnByGrpByDate}',
+			$('#loader').show();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									from_date : from_date,
-									to_date : to_date,
-									route_id:routeId,
-									is_grn:isGrn,
-									ajax : 'true'
+			$.getJSON('${getGrnGvnByGrpByDate}',
 
-								},
-								function(data) {
-									//alert(data);
+			{
+				fr_id_list : JSON.stringify(selectedFr),
+				from_date : from_date,
+				to_date : to_date,
+				route_id : routeId,
+				is_grn : isGrn,
+				ajax : 'true'
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			}, function(data) {
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
-									}
+				var totalReqQty = 0;
+				var totalReqAmt = 0;
+				var totalAprQty = 0;
+				var totalAprValue = 0;
+				//alert(data);
 
-									$
-											.each(
-													data,
-													function(key, report) {
-														
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
-															
-														var index = key + 1;
-														//var tr = "<tr>";
-														
-														var type=null;
-														if(report.isGrn==0)
-															type="GVN";
-														else if(report.isGrn==1)
-															type="GRN";
-														else type="Cust Complaint";
-														
-														var tr = $('<tr></tr>');
-													  	tr.append($('<td></td>').html(key+1));
-													  	tr.append($('<td></td>').html(report.grnGvnDate));
-														tr.append($('<td></td>').html(type));
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-													  	tr.append($('<td></td>').html(report.reqQty));
-													  	tr.append($('<td></td>').html(report.totalAmt));
-													  	tr.append($('<td></td>').html(report.aprQty));
-													  	tr.append($('<td></td>').html(report.aprGrandTotal));
-														
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
+				}
 
-													})
+				$.each(data, function(key, report) {
 
-								});
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
 
-			
+					var index = key + 1;
+
+					totalReqQty = totalReqQty + report.reqQty;
+					totalReqAmt = totalReqAmt + report.totalAmt;
+					totalAprQty = totalAprQty + report.aprQty;
+					totalAprValue = totalAprValue + report.aprGrandTotal;
+					//var tr = "<tr>";
+
+					var type = null;
+					if (report.isGrn == 0)
+						type = "GVN";
+					else if (report.isGrn == 1)
+						type = "GRN";
+					else
+						type = "Cust Complaint";
+
+					var tr = $('<tr></tr>');
+					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td></td>').html(report.grnGvnDate));
+					tr.append($('<td></td>').html(type));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.reqQty.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.totalAmt.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.aprQty.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.aprGrandTotal.toFixed(2)));
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+				tr.append($('<td  style="text-align:right;"></td>').html(
+						totalReqQty.toFixed(2)));
+				tr.append($('<td  style="text-align:right;"></td>').html(
+						totalReqAmt.toFixed(2)));
+				tr.append($('<td  style="text-align:right;"></td>').html(
+						totalAprQty.toFixed(2)));
+				tr.append($('<td  style="text-align:right;"></td>').html(
+						totalAprValue.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
 		}
 	</script>
 
@@ -316,17 +341,16 @@
 			var selectedMenu = $("#selectMenu").val();
 			var selectedRoute = $("#selectRoute").val();
 
-
 			var isValid = true;
 
-			if (selectedFr == "" || selectedFr == null  ) {
- 
-				if(selectedRoute=="" || selectedRoute ==null ) {
+			if (selectedFr == "" || selectedFr == null) {
+
+				if (selectedRoute == "" || selectedRoute == null) {
 					alert("Please Select atleast one ");
 					isValid = false;
 				}
 				//alert("Please select Franchise/Route");
- 
+
 			} else if (selectedMenu == "" || selectedMenu == null) {
 
 				isValid = false;
@@ -338,169 +362,193 @@
 		}
 	</script>
 
-<script type="text/javascript">
-function showChart(){
-	$("#PieChart_div").empty();
-	$("#chart_div").empty();
-		document.getElementById('chart').style.display = "block";
-		   document.getElementById("table_grid").style="display:none";
-		 
-		   var isGrn = $("#isGrn").val();
+	<script type="text/javascript">
+		function showChart() {
+			$("#PieChart_div").empty();
+			$("#chart_div").empty();
+			document.getElementById('chart').style.display = "block";
+			document.getElementById("table_grid").style = "display:none";
+
+			var isGrn = $("#isGrn").val();
 			//alert("isGrn " +isGrn);
 
-		 //report 2
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
+			//report 2
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-				$('#loader').show();
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
 
-				$
-						.getJSON(
-								'${getGrnGvnByGrpByDate}',
+			$('#loader').show();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									from_date : from_date,
-									to_date : to_date,
-									route_id:routeId,
-									is_grn:isGrn,
-									ajax : 'true'
+			$
+					.getJSON(
+							'${getGrnGvnByGrpByDate}',
 
-								},
-								function(data) {
+							{
+								fr_id_list : JSON.stringify(selectedFr),
+								from_date : from_date,
+								to_date : to_date,
+								route_id : routeId,
+								is_grn : isGrn,
+								ajax : 'true'
+
+							},
+							function(data) {
 
 								//alert(data);
-							 if (data == "") {
+								if (data == "") {
 									alert("No records found !!");
-									
+
 									$('#loader').hide();
 
 								}
-							 var i=0;
-							 $('#loader').hide();
-							 
-							 google.charts.load('current', {'packages':['corechart', 'bar']});
-							 google.charts.setOnLoadCallback(drawStuff);
+								var i = 0;
+								$('#loader').hide();
 
-							 function drawStuff() {
-								 
-								// alert("Inside DrawStuff");
- 
-							   var chartDiv = document.getElementById('chart_div');
-							   document.getElementById("chart_div").style.border = "thin dotted red";
-							   
-							   
-							   var PiechartDiv = document.getElementById('PieChart_div');
-							   document.getElementById("PieChart_div").style.border = "thin dotted red";
-							   
-							   
-						       var dataTable = new google.visualization.DataTable();
-						       dataTable.addColumn('string', 'Date '); // Implicit domain column.
-						       dataTable.addColumn('number', 'Requested Value'); // Implicit data column.
-						       dataTable.addColumn('number', 'Approved Value');
-						       
-						       var piedataTable = new google.visualization.DataTable();
-						       piedataTable.addColumn('string', 'Date'); // Implicit domain column.
-						       piedataTable.addColumn('number', 'Approved Value');
-						       
-						       $.each(data,function(key, report) {
-						    	  // alert("In Data")
-						    	   var reqValue=report.totalAmt;
-						    	  var aprValue=report.aprGrandTotal;
-									
-						    	  
-									var date=report.grnGvnDate;
-									
-								   dataTable.addRows([
-									 
-									   
-									   [date, reqValue,aprValue],
-									   
-								          
-								           ]);
-								   
-								   piedataTable.addRows([
-									 
-									   [date, aprValue],
-									   
-								           ]);
-								     }) // end of  $.each(data,function(key, report) {-- function
+								google.charts.load('current', {
+									'packages' : [ 'corechart', 'bar' ]
+								});
+								google.charts.setOnLoadCallback(drawStuff);
 
-            // Instantiate and draw the chart.
-          						    
- var materialOptions = {
-						    	
-          width: 500,
-          chart: {
-            title: 'Grn Gvn Report Group By Date',
-            subtitle: 'Requested Value and Approved Value',
-           
+								function drawStuff() {
 
-          },
-          series: {
-            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
-          },
-          axes: {
-            y: {
-              distance: {label: 'Requested Value'}, // Left y-axis.
-              brightness: {side: 'right', label: 'Apporved Value'} // Right y-axis.
-            }
-          }
-        };
-						       
-						       function drawMaterialChart() {
-						           var materialChart = new google.charts.Bar(chartDiv);
-						           
-						          // alert("mater chart "+materialChart);
-						           materialChart.draw(dataTable, google.charts.Bar.convertOptions(materialOptions));
-						          // button.innerText = 'Change to Classic';
-						          // button.onclick = drawClassicChart;
-						         }
-						       
-						        var chart = new google.visualization.ColumnChart(
-						                document.getElementById('chart_div'));
-						        
-						        var Piechart = new google.visualization.PieChart(
-						                document.getElementById('PieChart_div'));
-						       chart.draw(dataTable,
-						          {title: 'Grn Gvn  Group By Date'});
-						       
-						       
-						       Piechart.draw(piedataTable,
-								          {title: 'Grn Gvn  Group By Date',is3D:true});
-						      // drawMaterialChart();
-							 };
-							 
-										
-							  	});
-			
-}
+									// alert("Inside DrawStuff");
 
-					
-					
-function genPdf()
-{
-	var from_date = $("#fromDate").val();
-	var to_date = $("#toDate").val();
+									var chartDiv = document
+											.getElementById('chart_div');
+									document.getElementById("chart_div").style.border = "thin dotted red";
 
-	var selectedFr = $("#selectFr").val();
-	var routeId=$("#selectRoute").val();
-	
-	var isGrn = $("#isGrn").val();
-	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showGGreportGrpByDate/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/'+isGrn+'/');
-	
-	}
-function exportToExcel()
-{
-	 
-	window.open("${pageContext.request.contextPath}/exportToExcel");
-			document.getElementById("expExcel").disabled=true;
-}
-</script>
+									var PiechartDiv = document
+											.getElementById('PieChart_div');
+									document.getElementById("PieChart_div").style.border = "thin dotted red";
+
+									var dataTable = new google.visualization.DataTable();
+									dataTable.addColumn('string', 'Date '); // Implicit domain column.
+									dataTable.addColumn('number',
+											'Requested Value'); // Implicit data column.
+									dataTable.addColumn('number',
+											'Approved Value');
+
+									var piedataTable = new google.visualization.DataTable();
+									piedataTable.addColumn('string', 'Date'); // Implicit domain column.
+									piedataTable.addColumn('number',
+											'Approved Value');
+
+									$.each(data, function(key, report) {
+										// alert("In Data")
+										var reqValue = report.totalAmt;
+										var aprValue = report.aprGrandTotal;
+
+										var date = report.grnGvnDate;
+
+										dataTable.addRows([
+
+										[ date, reqValue, aprValue ],
+
+										]);
+
+										piedataTable.addRows([
+
+										[ date, aprValue ],
+
+										]);
+									}) // end of  $.each(data,function(key, report) {-- function
+
+									// Instantiate and draw the chart.
+
+									var materialOptions = {
+
+										width : 500,
+										chart : {
+											title : 'Grn Gvn Report Group By Date',
+											subtitle : 'Requested Value and Approved Value',
+
+										},
+										series : {
+											0 : {
+												axis : 'distance'
+											}, // Bind series 0 to an axis named 'distance'.
+											1 : {
+												axis : 'brightness'
+											}
+										// Bind series 1 to an axis named 'brightness'.
+										},
+										axes : {
+											y : {
+												distance : {
+													label : 'Requested Value'
+												}, // Left y-axis.
+												brightness : {
+													side : 'right',
+													label : 'Apporved Value'
+												}
+											// Right y-axis.
+											}
+										}
+									};
+
+									function drawMaterialChart() {
+										var materialChart = new google.charts.Bar(
+												chartDiv);
+
+										// alert("mater chart "+materialChart);
+										materialChart
+												.draw(
+														dataTable,
+														google.charts.Bar
+																.convertOptions(materialOptions));
+										// button.innerText = 'Change to Classic';
+										// button.onclick = drawClassicChart;
+									}
+
+									var chart = new google.visualization.ColumnChart(
+											document
+													.getElementById('chart_div'));
+
+									var Piechart = new google.visualization.PieChart(
+											document
+													.getElementById('PieChart_div'));
+									chart.draw(dataTable, {
+										title : 'Grn Gvn  Group By Date'
+									});
+
+									Piechart.draw(piedataTable, {
+										title : 'Grn Gvn  Group By Date',
+										is3D : true
+									});
+									// drawMaterialChart();
+								}
+								;
+
+							});
+
+		}
+
+		function genPdf() {
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
+
+			var isGrn = $("#isGrn").val();
+			window
+					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showGGreportGrpByDate/'
+							+ from_date
+							+ '/'
+							+ to_date
+							+ '/'
+							+ selectedFr
+							+ '/' + routeId + '/' + isGrn + '/');
+
+		}
+		function exportToExcel() {
+
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 
 	<!--basic scripts-->
 	<script
