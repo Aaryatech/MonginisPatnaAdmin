@@ -512,7 +512,6 @@ public class SalesReportController {
 				map.add("toDate", toDate);
 				map.add("catIdList", selectedCat);
 
-
 				ParameterizedTypeReference<List<SalesReportBillwise>> typeRef = new ParameterizedTypeReference<List<SalesReportBillwise>>() {
 				};
 				ResponseEntity<List<SalesReportBillwise>> responseEntity = restTemplate.exchange(
@@ -586,8 +585,8 @@ public class SalesReportController {
 
 	@RequestMapping(value = "pdf/showSaleReportByDatePdf/{fDate}/{tDate}/{selectedFr}/{routeId}/{selectedCat}/", method = RequestMethod.GET)
 	public ModelAndView showSaleReportByDatePdf(@PathVariable String fDate, @PathVariable String tDate,
-			@PathVariable String selectedFr, @PathVariable String routeId,@PathVariable String selectedCat, HttpServletRequest request,
-			HttpServletResponse response) {
+			@PathVariable String selectedFr, @PathVariable String routeId, @PathVariable String selectedCat,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("reports/sales/pdf/billwisesalesbydatePdf");
 
@@ -734,8 +733,7 @@ public class SalesReportController {
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 
 			model.addObject("routeList", routeList);
-			
-			
+
 			CategoryListResponse categoryListResponse;
 
 			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
@@ -744,7 +742,6 @@ public class SalesReportController {
 			mCategoryList = categoryListResponse.getmCategoryList();
 
 			model.addObject("mCategoryList", mCategoryList);
-
 
 		} catch (Exception e) {
 
@@ -768,8 +765,8 @@ public class SalesReportController {
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
-			
-			String selectedCat=request.getParameter("cat_id_list");
+
+			String selectedCat = request.getParameter("cat_id_list");
 			List<String> catIdList = new ArrayList<>();
 			selectedCat = selectedCat.substring(1, selectedCat.length() - 1);
 			selectedCat = selectedCat.replaceAll("\"", "");
@@ -934,8 +931,8 @@ public class SalesReportController {
 
 	@RequestMapping(value = "pdf/showSaleBillwiseByFrPdf/{fromDate}/{toDate}/{selectedFr}/{routeId}/{selectedCat}", method = RequestMethod.GET)
 	public ModelAndView showSaleBillwiseByFrPdf(@PathVariable String fromDate, @PathVariable String toDate,
-			@PathVariable String selectedFr, @PathVariable String routeId,@PathVariable String selectedCat, HttpServletRequest request,
-			HttpServletResponse response) {
+			@PathVariable String selectedFr, @PathVariable String routeId, @PathVariable String selectedCat,
+			HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/sales/pdf/billwisesalebyfrPdf");
 
 		List<SalesReportBillwise> saleList = new ArrayList<>();
@@ -968,8 +965,6 @@ public class SalesReportController {
 				String strFrIdRouteWise = sbForRouteFrId.toString();
 				selectedFr = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
 				System.out.println("fr Id Route WISE = " + selectedFr);
-				
-				
 
 			} // end of if
 
@@ -1016,7 +1011,6 @@ public class SalesReportController {
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
 				map.add("catIdList", selectedCat);
-
 
 				ParameterizedTypeReference<List<SalesReportBillwise>> typeRef = new ParameterizedTypeReference<List<SalesReportBillwise>>() {
 				};
@@ -1913,7 +1907,7 @@ public class SalesReportController {
 
 				float netValue = royaltyList.get(i).gettBillTaxableAmt()
 						- (royaltyList.get(i).gettGrnTaxableAmt() + royaltyList.get(i).gettGvnTaxableAmt());
-				
+
 				float rAmt = netValue * royPer / 100;
 
 				rowData.add("" + roundUp(netQty));
@@ -4691,7 +4685,6 @@ public class SalesReportController {
 
 				float netValue = royaltyList.get(i).gettBillTaxableAmt()
 						- (royaltyList.get(i).gettGrnTaxableAmt() + royaltyList.get(i).gettGvnTaxableAmt());
-				
 
 				float rAmt = netValue * royPer / 100;
 
@@ -4845,8 +4838,8 @@ public class SalesReportController {
 			List<MCategoryList> tempList = new ArrayList<>();
 
 			// royaltyBean.setCategoryList(categoryList);
-			float royPerModel= getRoyPer();
-			
+			float royPerModel = getRoyPer();
+
 			Map<Integer, String> catNameId = new HashMap<Integer, String>();
 
 			for (int i = 0; i < categoryList.size(); i++) {
@@ -4909,8 +4902,9 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
-		// File f = new File("/home/ats-12/report.pdf");
+		// File f = new
+		// File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
+		File f = new File("/home/lenovo/Desktop/grngvn.pdf");
 
 		try {
 			runConverter(Constants.ReportURL + url, f, request, response);
@@ -4924,9 +4918,10 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
+		// String filePath =
+		// "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
 
-		// String filePath = "/home/ats-12/report.pdf";
+		String filePath = "/home/lenovo/Desktop/grngvn.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -5019,10 +5014,11 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		//File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
+		// File f = new
+		// File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		 File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report2.pdf");
-		 //File f = new File("E:\\bill.pdf");
+		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report2.pdf");
+		// File f = new File("E:\\bill.pdf");
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
 			// runConverter("www.google.com", f,request,response);
@@ -5035,7 +5031,8 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		//String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
+		// String filePath =
+		// "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
 		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report2.pdf";
 		// String filePath = "E:\\bill.pdf";
 
