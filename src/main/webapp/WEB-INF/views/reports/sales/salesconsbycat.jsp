@@ -286,11 +286,7 @@
 									$('#table_grid td').remove();
 									$('#loader').hide();
 
-									var royPer = $
-									{
-										royPer
-									}
-									;
+									var royPer = ${royPer};
 									//alert(royPer);
 
 									if (data == "") {

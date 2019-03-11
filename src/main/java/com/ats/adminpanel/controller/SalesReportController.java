@@ -2400,9 +2400,12 @@ public class SalesReportController {
 			}
 			List<AllFrIdName> selectedFrListAll = new ArrayList();
 			List<Menu> selectedMenuList = new ArrayList<Menu>();
+			CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+					CategoryListResponse.class);
 
+			mCategoryList = categoryListResponse.getmCategoryList();
 			System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
-
+            model.addObject("catList", mCategoryList);
 			model.addObject("todaysDate", todaysDate);
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 
@@ -4902,9 +4905,8 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		// File f = new
-		// File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
-		File f = new File("/home/lenovo/Desktop/grngvn.pdf");
+		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf");
+		 //File f = new File("/home/lenovo/Desktop/grngvn.pdf");
 
 		try {
 			runConverter(Constants.ReportURL + url, f, request, response);
@@ -4918,10 +4920,9 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		// String filePath =
-		// "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
+		 String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report.pdf";
 
-		String filePath = "/home/lenovo/Desktop/grngvn.pdf";
+		 //String filePath = "/home/lenovo/Desktop/grngvn.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

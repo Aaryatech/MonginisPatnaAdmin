@@ -529,7 +529,7 @@ table {
 															.append($(
 																	'<td></td>')
 																	.html(
-																			"<input type=text value="+spCakeOrder.spInstructions+"  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
+																			"<input type=text value='"+spCakeOrder.spInstructions+"'  name=spInstructions"+spCakeOrder.spOrderNo+" id=spInstructions"+spCakeOrder.spOrderNo+" class=form-control />"));
 
 													var totalValue = parseFloat(spCakeOrder.spTotalAddRate)
 															+ parseFloat(spCakeOrder.spPrice);
@@ -711,6 +711,7 @@ table {
 									sp_order_no : spOrderNo,
 									box : box,
 									addon : addon,
+									spInstructions:spInstructions,
 									ajax : 'true',
 								},
 								function(data) {
