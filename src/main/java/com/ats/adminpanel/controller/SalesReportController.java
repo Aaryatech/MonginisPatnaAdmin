@@ -535,41 +535,46 @@ public class SalesReportController {
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
 
-		rowData.add("Bill No");
+		rowData.add("Sr No");
 		rowData.add("Invoice No");
-		rowData.add("Bill Date");
-		rowData.add("Franchisee Code");
-		rowData.add("Franchisee Name");
-		rowData.add("Franchisee City");
-		rowData.add("Franchisee Gst No");
-		rowData.add("sgst sum");
-		rowData.add("cgst sum");
-		rowData.add("igst sum");
-		rowData.add("Total Tax");
-		rowData.add("Grand Total");
-		rowData.add("Taxable Amt");
+		rowData.add("Invoice Date");
+		
+		rowData.add("Franchise Name");
+		rowData.add("Franchise City");
+		rowData.add("Franchise GST No");
+		rowData.add("Taxable Amount");
+		rowData.add("CGST Amount");
+		rowData.add("SGST Amount");
+		
+		rowData.add("IGST Amount");
+		rowData.add("Total Tax Amount");
+		rowData.add("Total");
+		
 
 		expoExcel.setRowData(rowData);
+		int srno=1;
 		exportToExcelList.add(expoExcel);
 		for (int i = 0; i < saleList.size(); i++) {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + saleList.get(i).getBillNo());
+			rowData.add("" + srno);
 			rowData.add(saleList.get(i).getInvoiceNo());
 			rowData.add(saleList.get(i).getBillDate());
 
-			rowData.add("" + saleList.get(i).getFrId());
+			
 			rowData.add(saleList.get(i).getFrName());
 
 			rowData.add(saleList.get(i).getFrCity());
 			rowData.add(saleList.get(i).getFrGstNo());
-			rowData.add("" + saleList.get(i).getSgstSum());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
 			rowData.add("" + saleList.get(i).getCgstSum());
+			rowData.add("" + saleList.get(i).getSgstSum());
+			
 			rowData.add("" + saleList.get(i).getIgstSum());
 			rowData.add("" + saleList.get(i).getTotalTax());
 			rowData.add("" + saleList.get(i).getGrandTotal());
-			rowData.add("" + saleList.get(i).getTaxableAmt());
+			srno=srno+1;
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -882,19 +887,20 @@ public class SalesReportController {
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
 
-		rowData.add("Bill No");
-		rowData.add("Invoice No");
-		rowData.add("Bill Date");
-		rowData.add("Franchisee Code");
-		rowData.add("Franchisee Name");
-		rowData.add("Franchisee City");
-		rowData.add("Franchisee Gst No");
-		rowData.add("sgst sum");
-		rowData.add("cgst sum");
-		rowData.add("igst sum");
+		
+		
+		rowData.add("SR NO");
+		rowData.add("Franchise Name");
+		rowData.add("Franchise City");
+		rowData.add("Franchise GST Number");
+		rowData.add("Taxable Amount");
+		rowData.add("SGST Amount");
+		rowData.add("CGST Amount");
+		rowData.add("IGST Amount");
 		rowData.add("Total Tax");
 		rowData.add("Grand Total");
-		rowData.add("Taxable Amt");
+		
+		int SrNo=1;
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
@@ -902,21 +908,20 @@ public class SalesReportController {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + saleList.get(i).getBillNo());
-			rowData.add(saleList.get(i).getInvoiceNo());
-			rowData.add(saleList.get(i).getBillDate());
-
-			rowData.add("" + saleList.get(i).getFrId());
+			rowData.add("" + SrNo);
+			
 			rowData.add(saleList.get(i).getFrName());
 
 			rowData.add(saleList.get(i).getFrCity());
 			rowData.add(saleList.get(i).getFrGstNo());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
 			rowData.add("" + saleList.get(i).getSgstSum());
 			rowData.add("" + saleList.get(i).getCgstSum());
 			rowData.add("" + saleList.get(i).getIgstSum());
 			rowData.add("" + saleList.get(i).getTotalTax());
 			rowData.add("" + saleList.get(i).getGrandTotal());
-			rowData.add("" + saleList.get(i).getTaxableAmt());
+			
+			SrNo=SrNo+1;
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -1215,42 +1220,35 @@ public class SalesReportController {
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
 
-		rowData.add("Bill No");
-		rowData.add("Invoice No");
+		rowData.add("SR NO");
+		
 		rowData.add("Bill Date");
-		rowData.add("Franchisee Code");
-		rowData.add("Franchisee Name");
-		rowData.add("Franchisee City");
-		rowData.add("Franchisee Gst No");
-		rowData.add("sgst sum");
-		rowData.add("cgst sum");
-		rowData.add("igst sum");
-		rowData.add("Total Tax");
+		rowData.add("Taxable Amount");
+		rowData.add("SGST Amount");
+		rowData.add("CGST Amount");
+		rowData.add("IGST Amount");
 		rowData.add("Grand Total");
-		rowData.add("Taxable Amt");
-
+		
+		int srno=1;
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
 		for (int i = 0; i < saleList.size(); i++) {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + saleList.get(i).getBillNo());
-			rowData.add(saleList.get(i).getInvoiceNo());
+			rowData.add("" +srno );
+			
 			rowData.add(saleList.get(i).getBillDate());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
+			
 
-			rowData.add("" + saleList.get(i).getFrId());
-			rowData.add(saleList.get(i).getFrName());
-
-			rowData.add(saleList.get(i).getFrCity());
-			rowData.add(saleList.get(i).getFrGstNo());
+			
 			rowData.add("" + saleList.get(i).getSgstSum());
 			rowData.add("" + saleList.get(i).getCgstSum());
 			rowData.add("" + saleList.get(i).getIgstSum());
-			rowData.add("" + saleList.get(i).getTotalTax());
 			rowData.add("" + saleList.get(i).getGrandTotal());
-			rowData.add("" + saleList.get(i).getTaxableAmt());
-
+			
+			srno=srno+1;
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 
@@ -1474,7 +1472,7 @@ public class SalesReportController {
 
 			} // end of if
 
-			if (frList.contains("-1")) {
+			if (selectedFr.contains("-1")) {
 				isAllFrSelected = true;
 			}
 
@@ -2210,15 +2208,16 @@ public class SalesReportController {
 
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
-
-		rowData.add("fr Id");
-		rowData.add("Franchisee Code");
-		rowData.add("Franchisee Name");
-		rowData.add("Franchisee City");
-
-		rowData.add("Grn Taxable Amt");
-		rowData.add("Gvn Taxable Amt");
-		rowData.add("Taxable Amt");
+		float royPer = getRoyPer();
+		rowData.add("Sr No");
+		rowData.add("Franchise Name");
+		rowData.add("Franchise City");
+		rowData.add("Sales Value");
+		rowData.add("GRN Value");
+		rowData.add("GVN Value");
+		rowData.add("Net Value");
+		rowData.add("Royalty %");
+		rowData.add("Royalty Amount");
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
@@ -2226,16 +2225,19 @@ public class SalesReportController {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + royaltyFrList.get(i).getFrId());
-
-			rowData.add("" + royaltyFrList.get(i).getFrId());
+			rowData.add("" + i+1);
 			rowData.add(royaltyFrList.get(i).getFrName());
-
 			rowData.add(royaltyFrList.get(i).getFrCity());
-
+			rowData.add("" + royaltyFrList.get(i).gettBillTaxableAmt());
 			rowData.add("" + royaltyFrList.get(i).gettGrnTaxableAmt());
 			rowData.add("" + royaltyFrList.get(i).gettGvnTaxableAmt());
-			rowData.add("" + royaltyFrList.get(i).gettBillTaxableAmt());
+			rowData.add("" + (royaltyFrList.get(i).gettBillTaxableAmt()-(royaltyFrList.get(i).gettGvnTaxableAmt()+royaltyFrList.get(i).gettGrnTaxableAmt())));
+			rowData.add("" +royPer);
+			float netValue = royaltyFrList.get(i).gettBillTaxableAmt()
+					- (royaltyFrList.get(i).gettGrnTaxableAmt() + royaltyFrList.get(i).gettGvnTaxableAmt());
+
+			float rAmt = netValue * royPer / 100;
+			rowData.add("" +rAmt);
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
