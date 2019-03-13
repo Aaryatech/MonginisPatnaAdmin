@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.MCategory;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.CommonConf;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.item.CategoryListResponse;
@@ -52,68 +55,80 @@ import com.ats.adminpanel.model.stock.GetCurProdAndBillQtyList;
 public class ProdForcastingController {
 
 	List<MCategoryList> filteredCatList;
-	public  List<GetProductionItemQty> getProdItemQtyList;
-	public  int[] timeSlot;
-	public  String productionDate;
-	public  int selectedCat;
-	public  List<Item> globalItemList; 
-	
-	public PostProdPlanHeader postProdPlanHeaderRes=null;
-	 
-	GetCurProdAndBillQtyList getCurProdAndBillQtyList = new GetCurProdAndBillQtyList();
+	public List<GetProductionItemQty> getProdItemQtyList;
+	public int[] timeSlot;
+	public String productionDate;
+	public int selectedCat;
+	public List<Item> globalItemList;
 
+	public PostProdPlanHeader postProdPlanHeaderRes = null;
+
+	GetCurProdAndBillQtyList getCurProdAndBillQtyList = new GetCurProdAndBillQtyList();
 
 	@RequestMapping(value = "/showProdForcast", method = RequestMethod.GET)
 	public ModelAndView showProdForcasting(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("production/prodForcasting");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrItemConfP", "showFrItemConfP", "1", "0", "0", "0", newModuleList);
 
-		Constants.mainAct = 4;
-		Constants.subAct = 34;
+		if (view.getError() == true) {
 
-		try {
+			model = new ModelAndView("accessDenied");
 
-			RestTemplate restTemplate = new RestTemplate();
+		} else {
 
-			CategoryListResponse allCategoryResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
+			model = new ModelAndView("production/prodForcasting");
 
-			List<MCategoryList> catList = allCategoryResponse.getmCategoryList();
+			Constants.mainAct = 4;
+			Constants.subAct = 34;
 
-			filteredCatList = new ArrayList<MCategoryList>();
-			System.out.println("catList :" + catList.toString());
-
-			for (MCategoryList mCategory : catList) {
-				if (mCategory.getCatId() != 5 && mCategory.getCatId() != 6 && mCategory.getCatId() != 3) {
-					filteredCatList.add(mCategory);
-
-				}
-			}
-			int productionTimeSlot = 0;
 			try {
 
-				productionTimeSlot = restTemplate.getForObject(Constants.url + "getProductionTimeSlot", Integer.class);
-				System.out.println("time slot  " + productionTimeSlot);
+				RestTemplate restTemplate = new RestTemplate();
+
+				CategoryListResponse allCategoryResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+
+				List<MCategoryList> catList = allCategoryResponse.getmCategoryList();
+
+				filteredCatList = new ArrayList<MCategoryList>();
+				System.out.println("catList :" + catList.toString());
+
+				for (MCategoryList mCategory : catList) {
+					if (mCategory.getCatId() != 5 && mCategory.getCatId() != 6 && mCategory.getCatId() != 3) {
+						filteredCatList.add(mCategory);
+
+					}
+				}
+				int productionTimeSlot = 0;
+				try {
+
+					productionTimeSlot = restTemplate.getForObject(Constants.url + "getProductionTimeSlot",
+							Integer.class);
+					System.out.println("time slot  " + productionTimeSlot);
+				} catch (Exception e) {
+					// System.out.println(e.getMessage());
+					// e.printStackTrace();
+
+				}
+
+				timeSlot = new int[productionTimeSlot];
+				for (int i = 0; i < productionTimeSlot; i++)
+					timeSlot[i] = i + 1;
+
+				model.addObject("productionTimeSlot", timeSlot);
+
+				model.addObject("catList", filteredCatList);
+
 			} catch (Exception e) {
-				// System.out.println(e.getMessage());
-				// e.printStackTrace();
+				System.out.println("Exception in Show Production Forecasting.");
+
+				filteredCatList = new ArrayList<MCategoryList>();
+				model.addObject("catList", filteredCatList);
 
 			}
-
-			timeSlot = new int[productionTimeSlot];
-			for (int i = 0; i < productionTimeSlot; i++)
-				timeSlot[i] = i + 1;
-
-			model.addObject("productionTimeSlot", timeSlot);
-
-			model.addObject("catList", filteredCatList);
-
-		} catch (Exception e) {
-			System.out.println("Exception in Show Production Forecasting.");
-
-			filteredCatList = new ArrayList<MCategoryList>();
-			model.addObject("catList", filteredCatList);
-
 		}
 		return model;
 	}
@@ -133,8 +148,8 @@ public class ProdForcastingController {
 		Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatIdAndSortId", map, Item[].class);
 		ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
 		System.out.println("Filter Item List " + itemList.toString());
-		
-		globalItemList=itemList;
+
+		globalItemList = itemList;
 		// -------------------------------------------------------------------------------
 		MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
 
@@ -170,15 +185,12 @@ public class ProdForcastingController {
 			}
 			commonConfList.add(commonConf);
 		}
-		
-		
-		
-		
+
 		// new Code
 		List<FinishedGoodStockDetail> updateStockDetailList = new ArrayList<>();
 
 		try {
-			
+
 			map = new LinkedMultiValueMap<String, Object>();
 			DateFormat dfYmd = new SimpleDateFormat("yyyy-MM-dd");
 			map = new LinkedMultiValueMap<String, Object>();
@@ -197,21 +209,21 @@ public class ProdForcastingController {
 
 			System.out.println("stock date " + stockDate);
 			String stkDate = dfYmd.format(stockDate);
-			//int selCate=Integer.parseInt(selectedCat);
-			System.out.println("stk Date for get Cur Prod and Bill Qty "+stkDate);
-			
-			System.out.println("stk CatId for get Cur Prod and Bill Qty "+catId);
+			// int selCate=Integer.parseInt(selectedCat);
+			System.out.println("stk Date for get Cur Prod and Bill Qty " + stkDate);
+
+			System.out.println("stk CatId for get Cur Prod and Bill Qty " + catId);
 			map = new LinkedMultiValueMap<String, Object>();
-			
+
 			map.add("prodDate", stkDate);
 			map.add("catId", catId);
 			map.add("delStatus", 0);
-			
-map.add("timestamp", stockHeader.getTimestamp());
-			
+
+			map.add("timestamp", stockHeader.getTimestamp());
+
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
-			 
+
 			map.add("curTimeStamp", dateFormat.format(cal.getTime()));
 
 			getCurProdAndBillQtyList = restTemplate.postForObject(Constants.url + "getCurrentProdAndBillQty", map,
@@ -229,8 +241,8 @@ map.add("timestamp", stockHeader.getTimestamp());
 
 			ParameterizedTypeReference<List<FinishedGoodStockDetail>> typeRef = new ParameterizedTypeReference<List<FinishedGoodStockDetail>>() {
 			};
-			ResponseEntity<List<FinishedGoodStockDetail>> responseEntity = restTemplate.exchange(
-					Constants.url + "getFinGoodStockDetail", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			ResponseEntity<List<FinishedGoodStockDetail>> responseEntity = restTemplate
+					.exchange(Constants.url + "getFinGoodStockDetail", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
 			List<FinishedGoodStockDetail> finGoodDetail = responseEntity.getBody();
 
@@ -249,8 +261,8 @@ map.add("timestamp", stockHeader.getTimestamp());
 
 					if (curProdBilQty.getId() == stockDetail.getItemId()) {
 
-						System.out.println(
-								"item Id Matched " + curProdBilQty.getId() + "and " + stockDetail.getItemId());
+						System.out
+								.println("item Id Matched " + curProdBilQty.getId() + "and " + stockDetail.getItemId());
 
 						float a = 0, b = 0, c = 0;
 
@@ -350,28 +362,23 @@ map.add("timestamp", stockHeader.getTimestamp());
 			e.printStackTrace();
 
 		}
-		
-		for(int i=0;i<commonConfList.size();i++) {
-			
-			for(int j=0;j<updateStockDetailList.size();j++) {
-				
-				if(commonConfList.get(i).getId()==updateStockDetailList.get(j).getItemId()) {
-					
+
+		for (int i = 0; i < commonConfList.size(); i++) {
+
+			for (int j = 0; j < updateStockDetailList.size(); j++) {
+
+				if (commonConfList.get(i).getId() == updateStockDetailList.get(j).getItemId()) {
+
 					commonConfList.get(i).setCurClosingQty(updateStockDetailList.get(j).getCloCurrent());
-					
+
 					commonConfList.get(i).setCurOpeQty(updateStockDetailList.get(j).getTotalCloStk());
-					
+
 				}
-				
-				
+
 			}
 		}
-		
-		
-		
+
 //end of new Codes
-
-
 
 		System.out.println("------------------------");
 
@@ -451,14 +458,14 @@ map.add("timestamp", stockHeader.getTimestamp());
 	 */
 
 	@RequestMapping(value = "/getItemsProdQty", method = RequestMethod.GET)
-	public @ResponseBody PlanQtyAjaxResponse getItemsProdQty(HttpServletRequest request,
-			HttpServletResponse response) {
+	public @ResponseBody PlanQtyAjaxResponse getItemsProdQty(HttpServletRequest request, HttpServletResponse response) {
 
-		int maxTimeSlot=0;
-		PlanQtyAjaxResponse planQtyAjaxResponse=new PlanQtyAjaxResponse();
+		int maxTimeSlot = 0;
+		PlanQtyAjaxResponse planQtyAjaxResponse = new PlanQtyAjaxResponse();
 
 		System.out.println("In method");
-		//List<GetProductionItemQty> getProdItemQtyList = new ArrayList<GetProductionItemQty>();
+		// List<GetProductionItemQty> getProdItemQtyList = new
+		// ArrayList<GetProductionItemQty>();
 
 		String productionDate = request.getParameter("prodDate");
 		System.out.println("prodDate" + productionDate);
@@ -473,72 +480,69 @@ map.add("timestamp", stockHeader.getTimestamp());
 
 		map.add("productionDate", productionDate);
 		map.add("catId", selectedCat);
-		if(id==2)
-		{
+		if (id == 2) {
 			try {
-				
-				GetProductionItemQty[] responseEntity = rest.postForObject(Constants.url + "getOrderuItemQty",map,GetProductionItemQty[].class);
 
-				
-				//PostProdPlanHeader postProductionHeader= rest.postForObject(Constants.url + "getProductionTimeSlot", map,PostProdPlanHeader.class);
+				GetProductionItemQty[] responseEntity = rest.postForObject(Constants.url + "getOrderuItemQty", map,
+						GetProductionItemQty[].class);
 
-				//maxTimeSlot=postProductionHeader.getTimeSlot();
-				ArrayList<GetProductionItemQty> getProdItemQtyList = new ArrayList<GetProductionItemQty>(Arrays.asList(responseEntity));
+				// PostProdPlanHeader postProductionHeader= rest.postForObject(Constants.url +
+				// "getProductionTimeSlot", map,PostProdPlanHeader.class);
+
+				// maxTimeSlot=postProductionHeader.getTimeSlot();
+				ArrayList<GetProductionItemQty> getProdItemQtyList = new ArrayList<GetProductionItemQty>(
+						Arrays.asList(responseEntity));
 				System.out.println("Filter Item List " + getProdItemQtyList.toString());
-				
-				
+
 				planQtyAjaxResponse.setGetProductionItemQtyList(getProdItemQtyList);
 				planQtyAjaxResponse.setItemList(globalItemList);
-				System.out.println("planQtyAjaxResponse"+planQtyAjaxResponse.toString());
+				System.out.println("planQtyAjaxResponse" + planQtyAjaxResponse.toString());
 				// getOrderItemQtyList=rest.postForObject(Constants.url + "getOrderAllItemQty",
 				// map, List.class);
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+
 			}
-		}
-		else if(id==5)
-		{
+		} else if (id == 5) {
 			try {
-				
-				postProdPlanHeaderRes=rest.postForObject(Constants.url + "getPostProdPlanHeaderForPlan",map,PostProdPlanHeader.class);
+
+				postProdPlanHeaderRes = rest.postForObject(Constants.url + "getPostProdPlanHeaderForPlan", map,
+						PostProdPlanHeader.class);
 				planQtyAjaxResponse.setItemList(globalItemList);
-				System.err.println("################################"+postProdPlanHeaderRes.toString());
-				if(postProdPlanHeaderRes!=null) {
-				planQtyAjaxResponse.setProdDetails(postProdPlanHeaderRes.getPostProductionPlanDetail());
+				System.err.println("################################" + postProdPlanHeaderRes.toString());
+				if (postProdPlanHeaderRes != null) {
+					planQtyAjaxResponse.setProdDetails(postProdPlanHeaderRes.getPostProductionPlanDetail());
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		}else
-		{
+
+		} else {
 			try {
-				
-				GetProductionItemQty[] responseEntity = rest.postForObject(Constants.url + "getProduItemQty",map,GetProductionItemQty[].class);
 
-				
-				//PostProdPlanHeader postProductionHeader= rest.postForObject(Constants.url + "getProductionTimeSlot", map,PostProdPlanHeader.class);
+				GetProductionItemQty[] responseEntity = rest.postForObject(Constants.url + "getProduItemQty", map,
+						GetProductionItemQty[].class);
 
-				//maxTimeSlot=postProductionHeader.getTimeSlot();
-				ArrayList<GetProductionItemQty> getProdItemQtyList = new ArrayList<GetProductionItemQty>(Arrays.asList(responseEntity));
+				// PostProdPlanHeader postProductionHeader= rest.postForObject(Constants.url +
+				// "getProductionTimeSlot", map,PostProdPlanHeader.class);
+
+				// maxTimeSlot=postProductionHeader.getTimeSlot();
+				ArrayList<GetProductionItemQty> getProdItemQtyList = new ArrayList<GetProductionItemQty>(
+						Arrays.asList(responseEntity));
 				System.out.println("Filter Item List " + getProdItemQtyList.toString());
-				
-				
+
 				planQtyAjaxResponse.setGetProductionItemQtyList(getProdItemQtyList);
 				planQtyAjaxResponse.setItemList(globalItemList);
-				System.out.println("planQtyAjaxResponse"+planQtyAjaxResponse.toString());
+				System.out.println("planQtyAjaxResponse" + planQtyAjaxResponse.toString());
 				// getOrderItemQtyList=rest.postForObject(Constants.url + "getOrderAllItemQty",
 				// map, List.class);
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+
 			}
 		}
-		
 
 		System.out.println("List of Orders : " + getProdItemQtyList.toString());
 
@@ -553,128 +557,118 @@ map.add("timestamp", stockHeader.getTimestamp());
 	public String submitProduction(HttpServletRequest request, HttpServletResponse response) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		if(postProdPlanHeaderRes==null)
-		{
-		List<CommonConf> prodPlanItems=new ArrayList<CommonConf>();
-		String planDate=request.getParameter("datepicker5");
-		for(Item item:globalItemList)
-		{
-			CommonConf commonConf=new CommonConf();
-			int qty =Integer.parseInt(request.getParameter("qty5"+item.getId()));
-          
-			System.out.println(qty);
-		if(qty>0)
-		{
-			commonConf.setId(item.getId());
-            commonConf.setName(item.getItemName());
-            commonConf.setQty(qty);
-			
-            prodPlanItems.add(commonConf);
-		 }
-		}
-		
-		String selectTime = request.getParameter("selectTime");
-		String productionDate = null;
-		try
-		{
-			Date dt = new Date();
-			Calendar c = Calendar.getInstance(); 
-			c.setTime(dt); 
-			c.add(Calendar.DATE, 1);
-			dt = c.getTime();
+		if (postProdPlanHeaderRes == null) {
+			List<CommonConf> prodPlanItems = new ArrayList<CommonConf>();
+			String planDate = request.getParameter("datepicker5");
+			for (Item item : globalItemList) {
+				CommonConf commonConf = new CommonConf();
+				int qty = Integer.parseInt(request.getParameter("qty5" + item.getId()));
 
-		 productionDate = new SimpleDateFormat("dd-MM-yyyy").format(dt);
-		System.out.println("production Date"+productionDate);
-		}catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
+				System.out.println(qty);
+				if (qty > 0) {
+					commonConf.setId(item.getId());
+					commonConf.setName(item.getItemName());
+					commonConf.setQty(qty);
 
-		String convertedDate = null;
-		if (productionDate != null && productionDate != "" && selectTime != null && selectTime != "") {
-			try {
-				SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
-				SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy");
-				Date dmyDate = dmySDF.parse(productionDate);
-
-				convertedDate = ymdSDF.format(dmyDate);
-			} catch (ParseException e) {
-
-				e.printStackTrace();
+					prodPlanItems.add(commonConf);
+				}
 			}
 
-			int timeSlot = Integer.parseInt(selectTime);
-
-			/*System.out.println("Date  :  " + convertedDate);
-			for (int i = 0; i < prodPlanItems.size(); i++) {
-
-				System.out.println("item  Id " + prodPlanItems.get(i).getId());
-			}*/
-
-			PostProdPlanHeader postProductionHeader = new PostProdPlanHeader();
-
-			postProductionHeader.setTimeSlot(timeSlot);
-			postProductionHeader.setItemGrp1(selectedCat);
-			postProductionHeader.setProductionDate(planDate);
-			postProductionHeader.setDelStatus(0);
-			postProductionHeader.setIsBom(0);
-			postProductionHeader.setIsMixing(0);
-			postProductionHeader.setIsPlanned(1);
-			postProductionHeader.setProductionBatch("0");
-			postProductionHeader.setProductionStatus(1);
-			postProductionHeader.setProductionHeaderId(0);
-			
-			List<PostProductionPlanDetail> postProductionDetailList = new ArrayList<>();
-			PostProductionPlanDetail postProductionDetail;
-
-
-			for (int i = 0; i < prodPlanItems.size(); i++) {
-				postProductionDetail = new PostProductionPlanDetail();
-				int id = prodPlanItems.get(i).getId();
-				postProductionDetail.setProductionDate(planDate);
-				postProductionDetail.setItemId(id);
-				postProductionDetail.setOpeningQty(0);
-				postProductionDetail.setOrderQty(0);
-				postProductionDetail.setProductionBatch("0");
-				postProductionDetail.setRejectedQty(0);
-				postProductionDetail.setProductionQty(0);
-				postProductionDetail.setPlanQty(prodPlanItems.get(i).getQty());
-				postProductionDetailList.add(postProductionDetail);
-			}
-
-			postProductionHeader.setPostProductionPlanDetail(postProductionDetailList);
-			System.out.println("postProductionHeader"+postProductionHeader.toString());
+			String selectTime = request.getParameter("selectTime");
+			String productionDate = null;
 			try {
+				Date dt = new Date();
+				Calendar c = Calendar.getInstance();
+				c.setTime(dt);
+				c.add(Calendar.DATE, 1);
+				dt = c.getTime();
 
-				Info info = restTemplate.postForObject(Constants.url + "postProductionPlan", postProductionHeader,
-						Info.class);
-             	} catch (Exception e) {
-				e.printStackTrace();
+				productionDate = new SimpleDateFormat("dd-MM-yyyy").format(dt);
+				System.out.println("production Date" + productionDate);
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-			
-		}
-		}
-		else
-		{
-			String planDate=request.getParameter("datepicker5");
-			for(int j=0;j<globalItemList.size();j++)
-			{
-				int flag=0;
-				int qty =Integer.parseInt(request.getParameter("qty5"+globalItemList.get(j).getId()));
-	             
-			  for(int i=0;i<postProdPlanHeaderRes.getPostProductionPlanDetail().size();i++)
-			  {
-				  if(globalItemList.get(j).getId()==postProdPlanHeaderRes.getPostProductionPlanDetail().get(i).getItemId())
-				  {
-					  postProdPlanHeaderRes.getPostProductionPlanDetail().get(i).setPlanQty(qty);
-					  flag=1;
-					  break;
-				  }
-				  
-			  }
-				if(flag==0 && qty>0)
-				{
+
+			String convertedDate = null;
+			if (productionDate != null && productionDate != "" && selectTime != null && selectTime != "") {
+				try {
+					SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy");
+					Date dmyDate = dmySDF.parse(productionDate);
+
+					convertedDate = ymdSDF.format(dmyDate);
+				} catch (ParseException e) {
+
+					e.printStackTrace();
+				}
+
+				int timeSlot = Integer.parseInt(selectTime);
+
+				/*
+				 * System.out.println("Date  :  " + convertedDate); for (int i = 0; i <
+				 * prodPlanItems.size(); i++) {
+				 * 
+				 * System.out.println("item  Id " + prodPlanItems.get(i).getId()); }
+				 */
+
+				PostProdPlanHeader postProductionHeader = new PostProdPlanHeader();
+
+				postProductionHeader.setTimeSlot(timeSlot);
+				postProductionHeader.setItemGrp1(selectedCat);
+				postProductionHeader.setProductionDate(planDate);
+				postProductionHeader.setDelStatus(0);
+				postProductionHeader.setIsBom(0);
+				postProductionHeader.setIsMixing(0);
+				postProductionHeader.setIsPlanned(1);
+				postProductionHeader.setProductionBatch("0");
+				postProductionHeader.setProductionStatus(1);
+				postProductionHeader.setProductionHeaderId(0);
+
+				List<PostProductionPlanDetail> postProductionDetailList = new ArrayList<>();
+				PostProductionPlanDetail postProductionDetail;
+
+				for (int i = 0; i < prodPlanItems.size(); i++) {
+					postProductionDetail = new PostProductionPlanDetail();
+					int id = prodPlanItems.get(i).getId();
+					postProductionDetail.setProductionDate(planDate);
+					postProductionDetail.setItemId(id);
+					postProductionDetail.setOpeningQty(0);
+					postProductionDetail.setOrderQty(0);
+					postProductionDetail.setProductionBatch("0");
+					postProductionDetail.setRejectedQty(0);
+					postProductionDetail.setProductionQty(0);
+					postProductionDetail.setPlanQty(prodPlanItems.get(i).getQty());
+					postProductionDetailList.add(postProductionDetail);
+				}
+
+				postProductionHeader.setPostProductionPlanDetail(postProductionDetailList);
+				System.out.println("postProductionHeader" + postProductionHeader.toString());
+				try {
+
+					Info info = restTemplate.postForObject(Constants.url + "postProductionPlan", postProductionHeader,
+							Info.class);
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
+
+			}
+		} else {
+			String planDate = request.getParameter("datepicker5");
+			for (int j = 0; j < globalItemList.size(); j++) {
+				int flag = 0;
+				int qty = Integer.parseInt(request.getParameter("qty5" + globalItemList.get(j).getId()));
+
+				for (int i = 0; i < postProdPlanHeaderRes.getPostProductionPlanDetail().size(); i++) {
+					if (globalItemList.get(j).getId() == postProdPlanHeaderRes.getPostProductionPlanDetail().get(i)
+							.getItemId()) {
+						postProdPlanHeaderRes.getPostProductionPlanDetail().get(i).setPlanQty(qty);
+						flag = 1;
+						break;
+					}
+
+				}
+				if (flag == 0 && qty > 0) {
 					PostProductionPlanDetail postProductionDetail = new PostProductionPlanDetail();
 					postProductionDetail.setProductionHeaderId(postProdPlanHeaderRes.getProductionHeaderId());
 					postProductionDetail.setProductionDate(planDate);
@@ -687,19 +681,18 @@ map.add("timestamp", stockHeader.getTimestamp());
 					postProductionDetail.setPlanQty(qty);
 					postProdPlanHeaderRes.getPostProductionPlanDetail().add(postProductionDetail);
 				}
-			
+
 			}
 			try {
-               
+
 				Info info = restTemplate.postForObject(Constants.url + "postProductionPlan", postProdPlanHeaderRes,
 						Info.class);
-             	} catch (Exception e) {
-             		System.err.println(e.getMessage());
-				    e.printStackTrace();
-				
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+
 			}
-			
-			
+
 		}
 		return "redirect:/showProdForcast";
 	}

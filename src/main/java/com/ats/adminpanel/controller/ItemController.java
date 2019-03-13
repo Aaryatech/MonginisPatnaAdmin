@@ -39,6 +39,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.ExportToExcel;
@@ -48,6 +49,7 @@ import com.ats.adminpanel.model.StockItem;
 import com.ats.adminpanel.model.TaxHsn;
 import com.ats.adminpanel.model.TrayType;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUom;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.FrItemStock;
@@ -99,67 +101,95 @@ public class ItemController {
 
 	@RequestMapping(value = "/updateHsnAndPer", method = RequestMethod.GET)
 	public ModelAndView updateHsnAndPer(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/updateHsnPer");
 
-		/*
-		 * Constants.mainAct =1; Constants.subAct =4;
-		 */
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			List<Item> itemsList = new ArrayList<Item>();
-			itemsList = allItemsListResponse.getItems();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("updateHsnAndPer", "updateHsnAndPer", "1", "0", "0", "0", newModuleList);
 
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = categoryListResponse.getmCategoryList();
-			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
-			for (MCategoryList mCat : mCategoryList) {
-				if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
-					resCatList.add(mCat);
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("items/updateHsnPer");
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
+
+				List<Item> itemsList = new ArrayList<Item>();
+				itemsList = allItemsListResponse.getItems();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+						resCatList.add(mCat);
+					}
 				}
-			}
-			model.addObject("itemsList", itemsList);
-			model.addObject("mCategoryList", resCatList);
+				model.addObject("itemsList", itemsList);
+				model.addObject("mCategoryList", resCatList);
 
-		} catch (Exception e) {
-			System.out.println("" + e.getMessage());
+			} catch (Exception e) {
+				System.out.println("" + e.getMessage());
+			}
 		}
 		return model;
 	}
+
 	ArrayList<GetTaxHsn> taxHsnList;
+
 	@RequestMapping(value = "/showAddTaxHsn", method = RequestMethod.GET)
 	public ModelAndView showAddTaxHsn(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/tax_hsn");
 
 		/*
 		 * Constants.mainAct =1; Constants.subAct =4;
 		 */
-		try {
-			RestTemplate restTemplate = new RestTemplate();
 
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = categoryListResponse.getmCategoryList();
-			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
-			for (MCategoryList mCat : mCategoryList) {
-				if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
-					resCatList.add(mCat);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddTaxHsn", "showAddTaxHsn", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("items/tax_hsn");
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+						resCatList.add(mCat);
+					}
 				}
+				model.addObject("mCategoryList", resCatList);
+
+				GetTaxHsn[] taxHsnArray = restTemplate.getForObject(Constants.url + "getAllTaxHsnList",
+						GetTaxHsn[].class);
+
+				taxHsnList = new ArrayList<GetTaxHsn>(Arrays.asList(taxHsnArray));
+
+				model.addObject("taxHsnList", taxHsnList);
+
+			} catch (Exception e) {
+				System.out.println("" + e.getMessage());
 			}
-			model.addObject("mCategoryList", resCatList);
-			
-			
-			GetTaxHsn[] taxHsnArray = restTemplate.getForObject(Constants.url + "getAllTaxHsnList",  GetTaxHsn[].class);
-
-			 taxHsnList = new ArrayList<GetTaxHsn>(Arrays.asList(taxHsnArray));
-
-			model.addObject("taxHsnList", taxHsnList);
-			
-			
-		} catch (Exception e) {
-			System.out.println("" + e.getMessage());
 		}
 		return model;
 	}
@@ -274,7 +304,6 @@ public class ItemController {
 		return "redirect:/showAddTaxHsn";
 	}
 
-	
 	@RequestMapping(value = "/deleteTaxHsn/{idList}", method = RequestMethod.GET)
 	public String deleteTaxHsn(@PathVariable String[] idList) {
 
@@ -292,7 +321,7 @@ public class ItemController {
 			map.add("taxHsnIdList", strItemIds);
 
 			Info info = rest.postForObject("" + Constants.url + "deleteTaxHsn", map, Info.class);
-			//System.out.println(info.toString());
+			// System.out.println(info.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,23 +329,19 @@ public class ItemController {
 		return "redirect:/showAddTaxHsn";
 	}
 
-	//updateTaxHsn/${txList.taxHsnId}/index Ajax call set record..
-	
-	
-	
-	
+	// updateTaxHsn/${txList.taxHsnId}/index Ajax call set record..
+
 	@RequestMapping(value = "/getTaxHsnForEdit", method = RequestMethod.GET)
 	public @ResponseBody GetTaxHsn getTaxHsnForEdit(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		int key = Integer.parseInt(request.getParameter("key"));
-		
-		taxHsn=taxHsnList.get(key);
+
+		taxHsn = taxHsnList.get(key);
 
 		return taxHsn;
 
 	}
-	
-	
+
 	@RequestMapping(value = "/getGrp2ByCatId", method = RequestMethod.GET)
 	public @ResponseBody List<SubCategory> getSubCateListByCatId(
 			@RequestParam(value = "catId", required = true) int catId) {
@@ -333,34 +358,46 @@ public class ItemController {
 		return subCatList;
 	}
 
-	
-	
 	@RequestMapping(value = "/addItem", method = RequestMethod.GET)
 	public ModelAndView addItem(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/addnewitem");
 
-		Constants.mainAct = 1;
-		Constants.subAct = 4;
-		try {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			System.out.println("Add Item Request");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("addItem", "addItem", "1", "0", "0", "0", newModuleList);
 
-			RestTemplate restTemplate = new RestTemplate();
-			// CategoryListResponse
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = new ArrayList<MCategoryList>();
-			mCategoryList = categoryListResponse.getmCategoryList();
-			System.out.println("Main Cat is  " + categoryListResponse.toString());
-			Integer maxId = restTemplate.getForObject(Constants.url + "getUniqueItemCode", Integer.class);
+		if (view.getError() == true) {
 
-			model.addObject("itemId", maxId);
-			model.addObject("mCategoryList", mCategoryList);
-			model.addObject("isError", isError);
-			isError = false;
+			model = new ModelAndView("accessDenied");
 
-		} catch (Exception e) {
-			System.out.println("error in item show sachin" + e.getMessage());
+		} else {
+
+			model = new ModelAndView("items/addnewitem");
+
+			Constants.mainAct = 1;
+			Constants.subAct = 4;
+			try {
+
+				System.out.println("Add Item Request");
+
+				RestTemplate restTemplate = new RestTemplate();
+				// CategoryListResponse
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = new ArrayList<MCategoryList>();
+				mCategoryList = categoryListResponse.getmCategoryList();
+				System.out.println("Main Cat is  " + categoryListResponse.toString());
+				Integer maxId = restTemplate.getForObject(Constants.url + "getUniqueItemCode", Integer.class);
+
+				model.addObject("itemId", maxId);
+				model.addObject("mCategoryList", mCategoryList);
+				model.addObject("isError", isError);
+				isError = false;
+
+			} catch (Exception e) {
+				System.out.println("error in item show sachin" + e.getMessage());
+			}
 		}
 		return model;
 	}
@@ -405,7 +442,7 @@ public class ItemController {
 
 		// sachin 18 FEB
 		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
-		//System.err.println("Tax Hsn Found " + taxHsn);
+		// System.err.println("Tax Hsn Found " + taxHsn);
 		if (taxHsn == null) {
 			taxHsn = new GetTaxHsn();
 		}
@@ -417,14 +454,14 @@ public class ItemController {
 	@RequestMapping(value = "/taxHsnForAddNewItemOnSubCatChange", method = RequestMethod.GET)
 	public @ResponseBody GetTaxHsn taxHsnForAddNewItemOnSubCatChange(
 			@RequestParam(value = "subCatId", required = true) int subCatId) {
-		//logger.debug("finding Items for  " + subCatId);
+		// logger.debug("finding Items for " + subCatId);
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		map.add("subCatId", subCatId);
 
 		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
-		//System.err.println("Tax Hsn Found " + taxHsn);
+		// System.err.println("Tax Hsn Found " + taxHsn);
 		if (taxHsn == null) {
 			taxHsn = new GetTaxHsn();
 		}
@@ -535,18 +572,33 @@ public class ItemController {
 
 	@RequestMapping(value = "/showFrItemConfP")
 	public ModelAndView showFrItemConfP(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/itemConfP");
+
 		Constants.mainAct = 2;
 		Constants.subAct = 13;
 
-		try {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			model.addObject("catId", catId);
-			model.addObject("itemList", tempItemList);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrItemConfP", "showFrItemConfP", "1", "0", "0", "0", newModuleList);
 
-		} catch (Exception e) {
+		if (view.getError() == true) {
 
-			e.printStackTrace();
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("items/itemConfP");
+
+			try {
+
+				model.addObject("catId", catId);
+				model.addObject("itemList", tempItemList);
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
 		}
 		return model;
 	}
@@ -867,10 +919,11 @@ public class ItemController {
 
 		int itemIsUsed = Integer.parseInt(request.getParameter("is_used"));
 
-		/*String itemSortId = request.getParameter("item_sort_id");
-
-		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
-*/
+		/*
+		 * String itemSortId = request.getParameter("item_sort_id");
+		 * 
+		 * int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
+		 */
 		int itemShelfLife = Integer.parseInt(request.getParameter("item_shelf_life"));
 
 		logger.info("Add new item request mapping.");
@@ -953,96 +1006,114 @@ public class ItemController {
 	@RequestMapping(value = "/itemList")
 	public ModelAndView showAddItem(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("List Item Request");
-		ModelAndView mav = new ModelAndView("items/itemlist");
+
 		Constants.mainAct = 1;
 		Constants.subAct = 5;
 
-		RestTemplate restTemplate = new RestTemplate();
-		// CategoryListResponse
-		categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory", CategoryListResponse.class);
-		List<MCategoryList> mCategoryList = new ArrayList<MCategoryList>();
-		mCategoryList = categoryListResponse.getmCategoryList();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		mav.addObject("mCategoryList", mCategoryList);
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("itemList", "itemList", "1", "0", "0", "0", newModuleList);
 
-			// RestTemplate restTemplate = new RestTemplate();
-			allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+		if (view.getError() == true) {
 
-			List<Item> itemsList = new ArrayList<Item>();
-			itemsList = allItemsListResponse.getItems();
-			System.out.println("LIst of items" + itemsList.toString());
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("items/itemlist");
+
+			RestTemplate restTemplate = new RestTemplate();
+			// CategoryListResponse
+			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+					CategoryListResponse.class);
+			List<MCategoryList> mCategoryList = new ArrayList<MCategoryList>();
+			mCategoryList = categoryListResponse.getmCategoryList();
 
 			mav.addObject("mCategoryList", mCategoryList);
-			mav.addObject("itemsList", itemsList);
-			mav.addObject("url", Constants.ITEM_IMAGE_URL);
+			try {
 
-			// exportToExcel
+				// RestTemplate restTemplate = new RestTemplate();
+				allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
 
-			ItemList itemResponse = restTemplate.getForObject(Constants.url + "tally/getAllExcelItems", ItemList.class);
+				List<Item> itemsList = new ArrayList<Item>();
+				itemsList = allItemsListResponse.getItems();
+				System.out.println("LIst of items" + itemsList.toString());
 
-			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+				mav.addObject("mCategoryList", mCategoryList);
+				mav.addObject("itemsList", itemsList);
+				mav.addObject("url", Constants.ITEM_IMAGE_URL);
 
-			ExportToExcel expoExcel = new ExportToExcel();
-			List<String> rowData = new ArrayList<String>();
+				// exportToExcel
 
-			rowData.add("Sr. No.");
-			rowData.add("Id");
-			rowData.add("Item Code");
-			rowData.add("Item Name");
-			rowData.add("Category");
-			rowData.add("Group1");
-			rowData.add("Group2");
-			rowData.add("HsnCode");
-			rowData.add("UOM");
-			rowData.add("Rate1");
-			rowData.add("Rate2");
-			rowData.add("Rate3");
-			rowData.add("Mrp1");
-			rowData.add("Mrp2");
-			rowData.add("Mrp3");
-			rowData.add("Sgst %");
-			rowData.add("Cgst %");
-			rowData.add("Igst %");
-			rowData.add("Cess %");
+				ItemList itemResponse = restTemplate.getForObject(Constants.url + "tally/getAllExcelItems",
+						ItemList.class);
 
-			expoExcel.setRowData(rowData);
-			exportToExcelList.add(expoExcel);
-			List<TallyItem> excelItems = itemResponse.getItemList();
-			for (int i = 0; i < excelItems.size(); i++) {
-				expoExcel = new ExportToExcel();
-				rowData = new ArrayList<String>();
-				rowData.add("" + (i + 1));
-				rowData.add("" + excelItems.get(i).getId());
-				rowData.add(excelItems.get(i).getItemCode());
-				rowData.add(excelItems.get(i).getItemName());
-				rowData.add(excelItems.get(i).getItemGroup());
-				rowData.add(excelItems.get(i).getSubGroup());
-				rowData.add(excelItems.get(i).getSubSubGroup());
-				rowData.add(excelItems.get(i).getHsnCode());
+				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				rowData.add(excelItems.get(i).getUom());
-				rowData.add("" + excelItems.get(i).getItemRate1());
-				rowData.add("" + excelItems.get(i).getItemRate2());
-				rowData.add("" + excelItems.get(i).getItemRate3());
-				rowData.add("" + excelItems.get(i).getItemRate1());
-				rowData.add("" + excelItems.get(i).getItemRate2());
-				rowData.add("" + excelItems.get(i).getItemRate3());
-				rowData.add("" + excelItems.get(i).getSgstPer());
-				rowData.add("" + excelItems.get(i).getCgstPer());
-				rowData.add("" + excelItems.get(i).getIgstPer());
-				rowData.add("" + excelItems.get(i).getCessPer());
+				ExportToExcel expoExcel = new ExportToExcel();
+				List<String> rowData = new ArrayList<String>();
+
+				rowData.add("Sr. No.");
+				rowData.add("Id");
+				rowData.add("Item Code");
+				rowData.add("Item Name");
+				rowData.add("Category");
+				rowData.add("Group1");
+				rowData.add("Group2");
+				rowData.add("HsnCode");
+				rowData.add("UOM");
+				rowData.add("Rate1");
+				rowData.add("Rate2");
+				rowData.add("Rate3");
+				rowData.add("Mrp1");
+				rowData.add("Mrp2");
+				rowData.add("Mrp3");
+				rowData.add("Sgst %");
+				rowData.add("Cgst %");
+				rowData.add("Igst %");
+				rowData.add("Cess %");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
+				List<TallyItem> excelItems = itemResponse.getItemList();
+				for (int i = 0; i < excelItems.size(); i++) {
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+					rowData.add("" + (i + 1));
+					rowData.add("" + excelItems.get(i).getId());
+					rowData.add(excelItems.get(i).getItemCode());
+					rowData.add(excelItems.get(i).getItemName());
+					rowData.add(excelItems.get(i).getItemGroup());
+					rowData.add(excelItems.get(i).getSubGroup());
+					rowData.add(excelItems.get(i).getSubSubGroup());
+					rowData.add(excelItems.get(i).getHsnCode());
 
+					rowData.add(excelItems.get(i).getUom());
+					rowData.add("" + excelItems.get(i).getItemRate1());
+					rowData.add("" + excelItems.get(i).getItemRate2());
+					rowData.add("" + excelItems.get(i).getItemRate3());
+					rowData.add("" + excelItems.get(i).getItemRate1());
+					rowData.add("" + excelItems.get(i).getItemRate2());
+					rowData.add("" + excelItems.get(i).getItemRate3());
+					rowData.add("" + excelItems.get(i).getSgstPer());
+					rowData.add("" + excelItems.get(i).getCgstPer());
+					rowData.add("" + excelItems.get(i).getIgstPer());
+					rowData.add("" + excelItems.get(i).getCessPer());
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+
+				}
+
+				session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "itemsList");
+			} catch (Exception e) {
+				System.out.println("exce in listing filtered group itme" + e.getMessage());
 			}
-
-			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelList", exportToExcelList);
-			session.setAttribute("excelName", "itemsList");
-		} catch (Exception e) {
-			System.out.println("exce in listing filtered group itme" + e.getMessage());
 		}
 
 		return mav;
@@ -1350,9 +1421,11 @@ public class ItemController {
 
 		int itemIsUsed = Integer.parseInt(request.getParameter("is_used"));
 
-		/*double itemSortId = Double.parseDouble(request.getParameter("item_sort_id"));
-
-		int grnTwo = Integer.parseInt(request.getParameter("grn_two"));*/
+		/*
+		 * double itemSortId = Double.parseDouble(request.getParameter("item_sort_id"));
+		 * 
+		 * int grnTwo = Integer.parseInt(request.getParameter("grn_two"));
+		 */
 		int id = Integer.parseInt(request.getParameter("itemId"));
 		int shelfLife = Integer.parseInt(request.getParameter("item_shelf_life"));
 
@@ -1419,36 +1492,51 @@ public class ItemController {
 	public ModelAndView showAddItemSup(HttpServletRequest request, HttpServletResponse response) {
 		Constants.mainAct = 1;
 		Constants.subAct = 109;
-		ModelAndView model = new ModelAndView("items/itemSup");
-		try {
-			RestTemplate restTemplate = new RestTemplate();
 
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = categoryListResponse.getmCategoryList();
-			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
-			for (MCategoryList mCat : mCategoryList) {
-				if (mCat.getCatId() != 5) {
-					resCatList.add(mCat);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddItemSup", "showAddItemSup", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("items/itemSup");
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5) {
+						resCatList.add(mCat);
+					}
 				}
-			}
-			List<RawMaterialUom> rawMaterialUomList = restTemplate.getForObject(Constants.url + "rawMaterial/getRmUom",
-					List.class);
-			model.addObject("rmUomList", rawMaterialUomList);
-			List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
-			System.out.println("Tray Types:" + trayTypeList.toString());
-			model.addObject("trayTypes", trayTypeList);
+				List<RawMaterialUom> rawMaterialUomList = restTemplate
+						.getForObject(Constants.url + "rawMaterial/getRmUom", List.class);
+				model.addObject("rmUomList", rawMaterialUomList);
+				List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
+				System.out.println("Tray Types:" + trayTypeList.toString());
+				model.addObject("trayTypes", trayTypeList);
 
-			model.addObject("mCategoryList", resCatList);
-			model.addObject("isEdit", 0);
-			model.addObject("suppCatId", suppCatId);
-			model.addObject("suppId", suppId);
-			model.addObject("suppItemName", suppItemName);
-			suppCatId = 0;
-			suppId = 0;
-			suppItemName = "";
-		} catch (Exception e) {
-			System.out.println("Excption In /showAddItemSup");
+				model.addObject("mCategoryList", resCatList);
+				model.addObject("isEdit", 0);
+				model.addObject("suppCatId", suppCatId);
+				model.addObject("suppId", suppId);
+				model.addObject("suppItemName", suppItemName);
+				suppCatId = 0;
+				suppId = 0;
+				suppItemName = "";
+			} catch (Exception e) {
+				System.out.println("Excption In /showAddItemSup");
+			}
 		}
 		return model;
 
@@ -1498,24 +1586,39 @@ public class ItemController {
 
 	@RequestMapping(value = "/showItemSupList", method = RequestMethod.GET)
 	public ModelAndView itemSupList(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = new ModelAndView("items/itemSupList");
+
 		Constants.mainAct = 1;
 		Constants.subAct = 110;
 
-		RestTemplate restTemplate = new RestTemplate();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		try {
-			ItemSupList itemSupList = restTemplate.getForObject(Constants.url + "/getItemSupList", ItemSupList.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showItemSupList", "showItemSupList", "1", "0", "0", "0", newModuleList);
 
-			List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
-			System.out.println("Tray Types:" + trayTypeList.toString());
-			mav.addObject("trayTypes", trayTypeList);
-			mav.addObject("itemsList", itemSupList.getItemSupList());
+		if (view.getError() == true) {
 
-		} catch (Exception e) {
-			System.out.println("Exc In /itemSupList" + e.getMessage());
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("items/itemSupList");
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			try {
+				ItemSupList itemSupList = restTemplate.getForObject(Constants.url + "/getItemSupList",
+						ItemSupList.class);
+
+				List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
+				System.out.println("Tray Types:" + trayTypeList.toString());
+				mav.addObject("trayTypes", trayTypeList);
+				mav.addObject("itemsList", itemSupList.getItemSupList());
+
+			} catch (Exception e) {
+				System.out.println("Exc In /itemSupList" + e.getMessage());
+			}
 		}
-
 		return mav;
 
 	}
@@ -1546,9 +1649,11 @@ public class ItemController {
 
 			String uom = request.getParameter("uom");
 
-			/*float actualWeight = Float.parseFloat(request.getParameter("actual_weight"));
-
-			float baseWeight = Float.parseFloat(request.getParameter("base_weight"));*/
+			/*
+			 * float actualWeight = Float.parseFloat(request.getParameter("actual_weight"));
+			 * 
+			 * float baseWeight = Float.parseFloat(request.getParameter("base_weight"));
+			 */
 
 			float inputPerQty = Float.parseFloat(request.getParameter("input_per_qty"));
 			int trayType = Integer.parseInt(request.getParameter("tray_type"));
@@ -1560,9 +1665,11 @@ public class ItemController {
 			int isGateSaleDisc = Integer.parseInt(request.getParameter("is_gate_sale_disc"));
 
 			int isAllowBday = Integer.parseInt(request.getParameter("is_allow_bday"));
-			/*int cutSection = Integer.parseInt(request.getParameter("cut_section"));
-			String shortName = request.getParameter("short_name");
-			System.err.println("Short Name " + shortName);*/
+			/*
+			 * int cutSection = Integer.parseInt(request.getParameter("cut_section"));
+			 * String shortName = request.getParameter("short_name");
+			 * System.err.println("Short Name " + shortName);
+			 */
 			ItemSup itemSup = new ItemSup();
 			itemSup.setId(id);
 			itemSup.setItemId(itemId);

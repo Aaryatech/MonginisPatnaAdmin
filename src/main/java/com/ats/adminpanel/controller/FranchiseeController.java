@@ -42,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.AllRoutesListResponse;
@@ -56,6 +57,7 @@ import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.SpCakeResponse;
 import com.ats.adminpanel.model.SpDayConfigure;
 import com.ats.adminpanel.model.SpecialCake;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeAndMenu;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
@@ -86,7 +88,8 @@ public class FranchiseeController {
 	AllFranchiseeAndMenu allFranchiseeAndMenuList;
 	FranchiseeAndMenuList franchiseeAndMenuList;
 	public static int settingValue;
-	int frIdForSupp;boolean isError=false;
+	int frIdForSupp;
+	boolean isError = false;
 
 	private static final Logger logger = LoggerFactory.getLogger(FranchiseeController.class);
 
@@ -97,59 +100,74 @@ public class FranchiseeController {
 
 		logger.info("/showAddNewFranchisee request mapping.");
 
-		ModelAndView model = new ModelAndView("franchisee/addnewfranchisee");
+		// ModelAndView model = new ModelAndView("franchisee/addnewfranchisee");
 		Constants.mainAct = 1;
 		Constants.subAct = 2;
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		RestTemplate restTemplate = new RestTemplate();
-		AllRoutesListResponse allRoutesListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-				AllRoutesListResponse.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddNewFranchisee", "showAddNewFranchisee", "1", "0", "0", "0",
+				newModuleList);
 
-		Integer maxFrId = restTemplate.getForObject(Constants.url + "getUnigueFrCode", Integer.class);
+		if (view.getError() == true) {
 
-		int maxFrIdLenth = String.valueOf(maxFrId).length();
-		maxFrIdLenth = 5 - maxFrIdLenth;
-		StringBuilder frCode = new StringBuilder("DB");
+			model = new ModelAndView("accessDenied");
 
-		for (int i = 0; i < maxFrIdLenth; i++) {
-			String j = "0";
-			frCode.append(j);
-		}
-		frCode.append(String.valueOf(maxFrId));
+		} else {
 
-		List<Route> routeList = new ArrayList<Route>();
-		routeList = allRoutesListResponse.getRoute();
-		FrItemStockConfiResponse frItemStockConfiResponse = restTemplate
-				.getForObject(Constants.url + "getfrItemConfSetting", FrItemStockConfiResponse.class);
-		List<FrItemStockConfigure> frItemStockConfigures = new ArrayList<FrItemStockConfigure>();
-		List<FrItemStockConfigure> fileredFrItemStockConfigures = new ArrayList<FrItemStockConfigure>();
+			model = new ModelAndView("franchisee/addnewfranchisee");
 
-		frItemStockConfigures = frItemStockConfiResponse.getFrItemStockConfigure();
+			RestTemplate restTemplate = new RestTemplate();
+			AllRoutesListResponse allRoutesListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+					AllRoutesListResponse.class);
 
-		for (int i = 0; i < frItemStockConfigures.size(); i++) {
+			Integer maxFrId = restTemplate.getForObject(Constants.url + "getUnigueFrCode", Integer.class);
 
-			if (frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("frItemStockType")) {
-				settingValue = frItemStockConfigures.get(i).getSettingValue();
+			int maxFrIdLenth = String.valueOf(maxFrId).length();
+			maxFrIdLenth = 5 - maxFrIdLenth;
+			StringBuilder frCode = new StringBuilder("DB");
+
+			for (int i = 0; i < maxFrIdLenth; i++) {
+				String j = "0";
+				frCode.append(j);
 			}
+			frCode.append(String.valueOf(maxFrId));
 
-			if (frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("Non Registered")
-					|| frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("composite")
-					|| frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("Regular")) {
+			List<Route> routeList = new ArrayList<Route>();
+			routeList = allRoutesListResponse.getRoute();
+			FrItemStockConfiResponse frItemStockConfiResponse = restTemplate
+					.getForObject(Constants.url + "getfrItemConfSetting", FrItemStockConfiResponse.class);
+			List<FrItemStockConfigure> frItemStockConfigures = new ArrayList<FrItemStockConfigure>();
+			List<FrItemStockConfigure> fileredFrItemStockConfigures = new ArrayList<FrItemStockConfigure>();
 
-				fileredFrItemStockConfigures.add(frItemStockConfigures.get(i));
+			frItemStockConfigures = frItemStockConfiResponse.getFrItemStockConfigure();
+
+			for (int i = 0; i < frItemStockConfigures.size(); i++) {
+
+				if (frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("frItemStockType")) {
+					settingValue = frItemStockConfigures.get(i).getSettingValue();
+				}
+
+				if (frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("Non Registered")
+						|| frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("composite")
+						|| frItemStockConfigures.get(i).getSettingKey().equalsIgnoreCase("Regular")) {
+
+					fileredFrItemStockConfigures.add(frItemStockConfigures.get(i));
+				}
+
 			}
+			frItemStockConfigures.remove(0);
 
+			System.out.println("settingValue-------------------------------------------==" + settingValue);
+			model.addObject("settingValue", settingValue);
+			model.addObject("frItemStockConfigures", fileredFrItemStockConfigures);
+			System.out.println("Event List" + routeList.toString());
+			model.addObject("routeList", routeList);
+			model.addObject("frCode", frCode);
+			model.addObject("isError", isError);
+			isError = false;
 		}
-		frItemStockConfigures.remove(0);
-
-		System.out.println("settingValue-------------------------------------------==" + settingValue);
-		model.addObject("settingValue", settingValue);
-		model.addObject("frItemStockConfigures", fileredFrItemStockConfigures);
-		System.out.println("Event List" + routeList.toString());
-		model.addObject("routeList", routeList);
-		model.addObject("frCode", frCode);
-		model.addObject("isError",isError);
-		isError=false;
 		return model;
 	}
 	// ----------------------------------------END-------------------------------------------
@@ -159,25 +177,37 @@ public class FranchiseeController {
 	public ModelAndView updateFrMenuTime(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/updateFrMenuTime request mapping.");
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView mav = new ModelAndView("franchisee/confFrMenuTime");
-		Constants.mainAct = 2;
-		Constants.subAct = 14;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showUpdateFrMenuTime", "showUpdateFrMenuTime", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
-					FranchiseeAndMenuList.class);
+		if (view.getError() == true) {
 
-			System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+			mav = new ModelAndView("accessDenied");
 
-			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
-			mav.addObject("menuList", franchiseeAndMenuList.getAllMenu());
+		} else {
 
-		} catch (Exception e) {
-			System.out.println("Franchisee Controller Exception " + e.getMessage());
+			mav = new ModelAndView("franchisee/confFrMenuTime");
+			Constants.mainAct = 2;
+			Constants.subAct = 14;
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+
+				System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+
+				mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+				mav.addObject("menuList", franchiseeAndMenuList.getAllMenu());
+
+			} catch (Exception e) {
+				System.out.println("Franchisee Controller Exception " + e.getMessage());
+			}
 		}
-
 		return mav;
 	}
 
@@ -255,25 +285,38 @@ public class FranchiseeController {
 	public ModelAndView addconfigureFranchisee(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/configureFranchisee request mapping.");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView mav = new ModelAndView("franchisee/configureFr");
-		Constants.mainAct = 2;
-		Constants.subAct = 14;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("configureFranchisee", "configureFranchisee", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
-					FranchiseeAndMenuList.class);
+		if (view.getError() == true) {
 
-			System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+			model = new ModelAndView("accessDenied");
 
-			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+		} else {
 
-		} catch (Exception e) {
-			System.out.println("Franchisee Controller Exception " + e.getMessage());
+			model = new ModelAndView("franchisee/configureFr");
+
+			Constants.mainAct = 2;
+			Constants.subAct = 14;
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+
+				System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+
+				model.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+
+			} catch (Exception e) {
+				System.out.println("Franchisee Controller Exception " + e.getMessage());
+			}
 		}
-
-		return mav;
+		return model;
 	}
 	// ----------------------------------------END--------------------------------------------
 
@@ -342,96 +385,106 @@ public class FranchiseeController {
 		logger.info("/configureFranchisee List request mapping.");
 		Constants.mainAct = 2;
 		Constants.subAct = 15;
-		ModelAndView mav = new ModelAndView("franchisee/frlist");
+		ModelAndView model = null;
+
 		try {
 
-			RestTemplate restTemplate = new RestTemplate();
+			HttpSession session = request.getSession();
 
-			ConfigureFrListResponse congigureFrList = restTemplate.getForObject(Constants.url + "getAllConfFr",
-					ConfigureFrListResponse.class);
-			List<ConfigureFrBean> configureFrList = new ArrayList<ConfigureFrBean>();
-			configureFrList = congigureFrList.getConfigureFrBean();
+			List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+			Info view = AccessControll.checkAccess("configureFranchiseesList", "configureFranchiseesList", "1", "0",
+					"0", "0", newModuleList);
 
-			System.out.println("congi fr bean " + configureFrList.toString());
-			System.out.println("fr count = " + configureFrList.size());
-			mav.addObject("configureFrList", configureFrList);
+			if (view.getError() == true) {
 
-			List<Item> itemList = new ArrayList<Item>();
-			AllItemsListResponse itemListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
-					AllItemsListResponse.class);
+				model = new ModelAndView("accessDenied");
 
-			itemList = itemListResponse.getItems();
-			System.out.println();
-			List<ItemNameId> itemNames = new ArrayList<ItemNameId>();
+			} else {
 
-			mav.addObject("configureFrList", configureFrList);
+				model = new ModelAndView("franchisee/frlist");
+				RestTemplate restTemplate = new RestTemplate();
+
+				ConfigureFrListResponse congigureFrList = restTemplate.getForObject(Constants.url + "getAllConfFr",
+						ConfigureFrListResponse.class);
+				List<ConfigureFrBean> configureFrList = new ArrayList<ConfigureFrBean>();
+				configureFrList = congigureFrList.getConfigureFrBean();
+
+				System.out.println("congi fr bean " + configureFrList.toString());
+				System.out.println("fr count = " + configureFrList.size());
+				model.addObject("configureFrList", configureFrList);
+
+				List<Item> itemList = new ArrayList<Item>();
+				AllItemsListResponse itemListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
+
+				itemList = itemListResponse.getItems();
+				System.out.println();
+				List<ItemNameId> itemNames = new ArrayList<ItemNameId>();
+
+				model.addObject("configureFrList", configureFrList);
+			}
 
 		} catch (Exception e) {
 			System.out.println("exce in fr list fr controller" + e.getMessage());
 		}
 
-		return mav;
+		return model;
 	}
-	
-	//deleteMultiFrConfig
-	//3900 in Rest
-	//11
+
+	// deleteMultiFrConfig
+	// 3900 in Rest
+	// 11
 	@RequestMapping(value = "/deleteMultiFrConfig", method = RequestMethod.POST)
 	public String deleteMultiFrConfig(HttpServletRequest request, HttpServletResponse response) {
 
-		String[] settingIdList=request.getParameterValues("settingIdList");
+		String[] settingIdList = request.getParameterValues("settingIdList");
 
-		//System.err.println("Seeing id list " +settingIdList[1]);
-		//ModelAndView mav = new ModelAndView("franchisee/listAllFranchisee");
-		
+		// System.err.println("Seeing id list " +settingIdList[1]);
+		// ModelAndView mav = new ModelAndView("franchisee/listAllFranchisee");
+
 		try {
 			String settingString = new String();
 
-			for(int i=0;i<settingIdList.length;i++) {
-				
-				settingString = settingString+","+settingIdList[i]; 
+			for (int i = 0; i < settingIdList.length; i++) {
+
+				settingString = settingString + "," + settingIdList[i];
 
 			}
-			
-			//System.err.println(  "settingString1 "+settingString);
+
+			// System.err.println( "settingString1 "+settingString);
 
 			settingString = settingString.substring(1, settingString.length());
-			//System.err.println( " post settingString" +settingString);
+			// System.err.println( " post settingString" +settingString);
 
 			RestTemplate rest = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("settingIdList", settingString);
 
-
 			Info info = rest.postForObject(Constants.url + "deleteMultiFrConfig", map, Info.class);
 			System.out.println(info.toString());
 
-			/*if (errorResponse.getError()) {
-				return "redirect:/configureFranchiseesList";
-
-			} else {
-				return "redirect:/configureFranchiseesList";
-
-			}*/
+			/*
+			 * if (errorResponse.getError()) { return "redirect:/configureFranchiseesList";
+			 * 
+			 * } else { return "redirect:/configureFranchiseesList";
+			 * 
+			 * }
+			 */
 		} catch (Exception e) {
 			System.out.println("Exc In Del Fr");
 		}
 		return "redirect:/configureFranchiseesList";
 	}
-	
-	
 
 	// ----------------------------------------END--------------------------------------------
 	@RequestMapping(value = "/configureItems", method = RequestMethod.POST)
-	public String configureItems(HttpServletRequest request, HttpServletResponse response)
-	{
+	public String configureItems(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String[] itemShow = request.getParameterValues("items[]");
 			String[] frId = request.getParameterValues("fr_id[]");
-			int menuId=Integer.parseInt(request.getParameter("menu"));
+			int menuId = Integer.parseInt(request.getParameter("menu"));
 			RestTemplate restTemplate = new RestTemplate();
 
-			
 			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 					FranchiseeAndMenuList.class);
 
@@ -456,38 +509,35 @@ public class FranchiseeController {
 			System.out.println("items for conf" + items);
 
 			StringBuilder sb1 = new StringBuilder();
-            if(frId[0].equals("0"))
-            {
-            	for(FranchiseeList frList:franchiseeAndMenuList.getAllFranchisee())
-            	{
-            		sb1 = sb1.append(frList.getFrId() + ",");
-            	}
-            }else {
-			for (int i = 0; i < frId.length; i++) {
-				sb1 = sb1.append(frId[i] + ",");
+			if (frId[0].equals("0")) {
+				for (FranchiseeList frList : franchiseeAndMenuList.getAllFranchisee()) {
+					sb1 = sb1.append(frList.getFrId() + ",");
+				}
+			} else {
+				for (int i = 0; i < frId.length; i++) {
+					sb1 = sb1.append(frId[i] + ",");
 
+				}
 			}
-            }
 			String frIdList = sb1.toString();
 			frIdList = frIdList.substring(0, frIdList.length() - 1);
-			System.err.println("selected fr "+frIdList.toString());
-			RestTemplate rest=new RestTemplate();
+			System.err.println("selected fr " + frIdList.toString());
+			RestTemplate rest = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("itemIdList", items);
 			map.add("frIdList", frIdList);
 			map.add("menuId", menuId);
-            map.add("catId", selectedCatId);
+			map.add("catId", selectedCatId);
 			Info errorMessage = rest.postForObject(Constants.url + "updateConfiguredItems", map, Info.class);
 
-			if(errorMessage.getError()==false)
-			{
+			if (errorMessage.getError() == false) {
 				System.err.println("stock");
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "redirect:/configureFranchiseesList";
-		
+
 	}
 	// -------------------------ADD NEW FRANCHISEE
 	// PROCESS-------------------------------
@@ -638,24 +688,23 @@ public class FranchiseeController {
 		map.add("frAddress", frAddr);
 		map.add("frTarget", frTarget);
 		map.add("isSameState", isSameState);
-        try {
-		FranchiseeList frResponse = rest.postForObject(Constants.url + "saveFranchisee", map, FranchiseeList.class);
-		
-		if (frResponse!=null) {
-			
-			frIdForSupp=frResponse.getFrId();
-			System.err.println("frIdForSupp"+frIdForSupp);
-			isError=false;
-			return "redirect:/showAddFranchiseSup";
-		} else {
-			isError=true;
+		try {
+			FranchiseeList frResponse = rest.postForObject(Constants.url + "saveFranchisee", map, FranchiseeList.class);
+
+			if (frResponse != null) {
+
+				frIdForSupp = frResponse.getFrId();
+				System.err.println("frIdForSupp" + frIdForSupp);
+				isError = false;
+				return "redirect:/showAddFranchiseSup";
+			} else {
+				isError = true;
+				return "redirect:/showAddNewFranchisee";
+			}
+		} catch (Exception e) {
+			isError = true;
 			return "redirect:/showAddNewFranchisee";
-		}
-        }
-        catch (Exception e) {
-        	isError=true;
-			return "redirect:/showAddNewFranchisee";
-			
+
 		}
 
 	}
@@ -892,7 +941,6 @@ public class FranchiseeController {
 
 		System.out.println("Finding Item List for Selected CatId=" + catId);
 
-
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("itemGrp1", catId);
@@ -904,24 +952,23 @@ public class FranchiseeController {
 		return itemList;
 
 	}
+
 	@RequestMapping(value = "/getItemByIdUpdateHsn", method = RequestMethod.GET)
 	public @ResponseBody List<Item> getItemByIdUpdateHsn(HttpServletRequest request, HttpServletResponse response) {
-		ArrayList<Item> itemList =null;
+		ArrayList<Item> itemList = null;
 		try {
 
-        int catId=Integer.parseInt(request.getParameter("catId"));
-		
+			int catId = Integer.parseInt(request.getParameter("catId"));
 
-		RestTemplate restTemplate = new RestTemplate();
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("itemGrp1", catId);
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("itemGrp1", catId);
 
-		Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
-		 itemList = new ArrayList<Item>(Arrays.asList(item));
-		System.out.println("Filter Item List " + itemList.toString());
+			Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
+			itemList = new ArrayList<Item>(Arrays.asList(item));
+			System.out.println("Filter Item List " + itemList.toString());
 
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return itemList;
@@ -1146,77 +1193,93 @@ public class FranchiseeController {
 	public ModelAndView listAllFranchisee(HttpServletRequest request, HttpServletResponse response) {
 		Constants.mainAct = 1;
 		Constants.subAct = 3;
-		RestTemplate restTemplate = new RestTemplate();
-		AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
-				AllFranchiseeList.class);
-		AllRoutesListResponse allRoutesListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-				AllRoutesListResponse.class);
 
-		List<Route> routeList = new ArrayList<Route>();
-		routeList = allRoutesListResponse.getRoute();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView mav = new ModelAndView("franchisee/listAllFranchisee");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("listAllFranchisee", "listAllFranchisee", "1", "0", "0", "0",
+				newModuleList);
 
-		List<FranchiseeList> franchiseeList = new ArrayList<FranchiseeList>();
-		franchiseeList = allFranchiseeList.getFranchiseeList();
-		System.out.println("Franchisee List:" + franchiseeList.toString());
+		if (view.getError() == true) {
 
-		mav.addObject("franchiseeList", franchiseeList);
-		mav.addObject("routeList", routeList);
-		mav.addObject("url", Constants.FR_IMAGE_URL);
+			mav = new ModelAndView("accessDenied");
 
-		// exportToExcel
+		} else {
 
-		com.ats.adminpanel.model.mastexcel.FranchiseeList frList = restTemplate.getForObject(
-				Constants.url + "tally/getAllExcelFranchise", com.ats.adminpanel.model.mastexcel.FranchiseeList.class);
+			mav = new ModelAndView("franchisee/listAllFranchisee");
 
-		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+			RestTemplate restTemplate = new RestTemplate();
+			AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+					AllFranchiseeList.class);
+			AllRoutesListResponse allRoutesListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+					AllRoutesListResponse.class);
 
-		ExportToExcel expoExcel = new ExportToExcel();
-		List<String> rowData = new ArrayList<String>();
+			List<Route> routeList = new ArrayList<Route>();
+			routeList = allRoutesListResponse.getRoute();
 
-		rowData.add("Sr. No.");
-		rowData.add("Fr Id");
-		rowData.add("Franchisee Code");
-		rowData.add("Franchisee Name");
-		rowData.add("Rate Cat");
-		rowData.add("City");
-		rowData.add("Address 1");
-		rowData.add("Address 2");
-		rowData.add("State");
-		rowData.add("GSTIN");
+			List<FranchiseeList> franchiseeList = new ArrayList<FranchiseeList>();
+			franchiseeList = allFranchiseeList.getFranchiseeList();
+			System.out.println("Franchisee List:" + franchiseeList.toString());
 
-		expoExcel.setRowData(rowData);
-		exportToExcelList.add(expoExcel);
+			mav.addObject("franchiseeList", franchiseeList);
+			mav.addObject("routeList", routeList);
+			mav.addObject("url", Constants.FR_IMAGE_URL);
 
-		List<Franchisee> franchisee = frList.getFranchiseeList();
+			// exportToExcel
 
-		for (int i = 0; i < franchisee.size(); i++) {
-			expoExcel = new ExportToExcel();
-			rowData = new ArrayList<String>();
+			com.ats.adminpanel.model.mastexcel.FranchiseeList frList = restTemplate.getForObject(
+					Constants.url + "tally/getAllExcelFranchise",
+					com.ats.adminpanel.model.mastexcel.FranchiseeList.class);
 
-			rowData.add("" + (i + 1));
-			rowData.add("" + franchisee.get(i).getCustomerId());
-			rowData.add(franchisee.get(i).getFrCode());
-			rowData.add(franchisee.get(i).getCustomerName());
-			rowData.add(""+franchisee.get(i).getFrRateCat());
-			rowData.add(franchisee.get(i).getCity());
-			rowData.add(franchisee.get(i).getAddress1());
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-			rowData.add(franchisee.get(i).getAddress2());
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
 
-			rowData.add(franchisee.get(i).getState());
-			rowData.add(franchisee.get(i).getGSTIN());
+			rowData.add("Sr. No.");
+			rowData.add("Fr Id");
+			rowData.add("Franchisee Code");
+			rowData.add("Franchisee Name");
+			rowData.add("Rate Cat");
+			rowData.add("City");
+			rowData.add("Address 1");
+			rowData.add("Address 2");
+			rowData.add("State");
+			rowData.add("GSTIN");
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 
-		}
+			List<Franchisee> franchisee = frList.getFranchiseeList();
 
-		HttpSession session = request.getSession();
-		session.setAttribute("exportExcelList", exportToExcelList);
-		session.setAttribute("excelName", "frList");
+			for (int i = 0; i < franchisee.size(); i++) {
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+
+				rowData.add("" + (i + 1));
+				rowData.add("" + franchisee.get(i).getCustomerId());
+				rowData.add(franchisee.get(i).getFrCode());
+				rowData.add(franchisee.get(i).getCustomerName());
+				rowData.add("" + franchisee.get(i).getFrRateCat());
+				rowData.add(franchisee.get(i).getCity());
+				rowData.add(franchisee.get(i).getAddress1());
+
+				rowData.add(franchisee.get(i).getAddress2());
+
+				rowData.add(franchisee.get(i).getState());
+				rowData.add(franchisee.get(i).getGSTIN());
+
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+
+			}
+			session = request.getSession();
+			session.setAttribute("exportExcelList", exportToExcelList);
+			session.setAttribute("excelName", "frList");
+		}
 		return mav;
+
 	}
 	// ----------------------------------------END---------------------------------------------------------
 
@@ -1346,6 +1409,7 @@ public class FranchiseeController {
 
 	@RequestMapping(value = "/updateFranchisee/{frId}", method = RequestMethod.GET)
 	public ModelAndView updateFranchisee(@PathVariable int frId) {
+
 		ModelAndView model = new ModelAndView("franchisee/editFranchisee");
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -1663,51 +1727,67 @@ public class FranchiseeController {
 
 		logger.info("/configureFranchisee request mapping.");
 
-		ModelAndView mav = new ModelAndView("franchisee/specialDayCkConf");
 		Constants.mainAct = 2;
 		Constants.subAct = 16;
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
-					FranchiseeAndMenuList.class);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
-			List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
-			System.out.println("menu Response " + menuList.toString());
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("configureSpecialDayCake", "configureSpecialDayCake", "1", "0", "0", "0",
+				newModuleList);
 
-			for (FranchiseeList franchisee : franchiseeAndMenuList.getAllFranchisee()) {
-				frIdArray.add(String.valueOf(franchisee.getFrId()));
-				// System.out.println("frIdArray"+frIdArray.toString());
-			}
-			Menu frMenu = new Menu();
-			for (Menu menu : menuList) {
-				if (menu.getMainCatId() == 6) {
-					frMenu = menu;
-					break;
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("franchisee/specialDayCkConf");
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+
+				System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+				List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
+				System.out.println("menu Response " + menuList.toString());
+
+				for (FranchiseeList franchisee : franchiseeAndMenuList.getAllFranchisee()) {
+					frIdArray.add(String.valueOf(franchisee.getFrId()));
+					// System.out.println("frIdArray"+frIdArray.toString());
 				}
+				Menu frMenu = new Menu();
+				for (Menu menu : menuList) {
+					if (menu.getMainCatId() == 6) {
+						frMenu = menu;
+						break;
+					}
+				}
+				int catId = 6;
+				int menuId = frMenu.getMenuId();
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("itemGrp1", catId);
+
+				Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
+				ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+				System.out.println("Filter Item List " + itemList.toString());
+
+				model.addObject("catId", catId);
+				model.addObject("menuId", menuId);
+				model.addObject("itemList", itemList);
+				model.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+
+			} catch (Exception e) {
+				System.out.println("Franchisee Controller Exception " + e.getMessage());
+				e.printStackTrace();
 			}
-			int catId = 6;
-			int menuId = frMenu.getMenuId();
-
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("itemGrp1", catId);
-
-			Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
-			ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
-			System.out.println("Filter Item List " + itemList.toString());
-
-			mav.addObject("catId", catId);
-			mav.addObject("menuId", menuId);
-			mav.addObject("itemList", itemList);
-			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
-
-		} catch (Exception e) {
-			System.out.println("Franchisee Controller Exception " + e.getMessage());
-			e.printStackTrace();
 		}
 
-		return mav;
+		return model;
+
 	}
 	// ----------------------------------------END--------------------------------------------
 	// ----------------------------------CONFIGURE SPECIAL DAY CAKE LIST
@@ -1716,27 +1796,42 @@ public class FranchiseeController {
 	@RequestMapping(value = "/configureSpecialDayCkList")
 	public ModelAndView configureSpecialDayCkList(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("/configureFranchisee List request mapping.");
-		Constants.mainAct = 2;
-		Constants.subAct = 17;
-		ModelAndView mav = new ModelAndView("franchisee/specialDayCkConfList");
-		try {
 
-			RestTemplate restTemplate = new RestTemplate();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-			ConfiguredSpDayCkResponse configuredSpDayCkRes = restTemplate
-					.getForObject(Constants.url + "getConfiguredSpDayCkList", ConfiguredSpDayCkResponse.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrItemConfP", "showFrItemConfP", "1", "0", "0", "0", newModuleList);
 
-			List<GetConfiguredSpDayCk> configureSpDayFrList = new ArrayList<GetConfiguredSpDayCk>();
-			configureSpDayFrList = configuredSpDayCkRes.getConfiguredSpDayCkList();
+		if (view.getError() == true) {
 
-			mav.addObject("configureSpDayFrList", configureSpDayFrList);
+			mav = new ModelAndView("accessDenied");
 
-		} catch (Exception e) {
+		} else {
 
-			System.out.println("configureSpecialDayCkList Fr controller" + e.getMessage());
-			mav.addObject("configureSpDayFrList", "");
+			mav = new ModelAndView("franchisee/specialDayCkConfList");
+			Constants.mainAct = 2;
+			Constants.subAct = 17;
+
+			try {
+
+				RestTemplate restTemplate = new RestTemplate();
+
+				ConfiguredSpDayCkResponse configuredSpDayCkRes = restTemplate
+						.getForObject(Constants.url + "getConfiguredSpDayCkList", ConfiguredSpDayCkResponse.class);
+
+				List<GetConfiguredSpDayCk> configureSpDayFrList = new ArrayList<GetConfiguredSpDayCk>();
+				configureSpDayFrList = configuredSpDayCkRes.getConfiguredSpDayCkList();
+
+				mav.addObject("configureSpDayFrList", configureSpDayFrList);
+
+			} catch (Exception e) {
+
+				System.out.println("configureSpecialDayCkList Fr controller" + e.getMessage());
+				mav.addObject("configureSpDayFrList", "");
+			}
+
 		}
-
 		return mav;
 	}
 
@@ -2076,23 +2171,39 @@ public class FranchiseeController {
 	public ModelAndView addFranchiseSup(HttpServletRequest request, HttpServletResponse response) {
 		Constants.mainAct = 1;
 		Constants.subAct = 113;
-		ModelAndView mav = new ModelAndView("franchisee/addFranchiseSup");
 
-		RestTemplate restTemplate = new RestTemplate();
-		List<FrListForSupp> franchiseeList = restTemplate.getForObject(Constants.url + "getFrListForSupp", List.class);
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		FranchiseSupList frSupList = restTemplate.getForObject(Constants.url + "/getFranchiseSupList",
-				FranchiseSupList.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddFranchiseSup", "showAddFranchiseSup", "1", "0", "0", "0",
+				newModuleList);
 
-		System.out.println("Franchisee List:" + franchiseeList.toString());
+		if (view.getError() == true) {
 
-		mav.addObject("franchiseeList", franchiseeList);
-		mav.addObject("frSupList", frSupList.getFrList());
-		mav.addObject("frIdForSupp", frIdForSupp);
-		mav.addObject("isEdit", 0);
-		mav.addObject("state", "BIHAR");
-		frIdForSupp=0;
-        
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("franchisee/addFranchiseSup");
+			RestTemplate restTemplate = new RestTemplate();
+			List<FrListForSupp> franchiseeList = restTemplate.getForObject(Constants.url + "getFrListForSupp",
+					List.class);
+
+			FranchiseSupList frSupList = restTemplate.getForObject(Constants.url + "/getFranchiseSupList",
+					FranchiseSupList.class);
+
+			System.out.println("Franchisee List:" + franchiseeList.toString());
+
+			mav.addObject("franchiseeList", franchiseeList);
+			mav.addObject("frSupList", frSupList.getFrList());
+			mav.addObject("frIdForSupp", frIdForSupp);
+			mav.addObject("isEdit", 0);
+			mav.addObject("state", "BIHAR");
+			frIdForSupp = 0;
+
+		}
+
 		return mav;
 	}
 	// ----------------------------------------END---------------------------------------------------------
@@ -2164,7 +2275,7 @@ public class FranchiseeController {
 
 			Info info = restTemplate.postForObject(Constants.url + "/saveFranchiseSup", frSup, Info.class);
 			System.out.println("Response: " + info.toString());
-          
+
 			if (info.getError() == true) {
 
 				System.out.println("Error:True" + info.toString());
@@ -2232,24 +2343,37 @@ public class FranchiseeController {
 	public ModelAndView showAddFrTarget(HttpServletRequest request, HttpServletResponse response) {
 		Constants.mainAct = 2;
 		Constants.subAct = 114;
-		ModelAndView model = new ModelAndView("franchisee/addFrTarget");
 
-		List<String> months = Arrays.asList("January", "February", "March", "April", "May", "June", "July", "August",
-				"September", "October", "November", "December");
-		String thisYear = new SimpleDateFormat("yyyy").format(new Date());
-		RestTemplate restTemplate = new RestTemplate();
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
-				AllFranchiseeList.class);
-		List<FranchiseeList> franchiseeList = new ArrayList<FranchiseeList>();
-		franchiseeList = allFranchiseeList.getFranchiseeList();
-		System.out.println("Franchisee List:" + franchiseeList.toString());
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddFrTarget", "showAddFrTarget", "1", "0", "0", "0", newModuleList);
 
-		model.addObject("franchiseeList", franchiseeList);
-		model.addObject("thisYear", thisYear);
-		model.addObject("months", months);
-		model.addObject("isSave", 0);
+		if (view.getError() == true) {
 
+			model = new ModelAndView("accessDenied");
+
+		} else {
+
+			model = new ModelAndView("franchisee/addFrTarget");
+
+			List<String> months = Arrays.asList("January", "February", "March", "April", "May", "June", "July",
+					"August", "September", "October", "November", "December");
+			String thisYear = new SimpleDateFormat("yyyy").format(new Date());
+			RestTemplate restTemplate = new RestTemplate();
+
+			AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+					AllFranchiseeList.class);
+			List<FranchiseeList> franchiseeList = new ArrayList<FranchiseeList>();
+			franchiseeList = allFranchiseeList.getFranchiseeList();
+			System.out.println("Franchisee List:" + franchiseeList.toString());
+
+			model.addObject("franchiseeList", franchiseeList);
+			model.addObject("thisYear", thisYear);
+			model.addObject("months", months);
+			model.addObject("isSave", 0);
+		}
 		return model;
 	}
 	// ---------------------------------------------------------------------------------------------
@@ -2419,29 +2543,44 @@ public class FranchiseeController {
 		}
 		return franchiseeList;
 	}
+
 	// ----------------------------------------END--------------------------------------------
 	@RequestMapping(value = "/configureFrItems")
 	public ModelAndView configureFrItems(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/configureFrItems request mapping.");
 
-		ModelAndView mav = new ModelAndView("franchisee/configureItems");
 		Constants.mainAct = 2;
 		Constants.subAct = 14;
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
-					FranchiseeAndMenuList.class);
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-			System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("configureFrItems", "configureFrItems", "1", "0", "0", "0",
+				newModuleList);
 
-			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+		if (view.getError() == true) {
 
-		} catch (Exception e) {
-			System.out.println("Franchisee Controller Exception " + e.getMessage());
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("franchisee/configureItems");
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+
+				System.out.println("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+
+				mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
+
+			} catch (Exception e) {
+				System.out.println("Franchisee Controller Exception " + e.getMessage());
+			}
 		}
-
 		return mav;
 	}
 }
