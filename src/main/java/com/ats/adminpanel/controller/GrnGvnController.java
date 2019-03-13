@@ -29,11 +29,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.Firebase;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.grngvn.GetGrnGvnDetails;
 import com.ats.adminpanel.model.grngvn.GetGrnGvnDetailsList;
@@ -46,12 +48,11 @@ import com.ats.adminpanel.model.login.UserResponse;
 import com.ats.adminpanel.model.remarks.GetAllRemarks;
 import com.ats.adminpanel.model.remarks.GetAllRemarksList;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-   
 
 @Controller
 @Scope("session")
 public class GrnGvnController {
- 
+
 	public static float roundUp(float d) {
 		return BigDecimal.valueOf(d).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
 	}
@@ -64,9 +65,10 @@ public class GrnGvnController {
 
 	GetAllRemarksList getAllRemarksList = new GetAllRemarksList();
 
-	//public  String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
+	// public String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
 
-	//public  String gateGvnFromDate, gateGvnToDate, storeGvnFromDate, storeGvnToDate, accGvnFromDate, accGvnToDate;
+	// public String gateGvnFromDate, gateGvnToDate, storeGvnFromDate,
+	// storeGvnToDate, accGvnFromDate, accGvnToDate;
 
 	public String gateGrnHeaderFromDate, gateGrnHeaderToDate;
 
@@ -88,9 +90,8 @@ public class GrnGvnController {
 	String accGrnHeaderFromDate, accGrnHeaderToDate;
 
 	int globalGateHeaderId, globalAccHeaderId;
-	
-	LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>> hashMap=new LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>>();
 
+	LinkedHashMap<Integer, ArrayList<GetGrnGvnDetails>> hashMap = new LinkedHashMap<Integer, ArrayList<GetGrnGvnDetails>>();
 
 	@RequestMapping(value = "/getDateForGateHeader", method = RequestMethod.GET)
 	public String getDateForGateHeader(HttpServletRequest request, HttpServletResponse response) {
@@ -115,128 +116,144 @@ public class GrnGvnController {
 
 	}
 
-	
-	
 	@RequestMapping(value = "/getGrnHeaderForGate", method = RequestMethod.GET)
 	public ModelAndView getGrnHeaderForGate(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("grngvn/gateGrnHeader");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		boolean isAllFrSelected = false;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("getGrnHeaderForGate", "getGrnHeaderForGate", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
+		if (view.getError() == true) {
 
-			RestTemplate restTemplate = new RestTemplate();
+			model = new ModelAndView("accessDenied");
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		} else {
+			model = new ModelAndView("grngvn/gateGrnHeader");
 
-			allFrIdNameList = new AllFrIdNameList();
+			boolean isAllFrSelected = false;
+
 			try {
 
-				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+				RestTemplate restTemplate = new RestTemplate();
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+				allFrIdNameList = new AllFrIdNameList();
+				try {
+
+					allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName",
+							AllFrIdNameList.class);
+
+				} catch (Exception e) {
+					System.out.println("Exception in getAllFrIdName" + e.getMessage());
+					e.printStackTrace();
+
+				}
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+				if (gateGrnHeaderFromDate == "" || gateGrnHeaderFromDate == null) {
+
+					String statusList = new String();
+
+					statusList = "1";
+					// for Sending Current Date
+					java.util.Date date = new java.util.Date();
+
+					DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+					gateGrnHeaderFromDate = df.format(date);
+					gateGrnHeaderToDate = df.format(date);
+					// System.out.println("From Date And :" + gateGrnHeaderFromDate + "ToDATE" +
+					// gateGrnHeaderToDate);
+
+					map = new LinkedMultiValueMap<String, Object>();
+
+					map.add("statusList", statusList);
+					map.add("fromDate", gateGrnHeaderFromDate);// ie current date
+					map.add("toDate", gateGrnHeaderToDate);// ie current date
+					map.add("isGrn", 1);
+
+					grnGateHeaderList = new ArrayList<>();
+
+					headerList = restTemplate.postForObject(Constants.url + "findGrnGvnHeaderOnLoad", map,
+							GrnGvnHeaderList.class);
+
+					grnGateHeaderList = headerList.getGrnGvnHeader();
+
+					// System.out.println("Grn Gate Header List ON load " +
+					// grnGateHeaderList.toString());
+
+				} // end of if onload call
+
+				else {
+
+					if (frList.contains("-1")) {
+						isAllFrSelected = true;
+
+					}
+
+					if (isAllFrSelected) {
+						// all Fr selected Web Service
+						System.out.println("All Fr Selected =true");
+
+						map = new LinkedMultiValueMap<String, Object>();
+
+						map.add("fromDate", gateGrnHeaderFromDate);
+						map.add("toDate", gateGrnHeaderToDate);//
+						map.add("isGrn", 1);
+
+						grnGateHeaderList = new ArrayList<>();
+
+						headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeaderAllFr", map,
+								GrnGvnHeaderList.class);
+
+						grnGateHeaderList = headerList.getGrnGvnHeader();
+
+						// System.out.println("Grn Gate Header List All FR" +
+						// grnGateHeaderList.toString());
+
+					} else {
+
+						System.out.println("Specific Fr Selected ");
+
+						map = new LinkedMultiValueMap<String, Object>();
+
+						map.add("frIdList", frSelectedGateHeader);
+						map.add("fromDate", gateGrnHeaderFromDate);
+						map.add("toDate", gateGrnHeaderToDate);
+						map.add("isGrn", 1);
+
+						grnGateHeaderList = new ArrayList<>();
+
+						headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeader", map,
+								GrnGvnHeaderList.class);
+
+						grnGateHeaderList = headerList.getGrnGvnHeader();
+
+						// System.out.println("Grn Gate Header List specific FR " +
+						// grnGateHeaderList.toString());
+					}
+
+				} // End of else
+
+				model.addObject("fromDate", gateGrnHeaderFromDate);
+				model.addObject("toDate", gateGrnHeaderToDate);
+				model.addObject("grnList", grnGateHeaderList);
+				model.addObject("selectedFr", frList);
+
+				System.err.println("grnGateHeaderList size  " + grnGateHeaderList.size());
+
+				gateGrnHeaderFromDate = null;
+				gateGrnHeaderToDate = null;
 
 			} catch (Exception e) {
-				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+
+				System.out.println("Excep in Gate Header List /getGrnHeaderForGate " + e.getMessage());
 				e.printStackTrace();
-
 			}
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
-			if (gateGrnHeaderFromDate == "" || gateGrnHeaderFromDate == null) {
-
-				String statusList = new String();
-
-				statusList = "1";
-				// for Sending Current Date
-				java.util.Date date = new java.util.Date();
-
-				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-				gateGrnHeaderFromDate = df.format(date);
-				gateGrnHeaderToDate = df.format(date);
-				//System.out.println("From Date And :" + gateGrnHeaderFromDate + "ToDATE" + gateGrnHeaderToDate);
-
-				map = new LinkedMultiValueMap<String, Object>();
-
-				map.add("statusList", statusList);
-				map.add("fromDate", gateGrnHeaderFromDate);// ie current date
-				map.add("toDate", gateGrnHeaderToDate);// ie current date
-				map.add("isGrn", 1);
-
-				grnGateHeaderList = new ArrayList<>();
-
-				headerList = restTemplate.postForObject(Constants.url + "findGrnGvnHeaderOnLoad", map,
-						GrnGvnHeaderList.class);
-
-				grnGateHeaderList = headerList.getGrnGvnHeader();
-
-				//System.out.println("Grn Gate Header List ON load  " + grnGateHeaderList.toString());
-
-			} // end of if onload call
-
-			else {
-
-				if (frList.contains("-1")) {
-					isAllFrSelected = true;
-
-				}
-
-				if (isAllFrSelected) {
-					// all Fr selected Web Service
-					System.out.println("All Fr Selected =true");
-
-					map = new LinkedMultiValueMap<String, Object>();
-
-					map.add("fromDate", gateGrnHeaderFromDate);
-					map.add("toDate", gateGrnHeaderToDate);//
-					map.add("isGrn", 1);
-
-					grnGateHeaderList = new ArrayList<>();
-
-					headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeaderAllFr", map,
-							GrnGvnHeaderList.class);
-
-					grnGateHeaderList = headerList.getGrnGvnHeader();
-
-					//System.out.println("Grn Gate Header List  All FR" + grnGateHeaderList.toString());
-
-				} else {
-
-					System.out.println("Specific Fr Selected ");
-
-					map = new LinkedMultiValueMap<String, Object>();
-
-					map.add("frIdList", frSelectedGateHeader);
-					map.add("fromDate", gateGrnHeaderFromDate);
-					map.add("toDate", gateGrnHeaderToDate);
-					map.add("isGrn", 1);
-
-					grnGateHeaderList = new ArrayList<>();
-
-					headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeader", map,
-							GrnGvnHeaderList.class);
-
-					grnGateHeaderList = headerList.getGrnGvnHeader();
-
-					//System.out.println("Grn Gate Header List  specific FR " + grnGateHeaderList.toString());
-				}
-
-			} // End of else
-
-			model.addObject("fromDate", gateGrnHeaderFromDate);
-			model.addObject("toDate", gateGrnHeaderToDate);
-			model.addObject("grnList", grnGateHeaderList);
-			model.addObject("selectedFr", frList);
-			
-			System.err.println("grnGateHeaderList size  " +grnGateHeaderList.size());
-			
-			gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
-
-		} catch (Exception e) {
-
-			System.out.println("Excep in Gate Header List /getGrnHeaderForGate " + e.getMessage());
-			e.printStackTrace();
 		}
-
 		return model;
 	}
 
@@ -268,7 +285,7 @@ public class GrnGvnController {
 
 			grnGateDetailList = detailList.getGrnGvnDetails();
 			hashMap.put(headerId, grnGateDetailList);
-			//System.out.println("GRN Detail   " + grnGateDetailList.toString());
+			// System.out.println("GRN Detail " + grnGateDetailList.toString());
 
 			map = new LinkedMultiValueMap<String, Object>();
 
@@ -280,9 +297,7 @@ public class GrnGvnController {
 
 			getAllRemarks = new ArrayList<>();
 			getAllRemarks = getAllRemarksList.getGetAllRemarks();
-			
-			
-			
+
 			GrnGvnHeader gateHeader = new GrnGvnHeader();
 
 			for (int i = 0; i < grnGateHeaderList.size(); i++) {
@@ -297,7 +312,7 @@ public class GrnGvnController {
 			}
 			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
 			modelAndView.addObject("headerId", headerId);
-			
+
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -308,15 +323,12 @@ public class GrnGvnController {
 		modelAndView.addObject("grnList", grnGateDetailList);
 		modelAndView.addObject("grnDate", grnDate);
 
-
-		
 		modelAndView.addObject("remarkList", getAllRemarks);
 
-		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
-		
+		gateGrnHeaderFromDate = null;
+		gateGrnHeaderToDate = null;
+
 		return modelAndView;
-		
-		
 
 	}
 
@@ -366,10 +378,10 @@ public class GrnGvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			System.err.println("Key " +key);
-			grnGateDetailList=hashMap.get(key);
-			globalGateHeaderId=key;
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " + key);
+			grnGateDetailList = hashMap.get(key);
+			globalGateHeaderId = key;
 
 			if (info.getError() == false) {
 
@@ -464,8 +476,9 @@ public class GrnGvnController {
 			e.printStackTrace();
 		}
 
-		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
-		//return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate = null;
+		gateGrnHeaderToDate = null;
+		// return "redirect:/getGateGrnDetail";
 		return "redirect:/getGrnHeaderForGate";
 
 	}
@@ -520,11 +533,11 @@ public class GrnGvnController {
 			Info updateGateGrn = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of disagree" + updateGateGrn.toString());
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			System.err.println("Key " +key);
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " + key);
 
-			grnGateDetailList=hashMap.get(key);
-			globalGateHeaderId=key;
+			grnGateDetailList = hashMap.get(key);
+			globalGateHeaderId = key;
 
 			if (updateGateGrn.getError() == false) {
 
@@ -617,8 +630,9 @@ public class GrnGvnController {
 		}
 		System.out.println("INSERT GATE GRN DISAPPROVE : STATUS =3");
 
-		//return "redirect:/getGateGrnDetail";
-		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		// return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate = null;
+		gateGrnHeaderToDate = null;
 
 		return "redirect:/getGrnHeaderForGate";
 
@@ -641,7 +655,7 @@ public class GrnGvnController {
 
 			String[] grnIdList = request.getParameterValues("select_to_agree");
 
-			//System.out.println("first GRN ID " + grnIdList[0]);
+			// System.out.println("first GRN ID " + grnIdList[0]);
 
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -678,11 +692,11 @@ public class GrnGvnController {
 			gIds = gIds.substring(1);
 
 			Info updateGateGrn = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			globalGateHeaderId=key;
-			System.err.println("Key " +key);
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			globalGateHeaderId = key;
+			System.err.println("Key " + key);
 
-			grnGateDetailList=hashMap.get(key);
+			grnGateDetailList = hashMap.get(key);
 			if (updateGateGrn.getError() == false) {
 
 				System.out.println("Inside For Loop/updateGateGrn.getError() == false ");
@@ -697,7 +711,7 @@ public class GrnGvnController {
 
 						} else {
 
-							//System.out.println("No MAtch Found ");
+							// System.out.println("No MAtch Found ");
 						}
 					}
 				}
@@ -780,9 +794,10 @@ public class GrnGvnController {
 
 		}
 
-		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		gateGrnHeaderFromDate = null;
+		gateGrnHeaderToDate = null;
 
-		//return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
+		// return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
 		return "redirect:/getGrnHeaderForGate";
 	}
 	// Acc Grn Started
@@ -813,142 +828,155 @@ public class GrnGvnController {
 	@RequestMapping(value = "/getGrnHeaderForAcc", method = RequestMethod.GET)
 	public ModelAndView getGrnHeaderForAcc(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("grngvn/accGrnHeader");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		boolean isAllFrSelected = false;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("getGrnHeaderForAcc", "getGrnHeaderForAcc", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
+		if (view.getError() == true) {
 
-			RestTemplate restTemplate = new RestTemplate();
+			model = new ModelAndView("accessDenied");
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		} else {
+			model = new ModelAndView("grngvn/accGrnHeader");
 
-			allFrIdNameList = new AllFrIdNameList();
+			boolean isAllFrSelected = false;
+
 			try {
 
-				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+				RestTemplate restTemplate = new RestTemplate();
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+				allFrIdNameList = new AllFrIdNameList();
+				try {
+
+					allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName",
+							AllFrIdNameList.class);
+
+				} catch (Exception e) {
+					System.out.println("Exception in getAllFrIdName" + e.getMessage());
+					e.printStackTrace();
+
+				}
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+				if (accGrnHeaderFromDate == "" || accGrnHeaderFromDate == null) {
+
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Calendar cal = Calendar.getInstance();
+
+					String curTimeStamp = dateFormat.format(cal.getTime());
+					// System.out.println("Cur time Stamp= " + curTimeStamp);
+
+					cal.set(Calendar.HOUR, 0);
+					cal.set(Calendar.MINUTE, 0);
+					cal.set(Calendar.SECOND, 0);
+					String initialTimeStamp = dateFormat.format(cal.getTime());
+					// System.out.println("initialTime time Stamp= " + initialTimeStamp);
+
+					String statusList = new String();
+
+					statusList = "2" + "," + "8";
+					// for Sending Current Date
+					java.util.Date date = new java.util.Date();
+
+					DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+					accGrnHeaderFromDate = df.format(date);
+					accGrnHeaderToDate = df.format(date);
+					// System.out.println("From Date And :" + accGrnHeaderFromDate + "ToDATE" +
+					// accGrnHeaderToDate);
+
+					map = new LinkedMultiValueMap<String, Object>();
+
+					// map.add("initTime", initialTimeStamp);
+					// map.add("curTime", curTimeStamp);
+					map.add("statusList", statusList);
+					map.add("fromDate", accGrnHeaderFromDate);// ie current date
+					map.add("toDate", accGrnHeaderToDate);// ie current date
+					map.add("isGrn", 1);
+
+					grnAccHeaderList = new ArrayList<>();
+
+					headerList = restTemplate.postForObject(Constants.url + "findGrnGvnHeaderOnLoad", map,
+							GrnGvnHeaderList.class);
+
+					grnAccHeaderList = headerList.getGrnGvnHeader();
+
+				} // end of if onload call
+
+				else {
+
+					if (frList.contains("-1")) {
+						/*
+						 * isAllFrSelected = true;
+						 * 
+						 * }
+						 * 
+						 * if (isAllFrSelected) {
+						 */
+						// all Fr selected Web Service
+						System.out.println("All Fr Selected =true");
+
+						map = new LinkedMultiValueMap<String, Object>();
+
+						map.add("fromDate", accGrnHeaderFromDate);// ie current date
+						map.add("toDate", accGrnHeaderToDate);// ie current date
+						map.add("isGrn", 1);
+
+						grnAccHeaderList = new ArrayList<>();
+
+						headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeaderAllFr", map,
+								GrnGvnHeaderList.class);
+
+						grnAccHeaderList = headerList.getGrnGvnHeader();
+
+						// System.out.println("Grn Acc Header List All FR" +
+						// grnAccHeaderList.toString());
+
+					} else {
+
+						// System.out.println("Specific Fr Selected ");
+
+						map = new LinkedMultiValueMap<String, Object>();
+
+						map.add("frIdList", frSelectedAccHeader);
+						map.add("fromDate", accGrnHeaderFromDate);// ie current date
+						map.add("toDate", accGrnHeaderToDate);// ie current date
+						map.add("isGrn", 1);
+
+						grnAccHeaderList = new ArrayList<>();
+
+						headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeader", map,
+								GrnGvnHeaderList.class);
+
+						grnAccHeaderList = headerList.getGrnGvnHeader();
+
+						// System.out.println("Grn Acc Header List specific FR " +
+						// grnAccHeaderList.toString());
+					}
+
+				} // End of else
+				System.out.println("Grn Acc Header List SIZE ON Load  " + grnAccHeaderList.size());
+				model.addObject("fromDate", accGrnHeaderFromDate);
+				model.addObject("toDate", accGrnHeaderToDate);
+				model.addObject("grnList", grnAccHeaderList);
+				model.addObject("selectedFr", frList);
+
+				accGrnHeaderFromDate = null;
+				accGrnHeaderToDate = null;
 
 			} catch (Exception e) {
-				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+
+				System.out.println("Excep in Acc GrN Header List /getGrnHeaderForAcc " + e.getMessage());
 				e.printStackTrace();
-
 			}
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
-			if (accGrnHeaderFromDate == "" || accGrnHeaderFromDate == null) {
-
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Calendar cal = Calendar.getInstance();
-
-				String curTimeStamp = dateFormat.format(cal.getTime());
-			//	System.out.println("Cur time Stamp= " + curTimeStamp);
-
-				cal.set(Calendar.HOUR, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				String initialTimeStamp = dateFormat.format(cal.getTime());
-				//System.out.println("initialTime time Stamp= " + initialTimeStamp);
-
-				String statusList = new String();
-
-				statusList = "2" + "," + "8";
-				// for Sending Current Date
-				java.util.Date date = new java.util.Date();
-
-				DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-				accGrnHeaderFromDate = df.format(date);
-				accGrnHeaderToDate = df.format(date);
-				//System.out.println("From Date And :" + accGrnHeaderFromDate + "ToDATE" + accGrnHeaderToDate);
-
-				map = new LinkedMultiValueMap<String, Object>();
-
-				// map.add("initTime", initialTimeStamp);
-				// map.add("curTime", curTimeStamp);
-				map.add("statusList", statusList);
-				map.add("fromDate", accGrnHeaderFromDate);// ie current date
-				map.add("toDate", accGrnHeaderToDate);// ie current date
-				map.add("isGrn", 1);
-
-				grnAccHeaderList = new ArrayList<>();
-
-				headerList = restTemplate.postForObject(Constants.url + "findGrnGvnHeaderOnLoad", map,
-						GrnGvnHeaderList.class);
-
-				grnAccHeaderList = headerList.getGrnGvnHeader();
-
-				
-
-			} // end of if onload call
-
-			else {
-
-				if (frList.contains("-1")) {
-					/*
-					 * isAllFrSelected = true;
-					 * 
-					 * }
-					 * 
-					 * if (isAllFrSelected) {
-					 */
-					// all Fr selected Web Service
-					System.out.println("All Fr Selected =true");
-
-					map = new LinkedMultiValueMap<String, Object>();
-
-					map.add("fromDate", accGrnHeaderFromDate);// ie current date
-					map.add("toDate", accGrnHeaderToDate);// ie current date
-					map.add("isGrn", 1);
-
-					grnAccHeaderList = new ArrayList<>();
-
-					headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeaderAllFr", map,
-							GrnGvnHeaderList.class);
-
-					grnAccHeaderList = headerList.getGrnGvnHeader();
-
-					//System.out.println("Grn Acc Header List  All FR" + grnAccHeaderList.toString());
-
-				} else {
-
-					//System.out.println("Specific Fr Selected ");
-
-					map = new LinkedMultiValueMap<String, Object>();
-
-					map.add("frIdList", frSelectedAccHeader);
-					map.add("fromDate", accGrnHeaderFromDate);// ie current date
-					map.add("toDate", accGrnHeaderToDate);// ie current date
-					map.add("isGrn", 1);
-
-					grnAccHeaderList = new ArrayList<>();
-
-					headerList = restTemplate.postForObject(Constants.url + "getGrnGvnHeader", map,
-							GrnGvnHeaderList.class);
-
-					grnAccHeaderList = headerList.getGrnGvnHeader();
-
-					//System.out.println("Grn Acc Header List  specific FR " + grnAccHeaderList.toString());
-				}
-
-			} // End of else
-			System.out.println("Grn Acc Header List SIZE ON Load  " + grnAccHeaderList.size());
-			model.addObject("fromDate", accGrnHeaderFromDate);
-			model.addObject("toDate", accGrnHeaderToDate);
-			model.addObject("grnList", grnAccHeaderList);
-			model.addObject("selectedFr", frList);
-			
-			accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
-
-
-		} catch (Exception e) {
-
-			System.out.println("Excep in Acc GrN Header List /getGrnHeaderForAcc " + e.getMessage());
-			e.printStackTrace();
 		}
-
 		return model;
 	}
-	
-	
+
 	List<Integer> statuses;
 
 	@RequestMapping(value = "/getAccGrnDetail/{headerId}", method = RequestMethod.GET)
@@ -977,17 +1005,17 @@ public class GrnGvnController {
 
 			grnAccDetailList = detailList.getGrnGvnDetails();
 
-			hashMap.put(headerId,  grnAccDetailList);
+			hashMap.put(headerId, grnAccDetailList);
 
 			System.out.println("GRN Detail   " + grnAccDetailList.toString());
-			statuses=new ArrayList<Integer>();
-			for(int i=0;i<grnAccDetailList.size();i++) {
-				
+			statuses = new ArrayList<Integer>();
+			for (int i = 0; i < grnAccDetailList.size(); i++) {
+
 				System.err.println("In For ");
-				if(grnAccDetailList.get(i).getGrnGvnStatus()==7 || grnAccDetailList.get(i).getGrnGvnStatus()==2) {
+				if (grnAccDetailList.get(i).getGrnGvnStatus() == 7 || grnAccDetailList.get(i).getGrnGvnStatus() == 2) {
 					System.err.println("In If ");
 
-				statuses.add(i);
+					statuses.add(i);
 				}
 			}
 
@@ -1000,8 +1028,7 @@ public class GrnGvnController {
 
 			getAllRemarks = new ArrayList<>();
 			getAllRemarks = getAllRemarksList.getGetAllRemarks();
-			
-			
+
 			GrnGvnHeader gateHeader = new GrnGvnHeader();
 
 			for (int i = 0; i < grnAccHeaderList.size(); i++) {
@@ -1109,25 +1136,20 @@ public class GrnGvnController {
 		modelAndView.addObject("grnList", grnAccDetailList);
 		modelAndView.addObject("grnDate", grnDate);
 		modelAndView.addObject("remarkList", getAllRemarks);
-		
-		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
 
+		accGrnHeaderFromDate = null;
+		accGrnHeaderToDate = null;
 
 		return modelAndView;
 	}
 
-	
-	
-	
-	
 	@RequestMapping(value = "/getStatus", method = RequestMethod.GET)
 	public @ResponseBody List<Integer> getStatus(HttpServletRequest request, HttpServletResponse response) {
 
 		return statuses;
-		
+
 	}
-	
-	
+
 	// Acc GRN started
 
 	// A] --//Acc Grn Process Agree
@@ -1160,12 +1182,12 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
-			
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			globalAccHeaderId=key;
-			System.err.println("Key " +key);
 
-			grnAccDetailList=hashMap.get(key);
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId = key;
+			System.err.println("Key " + key);
+
+			grnAccDetailList = hashMap.get(key);
 
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
@@ -1253,20 +1275,18 @@ public class GrnGvnController {
 					data.setAprGrandTotal(roundUp(grandTotal));
 
 					dataList.add(data);
-					
-					
+
 					detail.setAprGrandTotal(data.getAprGrandTotal());
 					detail.setAprTaxableAmt(data.getAprTaxableAmt());
 					detail.setAprTotalTax(data.getAprTotalTax());
-					
+
 					detail.setAprCgstRs(data.getAprCgstRs());
 					detail.setAprSgstRs(data.getAprSgstRs());
 					detail.setAprIgstRs(data.getAprIgstRs());
-					
-					detail.setAprROff(data.getAprROff());
-					
-					grnAccDetailList.set(i, detail);
 
+					detail.setAprROff(data.getAprROff());
+
+					grnAccDetailList.set(i, detail);
 
 					break;
 
@@ -1434,24 +1454,25 @@ public class GrnGvnController {
 			System.out.println("GRN HEADER rESPONSE " + accHeader.toString());
 
 			//
-			
-			//-----------------------For Notification-----------------
-			String frToken="";
-		
+
+			// -----------------------For Notification-----------------
+			String frToken = "";
+
 			try {
 				map = new LinkedMultiValueMap<String, Object>();
-				  map.add("frId",accHeader.getFrId());
-				   
-                 frToken= restTemplate.postForObject(Constants.url+"getFrToken", map, String.class);
-		         Firebase.sendPushNotifForCommunication(frToken,"","GRN no"+accHeader.getGrngvnSrno()+"punched by you has been cleared by Accounts"+accHeader.getAprGrandTotal() + " Thank You..Team Monginis","inbox");
-		   	
-		        }
-		        catch(Exception e2)
-		        {
-			      e2.printStackTrace();
-		        }
-			
-			//-----------------------------------------------------
+				map.add("frId", accHeader.getFrId());
+
+				frToken = restTemplate.postForObject(Constants.url + "getFrToken", map, String.class);
+				Firebase.sendPushNotifForCommunication(frToken, "",
+						"GRN no" + accHeader.getGrngvnSrno() + "punched by you has been cleared by Accounts"
+								+ accHeader.getAprGrandTotal() + " Thank You..Team Monginis",
+						"inbox");
+
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+			// -----------------------------------------------------
 
 		} catch (Exception e) {
 
@@ -1460,10 +1481,11 @@ public class GrnGvnController {
 			e.printStackTrace();
 
 		}
-		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
-		//return "redirect:/getAccGrnDetail";
+		accGrnHeaderFromDate = null;
+		accGrnHeaderToDate = null;
+		// return "redirect:/getAccGrnDetail";
 		return "redirect:/getGrnHeaderForAcc";
-		
+
 	}
 
 	// B] --//insertAccGrnProcessDisAgree
@@ -1502,12 +1524,12 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
-			
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			globalAccHeaderId=key;
-			System.err.println("Key " +key);
 
-			grnAccDetailList=hashMap.get(key);
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId = key;
+			System.err.println("Key " + key);
+
+			grnAccDetailList = hashMap.get(key);
 
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
@@ -1595,20 +1617,18 @@ public class GrnGvnController {
 					data.setAprGrandTotal(roundUp(grandTotal));
 
 					dataList.add(data);
-					
-					
+
 					detail.setAprGrandTotal(data.getAprGrandTotal());
 					detail.setAprTaxableAmt(data.getAprTaxableAmt());
 					detail.setAprTotalTax(data.getAprTotalTax());
-					
+
 					detail.setAprCgstRs(data.getAprCgstRs());
 					detail.setAprSgstRs(data.getAprSgstRs());
 					detail.setAprIgstRs(data.getAprIgstRs());
-					
-					detail.setAprROff(data.getAprROff());
-					
-					grnAccDetailList.set(i, detail);
 
+					detail.setAprROff(data.getAprROff());
+
+					grnAccDetailList.set(i, detail);
 
 					break;
 
@@ -1769,27 +1789,27 @@ public class GrnGvnController {
 			System.out.println("GRN HEADER rESPONSE " + accHeader.toString());
 
 			System.out.println("LIST SIZE ACC GRN : " + grnAccDetailList.size());
-			
+
 			//
-			
-			
-			//-----------------------For Notification-----------------
-			String frToken="";
-		
+
+			// -----------------------For Notification-----------------
+			String frToken = "";
+
 			try {
 				map = new LinkedMultiValueMap<String, Object>();
-				  map.add("frId",accHeader.getFrId());
-				   
-                 frToken= restTemplate.postForObject(Constants.url+"getFrToken", map, String.class);
-		         Firebase.sendPushNotifForCommunication(frToken,"","GRN no"+accHeader.getGrngvnSrno()+"punched by you has been rejected by Accounts" + " Thank You..Team Monginis","inbox");
-		   	
-		        }
-		        catch(Exception e2)
-		        {
-			      e2.printStackTrace();
-		        }
-			
-			//-----------------------------------------------------
+				map.add("frId", accHeader.getFrId());
+
+				frToken = restTemplate.postForObject(Constants.url + "getFrToken", map, String.class);
+				Firebase.sendPushNotifForCommunication(
+						frToken, "", "GRN no" + accHeader.getGrngvnSrno()
+								+ "punched by you has been rejected by Accounts" + " Thank You..Team Monginis",
+						"inbox");
+
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+			// -----------------------------------------------------
 
 		} catch (Exception e) {
 
@@ -1798,11 +1818,11 @@ public class GrnGvnController {
 			e.printStackTrace();
 
 		}
-		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
+		accGrnHeaderFromDate = null;
+		accGrnHeaderToDate = null;
 
-		//return "redirect:/getAccGrnDetail";
+		// return "redirect:/getAccGrnDetail";
 		return "redirect:/getGrnHeaderForAcc";
-
 
 	}
 
@@ -1851,14 +1871,12 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
-			
-			
-			int key=Integer.parseInt(request.getParameter("headerId"));
-			globalAccHeaderId=key;
-			System.err.println("Key " +key);
 
-			grnAccDetailList=hashMap.get(key);
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId = key;
+			System.err.println("Key " + key);
 
+			grnAccDetailList = hashMap.get(key);
 
 			for (int j = 0; j < grnIdList.length; j++) {
 
@@ -1868,7 +1886,7 @@ public class GrnGvnController {
 
 					if (grnAccDetailList.get(i).getGrnGvnId() == Integer.parseInt(grnIdList[j])) {
 
-						//System.out.println("GRN ID MAtched " + grnIdList[j]);
+						// System.out.println("GRN ID MAtched " + grnIdList[j]);
 
 						detail = new GetGrnGvnDetails();
 						data = new TempGrnGvnBeanUp();
@@ -1945,20 +1963,17 @@ public class GrnGvnController {
 						data.setAprTotalTax(roundUp(aprTotalTax));
 
 						data.setAprGrandTotal(roundUp(grandTotal));
-						
-						
-						
 
 						detail.setAprGrandTotal(data.getAprGrandTotal());
 						detail.setAprTaxableAmt(data.getAprTaxableAmt());
 						detail.setAprTotalTax(data.getAprTotalTax());
-						
+
 						detail.setAprCgstRs(data.getAprCgstRs());
 						detail.setAprSgstRs(data.getAprSgstRs());
 						detail.setAprIgstRs(data.getAprIgstRs());
-						
+
 						detail.setAprROff(data.getAprROff());
-						
+
 						grnAccDetailList.set(i, detail);
 
 					} // end of matching grnId
@@ -2107,7 +2122,8 @@ public class GrnGvnController {
 					accHeader.setAprTaxableAmt(
 							accHeader.getAprTaxableAmt() + grnAccDetailList.get(i).getAprTaxableAmt());
 					accHeader.setAprTotalTax(accHeader.getAprTotalTax() + grnAccDetailList.get(i).getAprTotalTax());
-					accHeader.setAprGrandTotal(accHeader.getAprGrandTotal() + grnAccDetailList.get(i).getAprGrandTotal());
+					accHeader.setAprGrandTotal(
+							accHeader.getAprGrandTotal() + grnAccDetailList.get(i).getAprGrandTotal());
 					accHeader.setAprCgstRs(accHeader.getAprCgstRs() + grnAccDetailList.get(i).getAprCgstRs());
 					accHeader.setAprSgstRs(accHeader.getAprSgstRs() + grnAccDetailList.get(i).getAprSgstRs());
 					accHeader.setAprIgstRs(accHeader.getAprIgstRs() + grnAccDetailList.get(i).getAprIgstRs());
@@ -2126,26 +2142,25 @@ public class GrnGvnController {
 			System.out.println("GRN HEADER rESPONSE " + accHeader.toString());
 
 			//
-			
-			
-			//-----------------------For Notification-----------------
-			String frToken="";
-		
+
+			// -----------------------For Notification-----------------
+			String frToken = "";
+
 			try {
 				map = new LinkedMultiValueMap<String, Object>();
-				  map.add("frId",accHeader.getFrId());
-				   
-                 frToken= restTemplate.postForObject(Constants.url+"getFrToken", map, String.class);
-		         Firebase.sendPushNotifForCommunication(frToken,"","GRN no"+accHeader.getGrngvnSrno()+"punched by you has been cleared by Accounts"+accHeader.getAprGrandTotal() + " Thank You..Team Monginis","inbox");
-		   	
-		        }
-		        catch(Exception e2)
-		        {
-			      e2.printStackTrace();
-		        }
-			
-			//-----------------------------------------------------
+				map.add("frId", accHeader.getFrId());
 
+				frToken = restTemplate.postForObject(Constants.url + "getFrToken", map, String.class);
+				Firebase.sendPushNotifForCommunication(frToken, "",
+						"GRN no" + accHeader.getGrngvnSrno() + "punched by you has been cleared by Accounts"
+								+ accHeader.getAprGrandTotal() + " Thank You..Team Monginis",
+						"inbox");
+
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+			// -----------------------------------------------------
 
 		} catch (Exception e) {
 
@@ -2155,9 +2170,10 @@ public class GrnGvnController {
 
 		}
 
-		accGrnHeaderFromDate=null;accGrnHeaderToDate=null;
-		//return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
-		
+		accGrnHeaderFromDate = null;
+		accGrnHeaderToDate = null;
+		// return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
+
 		return "redirect:/getGrnHeaderForAcc";
 
 	}

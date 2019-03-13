@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
@@ -41,8 +43,10 @@ import com.ats.adminpanel.model.ConfigureFrListResponse;
 import com.ats.adminpanel.model.DumpOrderList;
 import com.ats.adminpanel.model.GetDumpOrder;
 import com.ats.adminpanel.model.GetDumpOrderList;
+import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.OrderData;
 import com.ats.adminpanel.model.Orders;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
@@ -478,49 +482,60 @@ public class DumpOrderController {
 	 */
 	@RequestMapping(value = "/useDumpOrdTempl", method = RequestMethod.GET)
 	public ModelAndView showDumpTempl(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("orders/dump_ord_templ_use");
-		Constants.mainAct = 4;
-		Constants.subAct = 31;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("useDumpOrdTempl", "useDumpOrdTempl", "1", "0", "0", "0", newModuleList);
 
-		RestTemplate restTemplate = new RestTemplate();
-		try {
+		if (view.getError() == true) {
 
-			AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
-					AllMenuResponse.class);
+			model = new ModelAndView("accessDenied");
 
-			menuList = allMenuResponse.getMenuConfigurationPage();
+		} else {
 
-			allFrIdNameList = new AllFrIdNameList();
+			model = new ModelAndView("orders/dump_ord_templ_use");
+			Constants.mainAct = 4;
+			Constants.subAct = 31;
 
-			// System.out.println(orderDate);
+			RestTemplate restTemplate = new RestTemplate();
+			try {
 
-		} catch (Exception e) {
-			System.out.println("Exception in getAllFrIdName" + e.getMessage());
-			e.printStackTrace();
+				AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
+						AllMenuResponse.class);
 
-		}
-		// List<AllFrIdName> selectedFrListAll=new ArrayList();
-		selectedMenuList = new ArrayList<Menu>();
+				menuList = allMenuResponse.getMenuConfigurationPage();
 
-		for (int i = 0; i < menuList.size(); i++) {
-			if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
-					|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
-					|| menuList.get(i).getMenuId() == 66 || menuList.get(i).getMenuId() == 67
-					|| menuList.get(i).getMenuId() == 68) {
-				selectedMenuList.add(menuList.get(i));
+				allFrIdNameList = new AllFrIdNameList();
+
+				// System.out.println(orderDate);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
 			}
+			// List<AllFrIdName> selectedFrListAll=new ArrayList();
+			selectedMenuList = new ArrayList<Menu>();
+
+			for (int i = 0; i < menuList.size(); i++) {
+				if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
+						|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
+						|| menuList.get(i).getMenuId() == 66 || menuList.get(i).getMenuId() == 67
+						|| menuList.get(i).getMenuId() == 68) {
+					selectedMenuList.add(menuList.get(i));
+				}
+			}
+
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
+
+			model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+
+			model.addObject("unSelectedMenuList", selectedMenuList);
+			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 		}
-
-		allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
-
-		System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
-
-		model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-
-		model.addObject("unSelectedMenuList", selectedMenuList);
-		model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
 		return model;
 	}
 
@@ -573,49 +588,61 @@ public class DumpOrderController {
 
 	@RequestMapping(value = "/createOrdProdTempl", method = RequestMethod.GET)
 	public ModelAndView createOrdProdTempl(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("orders/ord_prod_temp_create");
-		Constants.mainAct = 4;
-		Constants.subAct = 31;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("createOrdProdTempl", "createOrdProdTempl", "1", "0", "0", "0",
+				newModuleList);
 
-		RestTemplate restTemplate = new RestTemplate();
-		try {
+		if (view.getError() == true) {
 
-			AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
-					AllMenuResponse.class);
+			model = new ModelAndView("accessDenied");
 
-			menuList = allMenuResponse.getMenuConfigurationPage();
+		} else {
 
-			allFrIdNameList = new AllFrIdNameList();
+			model = new ModelAndView("orders/ord_prod_temp_create");
+			Constants.mainAct = 4;
+			Constants.subAct = 31;
 
-			// System.out.println(orderDate);
+			RestTemplate restTemplate = new RestTemplate();
+			try {
 
-		} catch (Exception e) {
-			System.out.println("Exception in getAllFrIdName" + e.getMessage());
-			e.printStackTrace();
+				AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
+						AllMenuResponse.class);
 
-		}
-		// List<AllFrIdName> selectedFrListAll=new ArrayList();
-		selectedMenuList = new ArrayList<Menu>();
+				menuList = allMenuResponse.getMenuConfigurationPage();
 
-		for (int i = 0; i < menuList.size(); i++) {
-			if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
-					|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
-					|| menuList.get(i).getMenuId() == 66 || menuList.get(i).getMenuId() == 67
-					|| menuList.get(i).getMenuId() == 68) {
-				selectedMenuList.add(menuList.get(i));
+				allFrIdNameList = new AllFrIdNameList();
+
+				// System.out.println(orderDate);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
 			}
+			// List<AllFrIdName> selectedFrListAll=new ArrayList();
+			selectedMenuList = new ArrayList<Menu>();
+
+			for (int i = 0; i < menuList.size(); i++) {
+				if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
+						|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
+						|| menuList.get(i).getMenuId() == 66 || menuList.get(i).getMenuId() == 67
+						|| menuList.get(i).getMenuId() == 68) {
+					selectedMenuList.add(menuList.get(i));
+				}
+			}
+
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
+
+			model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+
+			model.addObject("unSelectedMenuList", selectedMenuList);
+			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 		}
-
-		allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
-
-		System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
-
-		model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-
-		model.addObject("unSelectedMenuList", selectedMenuList);
-		model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
 		return model;
 	}
 

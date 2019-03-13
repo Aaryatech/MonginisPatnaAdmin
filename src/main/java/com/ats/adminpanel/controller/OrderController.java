@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Commons;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllRoutesListResponse;
@@ -41,6 +42,7 @@ import com.ats.adminpanel.model.SpCakeOrderUpdate;
 import com.ats.adminpanel.model.SpCakeOrders;
 import com.ats.adminpanel.model.SpCakeOrdersBean;
 import com.ats.adminpanel.model.SpCakeOrdersBeanResponse;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
@@ -71,44 +73,58 @@ public class OrderController {
 	public ModelAndView searchOrder(HttpServletRequest request, HttpServletResponse response) {
 
 		// ModelAndView model=new ModelAndView("orders/orders");
-		ModelAndView model = new ModelAndView("orders/orders");
-		Constants.mainAct = 4;
-		Constants.subAct = 27;
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
-					AllFranchiseeList.class);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			// franchiseeList= new ArrayList<FranchiseeList>();
-			franchiseeList = allFranchiseeList.getFranchiseeList();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showOrders", "showOrders", "1", "0", "0", "0", newModuleList);
 
-			model.addObject("franchiseeList", franchiseeList);
-			model.addObject("allOtherFrList", tempFrList);
-			model.addObject("selectedFrList", selectedFrList);
-			model.addObject("date", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-			RestTemplate restTemplate1 = new RestTemplate();
+		if (view.getError() == true) {
 
-			AllMenuResponse allMenuResponse = restTemplate1.getForObject(Constants.url + "getAllMenu",
-					AllMenuResponse.class);
+			model = new ModelAndView("accessDenied");
 
-			menuList = new ArrayList<Menu>();
-			menuList = allMenuResponse.getMenuConfigurationPage();
+		} else {
 
-			System.out.println("MENU LIST= " + menuList.toString());
-			model.addObject("menuList", menuList);
-			System.out.println("menu list is" + menuList.toString());
+			model = new ModelAndView("orders/orders");
+			Constants.mainAct = 4;
+			Constants.subAct = 27;
 
-			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-					AllRoutesListResponse.class);
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+						AllFranchiseeList.class);
 
-			List<Route> routeList = new ArrayList<Route>();
+				// franchiseeList= new ArrayList<FranchiseeList>();
+				franchiseeList = allFranchiseeList.getFranchiseeList();
 
-			routeList = allRouteListResponse.getRoute();
-			model.addObject("routeList", routeList);
+				model.addObject("franchiseeList", franchiseeList);
+				model.addObject("allOtherFrList", tempFrList);
+				model.addObject("selectedFrList", selectedFrList);
+				model.addObject("date", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+				RestTemplate restTemplate1 = new RestTemplate();
 
-		} catch (Exception e) {
-			e.printStackTrace();
+				AllMenuResponse allMenuResponse = restTemplate1.getForObject(Constants.url + "getAllMenu",
+						AllMenuResponse.class);
+
+				menuList = new ArrayList<Menu>();
+				menuList = allMenuResponse.getMenuConfigurationPage();
+
+				System.out.println("MENU LIST= " + menuList.toString());
+				model.addObject("menuList", menuList);
+				System.out.println("menu list is" + menuList.toString());
+
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
+
+				List<Route> routeList = new ArrayList<Route>();
+
+				routeList = allRouteListResponse.getRoute();
+				model.addObject("routeList", routeList);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return model;
 
@@ -390,70 +406,93 @@ public class OrderController {
 
 	@RequestMapping(value = "/spCakeOrders")
 	public ModelAndView searchSpCakeOrder(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("orders/spcakeorders");
-		Constants.mainAct = 4;
-		Constants.subAct = 28;
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
-					AllFranchiseeList.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("spCakeOrders", "spCakeOrders", "1", "0", "0", "0", newModuleList);
 
-			// franchiseeList= new ArrayList<FranchiseeList>();
-			franchiseeList = allFranchiseeList.getFranchiseeList();
-			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-					AllRoutesListResponse.class);
+		if (view.getError() == true) {
 
-			List<Route> routeList = new ArrayList<Route>();
+			model = new ModelAndView("accessDenied");
 
-			routeList = allRouteListResponse.getRoute();
-			model.addObject("routeList", routeList);
+		} else {
 
-			model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-			model.addObject("franchiseeList", franchiseeList);
-		} catch (Exception e) {
-			e.printStackTrace();
+			model = new ModelAndView("orders/spcakeorders");
+			Constants.mainAct = 4;
+			Constants.subAct = 28;
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+						AllFranchiseeList.class);
+
+				// franchiseeList= new ArrayList<FranchiseeList>();
+				franchiseeList = allFranchiseeList.getFranchiseeList();
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
+
+				List<Route> routeList = new ArrayList<Route>();
+
+				routeList = allRouteListResponse.getRoute();
+				model.addObject("routeList", routeList);
+
+				model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+				model.addObject("franchiseeList", franchiseeList);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-
 		return model;
 	}
 
 	@RequestMapping(value = "/regularSpCakeOrderProcess")
 	public ModelAndView regularSpCakeOrderProcess(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("orders/regularsporders");
-		Constants.mainAct = 4;
-		Constants.subAct = 29;
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrItemConfP", "showFrItemConfP", "1", "0", "0", "0", newModuleList);
 
-			RestTemplate restTemplate = new RestTemplate();
-			AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
-					AllFranchiseeList.class);
+		if (view.getError() == true) {
 
-			// franchiseeList= new ArrayList<FranchiseeList>();
-			franchiseeList = allFranchiseeList.getFranchiseeList();
-			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-					AllRoutesListResponse.class);
+			model = new ModelAndView("accessDenied");
 
-			List<Route> routeList = new ArrayList<Route>();
+		} else {
 
-			routeList = allRouteListResponse.getRoute();
-			model.addObject("routeList", routeList);
-			AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
-					AllMenuResponse.class);
+			model = new ModelAndView("orders/regularsporders");
+			Constants.mainAct = 4;
+			Constants.subAct = 29;
+			try {
 
-			menuList = new ArrayList<Menu>();
-			menuList = allMenuResponse.getMenuConfigurationPage();
+				RestTemplate restTemplate = new RestTemplate();
+				AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+						AllFranchiseeList.class);
 
-			System.out.println("MENU LIST= " + menuList.toString());
-			model.addObject("menuList", menuList);
-			model.addObject("menuIdList", new ArrayList<Menu>());
+				// franchiseeList= new ArrayList<FranchiseeList>();
+				franchiseeList = allFranchiseeList.getFranchiseeList();
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
 
-			model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-			model.addObject("franchiseeList", franchiseeList);
+				List<Route> routeList = new ArrayList<Route>();
 
-		} catch (Exception e) {
-			e.printStackTrace();
+				routeList = allRouteListResponse.getRoute();
+				model.addObject("routeList", routeList);
+				AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
+						AllMenuResponse.class);
+
+				menuList = new ArrayList<Menu>();
+				menuList = allMenuResponse.getMenuConfigurationPage();
+
+				System.out.println("MENU LIST= " + menuList.toString());
+				model.addObject("menuList", menuList);
+				model.addObject("menuIdList", new ArrayList<Menu>());
+
+				model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+				model.addObject("franchiseeList", franchiseeList);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return model;
 	}

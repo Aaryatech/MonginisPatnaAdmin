@@ -27,10 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.RawMaterial.GetItemSfHeader;
 import com.ats.adminpanel.model.RawMaterial.RmItemCategory;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.ErrorMessage;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
 import com.ats.adminpanel.model.login.UserResponse;
@@ -70,55 +72,70 @@ import com.ats.adminpanel.model.spprod.TypeList;
 @Controller
 @Scope("session")
 public class SpProductionController {
- 
+
 	private int empType = 1;// employee Type
 	private int instType = 2;// instrument Type
 	private int mistryId = 101;
 	private int helperId = 102;
-	private  InstVerificationHeader instVerificationHeaderRes = null;
-	private  int userId = 0;
-	private  int userType = 6;
-	private  StationSpCakeList stationSpCakeList=new StationSpCakeList();
-	private  List<GetAllocStationCk> getAllocStationCkRes=null;
-	private  List<GetSpDetailForBom> getSpDetailForBomList=null;
-	
+	private InstVerificationHeader instVerificationHeaderRes = null;
+	private int userId = 0;
+	private int userType = 6;
+	private StationSpCakeList stationSpCakeList = new StationSpCakeList();
+	private List<GetAllocStationCk> getAllocStationCkRes = null;
+	private List<GetSpDetailForBom> getSpDetailForBomList = null;
+
 	@RequestMapping(value = "/showAddEmployee", method = RequestMethod.GET)
 	public ModelAndView showAddEmployee(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct=17;
-		Constants.subAct =90;
+		Constants.mainAct = 17;
+		Constants.subAct = 90;
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("spProduction/addEmployee");
-		try {
-			RestTemplate restTemplate = new RestTemplate();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddEmployee", "showAddEmployee", "1", "0", "0", "0", newModuleList);
 
-			MDeptList mDeptList = restTemplate.getForObject(Constants.url + "/spProduction/mDeptList", MDeptList.class);
-			System.out.println("Response: " + mDeptList.toString());
+		if (view.getError() == true) {
 
-			MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
-			mvm.add("empType", empType);
+			model = new ModelAndView("accessDenied");
 
-			EmployeeList employeeList = restTemplate.postForObject(Constants.url + "/spProduction/getEmployeeList", mvm,
-					EmployeeList.class);
-			System.out.println("Response: " + employeeList.toString());
+		} else {
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("typeId", empType);
+			model = new ModelAndView("spProduction/addEmployee");
+			try {
+				RestTemplate restTemplate = new RestTemplate();
 
-			TypeList typeList = restTemplate.postForObject(Constants.url + "/spProduction/getTypeList", map,
-					TypeList.class);
-			
-			map = new LinkedMultiValueMap<String, Object>();
-			map.add("userType",userType);
-			List<GateSaleDiscount> discountList=restTemplate.postForObject(Constants.url + "/gatesale/getGateSaleDiscByUsrType", map,List.class);
+				MDeptList mDeptList = restTemplate.getForObject(Constants.url + "/spProduction/mDeptList",
+						MDeptList.class);
+				System.out.println("Response: " + mDeptList.toString());
 
-			System.out.println("Response: " + typeList.toString());
-            model.addObject("discountList", discountList);
-			model.addObject("typeList", typeList.getTypeList());
-			model.addObject("mDeptList", mDeptList.getList());
-			model.addObject("employeeList", employeeList.getEmployeeList());
-		} catch (Exception e) {
-			System.out.println("Exc In ShowAddEmployee:" + e.getMessage());
+				model = new ModelAndView("items/updateHsnPer");
+				MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
+				mvm.add("empType", empType);
+
+				EmployeeList employeeList = restTemplate.postForObject(Constants.url + "/spProduction/getEmployeeList",
+						mvm, EmployeeList.class);
+				System.out.println("Response: " + employeeList.toString());
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("typeId", empType);
+
+				TypeList typeList = restTemplate.postForObject(Constants.url + "/spProduction/getTypeList", map,
+						TypeList.class);
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("userType", userType);
+				List<GateSaleDiscount> discountList = restTemplate
+						.postForObject(Constants.url + "/gatesale/getGateSaleDiscByUsrType", map, List.class);
+
+				System.out.println("Response: " + typeList.toString());
+				model.addObject("discountList", discountList);
+				model.addObject("typeList", typeList.getTypeList());
+				model.addObject("mDeptList", mDeptList.getList());
+				model.addObject("employeeList", employeeList.getEmployeeList());
+			} catch (Exception e) {
+				System.out.println("Exc In ShowAddEmployee:" + e.getMessage());
+			}
 		}
 		return model;
 	}
@@ -126,19 +143,34 @@ public class SpProductionController {
 	@RequestMapping(value = "/showAddDepartment", method = RequestMethod.GET)
 	public ModelAndView showAddDepartment(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct =17;
-		Constants.subAct =91;
+		Constants.mainAct = 17;
+		Constants.subAct = 91;
 
-		ModelAndView model = new ModelAndView("masters/department");
-		try {
-			RestTemplate restTemplate = new RestTemplate();
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+		
+		
 
-			MDeptList mDeptList = restTemplate.getForObject(Constants.url + "/spProduction/mDeptList", MDeptList.class);
-			System.out.println("Response: " + mDeptList.toString());
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddDepartment", "showAddDepartment", "1", "0", "0", "0", newModuleList);
 
-			model.addObject("deptList", mDeptList.getList());
-		} catch (Exception e) {
-			System.out.println("Exc In showAddDept:" + e.getMessage());
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+			model = new ModelAndView("masters/department");
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+
+				MDeptList mDeptList = restTemplate.getForObject(Constants.url + "/spProduction/mDeptList",
+						MDeptList.class);
+				System.out.println("Response: " + mDeptList.toString());
+
+				model.addObject("deptList", mDeptList.getList());
+			} catch (Exception e) {
+				System.out.println("Exc In showAddDept:" + e.getMessage());
+			}
 		}
 		return model;
 	}
@@ -146,8 +178,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/showAddStation", method = RequestMethod.GET)
 	public ModelAndView showAddStation(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct =19;
-		Constants.subAct =95;
+		Constants.mainAct = 19;
+		Constants.subAct = 95;
 
 		ModelAndView model = new ModelAndView("spProduction/addSpStation");
 		try {
@@ -162,7 +194,7 @@ public class SpProductionController {
 
 			model.addObject("mDeptList", mDeptList.getList());
 			model.addObject("spStationList", spStationList.getSpStationList());
-		//	model.addObject("spStation", new SpStation());
+			// model.addObject("spStation", new SpStation());
 		} catch (Exception e) {
 			System.out.println("Exc In showAddStation:" + e.getMessage());
 		}
@@ -172,8 +204,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/showAddInstrument", method = RequestMethod.GET)
 	public ModelAndView showAddInstrument(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct =19;
-		Constants.subAct =96;
+		Constants.mainAct = 19;
+		Constants.subAct = 96;
 		RestTemplate restTemplate = new RestTemplate();
 
 		ModelAndView model = new ModelAndView("spProduction/addInstrument");
@@ -196,8 +228,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/showAllInstrument", method = RequestMethod.GET)
 	public ModelAndView showAllInstrument(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct =19;
-		Constants.subAct =97;
+		Constants.mainAct = 19;
+		Constants.subAct = 97;
 
 		ModelAndView model = new ModelAndView("spProduction/instrumentsList");
 		try {
@@ -225,7 +257,8 @@ public class SpProductionController {
 		return model;
 	}
 
-	// ------------------------------Delete SpStation Process------------------------------------
+	// ------------------------------Delete SpStation
+	// Process------------------------------------
 	@RequestMapping(value = "/deleteSpStation/{stId}", method = RequestMethod.GET)
 	public String deleteRmItemCategory(@PathVariable int stId) {
 
@@ -257,7 +290,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------Delete Department Process------------------------------------
+	// ------------------------------Delete Department
+	// Process------------------------------------
 	@RequestMapping(value = "/deleteDept/{deptId}", method = RequestMethod.GET)
 	public String deleteDepartment(@PathVariable int deptId) {
 
@@ -289,7 +323,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------Delete Instrument Process------------------------------------
+	// ------------------------------Delete Instrument
+	// Process------------------------------------
 	@RequestMapping(value = "/deleteInstrument/{instId}", method = RequestMethod.GET)
 	public String deleteInstrument(@PathVariable int instId) {
 
@@ -321,7 +356,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------Delete Employee Process------------------------------------
+	// ------------------------------Delete Employee
+	// Process------------------------------------
 	@RequestMapping(value = "/deleteEmp/{empId}", method = RequestMethod.GET)
 	public String deleteEmployee(@PathVariable int empId) {
 
@@ -353,7 +389,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------ADD SpStation Process------------------------------------
+	// ------------------------------ADD SpStation
+	// Process------------------------------------
 	@RequestMapping(value = "/addSpStationProcess", method = RequestMethod.POST)
 	public String addSpStation(HttpServletRequest request, HttpServletResponse response) {
 
@@ -412,7 +449,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END---------------------------------------------------
-	// ------------------------------ADD Employee Process------------------------------------
+	// ------------------------------ADD Employee
+	// Process------------------------------------
 	@RequestMapping(value = "/addEmpProcess", method = RequestMethod.POST)
 	public String addEmployee(HttpServletRequest request, HttpServletResponse response) {
 
@@ -437,20 +475,20 @@ public class SpProductionController {
 			int deptId = Integer.parseInt(request.getParameter("dept_id"));
 
 			int isUsed = Integer.parseInt(request.getParameter("is_used"));
-			
-			String empDob=request.getParameter("emp_dob");
-			
-			String empDoj=request.getParameter("emp_doj");
-			
-			int empFamMemb=Integer.parseInt(request.getParameter("emp_fam_memb"));
-			
-			String empMobile= request.getParameter("emp_mob");
-			
-			float monthlyLimit= Float.parseFloat(request.getParameter("monthly_limit"));
-			
-			float yearlyLimit= Float.parseFloat(request.getParameter("yearly_limit"));
-			
-			int discId= Integer.parseInt(request.getParameter("disc_id"));
+
+			String empDob = request.getParameter("emp_dob");
+
+			String empDoj = request.getParameter("emp_doj");
+
+			int empFamMemb = Integer.parseInt(request.getParameter("emp_fam_memb"));
+
+			String empMobile = request.getParameter("emp_mob");
+
+			float monthlyLimit = Float.parseFloat(request.getParameter("monthly_limit"));
+
+			float yearlyLimit = Float.parseFloat(request.getParameter("yearly_limit"));
+
+			int discId = Integer.parseInt(request.getParameter("disc_id"));
 			Employee emp = new Employee();
 			emp.setEmpId(empId);
 			emp.setDeptId(deptId);
@@ -487,7 +525,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------ADD Employee Process------------------------------------
+	// ------------------------------ADD Employee
+	// Process------------------------------------
 	@RequestMapping(value = "/addInstrumentProcess", method = RequestMethod.POST)
 	public String addInstrumentProcess(HttpServletRequest request, HttpServletResponse response) {
 
@@ -547,7 +586,8 @@ public class SpProductionController {
 		return "redirect:/showAllInstrument";
 	}
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------Edit Employee------------------------------------
+	// ------------------------------Edit
+	// Employee------------------------------------
 
 	@RequestMapping(value = "/updateEmp/{empId}", method = RequestMethod.GET)
 	public ModelAndView updateEmp(@PathVariable int empId) {
@@ -574,12 +614,13 @@ public class SpProductionController {
 
 			map = new LinkedMultiValueMap<String, Object>();
 			map.add("typeId", empType);
-			TypeList typeList = rest.postForObject(Constants.url + "/spProduction/getTypeList",map, TypeList.class);
+			TypeList typeList = rest.postForObject(Constants.url + "/spProduction/getTypeList", map, TypeList.class);
 			System.out.println("Response: " + typeList.toString());
-			
+
 			map = new LinkedMultiValueMap<String, Object>();
-			map.add("userType",userType);
-			List<GateSaleDiscount> discountList=rest.postForObject(Constants.url + "/gatesale/getGateSaleDiscByUsrType", map,List.class);
+			map.add("userType", userType);
+			List<GateSaleDiscount> discountList = rest
+					.postForObject(Constants.url + "/gatesale/getGateSaleDiscByUsrType", map, List.class);
 
 			System.out.println("Response: " + typeList.toString());
 			mav.addObject("discountList", discountList);
@@ -603,7 +644,8 @@ public class SpProductionController {
 		return mav;
 	}
 	// -----------------------------------------------------------------------------------------------------------
-	// ------------------------------Edit Instrument-------------------------------------------------------------
+	// ------------------------------Edit
+	// Instrument-------------------------------------------------------------
 
 	@RequestMapping(value = "/updateInstrument/{instrumentId}", method = RequestMethod.GET)
 	public ModelAndView updateInstrument(@PathVariable int instrumentId) {
@@ -619,9 +661,9 @@ public class SpProductionController {
 					Instrument.class);
 			System.out.println(instrument.toString());
 			MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
-			mvm.add("typeId",instType);
+			mvm.add("typeId", instType);
 
-			TypeList typeList = rest.postForObject(Constants.url + "/spProduction/getTypeList",mvm,TypeList.class);
+			TypeList typeList = rest.postForObject(Constants.url + "/spProduction/getTypeList", mvm, TypeList.class);
 			System.out.println("Response: " + typeList.toString());
 
 			if (instrument.isError()) {
@@ -642,7 +684,8 @@ public class SpProductionController {
 		return mav;
 	}
 	// ----------------------------------------------------------------------------------------------
-	// ------------------------------Edit SpStation-------------------------------------------------------------
+	// ------------------------------Edit
+	// SpStation-------------------------------------------------------------
 
 	@RequestMapping(value = "/updateSpStation/{stId}", method = RequestMethod.GET)
 	public ModelAndView updateSpStation(@PathVariable int stId) {
@@ -682,7 +725,8 @@ public class SpProductionController {
 		return mav;
 	}
 	// -------------------------------------------------------------------------------------------
-	// ------------------------------Edit Dept-------------------------------------------------------------
+	// ------------------------------Edit
+	// Dept-------------------------------------------------------------
 
 	@RequestMapping(value = "/updateDept/{deptId}", method = RequestMethod.GET)
 	public ModelAndView updateDepartment(@PathVariable int deptId) {
@@ -716,7 +760,8 @@ public class SpProductionController {
 	}
 
 	// ------------------------------------------------------------------------------------
-	// ------------------------------ADD Department Process------------------------------------
+	// ------------------------------ADD Department
+	// Process------------------------------------
 	@RequestMapping(value = "/addDeptProcess", method = RequestMethod.POST)
 	public String addDeptProcess(HttpServletRequest request, HttpServletResponse response) {
 
@@ -767,7 +812,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------ADD Shift Process------------------------------------
+	// ------------------------------ADD Shift
+	// Process------------------------------------
 	@RequestMapping(value = "/addShiftProcess", method = RequestMethod.POST)
 	public String addShiftProcess(HttpServletRequest request, HttpServletResponse response) {
 
@@ -823,8 +869,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/showAddShift", method = RequestMethod.GET)
 	public ModelAndView showAddShift(HttpServletRequest request, HttpServletResponse response) {
 
-		Constants.mainAct =19;
-		Constants.subAct =98;
+		Constants.mainAct = 19;
+		Constants.subAct = 98;
 
 		ModelAndView model = new ModelAndView("spProduction/addShift");
 		RestTemplate restTemplate = new RestTemplate();
@@ -872,7 +918,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// ------------------------------Edit Shift-------------------------------------------------------------
+	// ------------------------------Edit
+	// Shift-------------------------------------------------------------
 
 	@RequestMapping(value = "/updateShift/{shiftId}", method = RequestMethod.GET)
 	public ModelAndView updateShift(@PathVariable int shiftId) {
@@ -910,8 +957,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/configureStation", method = RequestMethod.GET)
 	public ModelAndView configureStation(HttpServletRequest request, HttpServletResponse response) {
 
-		 Constants.mainAct =20;
-		 Constants.subAct =99;
+		Constants.mainAct = 20;
+		Constants.subAct = 99;
 
 		ModelAndView model = new ModelAndView("spProduction/configureStation");
 		try {
@@ -1079,7 +1126,8 @@ public class SpProductionController {
 	}
 
 	// -------------------------------------------------------------------------------------------------------
-	// -------------------------------Delete StationAllocation---------------------------------
+	// -------------------------------Delete
+	// StationAllocation---------------------------------
 	@RequestMapping(value = "/deleteStationAllocation/{allocationId}", method = RequestMethod.GET)
 	public String deleteStationAllocation(@PathVariable int allocationId) {
 
@@ -1116,8 +1164,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/instrumentAllocation", method = RequestMethod.GET)
 	public ModelAndView instrumentAllocation(HttpServletRequest request, HttpServletResponse response) {
 
-		 Constants.mainAct =20;
-		 Constants.subAct =116;
+		Constants.mainAct = 20;
+		Constants.subAct = 116;
 		int isEdit = 0;
 		ModelAndView model = new ModelAndView("spProduction/instrumentAlloc");
 		try {
@@ -1146,7 +1194,8 @@ public class SpProductionController {
 		return model;
 	}
 
-	// ------------------------------ADD StAllocation Process------------------------------------
+	// ------------------------------ADD StAllocation
+	// Process------------------------------------
 	@RequestMapping(value = "/addInstrumentAlloc", method = RequestMethod.POST)
 	public String addInstrumentAlloc(HttpServletRequest request, HttpServletResponse response) {
 
@@ -1211,7 +1260,8 @@ public class SpProductionController {
 	}
 
 	// ----------------------------------------END-------------------------------------------------------------
-	// -------------------------------Delete InstAllocToStation---------------------------------
+	// -------------------------------Delete
+	// InstAllocToStation---------------------------------
 	@RequestMapping(value = "/deleteInstAllocToStation/{instAllocId}", method = RequestMethod.GET)
 	public String deleteInstrumentAlloc(@PathVariable int instAllocId) {
 
@@ -1318,8 +1368,8 @@ public class SpProductionController {
 	@RequestMapping(value = "/instrVerification", method = RequestMethod.GET)
 	public ModelAndView instVerification(HttpServletRequest request, HttpServletResponse response) {
 
-	    Constants.mainAct =20;
-		Constants.subAct =101;
+		Constants.mainAct = 20;
+		Constants.subAct = 101;
 		int isEdit = 0;
 		ModelAndView model = new ModelAndView("spProduction/InstVerification");
 		try {
@@ -1343,7 +1393,7 @@ public class SpProductionController {
 			model.addObject("shiftList", shiftListRes.getShiftList());
 			model.addObject("spStationList", spStationList.getSpStationList());
 			model.addObject("instrumentsList", instrumentsList.getInstrumentList());
-			
+
 		} catch (Exception e) {
 			System.out.println("Exc In InstrumentVerification:" + e.getMessage());
 		}
@@ -1367,7 +1417,8 @@ public class SpProductionController {
 		return instVerificationHeaderRes;
 	}
 
-	// ------------------------------ADD InstVerification Process------------------------------------
+	// ------------------------------ADD InstVerification
+	// Process------------------------------------
 	@RequestMapping(value = "/addInstVerification", method = RequestMethod.POST)
 	public String addInstVerification(HttpServletRequest request, HttpServletResponse response) {
 
@@ -1376,7 +1427,6 @@ public class SpProductionController {
 		HttpSession session = request.getSession();
 		UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 
-		
 		try {
 			userId = userResponse.getUser().getId();
 		} catch (Exception e) {
@@ -1409,7 +1459,7 @@ public class SpProductionController {
 
 				String[] selectedBeforeInstr = null;
 				String[] selectedAfterInstr = null;
-				
+
 				if (isStationAvail == 1) {
 					selectedBeforeInstr = request.getParameterValues("before");
 					System.out.println("selectedBeforeInstr" + selectedBeforeInstr);
@@ -1423,7 +1473,6 @@ public class SpProductionController {
 					instVerificationHeader.setEndTime(java.time.LocalTime.now().toString());
 					instVerificationHeader.setStStatus(2);
 				}
-				
 
 				instVerificationHeader.setInstVerifDate(new Date());
 				instVerificationHeader.setUserId(userId);
@@ -1490,7 +1539,7 @@ public class SpProductionController {
 				String[] selectedAfterInstr = null;
 				List<String> beforeInstrList = null;
 				List<String> afterInstrList = null;
-				
+
 				if (isStationAvail == 1) {
 					selectedBeforeInstr = request.getParameterValues("before");
 					System.out.println("selectedBeforeInstr" + selectedBeforeInstr);
@@ -1557,530 +1606,500 @@ public class SpProductionController {
 	public ModelAndView instrVerifDetails(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("spProduction/instVerifHeader");
-		
-		    Constants.mainAct =20;
-			Constants.subAct =117;
-    try {
-		 RestTemplate restTemplate = new RestTemplate();
 
-		 List<GetInstVerifHeader> getInstVerifHeaderRes = restTemplate
-				.getForObject(Constants.url + "/spProduction/getInstVerHeaders", List.class);
+		Constants.mainAct = 20;
+		Constants.subAct = 117;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
 
-		 model.addObject("getInstVerifHeaderRes", getInstVerifHeaderRes);
-        }
-        catch(Exception e)
-        {
-    	  System.out.println("Exception in /instrVerifDetails");
-        }
+			List<GetInstVerifHeader> getInstVerifHeaderRes = restTemplate
+					.getForObject(Constants.url + "/spProduction/getInstVerHeaders", List.class);
+
+			model.addObject("getInstVerifHeaderRes", getInstVerifHeaderRes);
+		} catch (Exception e) {
+			System.out.println("Exception in /instrVerifDetails");
+		}
 		return model;
-	 }
+	}
+
 	// --------------------------------------------------------------------------------------------------------------
 	// -------------------------------------------------------------------------------------------------------
-		@RequestMapping(value = "/showInstrVeriDetails/{instVerifHId}", method = RequestMethod.GET)
-		public ModelAndView showInstVeriDetails(@PathVariable int instVerifHId,HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/showInstrVeriDetails/{instVerifHId}", method = RequestMethod.GET)
+	public ModelAndView showInstVeriDetails(@PathVariable int instVerifHId, HttpServletRequest request,
+			HttpServletResponse response) {
 
-			ModelAndView model = new ModelAndView("spProduction/instVerifDetail");
-			  
-				
-			System.out.println("instVerifHId"+instVerifHId);
-			try
-			{
+		ModelAndView model = new ModelAndView("spProduction/instVerifDetail");
+
+		System.out.println("instVerifHId" + instVerifHId);
+		try {
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
-			mvm.add("instVerifId",instVerifHId);
-			
-			GetInstrVerifHeader getInstrVerifHeaderRes = restTemplate
-					.postForObject(Constants.url + "/spProduction/getInstVerifHDetails",mvm, GetInstrVerifHeader.class);
+			mvm.add("instVerifId", instVerifHId);
 
-			System.out.println("getInstrVerifHeaderRes"+getInstrVerifHeaderRes.getInstVerificationDetailList().toString());
-			
+			GetInstrVerifHeader getInstrVerifHeaderRes = restTemplate.postForObject(
+					Constants.url + "/spProduction/getInstVerifHDetails", mvm, GetInstrVerifHeader.class);
+
+			System.out.println(
+					"getInstrVerifHeaderRes" + getInstrVerifHeaderRes.getInstVerificationDetailList().toString());
+
 			model.addObject("getInstrVerifDetailRes", getInstrVerifHeaderRes.getInstVerificationDetailList());
 			model.addObject("getInstrVerifHeaderRes", getInstrVerifHeaderRes);
 
-			}
-			catch(Exception e)
-			{
-				System.out.println("Exc"+e.getMessage());
-				e.printStackTrace();
-			}
-			return model;
+		} catch (Exception e) {
+			System.out.println("Exc" + e.getMessage());
+			e.printStackTrace();
 		}
-		// --------------------------------------------------------------------------------------------------------------
-		// -------------------------------------------------------------------------------------------------------
-		@RequestMapping(value = "/showCkAllocToStation", method = RequestMethod.GET)
-		public ModelAndView showCkAllocToStation(HttpServletRequest request, HttpServletResponse response) {
+		return model;
+	}
 
-			 Constants.mainAct =20;
-			 Constants.subAct =100;
-			ModelAndView model = new ModelAndView("spProduction/ckAllocToStation");
-	    try {
+	// --------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------
+	@RequestMapping(value = "/showCkAllocToStation", method = RequestMethod.GET)
+	public ModelAndView showCkAllocToStation(HttpServletRequest request, HttpServletResponse response) {
+
+		Constants.mainAct = 20;
+		Constants.subAct = 100;
+		ModelAndView model = new ModelAndView("spProduction/ckAllocToStation");
+		try {
 			RestTemplate restTemplate = new RestTemplate();
 			SpStationList spStationList = restTemplate.getForObject(Constants.url + "/spProduction/getSpStationList",
 					SpStationList.class);
 			System.out.println("Response: " + spStationList.toString());
-			
-			List<StationWiseCkCount> stWiseCkList=restTemplate.getForObject(Constants.url + "/spProduction/getStationwiseCkCount",List.class);
+
+			List<StationWiseCkCount> stWiseCkList = restTemplate
+					.getForObject(Constants.url + "/spProduction/getStationwiseCkCount", List.class);
 			System.out.println("Response: " + stWiseCkList.toString());
 
-			
 			ShiftList shiftListRes = restTemplate.getForObject(Constants.url + "/spProduction/getShiftList",
 					ShiftList.class);
 			System.out.println("Response: " + shiftListRes.toString());
 
 			model.addObject("shiftList", shiftListRes.getShiftList());
-			
-			 stationSpCakeList=restTemplate.getForObject(Constants.url + "/spProduction/getStationSpCakeList",StationSpCakeList.class);
-			
+
+			stationSpCakeList = restTemplate.getForObject(Constants.url + "/spProduction/getStationSpCakeList",
+					StationSpCakeList.class);
+
 			model.addObject("stationSpCakeList", stationSpCakeList.getStationSpCakeList());
 			model.addObject("spStationList", spStationList.getSpStationList());
 			model.addObject("stWiseCkList", stWiseCkList);
-	    }
-	    catch(Exception e)
-	    {
-	    	System.out.println("Exception in /showCkAllocToStation");
-	    }
-			return model;
+		} catch (Exception e) {
+			System.out.println("Exception in /showCkAllocToStation");
 		}
-		// --------------------------------------------------------------------------------------------------------------
-		
+		return model;
+	}
+	// --------------------------------------------------------------------------------------------------------------
 
-		// -------------------------------------------------------------------------------------------------------
-				@RequestMapping(value = "/addCkAllocToStation", method = RequestMethod.POST)
-				public String addCkAllocToStation(HttpServletRequest request, HttpServletResponse response) {
+	// -------------------------------------------------------------------------------------------------------
+	@RequestMapping(value = "/addCkAllocToStation", method = RequestMethod.POST)
+	public String addCkAllocToStation(HttpServletRequest request, HttpServletResponse response) {
 
-					ModelAndView model = new ModelAndView("spProduction/ckAllocToStation");
-			    try {
-			    	HttpSession session = request.getSession();
-					UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
+		ModelAndView model = new ModelAndView("spProduction/ckAllocToStation");
+		try {
+			HttpSession session = request.getSession();
+			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 
-					try {
-						userId = userResponse.getUser().getId();
+			try {
+				userId = userResponse.getUser().getId();
+			} catch (Exception e) {
+				userId = 0;
+			}
+
+			int stationId = Integer.parseInt(request.getParameter("st_id"));
+			System.out.println("Station Id:" + stationId);
+
+			String[] spId = request.getParameterValues("spck_id");
+			System.out.println("spId" + spId.toString());
+			List<String> spIdList = Arrays.asList(spId);
+
+			int shiftId = Integer.parseInt(request.getParameter("shift_id"));
+			System.out.println("shiftId" + shiftId);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			SpCkAllocHeader spCkAllocHeader = new SpCkAllocHeader();
+
+			spCkAllocHeader.setReqDate(new Date());// Current Date
+
+			spCkAllocHeader.setReqTime(java.time.LocalTime.now().toString());// Current Time
+
+			spCkAllocHeader.setReqUserId(userId);
+
+			spCkAllocHeader.setShiftId(shiftId);
+
+			spCkAllocHeader.setSpCkAllocId(0);
+
+			spCkAllocHeader.setStationId(stationId);
+
+			List<SpCkAllocDetail> spCkAllocDetailList = new ArrayList<SpCkAllocDetail>();
+			for (int i = 0; i < spIdList.size(); i++) {
+				SpCkAllocDetail spCkAllocDetail = new SpCkAllocDetail();
+
+				spCkAllocDetail.setSpCkAllocDId(0);
+				spCkAllocDetail.setSpCkAllocId(0);
+
+				StationSpCake stationSpCake = new StationSpCake();
+				System.out.println("Station Special Cake List :" + stationSpCakeList.getStationSpCakeList());
+				System.out.println("Special Cake Ids:" + spIdList.toString());
+
+				for (int j = 0; j < stationSpCakeList.getStationSpCakeList().size(); j++) {
+
+					if (stationSpCakeList.getStationSpCakeList().get(j).getSpOrderNo() == Integer
+							.parseInt(spIdList.get(i))) {
+						stationSpCake = stationSpCakeList.getStationSpCakeList().get(j);
+						System.out.println("Special Cake:" + stationSpCake.toString());
 					}
-					catch(Exception e)
-					{
-						userId=0;
-					}
-			    	
-			    	int stationId=Integer.parseInt(request.getParameter("st_id"));
-			    	System.out.println("Station Id:"+stationId);
-			    	
-			    	String[] spId=request.getParameterValues("spck_id");
-			    	System.out.println("spId"+spId.toString());
-			        List<String> spIdList = Arrays.asList(spId);  
-			        
-			    	int shiftId=Integer.parseInt(request.getParameter("shift_id"));
-			    	System.out.println("shiftId"+shiftId);
-
-			    	
-			    	RestTemplate restTemplate = new RestTemplate();
-
-                    SpCkAllocHeader  spCkAllocHeader=new SpCkAllocHeader();
-                    
-                    spCkAllocHeader.setReqDate(new Date());//Current Date 
-                    
-                    spCkAllocHeader.setReqTime(java.time.LocalTime.now().toString());//Current Time 
-                    
-                    spCkAllocHeader.setReqUserId(userId);
-                    
-                    spCkAllocHeader.setShiftId(shiftId);
-                    
-                    spCkAllocHeader.setSpCkAllocId(0);
-                    
-                    spCkAllocHeader.setStationId(stationId);
-                    
-                    List<SpCkAllocDetail> spCkAllocDetailList=new ArrayList<SpCkAllocDetail>();
-                    for(int i=0;i<spIdList.size();i++)
-                    {
-                    	SpCkAllocDetail spCkAllocDetail=new SpCkAllocDetail();
-                    	
-                    	spCkAllocDetail.setSpCkAllocDId(0);
-                    	spCkAllocDetail.setSpCkAllocId(0);
-                    	
-                    	StationSpCake stationSpCake=new StationSpCake();
-                    	System.out.println("Station Special Cake List :"+stationSpCakeList.getStationSpCakeList());
-                    	System.out.println("Special Cake Ids:"+spIdList.toString());
-                    	
-                    	for(int j=0;j<stationSpCakeList.getStationSpCakeList().size();j++)
-                    	{
-                    		
-                    		if(stationSpCakeList.getStationSpCakeList().get(j).getSpOrderNo()==Integer.parseInt(spIdList.get(i)))
-                    		{
-                    			stationSpCake=stationSpCakeList.getStationSpCakeList().get(j);
-                    		    System.out.println("Special Cake:"+stationSpCake.toString());
-                    		}
-                    	}
-                    	spCkAllocDetail.setSpCode(stationSpCake.getSpCode());
-                    	spCkAllocDetail.setSpId(stationSpCake.getSpId());
-                    	spCkAllocDetail.setSpName(stationSpCake.getSpName());
-                    	spCkAllocDetail.settSpCakeId(Integer.parseInt(spIdList.get(i)));
-                    	spCkAllocDetail.setPickupDate(new Date());//Current Date 
-                    	spCkAllocDetail.setFrId(stationSpCake.getFrId());
-                    	spCkAllocDetail.setStatus(0);
-                    	spCkAllocDetail.setStartTime("00:00:00");
-                    	spCkAllocDetail.setEndTime("00:00:00");
-                    	spCkAllocDetail.setDelStatus(0);
-                    	
-                    	spCkAllocDetailList.add(spCkAllocDetail);
-                    }
-                    spCkAllocHeader.setSpCkAllocDetailList(spCkAllocDetailList);
-           
-                    Info info=restTemplate.postForObject(Constants.url + "/spProduction/saveSpCkAllocHeader",spCkAllocHeader,Info.class);
-                    
-                    System.out.println("addCkAllocToStation Response:"+info.toString());
-			    } 
-			    catch(Exception e)
-			    {
-			    	System.out.println("Exception In Saving Cake Alloc Data"+e.getMessage());
-			    	
-			    	e.printStackTrace();
-			    }
-				return "redirect:/showSpCksAllocToStation";
 				}
-	
-				@RequestMapping(value = "/showSpCksAllocToStation", method = RequestMethod.GET)
-				public ModelAndView showSpCksAllocToStation(HttpServletRequest request, HttpServletResponse response) {
+				spCkAllocDetail.setSpCode(stationSpCake.getSpCode());
+				spCkAllocDetail.setSpId(stationSpCake.getSpId());
+				spCkAllocDetail.setSpName(stationSpCake.getSpName());
+				spCkAllocDetail.settSpCakeId(Integer.parseInt(spIdList.get(i)));
+				spCkAllocDetail.setPickupDate(new Date());// Current Date
+				spCkAllocDetail.setFrId(stationSpCake.getFrId());
+				spCkAllocDetail.setStatus(0);
+				spCkAllocDetail.setStartTime("00:00:00");
+				spCkAllocDetail.setEndTime("00:00:00");
+				spCkAllocDetail.setDelStatus(0);
 
-					ModelAndView model = new ModelAndView("spProduction/stationwiseSpAllocList");
-					 Constants.mainAct =20;
-					 Constants.subAct =115;
-					 try {
-							RestTemplate restTemplate = new RestTemplate();
-							SpStationList spStationList = restTemplate.getForObject(Constants.url + "/spProduction/getSpStationList",
-									SpStationList.class);
-							System.out.println("Response: " + spStationList.toString());
-							
-							List<String> stationId = new ArrayList<String>();
-							String stIds=new String();
-							
-							for(int i=0;i<spStationList.getSpStationList().size();i++)
-							{
-								int stId=spStationList.getSpStationList().get(i).getStId();
-								stationId.add(String.valueOf(stId));
-								stIds=stIds+","+stId;
-								
-							}
-							stIds=stIds.substring(1);
-							
-							System.out.println("Station Id:"+stIds);
-							
-							DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-							DateFormat dmyFr = new SimpleDateFormat("dd-MM-yyyy");
+				spCkAllocDetailList.add(spCkAllocDetail);
+			}
+			spCkAllocHeader.setSpCkAllocDetailList(spCkAllocDetailList);
 
-							String currentDate = df.format(new Date());
-							String dmyCDate=dmyFr.format(new Date());
-							System.out.println("currentDate :"+currentDate);
+			Info info = restTemplate.postForObject(Constants.url + "/spProduction/saveSpCkAllocHeader", spCkAllocHeader,
+					Info.class);
 
-							
-							MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-							map.add("stationId",stIds);
-							map.add("fromDate",currentDate);
-							map.add("toDate",currentDate);
+			System.out.println("addCkAllocToStation Response:" + info.toString());
+		} catch (Exception e) {
+			System.out.println("Exception In Saving Cake Alloc Data" + e.getMessage());
 
-					/*		ParameterizedTypeReference<List<GetAllocStationCk>> typeRef = new ParameterizedTypeReference<List<GetAllocStationCk>>() {
-							};
-							ResponseEntity<List<GetAllocStationCk>> responseEntity = restTemplate.exchange(Constants.url + "/spProduction/getAllocStationCk",
-									HttpMethod.POST, new HttpEntity<>(map), typeRef);
-							
-							List<GetAllocStationCk> getAllocStationCkList =new ArrayList<GetAllocStationCk>();
-							getAllocStationCkList= responseEntity.getBody();*/
-							GetAllocStationCkList getAllocStationCkList=restTemplate.postForObject(Constants.url + "/spProduction/getAllocStationCk",map,GetAllocStationCkList.class);
+			e.printStackTrace();
+		}
+		return "redirect:/showSpCksAllocToStation";
+	}
 
-							System.out.println("getAllocStationCkList"+getAllocStationCkList.toString());
-							getAllocStationCkRes=new ArrayList<>();
-							getAllocStationCkRes=getAllocStationCkList.getGetAllocStationCkList();
-							
-							model.addObject("getAllocStationCkList", getAllocStationCkList.getGetAllocStationCkList());
-							model.addObject("spStationList",spStationList.getSpStationList());
-							model.addObject("fromDate", dmyCDate);
-							model.addObject("toDate", dmyCDate);
-						    model.addObject("selStId",-1);
+	@RequestMapping(value = "/showSpCksAllocToStation", method = RequestMethod.GET)
+	public ModelAndView showSpCksAllocToStation(HttpServletRequest request, HttpServletResponse response) {
 
-					 }
-					 catch(Exception e)
-					 {
-						 System.out.println("Exce while showing /showSpCksAllocToStation"+e.getMessage());
-						 
-					 }
-					return model;
+		ModelAndView model = new ModelAndView("spProduction/stationwiseSpAllocList");
+		Constants.mainAct = 20;
+		Constants.subAct = 115;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			SpStationList spStationList = restTemplate.getForObject(Constants.url + "/spProduction/getSpStationList",
+					SpStationList.class);
+			System.out.println("Response: " + spStationList.toString());
+
+			List<String> stationId = new ArrayList<String>();
+			String stIds = new String();
+
+			for (int i = 0; i < spStationList.getSpStationList().size(); i++) {
+				int stId = spStationList.getSpStationList().get(i).getStId();
+				stationId.add(String.valueOf(stId));
+				stIds = stIds + "," + stId;
+
+			}
+			stIds = stIds.substring(1);
+
+			System.out.println("Station Id:" + stIds);
+
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			DateFormat dmyFr = new SimpleDateFormat("dd-MM-yyyy");
+
+			String currentDate = df.format(new Date());
+			String dmyCDate = dmyFr.format(new Date());
+			System.out.println("currentDate :" + currentDate);
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("stationId", stIds);
+			map.add("fromDate", currentDate);
+			map.add("toDate", currentDate);
+
+			/*
+			 * ParameterizedTypeReference<List<GetAllocStationCk>> typeRef = new
+			 * ParameterizedTypeReference<List<GetAllocStationCk>>() { };
+			 * ResponseEntity<List<GetAllocStationCk>> responseEntity =
+			 * restTemplate.exchange(Constants.url + "/spProduction/getAllocStationCk",
+			 * HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			 * 
+			 * List<GetAllocStationCk> getAllocStationCkList =new
+			 * ArrayList<GetAllocStationCk>(); getAllocStationCkList=
+			 * responseEntity.getBody();
+			 */
+			GetAllocStationCkList getAllocStationCkList = restTemplate
+					.postForObject(Constants.url + "/spProduction/getAllocStationCk", map, GetAllocStationCkList.class);
+
+			System.out.println("getAllocStationCkList" + getAllocStationCkList.toString());
+			getAllocStationCkRes = new ArrayList<>();
+			getAllocStationCkRes = getAllocStationCkList.getGetAllocStationCkList();
+
+			model.addObject("getAllocStationCkList", getAllocStationCkList.getGetAllocStationCkList());
+			model.addObject("spStationList", spStationList.getSpStationList());
+			model.addObject("fromDate", dmyCDate);
+			model.addObject("toDate", dmyCDate);
+			model.addObject("selStId", -1);
+
+		} catch (Exception e) {
+			System.out.println("Exce while showing /showSpCksAllocToStation" + e.getMessage());
+
+		}
+		return model;
+	}
+
+	@RequestMapping(value = "/searchStSpCkAlloc", method = RequestMethod.POST)
+	public ModelAndView searchStSpCkAlloc(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("spProduction/stationwiseSpAllocList");
+
+		try {
+
+			int selStId = Integer.parseInt(request.getParameter("st_id"));
+			System.out.println("selStId :" + selStId);
+
+			String fromDate = request.getParameter("from_date");
+			System.out.println("fromDate" + fromDate);
+
+			String toDate = request.getParameter("to_date");
+			System.out.println("toDate" + toDate);
+
+			RestTemplate restTemplate = new RestTemplate();
+			SpStationList spStationList = restTemplate.getForObject(Constants.url + "/spProduction/getSpStationList",
+					SpStationList.class);
+			System.out.println("Response: " + spStationList.toString());
+
+			List<String> stationId = new ArrayList<String>();
+			String stIds = new String();
+
+			for (int i = 0; i < spStationList.getSpStationList().size(); i++) {
+				int stId = spStationList.getSpStationList().get(i).getStId();
+				stationId.add(String.valueOf(stId));
+				stIds = stIds + "," + stId;
+
+			}
+			stIds = stIds.substring(1);
+
+			System.out.println("Station Id:" + stIds);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			DateFormat dmyFr = new SimpleDateFormat("dd-MM-yyyy");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			if (selStId == -1) {
+				map.add("stationId", stIds);
+			} else {
+				map.add("stationId", selStId);
+
+			}
+			Date fmtFrDate = dmyFr.parse(fromDate);
+			Date fmtToDate = dmyFr.parse(toDate);
+
+			map.add("fromDate", df.format(fmtFrDate));
+			map.add("toDate", df.format(fmtToDate));
+
+			System.out.println("fmtFrDate" + df.format(fmtFrDate));
+			/*
+			 * ParameterizedTypeReference<List<GetAllocStationCk>> typeRef = new
+			 * ParameterizedTypeReference<List<GetAllocStationCk>>() { };
+			 * ResponseEntity<List<GetAllocStationCk>> responseEntity =
+			 * restTemplate.exchange(Constants.url + "/spProduction/getAllocStationCk",
+			 * HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			 * 
+			 * getAllocStationCkList =new ArrayList<GetAllocStationCk>();
+			 * getAllocStationCkList= responseEntity.getBody();
+			 */
+			GetAllocStationCkList getAllocStationCkList = restTemplate
+					.postForObject(Constants.url + "/spProduction/getAllocStationCk", map, GetAllocStationCkList.class);
+
+			System.out.println("getAllocStationCkList" + getAllocStationCkList.toString());
+			getAllocStationCkRes = new ArrayList<>();
+			getAllocStationCkRes = getAllocStationCkList.getGetAllocStationCkList();
+
+			model.addObject("getAllocStationCkList", getAllocStationCkList.getGetAllocStationCkList());
+
+			System.out.println("getAllocStationCkList" + getAllocStationCkList.toString());
+
+			model.addObject("spStationList", spStationList.getSpStationList());
+			model.addObject("fromDate", dmyFr.format(fmtFrDate));
+			model.addObject("toDate", dmyFr.format(fmtToDate));
+			model.addObject("selStId", selStId);
+		} catch (Exception e) {
+			System.out.println("Exce in /searchStSpCkAlloc" + e.getMessage());
+
+		}
+		return model;
+
+	}
+
+	// -------------------------------------------------------------------------------------------------------
+	@RequestMapping(value = "/getSpDetailForBom/{spId}/{spCkAllocDId}", method = RequestMethod.GET)
+	public ModelAndView getSpDetailForBom(@PathVariable("spId") int spId,
+			@PathVariable("spCkAllocDId") int spCkAllocDId, HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("spProduction/addSpBom");
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		try {
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("spId", spId);
+
+			GetSpDetailForBomList getSpDtailForBom = restTemplate.postForObject(Constants.url + "/getSpDetailForBom",
+					map, GetSpDetailForBomList.class);
+
+			System.out.println("GetSpDetailForBomList" + getSpDtailForBom.toString());
+
+			getSpDetailForBomList = getSpDtailForBom.getGetSpDetailForBomList();
+
+			model.addObject("getSpDtailForBom", getSpDtailForBom.getGetSpDetailForBomList());
+			model.addObject("spId", spId);
+			model.addObject("spCkAllocDId", spCkAllocDId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
+	// -------------------------------------------------------------------------------------------------------
+	// insertSpBom getAllocStationCkList
+
+	@RequestMapping(value = "/insertSpBom", method = RequestMethod.POST)
+	public String insertBom(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView mav = new ModelAndView("spProduction/addSpBom");
+		try {
+			int localSpId = 0;
+			HttpSession session = request.getSession();
+			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
+
+			int spId = Integer.parseInt(request.getParameter("spId"));
+			System.out.println("spId" + spId);
+			int spCkAllocDId = Integer.parseInt(request.getParameter("spCkAllocDId"));
+			System.out.println("spCkAllocDId" + spCkAllocDId);
+
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			// int deptId=userResponse.getUser().getDeptId();
+
+			int userId = userResponse.getUser().getId();
+
+			String fromSettingKey = new String();
+
+			fromSettingKey = "sp_cake_dept";
+
+			map.add("settingKeyList", fromSettingKey);
+
+			// web Service to get Dept Name And Dept Id for bom toDept and toDeptId
+
+			FrItemStockConfigureList fromSettingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue",
+					map, FrItemStockConfigureList.class);
+			System.out.println("fromSettingList" + fromSettingList.toString());
+
+			String toSettingKey = new String();
+
+			toSettingKey = "BMS";
+
+			map.add("settingKeyList", toSettingKey);
+
+			// web Service to get Dept Name And Dept Id for bom toDept and toDeptId
+
+			FrItemStockConfigureList toSettingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue",
+					map, FrItemStockConfigureList.class);
+
+			System.out.println("toSettingList" + toSettingList.toString());
+			System.out.println("new Field Dept Id = " + userResponse.getUser().getDeptId());
+
+			BillOfMaterialHeader billOfMaterialHeader = new BillOfMaterialHeader();
+
+			for (int i = 0; i < getAllocStationCkRes.size(); i++) {
+				if (spId == getAllocStationCkRes.get(i).getSpId()) {
+					localSpId = getAllocStationCkRes.get(i).getSpId();
+					int fromDeptId = fromSettingList.getFrItemStockConfigure().get(0).getSettingValue();
+					String fromDeptName = fromSettingList.getFrItemStockConfigure().get(0).getSettingKey();
+
+					int toDeptId = toSettingList.getFrItemStockConfigure().get(0).getSettingValue();
+					String toDeptName = toSettingList.getFrItemStockConfigure().get(0).getSettingKey();
+
+					Date date = new Date();
+
+					billOfMaterialHeader.setApprovedDate(date);
+					billOfMaterialHeader.setApprovedUserId(0);
+					billOfMaterialHeader.setDelStatus(0);
+					billOfMaterialHeader.setFromDeptId(fromDeptId);
+
+					DateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
+					Date frDate = (Date) parser.parse(getAllocStationCkRes.get(i).getReqDate());
+
+					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					frDate = formatter.parse(formatter.format(frDate));
+					System.out.println(frDate);
+
+					billOfMaterialHeader.setProductionDate(frDate);//
+					billOfMaterialHeader.setProductionId(getAllocStationCkRes.get(i).gettSpCakeId());//
+					billOfMaterialHeader.setReqDate(date);
+					billOfMaterialHeader.setSenderUserid(userId);
+					billOfMaterialHeader.setStatus(0);
+					billOfMaterialHeader.setToDeptId(toDeptId);
+					billOfMaterialHeader.setToDeptName(toDeptName);
+					billOfMaterialHeader.setFromDeptName(fromDeptName);
+
+					billOfMaterialHeader.setRejApproveDate(date);
+					billOfMaterialHeader.setRejApproveUserId(0);
+					billOfMaterialHeader.setRejDate(date);
+					billOfMaterialHeader.setRejUserId(0);
+
+					billOfMaterialHeader.setIsManual(0);
+					billOfMaterialHeader.setIsProduction(4);
+					billOfMaterialHeader.setIsPlan(0);
+
+					billOfMaterialHeader.setIsPlan(0);
 				}
-				
-				
-				
-				@RequestMapping(value = "/searchStSpCkAlloc", method = RequestMethod.POST)
-				public ModelAndView searchStSpCkAlloc(HttpServletRequest request, HttpServletResponse response) {
+			}
+			List<BillOfMaterialDetailed> bomDetailList = new ArrayList<BillOfMaterialDetailed>();
+			BillOfMaterialDetailed bomDetail = null;
+			for (int i = 0; i < getSpDetailForBomList.size(); i++) {
 
-					ModelAndView model = new ModelAndView("spProduction/stationwiseSpAllocList");
-					
-					 try {
-						 
-						 int selStId=Integer.parseInt(request.getParameter("st_id"));
-						 System.out.println("selStId :"+selStId);
+				String editQty = request.getParameter("editQty" + i);
+				bomDetail = new BillOfMaterialDetailed();
 
-						 String fromDate=request.getParameter("from_date");
-						 System.out.println("fromDate"+fromDate);
-						 
-						 String toDate=request.getParameter("to_date");
-						 System.out.println("toDate"+toDate);
+				System.out.println("editQty " + editQty);
 
-						 
-						    RestTemplate restTemplate = new RestTemplate();
-							SpStationList spStationList = restTemplate.getForObject(Constants.url + "/spProduction/getSpStationList",
-									SpStationList.class);
-							System.out.println("Response: " + spStationList.toString());
-							
-							List<String> stationId = new ArrayList<String>();
-							String stIds=new String();
-							
-							for(int i=0;i<spStationList.getSpStationList().size();i++)
-							{
-								int stId=spStationList.getSpStationList().get(i).getStId();
-								stationId.add(String.valueOf(stId));
-								stIds=stIds+","+stId;
-								
-							}
-							stIds=stIds.substring(1);
-							
-							System.out.println("Station Id:"+stIds);
-							DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-							DateFormat dmyFr = new SimpleDateFormat("dd-MM-yyyy");
+				bomDetail.setDelStatus(0);
+				bomDetail.setRmId(getSpDetailForBomList.get(i).getRmId());
+				bomDetail.setRmIssueQty(0.0F);
+				bomDetail.setUom(getSpDetailForBomList.get(i).getUom());
+				bomDetail.setRmType(getSpDetailForBomList.get(i).getRmType());
+				bomDetail.setRmReqQty(Integer.parseInt(editQty));
+				bomDetail.setRmName(getSpDetailForBomList.get(i).getRmName());
 
-							
-							MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-							if(selStId==-1)
-							{
-							 map.add("stationId",stIds);
-							}
-							else
-							{
-							 map.add("stationId",selStId);
+				bomDetail.setRejectedQty(0);
+				bomDetail.setAutoRmReqQty(getSpDetailForBomList.get(i).getTotal());
 
-							}
-							Date fmtFrDate=dmyFr.parse(fromDate);
-							Date fmtToDate=dmyFr.parse(toDate);
+				bomDetail.setReturnQty(0);
+				bomDetailList.add(bomDetail);
 
-							map.add("fromDate",df.format(fmtFrDate));
-							map.add("toDate",df.format(fmtToDate));
+			}
 
-							System.out.println("fmtFrDate"+df.format(fmtFrDate));
-							/*ParameterizedTypeReference<List<GetAllocStationCk>> typeRef = new ParameterizedTypeReference<List<GetAllocStationCk>>() {
-							};
-							ResponseEntity<List<GetAllocStationCk>> responseEntity = restTemplate.exchange(Constants.url + "/spProduction/getAllocStationCk",
-									HttpMethod.POST, new HttpEntity<>(map), typeRef);
-							
-							getAllocStationCkList =new ArrayList<GetAllocStationCk>();
-							getAllocStationCkList= responseEntity.getBody();
-							*/
-							GetAllocStationCkList getAllocStationCkList=restTemplate.postForObject(Constants.url + "/spProduction/getAllocStationCk",map,GetAllocStationCkList.class);
+			System.out.println("bom detail List " + bomDetailList.toString());
+			billOfMaterialHeader.setBillOfMaterialDetailed(bomDetailList);
 
-							System.out.println("getAllocStationCkList"+getAllocStationCkList.toString());
-							getAllocStationCkRes=new ArrayList<>();
-							getAllocStationCkRes=getAllocStationCkList.getGetAllocStationCkList();
-							
-							model.addObject("getAllocStationCkList", getAllocStationCkList.getGetAllocStationCkList());
-							
-							System.out.println("getAllocStationCkList"+getAllocStationCkList.toString());
-							
-							model.addObject("spStationList",spStationList.getSpStationList());
-						    model.addObject("fromDate", dmyFr.format(fmtFrDate));
-						    model.addObject("toDate",dmyFr.format(fmtToDate));
-						    model.addObject("selStId", selStId);
-					 }
-					 catch(Exception e)
-					 {
-						 System.out.println("Exce in /searchStSpCkAlloc"+e.getMessage());
+			System.out.println(" insert List " + billOfMaterialHeader.toString());
+			int prodId = billOfMaterialHeader.getProductionId();
 
-					 }
-				return model;
+			Info info = restTemplate.postForObject(Constants.url + "saveBom", billOfMaterialHeader, Info.class);
+			System.out.println(" Info " + info.toString());
 
-				}
-				
-				// -------------------------------------------------------------------------------------------------------
-				@RequestMapping(value = "/getSpDetailForBom/{spId}/{spCkAllocDId}", method = RequestMethod.GET)
-				public ModelAndView getSpDetailForBom(@PathVariable("spId")int spId,@PathVariable("spCkAllocDId")int spCkAllocDId,HttpServletRequest request, HttpServletResponse response) {
+			mav.addObject("getSpDtailForBom", getSpDetailForBomList);
+			mav.addObject("spId", localSpId);
 
-					ModelAndView model = new ModelAndView("spProduction/addSpBom");
-					
-					RestTemplate restTemplate = new RestTemplate();
+			map = new LinkedMultiValueMap<String, Object>();
+			map.add("spCkAllocDId", spCkAllocDId);
 
-					try {
-					MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-					map.add("spId",spId);
-					
-					GetSpDetailForBomList getSpDtailForBom=restTemplate.postForObject(Constants.url + "/getSpDetailForBom", map, GetSpDetailForBomList.class);
-					
-					System.out.println("GetSpDetailForBomList"+getSpDtailForBom.toString());
-					
-					
-					getSpDetailForBomList=getSpDtailForBom.getGetSpDetailForBomList();
-					
-					model.addObject("getSpDtailForBom",getSpDtailForBom.getGetSpDetailForBomList());
-					model.addObject("spId",spId);
-					model.addObject("spCkAllocDId",spCkAllocDId);
+			Info updateRes = restTemplate.postForObject(Constants.url + "updateIsBomOfSpAllocn", map, Info.class);
+			System.out.println("Is Bom Updated Res" + updateRes.toString());
 
-					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
-					}
-					return model;
-				}
-				//-------------------------------------------------------------------------------------------------------
-				//insertSpBom getAllocStationCkList
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-				@RequestMapping(value = "/insertSpBom", method = RequestMethod.POST)
-				public String insertBom(HttpServletRequest request, HttpServletResponse response) {
+		return "redirect:/showSpCksAllocToStation";
 
-					ModelAndView mav = new ModelAndView("spProduction/addSpBom");
-					try {
-						int localSpId = 0;
-					HttpSession session=request.getSession();
-					UserResponse userResponse =(UserResponse) session.getAttribute("UserDetail");
-					
-					int spId = Integer.parseInt(request.getParameter("spId"));
-					System.out.println("spId"+spId);
-					int spCkAllocDId= Integer.parseInt(request.getParameter("spCkAllocDId"));
-					System.out.println("spCkAllocDId"+spCkAllocDId);
-
-					RestTemplate restTemplate = new RestTemplate();
-					MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-					
-					//int deptId=userResponse.getUser().getDeptId();
-
-					int userId=userResponse.getUser().getId();
-					
-					String fromSettingKey = new String();
-
-					fromSettingKey = "sp_cake_dept";
-
-					map.add("settingKeyList", fromSettingKey);
-					
-					// web Service to get Dept Name And Dept Id for bom toDept and toDeptId
-					
-					FrItemStockConfigureList fromSettingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue", map,
-							FrItemStockConfigureList.class);
-					System.out.println("fromSettingList"+fromSettingList.toString());
-
-					
-					String toSettingKey = new String();
-
-					toSettingKey = "BMS";
-
-					map.add("settingKeyList", toSettingKey);
-					
-					// web Service to get Dept Name And Dept Id for bom toDept and toDeptId
-					
-					FrItemStockConfigureList toSettingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue", map,
-							FrItemStockConfigureList.class);
-					
-					System.out.println("toSettingList"+toSettingList.toString());
-					System.out.println("new Field Dept Id = "+userResponse.getUser().getDeptId());
-					
-					BillOfMaterialHeader billOfMaterialHeader = new BillOfMaterialHeader();
-
-					
-			
-					for(int i=0;i<getAllocStationCkRes.size();i++)
-					{
-						if(spId==getAllocStationCkRes.get(i).getSpId())
-						{
-							localSpId=getAllocStationCkRes.get(i).getSpId();
-						int fromDeptId=fromSettingList.getFrItemStockConfigure().get(0).getSettingValue();
-						String fromDeptName=fromSettingList.getFrItemStockConfigure().get(0).getSettingKey();
-						
-						int toDeptId=toSettingList.getFrItemStockConfigure().get(0).getSettingValue();
-						String toDeptName=toSettingList.getFrItemStockConfigure().get(0).getSettingKey();
-						
-						Date date = new Date();
-
-
-						billOfMaterialHeader.setApprovedDate(date);
-						billOfMaterialHeader.setApprovedUserId(0);
-						billOfMaterialHeader.setDelStatus(0);
-						billOfMaterialHeader.setFromDeptId(fromDeptId);
-						
-
-                        DateFormat parser = new SimpleDateFormat("dd-MM-yyyy"); 
-                        Date frDate = (Date) parser.parse(getAllocStationCkRes.get(i).getReqDate());
-
-                        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-                        frDate=formatter.parse(formatter.format(frDate));
-                        System.out.println(frDate);
-
-						billOfMaterialHeader.setProductionDate(frDate);//
-						billOfMaterialHeader.setProductionId(getAllocStationCkRes.get(i).gettSpCakeId());//
-						billOfMaterialHeader.setReqDate(date);
-						billOfMaterialHeader.setSenderUserid(userId);
-						billOfMaterialHeader.setStatus(0);
-						billOfMaterialHeader.setToDeptId(toDeptId);
-						billOfMaterialHeader.setToDeptName(toDeptName);
-						billOfMaterialHeader.setFromDeptName(fromDeptName);
-
-						billOfMaterialHeader.setRejApproveDate(date);
-						billOfMaterialHeader.setRejApproveUserId(0);
-						billOfMaterialHeader.setRejDate(date);
-						billOfMaterialHeader.setRejUserId(0);
-						
-						billOfMaterialHeader.setIsManual(0);
-						billOfMaterialHeader.setIsProduction(4);
-						billOfMaterialHeader.setIsPlan(0);
-						
-						billOfMaterialHeader.setIsPlan(0);
-						}
-					}
-						List<BillOfMaterialDetailed> bomDetailList = new ArrayList<BillOfMaterialDetailed>();
-						BillOfMaterialDetailed bomDetail = null;
-						for (int i = 0; i < getSpDetailForBomList.size(); i++) {
-
-							String editQty = request.getParameter("editQty" + i);
-							bomDetail = new BillOfMaterialDetailed();
-
-							System.out.println("editQty " + editQty);
-
-							bomDetail.setDelStatus(0);
-							bomDetail.setRmId(getSpDetailForBomList.get(i).getRmId());
-							bomDetail.setRmIssueQty(0.0F);
-							bomDetail.setUom(getSpDetailForBomList.get(i).getUom());
-							bomDetail.setRmType(getSpDetailForBomList.get(i).getRmType());
-							bomDetail.setRmReqQty(Integer.parseInt(editQty));
-							bomDetail.setRmName(getSpDetailForBomList.get(i).getRmName());
-							
-							bomDetail.setRejectedQty(0);
-							bomDetail.setAutoRmReqQty(getSpDetailForBomList.get(i).getTotal());
-							
-							bomDetail.setReturnQty(0);
-							bomDetailList.add(bomDetail);
-
-						}
-						
-						System.out.println("bom detail List " + bomDetailList.toString());
-						billOfMaterialHeader.setBillOfMaterialDetailed(bomDetailList);
-
-						System.out.println(" insert List " + billOfMaterialHeader.toString());
-						int prodId=billOfMaterialHeader.getProductionId();
-						
-						Info info = restTemplate.postForObject(Constants.url + "saveBom", billOfMaterialHeader, Info.class);
-						System.out.println(" Info " + info.toString());
-
-						mav.addObject("getSpDtailForBom",getSpDetailForBomList);
-                        mav.addObject("spId", localSpId);
-                        
-                        map = new LinkedMultiValueMap<String, Object>();
-    					map.add("spCkAllocDId",spCkAllocDId);
-    					
-                        
-                        Info updateRes = restTemplate.postForObject(Constants.url + "updateIsBomOfSpAllocn", map, Info.class);
-                        System.out.println("Is Bom Updated Res"+updateRes.toString());
-                        
-					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
-					}
-					
-					return "redirect:/showSpCksAllocToStation";    
-					
-					
-				}
+	}
 }
-
-				

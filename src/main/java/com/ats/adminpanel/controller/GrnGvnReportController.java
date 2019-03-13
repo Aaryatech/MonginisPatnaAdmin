@@ -40,12 +40,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.ExportToExcel;
+import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.ggreports.GGReportByDateAndFr;
@@ -98,27 +101,41 @@ public class GrnGvnReportController {
 	@RequestMapping(value = "/showGGReportDateWise", method = RequestMethod.GET)
 	public ModelAndView showGGReportDateWise(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("reports/grnGvn/ggByDate");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showGGReportDateWise", "showGGReportDateWise", "1", "0", "0", "0",
+				newModuleList);
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+		if (view.getError() == true) {
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+			model = new ModelAndView("accessDenied");
 
-			allFrIdNameList = getFrNameId();
+		} else {
 
-			allRouteListResponse = getAllRoute();
+			model = new ModelAndView("reports/grnGvn/ggByDate");
 
-			model.addObject("routeList", allRouteListResponse.getRoute());
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+			try {
 
-		} catch (Exception e) {
-			System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
-			e.printStackTrace();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
+
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
+
+				allFrIdNameList = getFrNameId();
+
+				allRouteListResponse = getAllRoute();
+
+				model.addObject("routeList", allRouteListResponse.getRoute());
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 
 		return model;
@@ -396,29 +413,42 @@ public class GrnGvnReportController {
 	@RequestMapping(value = "/showGGReportGrpByFr", method = RequestMethod.GET)
 	public ModelAndView showGGReportGrpByFr(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("reports/grnGvn/ggGrpByFr");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showGGReportGrpByFr", "showGGReportGrpByFr", "1", "0", "0", "0",
+				newModuleList);
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+		if (view.getError() == true) {
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+			model = new ModelAndView("accessDenied");
 
-			allFrIdNameList = getFrNameId();
+		} else {
 
-			allRouteListResponse = getAllRoute();
+			model = new ModelAndView("reports/grnGvn/ggGrpByFr");
 
-			model.addObject("routeList", allRouteListResponse.getRoute());
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+			try {
 
-		} catch (Exception e) {
-			System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
-			e.printStackTrace();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
+
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
+
+				allFrIdNameList = getFrNameId();
+
+				allRouteListResponse = getAllRoute();
+
+				model.addObject("routeList", allRouteListResponse.getRoute());
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
-
 		return model;
 	}
 
@@ -691,30 +721,42 @@ public class GrnGvnReportController {
 
 	@RequestMapping(value = "/showGGReportGrpByDate", method = RequestMethod.GET)
 	public ModelAndView showGGReportGrpByDate(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("reports/grnGvn/grnGvnGrpByDate");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showGGReportGrpByDate", "showGGReportGrpByDate", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
+		if (view.getError() == true) {
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+			model = new ModelAndView("accessDenied");
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+		} else {
 
-			allFrIdNameList = getFrNameId();
+			model = new ModelAndView("reports/grnGvn/grnGvnGrpByDate");
 
-			allRouteListResponse = getAllRoute();
+			try {
 
-			model.addObject("routeList", allRouteListResponse.getRoute());
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+				ZoneId z = ZoneId.of("Asia/Calcutta");
 
-		} catch (Exception e) {
-			System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
-			e.printStackTrace();
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
+
+				allFrIdNameList = getFrNameId();
+
+				allRouteListResponse = getAllRoute();
+
+				model.addObject("routeList", allRouteListResponse.getRoute());
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
-
 		return model;
 	}
 
@@ -993,29 +1035,42 @@ public class GrnGvnReportController {
 	@RequestMapping(value = "/showGGReportGrpByMonth", method = RequestMethod.GET)
 	public ModelAndView showGGReportGrpByMonth(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("reports/grnGvn/gGGrpByMonth");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showGGReportGrpByMonth", "showGGReportGrpByMonth", "1", "0", "0", "0",
+				newModuleList);
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+		if (view.getError() == true) {
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+			model = new ModelAndView("accessDenied");
 
-			allFrIdNameList = getFrNameId();
+		} else {
 
-			allRouteListResponse = getAllRoute();
+			model = new ModelAndView("reports/grnGvn/gGGrpByMonth");
 
-			model.addObject("routeList", allRouteListResponse.getRoute());
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+			try {
 
-		} catch (Exception e) {
-			System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
-			e.printStackTrace();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
+
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
+
+				allFrIdNameList = getFrNameId();
+
+				allRouteListResponse = getAllRoute();
+
+				model.addObject("routeList", allRouteListResponse.getRoute());
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
-
 		return model;
 	}
 
@@ -1282,42 +1337,55 @@ public class GrnGvnReportController {
 
 	@RequestMapping(value = "/showGGReportGrpByItem", method = RequestMethod.GET)
 	public ModelAndView showGGReportGrpByItem(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("reports/grnGvn/ggByItem");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showGGReportGrpByItem", "showGGReportGrpByItem", "1", "0", "0", "0",
+				newModuleList);
 
-		try {
-			RestTemplate restTemplate = new RestTemplate();
+		if (view.getError() == true) {
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+			model = new ModelAndView("accessDenied");
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+		} else {
 
-			allFrIdNameList = getFrNameId();
+			model = new ModelAndView("reports/grnGvn/ggByItem");
 
-			allRouteListResponse = getAllRoute();
+			try {
+				RestTemplate restTemplate = new RestTemplate();
 
-			List<Item> itemList = new ArrayList<Item>();
-			AllItemsListResponse itemListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
-					AllItemsListResponse.class);
-			itemList = itemListResponse.getItems();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
 
-			CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			List<MCategoryList> categoryList;
-			categoryList = categoryListResponse.getmCategoryList();
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
 
-			model.addObject("catList", categoryList);
+				allFrIdNameList = getFrNameId();
 
-			model.addObject("routeList", allRouteListResponse.getRoute());
-			model.addObject("itemList", itemList);
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+				allRouteListResponse = getAllRoute();
 
-		} catch (Exception e) {
-			System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
-			e.printStackTrace();
+				List<Item> itemList = new ArrayList<Item>();
+				AllItemsListResponse itemListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
+				itemList = itemListResponse.getItems();
+
+				CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				List<MCategoryList> categoryList;
+				categoryList = categoryListResponse.getmCategoryList();
+
+				model.addObject("catList", categoryList);
+
+				model.addObject("routeList", allRouteListResponse.getRoute());
+				model.addObject("itemList", itemList);
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce inshowGGReportDateWise " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 
 		return model;

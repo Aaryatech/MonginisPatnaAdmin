@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
@@ -51,6 +53,7 @@ import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.RegCakeAsSpDispatchReport;
 import com.ats.adminpanel.model.RegCakeAsSpDispatchReportList;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.billing.FrBillHeaderForPrint;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
@@ -78,35 +81,48 @@ public class RegCakeAsSpOrderController {
 
 	@RequestMapping(value = "/showRegCakeSpOrderReport", method = RequestMethod.GET)
 	public ModelAndView showBillListForPrint(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		ModelAndView model = new ModelAndView("reports/regCakeAsSp");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showRegCakeSpOrderReport", "showRegCakeSpOrderReport", "1", "0", "0",
+				"0", newModuleList);
 
-		try {
+		if (view.getError() == true) {
 
-			RestTemplate restTemplate = new RestTemplate();
+			model = new ModelAndView("accessDenied");
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+		} else {
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+			model = new ModelAndView("reports/regCakeAsSp");
 
-			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+			try {
 
-			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-					AllRoutesListResponse.class);
+				RestTemplate restTemplate = new RestTemplate();
 
-			List<Route> routeList = new ArrayList<Route>();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
 
-			routeList = allRouteListResponse.getRoute();
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
 
-			model.addObject("routeList", routeList);
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
 
-		} catch (Exception e) {
-			System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
-			e.printStackTrace();
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
+
+				List<Route> routeList = new ArrayList<Route>();
+
+				routeList = allRouteListResponse.getRoute();
+
+				model.addObject("routeList", routeList);
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 
 		return model;
@@ -204,7 +220,6 @@ public class RegCakeAsSpOrderController {
 
 		System.err.println("regCakeAsSp" + regCakeAsSp.toString());
 
-		
 		return regCakeAsSp;
 	}
 
@@ -246,7 +261,7 @@ public class RegCakeAsSpOrderController {
 			for (int i = 0; i < regCakeAsSp.size(); i++) {
 
 				if (tempFrList.isEmpty()) {
-					
+
 					System.err.println("temp list empty");
 
 					AllFrIdName names = new AllFrIdName();
@@ -258,23 +273,22 @@ public class RegCakeAsSpOrderController {
 					frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
 
 				} else if (!frIdMap.containsKey(regCakeAsSp.get(i).getFrId())) {
-					
-					System.err.println("temp list not empty");
 
+					System.err.println("temp list not empty");
 
 					AllFrIdName names = new AllFrIdName();
 
 					names.setFrId(regCakeAsSp.get(i).getFrId());
 					names.setFrName(regCakeAsSp.get(i).getFrName());
-					
+
 					frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
 
 					tempFrList.add(names);
 
 				}
 			}
-			
-			System.err.println("Temp Fr List " +tempFrList);
+
+			System.err.println("Temp Fr List " + tempFrList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -287,10 +301,9 @@ public class RegCakeAsSpOrderController {
 			table.setWidthPercentage(100);
 			table.setWidths(new float[] { 0.4f, 2.0f, 0.6f, 1.0f });
 			Font headFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.NORMAL, BaseColor.BLACK);
-			
+
 			Font frFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, BaseColor.MAGENTA);
 
-			
 			Font headFont1 = new Font(FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
 
@@ -316,16 +329,14 @@ public class RegCakeAsSpOrderController {
 			for (int k = 0; k < tempFrList.size(); k++) {
 
 				PdfPCell cell1;
-				
-				
+
 				cell1 = new PdfPCell(new Phrase("", headFont));
 				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
 				cell1.setPaddingRight(2);
 				cell1.setPadding(4);
 				table.addCell(cell1);
-				
-				
+
 				cell1 = new PdfPCell(new Phrase(tempFrList.get(k).getFrName(), frFont));
 				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -333,8 +344,6 @@ public class RegCakeAsSpOrderController {
 				cell1.setPadding(4);
 				table.addCell(cell1);
 
-				
-
 				cell1 = new PdfPCell(new Phrase("", headFont));
 				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -348,11 +357,11 @@ public class RegCakeAsSpOrderController {
 				cell1.setPaddingRight(2);
 				cell1.setPadding(4);
 				table.addCell(cell1);
-				
+
 				int index = 0;
 				for (int j = 0; j < regCakeAsSp.size(); j++) {
 					PdfPCell cell;
-					
+
 					if (tempFrList.get(k).getFrId() == regCakeAsSp.get(j).getFrId()) {
 						index++;
 
@@ -382,7 +391,7 @@ public class RegCakeAsSpOrderController {
 						cell.setPaddingRight(2);
 						cell.setPadding(4);
 						table.addCell(cell);
-						
+
 					}
 
 				}
@@ -400,7 +409,7 @@ public class RegCakeAsSpOrderController {
 			Paragraph heading = new Paragraph("Regular Cake As Special Order Dispatch Report");
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
-			
+
 			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
 			String reportDate = DF.format(new Date());
 

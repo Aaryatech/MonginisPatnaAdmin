@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
@@ -37,6 +39,7 @@ import com.ats.adminpanel.model.FrMenu;
 
 import com.ats.adminpanel.model.GetFrMenus;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.stock.PostFrItemStockCommon;
 import com.ats.adminpanel.model.stock.PostFrItemStockDetail;
@@ -59,25 +62,39 @@ public class StockController {
 
 		logger.info("/showFrOpeningStock request mapping.");
 
-		ModelAndView model = new ModelAndView("stock/fropeningstock");
 		Constants.mainAct = 2;
 		Constants.subAct = 18;
 
-		RestTemplate restTemplate = new RestTemplate();
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrOpeningStock", "showFrOpeningStock", "1", "0", "0", "0",
+				newModuleList);
 
-			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+		if (view.getError() == true) {
 
-		} catch (Exception e) {
-			System.out.println("Exception in getAllFrIdName" + e.getMessage());
-			e.printStackTrace();
+			model = new ModelAndView("stock/fropeningstock");
 
+		} else {
+
+			model = new ModelAndView("items/itemConfP");
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
+			try {
+
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
+			}
+
+			model.addObject("frList", allFrIdNameList.getFrIdNamesList());
 		}
-
-		model.addObject("frList", allFrIdNameList.getFrIdNamesList());
-
 		return model;
 	}
 
@@ -86,37 +103,37 @@ public class StockController {
 	public @ResponseBody List<FrMenu> getMenuListByFr(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/getMenuListByFr AJAX Call mapping.");
-try {
-		frId = request.getParameter("fr_id");
+		try {
+			frId = request.getParameter("fr_id");
 
-		RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = new RestTemplate();
 
-		MultiValueMap<String, Object> menuMap = new LinkedMultiValueMap<String, Object>();
-		menuMap.add("frId", frId);
+			MultiValueMap<String, Object> menuMap = new LinkedMultiValueMap<String, Object>();
+			menuMap.add("frId", frId);
 
-		GetFrMenus getFrMenus = restTemplate.postForObject(Constants.url + "getFrConfigMenus", menuMap,
-				GetFrMenus.class);
+			GetFrMenus getFrMenus = restTemplate.postForObject(Constants.url + "getFrConfigMenus", menuMap,
+					GetFrMenus.class);
 
-		filterFrMenus = new ArrayList<FrMenu>();
+			filterFrMenus = new ArrayList<FrMenu>();
 
-		for (int i = 0; i < getFrMenus.getFrMenus().size(); i++) {
+			for (int i = 0; i < getFrMenus.getFrMenus().size(); i++) {
 
-			FrMenu frMenu = getFrMenus.getFrMenus().get(i);
+				FrMenu frMenu = getFrMenus.getFrMenus().get(i);
 
-			if (frMenu.getMenuId() == 26 || frMenu.getMenuId() == 31 || frMenu.getMenuId() == 33
-					|| frMenu.getMenuId() == 34 || frMenu.getMenuId() == 49) {
+				if (frMenu.getMenuId() == 26 || frMenu.getMenuId() == 31 || frMenu.getMenuId() == 33
+						|| frMenu.getMenuId() == 34 || frMenu.getMenuId() == 49) {
 
-				filterFrMenus.add(frMenu);
+					filterFrMenus.add(frMenu);
+
+				}
 
 			}
-
+			System.err.println("Menus " + filterFrMenus);
+		} catch (Exception e) {
+			System.err.println("Exc in ");
+			System.err.println("dvld");
+			e.printStackTrace();
 		}
-System.err.println("Menus " +filterFrMenus);
-}catch (Exception e) {
-	System.err.println("Exc in ");
-	System.err.println("dvld");
-	e.printStackTrace();
-}
 		return filterFrMenus;
 	}
 
