@@ -333,7 +333,7 @@
 									tr.append($('<td style="text-align:right;"></td>').html(
 											totalGrnValue.toFixed(2)));
 									
-									tr.append($('<td></td>').html(""));
+								
 									
 								
 									tr.append($('<td style="text-align:right;"></td>').html(
@@ -342,7 +342,7 @@
 									tr.append($('<td style="text-align:right;"></td>').html(
 											totalNetValue.toFixed(2)));
 									
-									
+									tr.append($('<td></td>').html(""));
 									
 									
 									tr.append($('<td style="text-align:right;"></td>').html(

@@ -1482,7 +1482,7 @@ public class GrnGvnReportController {
 				System.out.println("Inside IF  is All fr Selected " + isAllFrSelected);
 
 				map.add("frIdList", -1);
-				map.add("catIdList", -1);
+				map.add("catIdList", itemIdString);
 				// model.addObject("billHeadersList",billHeadersListForPrint);
 
 			} else { // few franchisee selected
