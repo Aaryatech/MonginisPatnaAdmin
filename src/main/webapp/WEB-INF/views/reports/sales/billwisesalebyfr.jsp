@@ -28,7 +28,8 @@
 
 
 	<!-- BEGIN Content -->
-	<div id="main-content">
+	<div id="main-content"> 
+	
 		<!-- BEGIN Page Title -->
 		<div class="page-title">
 			<div>
