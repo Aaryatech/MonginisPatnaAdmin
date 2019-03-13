@@ -57,15 +57,15 @@ th {
 	
 		<thead>
 			<tr class="bgpink">
-				<th height="25">Sr.No.</th>
-				<th>Fr Name</th>
+				<th class="col-md-1" height="25">Sr.No.</th>
+				<th>Franchise Name</th>
 				<th>City</th>
 				<th>Sale Value</th>
-				<th>Grn Value</th>
-				<th>Gvn Value</th>
-				<th>%</th>
+				<th>GRN Value</th>
+				<th>GVN Value</th>
 				<th>Net Value</th>
-				<th>Amount</th>
+				<th>Royalty %</th>
+				<th>Royalty Amount</th>
 		<!-- 		<th>Royalty Amt</th> -->
 			</tr>
 		</thead>
@@ -83,7 +83,7 @@ th {
 				
 			<c:forEach items="${report}" var="report" varStatus="count">
 				<tr>
-					<td><c:out value="${count.index+1}" /></td>
+					<td class="col-md-1"><c:out value="${count.index+1}" /></td>
 					<td width="200"><c:out value="${report.frName}" /></td>
 					<td width="100"><c:out value="${report.frCity}" /></td>
 					<td  width="100" align="right"><fmt:formatNumber type="number"
@@ -99,7 +99,7 @@ th {
 					<td  width="100" align="right">
 					<fmt:formatNumber type="number"
 								maxFractionDigits="2" value="${report.tGvnTaxableAmt}" /></td>
-					<td  width="100" align="right"><c:out value="${royPer}" /></td>
+					
 					
 					<c:set var="netValue" value="${report.tBillTaxableAmt -(report.tGrnTaxableAmt + report.tGvnTaxableAmt)}" />
 					
@@ -113,7 +113,7 @@ th {
 					<td  width="100" align="right">
 					<fmt:formatNumber type="number"
 								maxFractionDigits="2" value="${netValue}" /></td>
-								
+					<td  width="100" align="right"><c:out value="${royPer}" /></td>			
 					<c:set var="rAmt"
 						value="${netValue*royPer/100}" />
 							<c:set var="taxPer"

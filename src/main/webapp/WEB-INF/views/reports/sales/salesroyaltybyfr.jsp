@@ -34,7 +34,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Royalty Report By FR
+					<i class="fa fa-file-o"></i>Franchasee-wise Royalty Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -56,7 +56,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Sales Royalty by FR
+					<i class="fa fa-bars"></i>Franchasee-wise Royalty Report
 				</h3>
 
 			</div>
@@ -173,14 +173,16 @@
 								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
-										<th>Fr Name</th>
+										<th>Franchise Name</th>
 										<th>City</th>
 										<th>Sale Value</th>
 										<th>GRN Value</th>
-										<th>%</th>
 										<th>GVN Value</th>
 										<th>Net Value</th>
-										<th>Royalty Amt</th>
+										<th>%</th>
+										
+										
+										<th>Royalty Amount</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -283,19 +285,20 @@
 													  	tr.append($('<td></td>').html(report.frCity));
 													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillTaxableAmt.toFixed(2)));
 														tr.append($('<td style="text-align:right;"></td>').html(report.tGrnTaxableAmt.toFixed(2)));
-														
-													  	tr.append($('<td style="text-align:right;"></td>').html(royPer));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
-
-														
-													  	
-													  	var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
+														tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
+														var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
 														netValue=netValue.toFixed(2);
 														
 														
 														
 														
 													  	tr.append($('<td style="text-align:right;"></td>').html(netValue));
+													  	tr.append($('<td style="text-align:right;"></td>').html(royPer));
+													  
+
+														
+													  	
+													  	
 													  	//alert("netVAlue"+netValue);
 													  	//alert("Per"+royPer);
 													  	rAmt=parseFloat(netValue) * parseFloat(royPer)/100;

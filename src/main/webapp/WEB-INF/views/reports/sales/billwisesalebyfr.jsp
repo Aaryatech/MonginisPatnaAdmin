@@ -33,7 +33,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Billwise Report by Fr
+					<i class="fa fa-file-o"></i>Franchise-wise Report 
 				</h1>
 				<h4></h4>
 			</div>
@@ -55,7 +55,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale By Franchise
+					<i class="fa fa-bars"></i>Franchise-wise Report
 				</h3>
 
 			</div>
@@ -198,12 +198,11 @@
 								<th>Sr.No.</th>
 								<th>Party Name</th>
 								<th>City</th>
-								<th>GSTIN</th>
-								<th>Basic Value</th>
+								<th>GSTIN Number</th>
+								<th>Taxable Value</th>
 								<th>CGST</th>
 								<th>SGST</th>
 								<th>IGST</th>
-								<th>Round Off</th>
 								<th>Total</th>
 							</tr>
 						</thead>
@@ -377,8 +376,7 @@
 								.html(report.igstSum.toFixed(2)));
 					}
 					//tr.append($('<td></td>').html(report.igstSum));
-					tr.append($('<td style="text-align:right;"></td>').html(
-							report.roundOff));
+					
 					var total;
 
 					if (report.isSameState == 1) {
@@ -412,8 +410,7 @@
 						totalSgst.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalIgst.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalRoundOff.toFixed(2)));
+				
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalFinal.toFixed(2)));
 

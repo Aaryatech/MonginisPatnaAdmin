@@ -34,7 +34,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Billwise Report Grp By Date
+					<i class="fa fa-file-o"></i>Date-wise Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -56,7 +56,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale Grp By Date
+					<i class="fa fa-bars"></i>Date-wise Report 
 				</h3>
 
 			</div>
@@ -182,12 +182,11 @@
 									<tr>
 										<th>Sr.No.</th>
 										<th>Date</th>
-										<th>Basic Value</th>
-										<th>CGST</th>
-										<th>SGST</th>
-										<th>IGST</th>
-										<th>Round Off</th>
-										<th>Total</th>
+										<th>Taxable Value</th>
+										<th>CGST Amount</th>
+										<th>SGST Amount</th>
+										<th>IGST Amount</th>
+										<th>Total Amount</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -296,8 +295,7 @@
 								.html(report.igstSum.toFixed(2)));
 					}
 					//tr.append($('<td></td>').html(report.igstSum));
-					tr.append($('<td style="text-align:right;"></td>').html(
-							report.roundOff));
+					
 					var total;
 
 					if (report.isSameState == 1) {
@@ -331,8 +329,7 @@
 						totalSgst.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalIgst.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalRoundOff.toFixed(2)));
+			
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalFinal.toFixed(2)));
 

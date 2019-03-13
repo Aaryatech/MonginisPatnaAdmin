@@ -63,7 +63,6 @@ th {
 				<th>CGST</th>
 				<th>SGST</th>
 				<th>IGST</th>
-				<th>Round Off</th>
 				<th>Total</th>
 			</tr>
 		</thead>
@@ -109,8 +108,7 @@ th {
 					
 					<c:set var="grandTotal"
 						value="${grandTotal+total}" />
-				<td width="100" align="right"><fmt:formatNumber type="number"
-								maxFractionDigits="2"  minFractionDigits="2"  value="${report.roundOff}" /></td>
+				
 					<%-- <td><c:out value="${total}" /></td> --%>
 						<c:set var="rOff"
 						value="${rOff+report.roundOff}" />
@@ -130,8 +128,7 @@ th {
 								maxFractionDigits="2"  minFractionDigits="2"  value="${sgst}" /></b></td>
 					<td width="100" align="right"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2"  minFractionDigits="2"  value="${igst}" /></b></td>
-					<td  width="100" align="right"><b><fmt:formatNumber type="number"
-								maxFractionDigits="2"  minFractionDigits="2"  value="${rOff}" /></b></td>
+					
 					<td width="100" align="right"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2"  minFractionDigits="2"  value="${grandTotal}" /></b></td>
 					<!--  <td><b>Total</b></td> -->
