@@ -35,7 +35,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Royalty Report By Category
+					<i class="fa fa-file-o"></i>Item-wise Royalty Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -57,7 +57,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Sales Royalty by Category
+					<i class="fa fa-bars"></i>Item-wise Royalty Report
 				</h3>
 
 			</div>
@@ -140,8 +140,8 @@
 							<select data-placeholder="Select Group"
 								class="form-control chosen" name="item_grp1" tabindex="-1"
 								id="item_grp1" data-rule-required="true"
-								onchange="setCatOptions(this.value)" multiple="multiple">
-								<option value="-1">Select All</option>
+								onchange="setCatOptions(this.value)" >
+								
 
 								<c:forEach items="${catList}" var="mCategoryList">
 									<option value="${mCategoryList.catId}"><c:out

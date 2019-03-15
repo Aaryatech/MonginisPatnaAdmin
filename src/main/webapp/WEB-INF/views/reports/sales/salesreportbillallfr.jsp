@@ -32,7 +32,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Bill+HSN wise Sale Report All Fr
+					<i class="fa fa-file-o"></i>Bill-wise & HSN Code-wise Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Bill+HSN wise Sale By All FR R7
+					<i class="fa fa-bars"></i>Bill-wise & HSN Code-wise Report
 				</h3>
 
 			</div>
@@ -174,9 +174,9 @@
 								style="width: 100%" id="table_grid">
 								<thead style="background-color: #f3b5db;">
 									<tr>
-										<th>Sr.No.</th>
+										<th>Sr</th>
 										<th>Invoice No</th>
-										<th class="col-md-2">Date</th>
+										<th >Invoice Date</th>
 										<th>Party Name</th>
 										<th>City</th>
 										<th>GSTIN</th>

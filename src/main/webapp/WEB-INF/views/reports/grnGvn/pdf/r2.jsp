@@ -82,9 +82,9 @@ th {
 					</c:choose>
 					<td width="100" align="center"><c:out value="${type}" /></td>
 					<td width="120"><c:out value="${report.frName}" /></td>
-					<td width="100" align="center"><c:out value="${report.reqQty}" /></td>
+					<td width="100" align="right"><c:out value="${report.reqQty}" /></td>
 					<td width="100" align="right"><c:out value="${report.totalAmt}" /></td>
-										<td align="center" width="100"><c:out value="${report.aprQty}" /></td>
+										<td align="right" width="100"><c:out value="${report.aprQty}" /></td>
 										<td  align="right" width="100"><c:out value="${report.aprGrandTotal}" /></td>
 					<c:set var="reqQtySum" value="${reqQtySum + report.reqQty}" />
 					<c:set var="reqValSum"

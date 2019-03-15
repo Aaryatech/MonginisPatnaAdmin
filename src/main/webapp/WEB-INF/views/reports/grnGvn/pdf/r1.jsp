@@ -50,7 +50,7 @@ th {
 <p align="center">${FACTORYADDRESS}</p>
 
 	<div align="center">
-		<h5>GRN GVN Report (Date Wise) &nbsp;&nbsp;&nbsp;&nbsp; From
+		<h5>GRN GVN- wise Report &nbsp;&nbsp;&nbsp;&nbsp; From
 			&nbsp; ${fromDate} &nbsp;To &nbsp; ${toDate}</h5>
 	</div>
 	<table align="center" border="1" cellspacing="0" cellpadding="1"
@@ -58,9 +58,9 @@ th {
 		<thead>
 			<tr class="bgpink">
 				<th>Sr.No.</th>
-				<th>GrnGvn Sr.No.</th>
-				<th>Type</th>
 				<th>Date</th>
+				<th>Type</th>
+				<th>GRN-GVN No.</th>
 				<th>Party Name</th>
 				<th>Req Qty</th>
 				<th>Req Value</th>

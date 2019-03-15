@@ -66,6 +66,8 @@ th {
 				<th>SGST</th>
 				<th>IGST</th>
 				<th>Total GST</th>
+				<th>Grand Total</th>
+				
 			</tr>
 		</thead>
 		<tbody>
@@ -75,6 +77,7 @@ th {
 			<c:set var="sgstSum" value="${0 }" />
 			<c:set var="igstSum" value="${0 }" />
 			<c:set var="GrandTotalGst" value="${0 }" />
+			<c:set var="totalGrandTotal" value="${0 }" />
 			<c:forEach items="${report}" var="report" varStatus="count">
 				<tr>
 					<td><c:out value="${count.index+1}" /></td>
@@ -108,8 +111,15 @@ th {
 						value="${report.sgstRsSum + report.cgstRsSum}" />
 					<td  width="100" align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" 
 							value="${totalGst}" /></td>
+					<c:set var="grandTotal"
+						value="${report.sgstRsSum + report.cgstRsSum +report.taxableAmtSum}" />	
+					<td  width="100" align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" 
+							value="${grandTotal}" /></td>
+							
+							
 
 					<c:set var="GrandTotalGst" value="${totalGst + GrandTotalGst}" />
+					<c:set var="totalGrandTotal" value="${totalGrandTotal + grandTotal}" />
 
 				</tr>
 
@@ -130,6 +140,8 @@ th {
 							
 				<td  width="100" align="right"><b><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2" value="${GrandTotalGst}" /></b></td>
+				<td  width="100" align="right"><b><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${totalGrandTotal}" /></b></td>
 				<!--  <td><b>Total</b></td> -->
 			</tr>
 		</tbody>

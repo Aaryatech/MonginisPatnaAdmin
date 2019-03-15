@@ -32,7 +32,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Grn Gvn Report By Itemwise
+					<i class="fa fa-file-o"></i>GRN GVN Item-wise Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Grn Gvn Item wise
+					<i class="fa fa-bars"></i>GRN GVN Item-wise Report
 				</h3>
 
 			</div>
@@ -197,7 +197,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-list-alt"></i>Grn Gvn Report
+					<i class="fa fa-list-alt"></i>GRN GVN Report
 				</h3>
 
 			</div>

@@ -32,7 +32,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Grn Gvn Report By Date
+					<i class="fa fa-file-o"></i>GRN GVN Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Grn Gvn DateWise
+					<i class="fa fa-bars"></i>GRN GVN Report
 				</h3>
 
 			</div>

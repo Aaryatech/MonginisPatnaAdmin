@@ -2523,41 +2523,40 @@ public class SalesReportController {
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
 
-		rowData.add("Item Id");
+		rowData.add("Sr No");
 
 		rowData.add("Item Name");
 		rowData.add("Item Hsn Code");
-		rowData.add("Bill Qty Sum");
-		rowData.add("Item Tax1");
-		rowData.add("Item Tax2");
-		rowData.add("Item Tax2");
-		rowData.add("Total Tax");
-		rowData.add("sgst sum");
-		rowData.add("cgst sum");
-		rowData.add("igst sum");
+		rowData.add("Item Tax Rate");
+		rowData.add("Item Qty");
+		rowData.add("Taxable Amount");
+		rowData.add("CGST Amount");
+		rowData.add("SGST Amount");
+		rowData.add("IGST Amount");
+		rowData.add("Total Tax Amount");
+		rowData.add("Grand Total");
 
-		rowData.add("Taxable Amt");
+		
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
+		int srno=1;
 		for (int i = 0; i < saleList.size(); i++) {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + saleList.get(i).getId());
+			rowData.add("" + srno);
 
 			rowData.add("" + saleList.get(i).getItemName());
 			rowData.add("" + saleList.get(i).getItemHsncd());
-			rowData.add("" + saleList.get(i).getBillQtySum());
-			rowData.add("" + saleList.get(i).getItemTax1());
-
-			rowData.add("" + saleList.get(i).getItemTax2());
-			rowData.add("" + saleList.get(i).getItemTax3());
-			rowData.add("" + saleList.get(i).getSgstRsSum());
-			rowData.add("" + saleList.get(i).getCgstRsSum());
-
-			rowData.add("" + saleList.get(i).getIgstRsSum());
-			rowData.add("" + saleList.get(i).getTaxableAmtSum());
+			rowData.add("" + (saleList.get(i).getItemTax1()+saleList.get(i).getItemTax2()));
+			rowData.add("" + roundUp(saleList.get(i).getBillQtySum()));
+			rowData.add("" + roundUp(saleList.get(i).getTaxableAmtSum()));
+			rowData.add("" + roundUp(saleList.get(i).getCgstRsSum()));
+			rowData.add("" + roundUp(saleList.get(i).getSgstRsSum()));
+			rowData.add("" + roundUp(saleList.get(i).getIgstRsSum()));
+			rowData.add("" + roundUp(saleList.get(i).getSgstRsSum()+saleList.get(i).getCgstRsSum()));
+			rowData.add("" + roundUp(saleList.get(i).getSgstRsSum()+saleList.get(i).getCgstRsSum()+saleList.get(i).getTaxableAmtSum()));
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -4408,6 +4407,8 @@ public class SalesReportController {
 			int isGraph = Integer.parseInt(request.getParameter("is_graph"));
 
 			String selectedCat = request.getParameter("cat_id_list");
+			
+			//int catId = Integer.parseInt(request.getParameter("catId"));
 
 			boolean isAllFrSelected = false;
 			boolean isAllCatSelected = false;

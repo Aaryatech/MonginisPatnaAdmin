@@ -29,7 +29,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Itemwise Sale Report
+					<i class="fa fa-file-o"></i>Item-wise Sale Report 
 				</h1>
 				<h4></h4>
 			</div>
@@ -51,7 +51,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale By Item
+					<i class="fa fa-bars"></i>Item-wise Sale Report 
 				</h3>
 
 			</div>
@@ -201,6 +201,7 @@
 										<th>SGST</th>
 										<th>IGST</th>
 										<th>Total GST</th>
+										<th>Grand Total</th>
 
 									</tr>
 								</thead>
@@ -268,7 +269,7 @@
 				var totalSgst = 0;
 				var totalIgst = 0;
 				var totalGst = 0;
-
+				var totalgrandTotal=0
 				if (data == "") {
 					alert("No records found !!");
 					document.getElementById("expExcel").disabled = true;
@@ -319,12 +320,17 @@
 							report.igstRsSum.toFixed(2)));
 
 					var total = report.sgstRsSum + report.cgstRsSum;
+					var grandTotal = report.sgstRsSum + report.cgstRsSum+report.taxableAmtSum;
+					grandTotal = grandTotal.toFixed(2);
 					total = total.toFixed(2);
 
 					totalGst = totalGst + parseFloat(total);
+					totalgrandTotal=totalgrandTotal+grandTotal
 
 					tr.append($('<td style="text-align:right;"></td>').html(
 							total));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							grandTotal));
 
 					$('#table_grid tbody').append(tr);
 
@@ -352,6 +358,8 @@
 
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalGst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalgrandTotal.toFixed(2)));
 
 				$('#table_grid tbody').append(tr);
 
@@ -394,6 +402,8 @@
 				var totalSgst = 0;
 				var totalIgst = 0;
 				var totalGst = 0;
+				var totalgrandTotal=0
+				
 
 				if (data == "") {
 					alert("No records found !!");
@@ -448,9 +458,13 @@
 					total = total.toFixed(2);
 
 					totalGst = totalGst + parseFloat(total);
+					
+					var grandTotal= report.sgstRsSum + report.cgstRsSum + report.taxableAmtSum
+					grandTotal = grandTotal.toFixed(2);
+					totalgrandTotal= totalgrandTotal + grandTotal
 
 					tr.append($('<td style="text-align:right;"></td>').html(total));
-
+					tr.append($('<td style="text-align:right;"></td>').html(grandTotal));
 					$('#table_grid tbody').append(tr);
 
 				})
@@ -477,7 +491,9 @@
 
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalGst.toFixed(2)));
-
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalgrandTotal.toFixed(2)));
+				
 				$('#table_grid tbody').append(tr);
 
 			});

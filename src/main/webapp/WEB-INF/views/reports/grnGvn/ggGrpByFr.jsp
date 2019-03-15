@@ -32,7 +32,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Grn Gvn Report By Franchise
+					<i class="fa fa-file-o"></i>GRN GVN Date-wise Report 
 				</h1>
 				<h4></h4>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Grn Gvn Franchise wise
+					<i class="fa fa-bars"></i>GRN GVN Date-wise Report
 				</h3>
 
 			</div>
@@ -108,7 +108,7 @@
 						</div>
 
 						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b>Select
-							Franchisee</label>
+							Franchise</label>
 						<div class="col-sm-6 col-lg-4">
 
 							<select data-placeholder="Choose Franchisee"
@@ -188,7 +188,7 @@
 							<tr>
 								<th>Sr.No.</th>
 								<th>Type</th>
-								<th>Fr Name</th>
+								<th>Franchise name</th>
 								<th>Req Qty</th>
 								<th>Req Value</th>
 								<th>Apr Qty</th>

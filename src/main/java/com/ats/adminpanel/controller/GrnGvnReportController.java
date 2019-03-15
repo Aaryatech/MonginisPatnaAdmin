@@ -169,10 +169,14 @@ public class GrnGvnReportController {
 			if (isGrn.equalsIgnoreCase("2")) {
 
 				System.err.println("Is Grn =2");
-				grnType = "1" + "," + "0";
+				grnType = "1" + "," + "0" + "," + "2";
 
 				map.add("isGrn", grnType);
-			} else {
+			} else if (isGrn.equalsIgnoreCase("0")) 
+			{
+				grnType =  "0" + "," + "2";	
+			}
+			else {
 				System.err.println("Is Grn not =2");
 				grnType = isGrn;
 				map.add("isGrn", isGrn);
@@ -373,8 +377,12 @@ public class GrnGvnReportController {
 			if (isGrn == 2) {
 				System.err.println("Is Grn ==2");
 
-				map.add("isGrn", "1" + "," + "0");
-			} else {
+				map.add("isGrn", "1" + "," + "0"+ "," + "2");
+			}else if(isGrn == 0) {
+				map.add("isGrn", "2" + "," + "0");
+				
+			} 
+			else {
 				System.err.println("Is Grn  not Eq 2");
 
 				map.add("isGrn", isGrn);
@@ -480,10 +488,17 @@ public class GrnGvnReportController {
 			if (isGrn.equalsIgnoreCase("2")) {
 
 				System.err.println("Is Grn =2");
-				grnType = "1" + "," + "0";
+				grnType = "1" + "," + "0"+ "," + "2";
 
 				map.add("isGrn", grnType);
-			} else {
+			} else if (isGrn.equalsIgnoreCase("0")) {
+
+				System.err.println("Is Grn =2");
+				grnType = "2" + "," + "0";
+
+				map.add("isGrn", grnType);
+			}
+			else {
 				System.err.println("Is Grn not =2");
 				grnType = isGrn;
 				map.add("isGrn", isGrn);
@@ -681,8 +696,13 @@ public class GrnGvnReportController {
 			if (isGrn == 2) {
 				System.err.println("Is Grn ==2");
 
-				map.add("isGrn", "1" + "," + "0");
-			} else {
+				map.add("isGrn", "1" + "," + "0"+ "," + "2");
+			} else if (isGrn == 0) {
+				System.err.println("Is Grn ==0");
+
+				map.add("isGrn", "1" + "," + "2");
+			} 
+			else {
 				System.err.println("Is Grn  not Eq 2");
 
 				map.add("isGrn", isGrn);
@@ -790,10 +810,16 @@ public class GrnGvnReportController {
 			if (isGrn.equalsIgnoreCase("2")) {
 
 				System.err.println("Is Grn =2");
-				grnType = "1" + "," + "0";
+				grnType = "1" + "," + "0"+ "," + "2";
 
 				map.add("isGrn", grnType);
-			} else {
+			} else if (isGrn.equalsIgnoreCase("0")) {
+
+				System.err.println("Is Grn =2");
+				grnType = "1" + "," + "2";
+
+				map.add("isGrn", grnType);
+			}else {
 				System.err.println("Is Grn not =2");
 				grnType = isGrn;
 				map.add("isGrn", isGrn);
@@ -993,7 +1019,11 @@ public class GrnGvnReportController {
 			if (isGrn == 2) {
 				System.err.println("Is Grn ==2");
 
-				map.add("isGrn", "1" + "," + "0");
+				map.add("isGrn", "1" + "," + "0" + "," + "2");
+			}else if (isGrn == 0) {
+				System.err.println("Is Grn ==2");
+
+				map.add("isGrn", "1" + "," + "2");
 			} else {
 				System.err.println("Is Grn  not Eq 2");
 
@@ -1104,7 +1134,13 @@ public class GrnGvnReportController {
 			if (isGrn.equalsIgnoreCase("2")) {
 
 				System.err.println("Is Grn =2");
-				grnType = "1" + "," + "0";
+				grnType = "1" + "," + "0"+ "," + "2";
+
+				map.add("isGrn", grnType);
+			}else if (isGrn.equalsIgnoreCase("0")) {
+
+				System.err.println("Is Grn =2");
+				grnType = "1" + "," + "2";
 
 				map.add("isGrn", grnType);
 			} else {
@@ -1301,7 +1337,11 @@ public class GrnGvnReportController {
 			if (isGrn == 2) {
 				System.err.println("Is Grn ==2");
 
-				map.add("isGrn", "1" + "," + "0");
+				map.add("isGrn", "1" + "," + "0"+ "," + "2");
+			}else if (isGrn == 0) {
+				System.err.println("Is Grn ==2");
+
+				map.add("isGrn", "1" + "," + "2");
 			} else {
 				System.err.println("Is Grn  not Eq 2");
 
@@ -1419,7 +1459,13 @@ public class GrnGvnReportController {
 			if (isGrn.equalsIgnoreCase("2")) {
 
 				System.err.println("Is Grn =2");
-				grnType = "1" + "," + "0";
+				grnType = "1" + "," + "0"+ "," + "2";
+
+				map.add("isGrn", grnType);
+			} else if (isGrn.equalsIgnoreCase("0")) {
+
+				System.err.println("Is Grn =2");
+				grnType = "0" + "," + "2";
 
 				map.add("isGrn", grnType);
 			} else {
