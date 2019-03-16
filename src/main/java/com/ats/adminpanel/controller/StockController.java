@@ -74,11 +74,11 @@ public class StockController {
 
 		if (view.getError() == true) {
 
-			model = new ModelAndView("stock/fropeningstock");
+			model = new ModelAndView("accessDenied");
 
 		} else {
 
-			model = new ModelAndView("items/itemConfP");
+			model = new ModelAndView("stock/fropeningstock");
 
 			RestTemplate restTemplate = new RestTemplate();
 
