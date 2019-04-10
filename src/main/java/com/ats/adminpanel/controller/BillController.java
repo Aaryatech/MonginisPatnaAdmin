@@ -2015,6 +2015,7 @@ public class BillController {
 						billPrint.setIsSameState(billHeadersListForPrint.get(i).getIsSameState());
 						billPrint.setBillDate(billHeadersListForPrint.get(i).getBillDate());
 						billPrint.setGrandTotal(billHeadersListForPrint.get(i).getGrandTotal());
+						billPrint.setCompany(billHeadersListForPrint.get(i).getCompany());
 						billDetails.add(billDetailsListForPrint.get(j));
 
 						for (int a = 0; a < subCatAList.size(); a++) {

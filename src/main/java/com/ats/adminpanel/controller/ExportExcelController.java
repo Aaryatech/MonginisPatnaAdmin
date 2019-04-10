@@ -52,12 +52,21 @@ public class ExportExcelController {
 	         
 	        	String excelName=(String)session.getAttribute("excelName"); 
 	            wb=createWorkbook();
-	         
+	            System.out.println("Excel Name :"+excelName);
+	            
 	            response.setContentType("application/vnd.ms-excel");
+	            System.out.println("after setContentType :"+excelName);
+	             
 	            String date=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	            System.out.println("after date :"+date);
+
 	            response.setHeader("Content-disposition", "attachment; filename="+excelName+"-"+date+".xlsx");
+	            System.out.println("after setHeader :");
+
 	            wb.write(response.getOutputStream());
-	        	
+
+	            System.out.println("Excel Created :"+excelName);
+
 	        } catch (IOException ioe) {
 	            throw new RuntimeException("Error writing spreadsheet to output stream");
 	        } finally {
@@ -123,7 +132,7 @@ public class ExportExcelController {
 	       
 	        Font font =workbook.createFont();
 	        font.setFontName("Arial");
-	        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	       // font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 	        font.setBold(true);
 	        //font.setColor(HSSFColor.WHITE.index);
 	        style.setFont(font);

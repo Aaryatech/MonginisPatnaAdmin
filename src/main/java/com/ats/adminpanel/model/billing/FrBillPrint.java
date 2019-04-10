@@ -24,7 +24,14 @@ public class FrBillPrint {
 	
 	public List<SubCategory> subCatList;
 	
+	Company company;
 	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public String getInvoiceNo() {
 		return invoiceNo;
 	}
@@ -73,8 +80,6 @@ public class FrBillPrint {
 	public void setBillDate(String billDate) {
 		this.billDate = billDate;
 	}
-	
-	
 	public List<SubCategory> getSubCatList() {
 		return subCatList;
 	}
@@ -98,9 +103,7 @@ public class FrBillPrint {
 		return "FrBillPrint [billDetailsList=" + billDetailsList + ", frId=" + frId + ", billNo=" + billNo + ", frName="
 				+ frName + ", frAddress=" + frAddress + ", invoiceNo=" + invoiceNo + ", isSameState=" + isSameState
 				+ ", billDate=" + billDate + ", amtInWords=" + amtInWords + ", grandTotal=" + grandTotal
-				+ ", subCatList=" + subCatList + "]";
+				+ ", subCatList=" + subCatList + ", company=" + company + "]";
 	}
 	
-	
-
 }

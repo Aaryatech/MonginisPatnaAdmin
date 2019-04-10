@@ -915,7 +915,7 @@ public class SpecialCakeController {
 				mav.addObject("rmUomList", rawMaterialUomList);
 				mav.addObject("spSuppList", spSuppList);
 				mav.addObject("spList", spList);
-
+                mav.addObject("hsnCode","19059010");
 			} catch (Exception e) {
 				System.out.println("Exc In /spSupList" + e.getMessage());
 			}
@@ -1019,7 +1019,7 @@ public class SpecialCakeController {
 			mav.addObject("rmUomList", rawMaterialUomList);
 
 			mav.addObject("spCkSupp", getSpCkSupplement);
-
+			 mav.addObject("hsnCode",getSpCkSupplement.getSpHsncd());
 		} catch (Exception e) {
 			System.out.println("Exc In /updateSpSupp" + e.getMessage());
 		}

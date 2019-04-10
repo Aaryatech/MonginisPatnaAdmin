@@ -1,6 +1,7 @@
 package com.ats.adminpanel.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -171,10 +172,10 @@ public class ManualOrderController {
 	public @ResponseBody List<Orders> commonItemById(@RequestParam(value = "menuId", required = true) int menuId,
 			@RequestParam(value = "frId", required = true) int frId) {
 
-		System.out.println("menuId " + menuId);
+		System.out.println("menuId " + menuId+"FrId"+frId);
 
 		RestTemplate restTemplate = new RestTemplate();
-
+		orderList=new ArrayList<>();
 		List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
 		Menu frMenu = new Menu();
 		for (Menu menu : menuList) {
@@ -203,6 +204,7 @@ public class ManualOrderController {
 				franchiseeList = franchiseeListRes.getAllFranchisee().get(i);
 			}
 		}
+		System.err.println("franchiseeListes" +franchiseeList.toString());
 
 		for (Item item : itemList) {
 
@@ -260,7 +262,7 @@ public class ManualOrderController {
 			order.setItemId(String.valueOf(item.getId()));
 			order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
 			order.setFrId(frId);
-			if (menuId == 44 || menuId == 45) {
+			if (menuId == 84 || menuId == 87||menuId == 88||menuId == 89) {
 				order.setDeliveryDate(sqlCurrDate);
 			} else {
 				order.setDeliveryDate(sqlTommDate);
@@ -283,7 +285,7 @@ public class ManualOrderController {
 			orderList.add(order);
 
 		}
-		System.out.println("------------------------");
+		System.out.println("------------------------orderList"+orderList.toString());
 
 		return orderList;
 	}
@@ -374,7 +376,7 @@ public class ManualOrderController {
 			order.setItemId(String.valueOf(itemId));
 			order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
 			order.setFrId(frId);
-			if (menuId == 44 || menuId == 45) {
+			if (menuId == 84 || menuId == 87||menuId == 88||menuId == 89) {
 				order.setDeliveryDate(sqlCurrDate);
 			} else {
 				order.setDeliveryDate(sqlTommDate);
@@ -404,6 +406,9 @@ public class ManualOrderController {
 		return orderList;
 	}
 
+	public static float roundUp(float d) {
+		return BigDecimal.valueOf(d).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+	}
 	@RequestMapping(value = "/deleteItems", method = RequestMethod.GET)
 	public @ResponseBody List<Orders> deleteItemDetail(HttpServletRequest request, HttpServletResponse response) {
 		ResponseEntity<String> orderListResponse = null;

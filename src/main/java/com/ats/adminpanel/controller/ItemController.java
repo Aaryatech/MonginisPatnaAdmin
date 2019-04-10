@@ -430,23 +430,32 @@ public class ItemController {
 	public @ResponseBody List<Item> itemsBysubCatId(@RequestParam(value = "subCatId", required = true) int subCatId) {
 		logger.debug("finding Items for  " + subCatId);
 
+		ArrayList<Item> items=null;
 		RestTemplate restTemplate = new RestTemplate();
-
+       try {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		map.add("subCatId", subCatId);
 
 		Item[] itemList = restTemplate.postForObject(Constants.url + "getItemsBySubCatId", map, Item[].class);
 
-		ArrayList<Item> items = new ArrayList<Item>(Arrays.asList(itemList));
+		 items = new ArrayList<Item>(Arrays.asList(itemList));
 
 		// sachin 18 FEB
+		try {
 		taxHsn = restTemplate.postForObject(Constants.url + "getTaxHsnBySubCatId", map, GetTaxHsn.class);
-		// System.err.println("Tax Hsn Found " + taxHsn);
+		System.err.println("Tax Hsn Found " + taxHsn);
 		if (taxHsn == null) {
 			taxHsn = new GetTaxHsn();
+			taxHsn.setTaxHsnId(0);
 		}
-
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+       }catch (Exception e) {
+		e.printStackTrace();
+	 }
 		return items;
 	}
 
@@ -464,6 +473,7 @@ public class ItemController {
 		// System.err.println("Tax Hsn Found " + taxHsn);
 		if (taxHsn == null) {
 			taxHsn = new GetTaxHsn();
+			taxHsn.setTaxHsnId(0);
 		}
 		return taxHsn;
 	}

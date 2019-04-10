@@ -17,7 +17,16 @@ public class FrBillHeaderForPrint {
 	private Integer delStatus;
 	private int isSameState;
 	private String frAddress;
+	Company company;
+	
+	
+	public Company getCompany() {
+		return company;
+	}
 
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public Integer getBillNo() {
 		return billNo;
 	}
@@ -147,9 +156,10 @@ public class FrBillHeaderForPrint {
 				+ ", invoiceNo=" + invoiceNo + ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode
 				+ ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", status="
 				+ status + ", remark=" + remark + ", delStatus=" + delStatus + ", isSameState=" + isSameState
-				+ ", frAddress=" + frAddress + "]";
+				+ ", frAddress=" + frAddress + ", company=" + company + "]";
 	}
 
+	
 	
 
 }
