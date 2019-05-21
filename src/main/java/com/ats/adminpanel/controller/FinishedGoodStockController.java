@@ -110,7 +110,7 @@ public class FinishedGoodStockController {
 				System.out.println("catList :" + catList.toString());
 
 				for (MCategoryList mCategory : catList) {
-					if (mCategory.getCatId() != 5 && mCategory.getCatId() != 3) {
+					if (mCategory.getCatId() != 5 ) {
 						filteredCatList.add(mCategory);
 
 					}

@@ -959,7 +959,7 @@ public class ViewProdController {
 				document.add(heading);
 			}
 
-			document.add(new Paragraph("Production Date: " + reportDate + "\n"));
+			document.add(new Paragraph("Production Date: " + pdfPlanHeader.getProductionDate() + "\n"));
 			Paragraph heading = new Paragraph(" ");
 			document.add(heading);
 			document.add(table);

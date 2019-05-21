@@ -346,8 +346,7 @@ public class ViewMixingController {
 
 			document.open();
 			Paragraph company = new Paragraph(
-					"Galdhar Foods Pvt.Ltd\n" + "Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667"
-							+ "Phone:0240-2466217, Email: aurangabad@monginis.net",
+					"Devour Foods",
 					f);
 			company.setAlignment(Element.ALIGN_CENTER);
 			document.add(company);
