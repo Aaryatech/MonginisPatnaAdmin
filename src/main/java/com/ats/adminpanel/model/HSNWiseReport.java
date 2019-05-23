@@ -3,6 +3,9 @@ package com.ats.adminpanel.model;
 import java.util.Date;
 
 public class HSNWiseReport {
+	
+	
+	
 
 	private String itemHsncd;
 

@@ -355,6 +355,8 @@ public class ReportController {
 				PdfPCell cell;
 
 				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+			
+				
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				table.addCell(cell);
