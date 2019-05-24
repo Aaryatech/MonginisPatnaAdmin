@@ -17,8 +17,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -2793,7 +2795,40 @@ public class SalesReportController {
 			staticSaleByAllFr = saleList;
 			// saleListForPdf=saleList;
 
-			System.out.println("sales List Bill Wise all fr  " + saleList.toString());
+			Map<Integer, SalesReportBillwiseAllFr> LHM = new LinkedHashMap<Integer, SalesReportBillwiseAllFr>();
+
+			for (int i = 0; i < saleList.size(); i++) {
+				if (LHM.containsKey(saleList.get(i).getBillNo()) == false) {
+					LHM.put(saleList.get(i).getBillNo(), saleList.get(i));
+				}
+
+			}
+
+			List<SalesReportBillwiseAllFr> frList = new ArrayList<>();
+
+			for (Entry<Integer, SalesReportBillwiseAllFr> entry : LHM.entrySet()) {
+				frList.add(entry.getValue());
+			}
+
+			float billAmt = 0;
+
+			for (int i = 0; i < frList.size(); i++) {
+
+				for (int j = 0; j < saleList.size(); j++) {
+
+					if (frList.get(i).getBillNo() == saleList.get(j).getBillNo())
+						billAmt = billAmt + saleList.get(j).getCgstRsSum() + saleList.get(j).getSgstRsSum()
+								+ saleList.get(j).getTaxableAmtSum();
+				}
+				for (int k = 0; k < saleList.size(); k++) {
+					if (frList.get(i).getBillNo() == saleList.get(k).getBillNo()) {
+						saleList.get(k).setBillTotalAmt(billAmt);
+
+					}
+
+				}
+
+			}
 
 		} catch (Exception e) {
 			System.out.println("get sale Report Bill Wise all Fr " + e.getMessage());
@@ -2823,6 +2858,7 @@ public class SalesReportController {
 		rowData.add("CGST sum");
 		rowData.add("IGST sum");
 		rowData.add("Taxable Amt");
+		rowData.add("Bill Amt");
 
 		/*
 		 * float taxableAmtSum; float sgstRsSum; float cgstRsSum; float igstRsSum;
@@ -2852,6 +2888,7 @@ public class SalesReportController {
 
 			rowData.add("" + saleList.get(i).getIgstRsSum());
 			rowData.add("" + saleList.get(i).getTaxableAmtSum());
+			rowData.add("" + saleList.get(i).getBillTotalAmt());
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);

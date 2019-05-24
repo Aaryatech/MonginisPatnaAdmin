@@ -3,10 +3,11 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-<body >
+<body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
@@ -32,7 +33,9 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Bill-wise & HSN Code-wise Report
+					<i class="fa fa-file-o"></i>
+					<!-- Bill-wise & HSN Code-wise  -->
+					Tax 2 Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -40,7 +43,7 @@
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-	<%-- 	<div id="breadcrumbs">
+		<%-- 	<div id="breadcrumbs">
 			<ul class="breadcrumb">
 				<li><i class="fa fa-home"></i> <a
 					href="${pageContext.request.contextPath}/home">Home</a> <span
@@ -54,7 +57,9 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Bill-wise & HSN Code-wise Report
+					<i class="fa fa-bars"></i>
+					<!-- Bill-wise & HSN Code-wise Report -->
+					Tax 2 Report
 				</h3>
 
 			</div>
@@ -157,17 +162,18 @@
 
 			</div>
 			<div class="col-md-9" style="padding-top: 5px;"></div>
-				  <label for="search" class="col-md-3" id="search">
-               <i class="fa fa-search" style="font-size:20px"></i>
-				<input type="text" style="border-radius: 25px;" id="myInput" onkeyup="myFunction()" placeholder="Search By Party Name & Date" title="Type in a name">
-			</label> 
+			<label for="search" class="col-md-3" id="search"> <i
+				class="fa fa-search" style="font-size: 20px"></i> <input type="text"
+				style="border-radius: 25px;" id="myInput" onkeyup="myFunction()"
+				placeholder="Search By Party Name & Date" title="Type in a name">
+			</label>
 		</div>
-	
-			<div class="box">
+
+		<div class="box">
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
 				method="post">
-				<div class="box-content">	
+				<div class="box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
@@ -176,7 +182,7 @@
 									<tr>
 										<th>Sr</th>
 										<th>Invoice No</th>
-										<th >Invoice Date</th>
+										<th>Invoice Date</th>
 										<th>Party Name</th>
 										<th>City</th>
 										<th>GSTIN</th>
@@ -186,6 +192,7 @@
 										<th>CGST</th>
 										<th>SGST</th>
 										<th>IGST</th>
+										<th>Bill Amount</th>
 
 									</tr>
 								</thead>
@@ -232,101 +239,181 @@
 
 			$('#loader').show();
 
-			$.getJSON('${getBillList}',
+			$
+					.getJSON(
+							'${getBillList}',
 
-			{
-				//fr_id_list : JSON.stringify(selectedFr),
-				fromDate : from_date,
-				toDate : to_date,
-				//route_id:routeId,
-				ajax : 'true'
+							{
+								//fr_id_list : JSON.stringify(selectedFr),
+								fromDate : from_date,
+								toDate : to_date,
+								//route_id:routeId,
+								ajax : 'true'
 
-			}, function(data) {
+							},
+							function(data) {
 
-				$('#table_grid td').remove();
-				$('#loader').hide();
+								$('#table_grid td').remove();
+								$('#loader').hide();
 
-				var totalBasicValue = 0;
-				var totalCgst = 0;
-				var totalSgst = 0;
-				var totalIgst = 0;
+								var totalBasicValue = 0;
+								var totalCgst = 0;
+								var totalSgst = 0;
+								var totalIgst = 0;
 
-				if (data == "") {
-					alert("No records found !!");
-					document.getElementById("expExcel").disabled = true;
+								if (data == "") {
+									alert("No records found !!");
+									document.getElementById("expExcel").disabled = true;
 
-				}
+								}
 
-				$.each(data, function(key, report) {
-					document.getElementById("expExcel").disabled = false;
-					document.getElementById('range').style.display = 'block';
-					var index = key + 1;
-					//var tr = "<tr>";	
-					totalBasicValue = totalBasicValue + report.taxableAmtSum;
-					totalCgst = totalCgst + report.cgstRsSum;
-					totalSgst = totalSgst + report.sgstRsSum;
-					totalIgst = totalIgst + report.igstRsSum;
+								$
+										.each(
+												data,
+												function(key, report) {
+													document
+															.getElementById("expExcel").disabled = false;
+													document
+															.getElementById('range').style.display = 'block';
+													var index = key + 1;
+													//var tr = "<tr>";	
+													totalBasicValue = totalBasicValue
+															+ report.taxableAmtSum;
+													totalCgst = totalCgst
+															+ report.cgstRsSum;
+													totalSgst = totalSgst
+															+ report.sgstRsSum;
+													totalIgst = totalIgst
+															+ report.igstRsSum;
 
-					var tr = $('<tr></tr>');
-					tr.append($('<td style="font-size: 12px;"></td>').html(key + 1));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.invoiceNo));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.billDate));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.frName));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.frCity));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.frGstNo));
-					tr.append($('<td style="font-size: 12px;"></td>').html(report.itemHsncd));
+													var tr = $('<tr></tr>');
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			key + 1));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.invoiceNo));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.billDate));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.frName));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.frCity));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.frGstNo));
+													tr
+															.append($(
+																	'<td style="font-size: 12px;"></td>')
+																	.html(
+																			report.itemHsncd));
 
-					if (report.isSameState == 1) {
+													if (report.isSameState == 1) {
 
-						var taxRate = report.itemTax1 + report.itemTax2;
-						taxRate = taxRate.toFixed();
-						tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(taxRate));
-						//	tr.append($('<td></td>').html(report.sgstSum));
-						//	tr.append($('<td></td>').html(0));
-					} else {
-						//tr.append($('<td></td>').html(0));
-						//	tr.append($('<td></td>').html(0));
-						tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(report.itemTax3));
-					}
-					//tr.append($('<td></td>').html(report.igstSum));
-					tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(
-							report.taxableAmtSum.toFixed(2)));
-					tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(
-							report.cgstRsSum.toFixed(2)));
-					tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(
-							report.sgstRsSum.toFixed(2)));
-					tr.append($('<td style="text-align:right;font-size: 12px;"></td>').html(
-							report.igstRsSum.toFixed(2)));
+														var taxRate = report.itemTax1
+																+ report.itemTax2;
+														taxRate = taxRate
+																.toFixed();
+														tr
+																.append($(
+																		'<td style="text-align:right;font-size: 12px;"></td>')
+																		.html(
+																				taxRate));
+														//	tr.append($('<td></td>').html(report.sgstSum));
+														//	tr.append($('<td></td>').html(0));
+													} else {
+														//tr.append($('<td></td>').html(0));
+														//	tr.append($('<td></td>').html(0));
+														tr
+																.append($(
+																		'<td style="text-align:right;font-size: 12px;"></td>')
+																		.html(
+																				report.itemTax3));
+													}
+													//tr.append($('<td></td>').html(report.igstSum));
+													tr
+															.append($(
+																	'<td style="text-align:right;font-size: 12px;"></td>')
+																	.html(
+																			report.taxableAmtSum
+																					.toFixed(2)));
+													tr
+															.append($(
+																	'<td style="text-align:right;font-size: 12px;"></td>')
+																	.html(
+																			report.cgstRsSum
+																					.toFixed(2)));
+													tr
+															.append($(
+																	'<td style="text-align:right;font-size: 12px;"></td>')
+																	.html(
+																			report.sgstRsSum
+																					.toFixed(2)));
+													tr
+															.append($(
+																	'<td style="text-align:right;font-size: 12px;"></td>')
+																	.html(
+																			report.igstRsSum
+																					.toFixed(2)));
 
-					$('#table_grid tbody').append(tr);
+													tr
+															.append($(
+																	'<td style="text-align:right;font-size: 12px;"></td>')
+																	.html(
+																			report.billTotalAmt
+																					.toFixed(2)));
 
-				})
+													$('#table_grid tbody')
+															.append(tr);
 
-				var tr = $('<tr></tr>');
+												})
 
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
+								var tr = $('<tr></tr>');
 
-				tr.append($('<td style="font-weight:bold;"></td>')
-						.html("Total"));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
+								tr.append($('<td></td>').html(""));
 
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalBasicValue.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalCgst.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSgst.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalIgst.toFixed(2)));
+								tr.append($(
+										'<td style="font-weight:bold;"></td>')
+										.html("Total"));
 
-				$('#table_grid tbody').append(tr);
+								tr.append($(
+										'<td style="text-align:right;"></td>')
+										.html(totalBasicValue.toFixed(2)));
+								tr.append($(
+										'<td style="text-align:right;"></td>')
+										.html(totalCgst.toFixed(2)));
+								tr.append($(
+										'<td style="text-align:right;"></td>')
+										.html(totalSgst.toFixed(2)));
+								tr.append($(
+										'<td style="text-align:right;"></td>')
+										.html(totalIgst.toFixed(2)));
+								tr.append($('<td></td>').html(""));
 
-			});
+								$('#table_grid tbody').append(tr);
+
+							});
 
 		}
 	</script>
@@ -479,31 +566,29 @@
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
-		 
-<script>
-function myFunction() {
-  var input, filter, table, tr, td,td1, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("table_grid");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[3];
-    td1 = tr[i].getElementsByTagName("td")[2];
-    if (td || td1) {
-      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      }  else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }//end of for
-  
- 
-  
-}
-</script>
+
+	<script>
+		function myFunction() {
+			var input, filter, table, tr, td, td1, i;
+			input = document.getElementById("myInput");
+			filter = input.value.toUpperCase();
+			table = document.getElementById("table_grid");
+			tr = table.getElementsByTagName("tr");
+			for (i = 0; i < tr.length; i++) {
+				td = tr[i].getElementsByTagName("td")[3];
+				td1 = tr[i].getElementsByTagName("td")[2];
+				if (td || td1) {
+					if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}//end of for
+
+		}
+	</script>
 </body>
 </html>

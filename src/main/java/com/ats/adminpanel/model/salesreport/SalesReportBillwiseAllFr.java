@@ -39,6 +39,16 @@ public class SalesReportBillwiseAllFr {
 	float cgstRsSum;
 	float igstRsSum;
 
+	private float billTotalAmt;
+
+	public float getBillTotalAmt() {
+		return billTotalAmt;
+	}
+
+	public void setBillTotalAmt(float billTotalAmt) {
+		this.billTotalAmt = billTotalAmt;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -198,7 +208,7 @@ public class SalesReportBillwiseAllFr {
 				+ ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", itemHsncd=" + itemHsncd + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", itemName=" + itemName
 				+ ", taxableAmtSum=" + taxableAmtSum + ", sgstRsSum=" + sgstRsSum + ", cgstRsSum=" + cgstRsSum
-				+ ", igstRsSum=" + igstRsSum + "]";
+				+ ", igstRsSum=" + igstRsSum + ", billTotalAmt=" + billTotalAmt + "]";
 	}
 
 }
