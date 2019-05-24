@@ -35,7 +35,7 @@
 				<h1>
 					<i class="fa fa-file-o"></i>
 					<!-- Bill-wise & HSN Code-wise  -->
-					Tax 2 Report
+					GST Register Done
 				</h1>
 				<h4></h4>
 			</div>
@@ -59,7 +59,8 @@
 				<h3>
 					<i class="fa fa-bars"></i>
 					<!-- Bill-wise & HSN Code-wise Report -->
-					Tax 2 Report
+					<!-- Tax 2 Report -->
+					GST Register Done
 				</h3>
 
 			</div>
