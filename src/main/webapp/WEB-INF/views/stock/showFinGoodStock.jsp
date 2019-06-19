@@ -485,7 +485,7 @@ table {
 
 													var rejQty = "<td align=center ><input type=text size='4' class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.rejQty+"  readonly></td>";
 
-													var gateSaleQty = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;' value="+stock.gateSaleQty+" readonly ></td>";
+													var gateSaleQty = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.gateSaleQty+" readonly ></td>";
 
 													var billQty = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;height:20px;text-align:right;'  value="+stock.frSaleQty+"  readonly></td>";
 
