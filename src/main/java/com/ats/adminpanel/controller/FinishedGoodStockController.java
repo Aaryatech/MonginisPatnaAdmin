@@ -110,7 +110,7 @@ public class FinishedGoodStockController {
 				System.out.println("catList :" + catList.toString());
 
 				for (MCategoryList mCategory : catList) {
-					if (mCategory.getCatId() != 5 ) {
+					if (mCategory.getCatId() != 5) {
 						filteredCatList.add(mCategory);
 
 					}
@@ -788,8 +788,8 @@ public class FinishedGoodStockController {
 							cloT2 = t2 - b;
 							cloT3 = t3 - c;
 
-							curClosing = prodQty - rejQty - curIssue;
-							totalClosing = ((t1 + t2 + t3) + (prodQty - rejQty)) - billQty;
+							curClosing = damagedQty + prodQty - rejQty - curIssue;
+							totalClosing = ((t1 + t2 + t3) + (prodQty - rejQty) + damagedQty) - billQty;
 							stockDetail.setCloCurrent(curClosing);
 							stockDetail.setCloT1(cloT1);
 							stockDetail.setCloT2(cloT2);
@@ -805,8 +805,7 @@ public class FinishedGoodStockController {
 						} // end of if isSameItem =true
 					} // end of Inner For Loop
 				} // End of outer For loop
-
-				// end of new code
+					// end of new code
 
 			} // end of Option 1
 
