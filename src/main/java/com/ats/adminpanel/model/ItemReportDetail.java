@@ -71,7 +71,7 @@ public class ItemReportDetail {
 		this.invoiceNo = invoiceNo;
 	}
 
-	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+
 	public String getBillDate() {
 		return billDate;
 	}
