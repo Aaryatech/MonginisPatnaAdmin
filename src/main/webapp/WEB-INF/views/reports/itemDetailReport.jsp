@@ -94,6 +94,8 @@
 										<%
 											int count = 1;
 										%>
+										<c:set var="totalBillQty" value="0"></c:set>
+										<c:set var="totalOrderQty" value="0"></c:set>
 										<c:forEach items="${itemDetailList}" var="itemDetailList">
 											<tr>
 												<td><%=count++%> <c:out value="${count}" /></td>
@@ -105,6 +107,9 @@
 
 												<td align="left"><c:out
 														value="${itemDetailList.itemName}" /></td>
+												<c:set var="totalOrderQty"
+													value="${totalOrderQty+itemDetailList.orderQty}"></c:set>
+
 
 
 
@@ -114,29 +119,36 @@
 												<td align="right"><c:out
 														value="${itemDetailList.billQty}" /></td>
 
-
-
-
-
+												<c:set var="totalBillQty"
+													value="${totalBillQty+itemDetailList.billQty}"></c:set>
 
 											</tr>
 										</c:forEach>
+										<tr>
+											<td></td>
+
+											<td>Total</td>
+											<td align="right"><c:out value="${totalOrderQty}" /></td>
+											<td align="right"><c:out value="${totalBillQty}" /></td>
+
+										</tr>
 
 									</tbody>
 								</table>
-								<div class="col-sm-3  controls">
-									<input type="button" id="expExcel" class="btn btn-primary"
-										value="EXPORT TO Excel" onclick="exportToExcel();">
-								</div>
-								<div class="col-sm-3  controls">
-									<button class="btn btn-primary" value="PDF" id="PDFButton"
-										onclick="genPdf()">PDF</button>
-								</div>
 							</div>
 						</div>
 					</div>
+					<div class="col-sm-3  controls">
+						<input type="button" id="expExcel" class="btn btn-primary"
+							value="EXPORT TO Excel" onclick="exportToExcel();">
+					</div>
+					<div class="col-sm-3  controls">
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()">PDF</button>
+					</div>
 				</div>
 			</div>
+
 			<!-- END Main Content -->
 			<footer>
 				<p>2017 © MONGINIS.</p>
