@@ -580,6 +580,9 @@ public class ReportController {
 		rowData.add("Order Qty");
 		rowData.add("Bill Qty");
 
+		float totalBillQty = 0;
+		float totalOrderQty = 0;
+
 		expoExcel.setRowData(rowData);
 		int srno = 1;
 		exportToExcelList.add(expoExcel);
@@ -595,12 +598,33 @@ public class ReportController {
 
 			srno = srno + 1;
 
+			totalBillQty = totalBillQty + itemReportList.get(i).getBillQty();
+			totalOrderQty = totalOrderQty + itemReportList.get(i).getOrderQty();
+
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 
 		}
 
+		expoExcel = new ExportToExcel();
+		rowData = new ArrayList<String>();
+
+		rowData.add("Total");
+		rowData.add("");
+		rowData.add("" + roundUp(totalOrderQty));
+		rowData.add(" " + roundUp(totalBillQty));
+
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+
 		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelListNew", exportToExcelList);
+		session.setAttribute("excelNameNew", "HSNWiseReport");
+		session.setAttribute("reportNameNew", "View HSN Wise Report");
+		session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+		session.setAttribute("mergeUpto1", "$A$1:$D$1");
+		session.setAttribute("mergeUpto2", "$A$2:$D$2");
+
 		session.setAttribute("exportExcelList", exportToExcelList);
 		session.setAttribute("excelName", "ItemReport");
 
@@ -667,6 +691,9 @@ public class ReportController {
 			table.addCell(hcell);
 
 			int index = 0;
+			float totalBillQty = 0;
+			float totalOrderQty = 0;
+
 			for (int j = 0; j < itemReportList.size(); j++) {
 
 				index++;
@@ -696,7 +723,39 @@ public class ReportController {
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
+				totalBillQty = totalBillQty + itemReportList.get(j).getBillQty();
+				totalOrderQty = totalOrderQty + itemReportList.get(j).getOrderQty();
+
 			}
+
+			PdfPCell cell;
+
+			cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalOrderQty, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalBillQty, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
 			document.open();
 
 			Paragraph heading = new Paragraph(
@@ -798,6 +857,9 @@ public class ReportController {
 			rowData.add("Bill Qty");
 
 			expoExcel.setRowData(rowData);
+
+			float totalBillQty = 0;
+			float totalOrderQty = 0;
 			int srno = 1;
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < itemDetailList.size(); i++) {
@@ -813,6 +875,9 @@ public class ReportController {
 				rowData.add(" " + roundUp(itemDetailList.get(i).getOrderQty()));
 				rowData.add("" + roundUp(itemDetailList.get(i).getBillQty()));
 
+				totalBillQty = totalBillQty + itemDetailList.get(i).getBillQty();
+				totalOrderQty = totalOrderQty + itemDetailList.get(i).getOrderQty();
+
 				srno = srno + 1;
 
 				expoExcel.setRowData(rowData);
@@ -820,7 +885,27 @@ public class ReportController {
 
 			}
 
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+
+			rowData.add("Total");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("" + roundUp(totalOrderQty));
+			rowData.add(" " + roundUp(totalBillQty));
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
 			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelListNew", exportToExcelList);
+			session.setAttribute("excelNameNew", "HSNWiseReport");
+			session.setAttribute("reportNameNew", "View HSN Wise Report");
+			session.setAttribute("searchByNew", "From Date: " + fromdate + "  To Date: " + todate + " ");
+			session.setAttribute("mergeUpto1", "$A$1:$D$1");
+			session.setAttribute("mergeUpto2", "$A$2:$D$2");
+
 			session.setAttribute("exportExcelList", exportToExcelList);
 			session.setAttribute("excelName", "ItemDetailReport");
 
@@ -902,6 +987,9 @@ public class ReportController {
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
 
+			float totalBillQty = 0;
+			float totalOrderQty = 0;
+
 			int index = 0;
 			for (int j = 0; j < itemDetailList.size(); j++) {
 
@@ -944,10 +1032,53 @@ public class ReportController {
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
+				totalBillQty = totalBillQty + itemDetailList.get(j).getBillQty();
+				totalOrderQty = totalOrderQty + itemDetailList.get(j).getOrderQty();
+
 			}
+
+			PdfPCell cell;
+
+			cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalBillQty, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalOrderQty, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(1);
+			table.addCell(cell);
 			document.open();
 
-			Paragraph heading = new Paragraph("NET SALES CODE TAX WISE SUMMERY Report \n  ");
+			Paragraph heading = new Paragraph("Item SUMMERY Report \n  ");
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
 

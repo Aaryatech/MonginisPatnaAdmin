@@ -223,10 +223,8 @@
 									document.getElementById("expExcel").disabled = true;
 								}
 
-								var totalTaxableAmt = 0;
-								var totalSgst = 0;
-								var totalCgst = 0;
-								var totalFinal = 0;
+								var totalBillQty = 0;
+								var totalOrderQty = 0;
 
 								$
 										.each(
@@ -262,6 +260,10 @@
 																	'<td  style="text-align:right;"></td>')
 																	.html(
 																			report.billQty));
+													totalBillQty = totalBillQty
+															+ report.billQty;
+													totalOrderQty = totalOrderQty
+															+ report.orderQty;
 
 													var acButton = '<a href="#" class="action_btn" onclick="callEdit('
 															+ report.itemId
@@ -280,10 +282,27 @@
 
 												})
 
+								var tr = $('<tr></tr>');
+
+								tr.append($('<td></td>').html(" "));
+
+								tr.append($('<td>Total</td>').html());
+
+								tr.append($(
+										'<td  style="text-align:right;"></td>')
+										.html(totalOrderQty));
+
+								tr.append($(
+										'<td  style="text-align:right;"></td>')
+										.html(totalBillQty));
+
+								$('#table_grid tbody').append(tr);
+
 							});
 
 		}
 	</script>
+
 
 	<script type="text/javascript">
 		function validate() {

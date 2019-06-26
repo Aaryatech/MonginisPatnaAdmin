@@ -126,6 +126,8 @@
 										</c:forEach>
 										<tr>
 											<td></td>
+											<td></td>
+											<td></td>
 
 											<td>Total</td>
 											<td align="right"><c:out value="${totalOrderQty}" /></td>
