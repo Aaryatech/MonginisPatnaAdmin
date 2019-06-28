@@ -31,7 +31,7 @@
 			<div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i>Item Detail report
+						<i class="fa fa-file-o"></i>Product Order Detail report
 					</h1>
 				</div>
 			</div>
@@ -62,7 +62,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-table"></i>Item Detail Report
+								<i class="fa fa-table"></i>Product Order Detail report
 							</h3>
 							<div class="box-tool"></div>
 						</div>

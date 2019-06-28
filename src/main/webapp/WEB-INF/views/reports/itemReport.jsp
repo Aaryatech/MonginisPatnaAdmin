@@ -32,7 +32,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>ITEM SUMMERY Report
+					<i class="fa fa-file-o"></i>Product Order Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Item Wise Report
+					<i class="fa fa-bars"></i>Product Order Report
 				</h3>
 
 			</div>
