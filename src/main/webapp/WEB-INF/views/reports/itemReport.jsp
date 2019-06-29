@@ -135,7 +135,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-list-alt"></i>HSN Report
+					<i class="fa fa-list-alt"></i>Product Order Report
 				</h3>
 
 			</div>
