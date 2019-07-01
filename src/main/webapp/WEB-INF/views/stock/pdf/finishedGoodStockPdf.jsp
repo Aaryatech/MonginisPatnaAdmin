@@ -39,8 +39,8 @@ th {
 
 </head>
 <body onload="myFunction()">
-<h3 align="center">Galdhar Foods Pvt Ltd</h3>
-<p align="center">A-89, Shendra M.I.D.C., Aurangabad</p>
+<h3 align="center">Devour Foods</h3>
+<p align="center">Patna</p>
 <div align="center"> <h5> Finished Good Stock Adjustment & Overview </h5></div>
 <div align="center"> <h5> Date : ${sDate}</h5></div>
 	<table  align="center" border="1" cellspacing="0" cellpadding="1" 

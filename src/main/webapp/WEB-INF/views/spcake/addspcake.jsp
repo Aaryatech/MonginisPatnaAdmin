@@ -355,8 +355,8 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_3" id="tax_3"
-													tax_3"" placeholder="IGST" class="form-control"
-													data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													 placeholder="IGST" class="form-control" readonly
+													data-rule-required="true" data-rule-number="true" value="18" onchange="calTotalGst()"/>
 											</div>
 										</div>
 										 <div class="form-group">
@@ -365,8 +365,8 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_1" id="tax_1"
 													 placeholder="CGST" class="form-control"
-													data-rule-required="true"
-													data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													data-rule-required="true" readonly
+													data-rule-number="true" value="9" onchange="calTotalGst()"/>
 											</div>
 										</div>
 
@@ -375,9 +375,9 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_2" id="tax_2"
-													 placeholder="SGST" class="form-control"	
+													 placeholder="SGST" class="form-control"	readonly
 													data-rule-required="true" data-rule-number="true"
-													value="0.0" />
+													value="9" />
 													
 											</div>
 										</div>

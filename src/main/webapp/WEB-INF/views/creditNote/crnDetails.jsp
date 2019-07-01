@@ -87,16 +87,58 @@
 
 									<div class="box-content">
 <div class="col-md-9" ></div> 
-					<label for="search" class="col-md-3" id="search">
-    <i class="fa fa-search" style="font-size:20px"></i>
-									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search items by name.." title="Type in a name">
-										</label> <br>
-										<h5> Credit Note No : ${creditNoteHeaders.crnId} </h5>
+				<div class="col-md-3"><label for="search" class="col-md-3" id="search">
+									<input type="text" style="border-radius: 25px;" id="myInput" onkeyup="myFunction()" placeholder="  Search items by name.." title="Type in a name">
+										</label></div> 
+										<%-- 	<table style="width: 100%; border: 1px dashed;font-size: 14px;">
+										<tbody>
+											<tr >
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;CREDIT NOTE NO: </td><td style="border: 1px dashed;">&nbsp; <b> ${creditNoteHeaders.crnNo} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;DATE:</td><td style="border: 1px dashed;"><b>
+											<input class="form-control date-picker" id="date" size="19" style="width:170px;" placeholder="dd-mm-yyyy" type="text" name="date" value="${creditNoteHeaders.crnDate}" required/>
+											  </b></td>
+											</tr>
+											<tr style="border: 1px dashed;">
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;INVOICE NO:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.exVarchar1} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;FRANCHISEE NAME:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.frName} </b></td>
+											</tr>
+											<tr>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAXABLE AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTaxableAmt} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAX AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTotalTax} </b></td>
+											</tr>
+											<tr><td colspan="2" style="border: 1px dashed;" >&nbsp;</td>
+												<td style="border: 1px dashed;font-weight: bold;" >&nbsp;TOTAL:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnGrandTotal}</b></td>
+											</tr>
+											
+										</tbody>
+									</table> --%>
+									<br>
+											<table style="width: 100%; border: 1px dashed;font-size: 14px;">
+										<tbody>
+											<tr >
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;CREDIT NOTE NO: </td><td style="border: 1px dashed;">&nbsp; <b> ${creditNoteHeaders.crnNo} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;DATE:</td><td style="border: 1px dashed;"><b>${creditNoteHeaders.crnDate}
+											  </b></td>
+											</tr>
+											<tr style="border: 1px dashed;">
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;FRANCHISEE NAME:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.frName} </b></td>
+											</tr>
+											<tr>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAXABLE AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTaxableAmt} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAX AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTotalTax} </b></td>
+											</tr>
+											<tr><td colspan="2" style="border: 1px dashed;" >&nbsp;</td>
+												<td style="border: 1px dashed;font-weight: bold;" >&nbsp;TOTAL:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnGrandTotal}</b></td>
+											</tr>
+											
+										</tbody>
+									</table>
+										<%-- <h5> Credit Note No : ${creditNoteHeaders.crnId} </h5>
 										<h5> Franchisee Name : ${creditNoteHeaders.frName} </h5> 
 										<h5> Date : ${creditNoteHeaders.crnDate} </h5> 
 										<h5> Taxable Amount : ${creditNoteHeaders.crnTaxableAmt} </h5> 
 										<h5> Tax Amount : ${creditNoteHeaders.crnTotalTax} </h5> 
-										<h5> Total : ${creditNoteHeaders.crnGrandTotal} </h5> 
+										<h5> Total : ${creditNoteHeaders.crnGrandTotal} </h5>  --%>
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="border: 0">
 											<table width="100%"

@@ -58,7 +58,7 @@ document.body.onload = function()
       <td colspan="2" align="center" style="padding:10px;"><p></p></td>
     </tr>
     <tr>
-      <td colspan="2" align="center" style="padding:5px; border-bottom:1px solid #E7E7E7;"><img src="${pageContext.request.contextPath}/resources/img/monginislogo.jpg" alt="logo"></td>
+      <td colspan="2" align="center" style="padding:5px; border-bottom:1px solid #E7E7E7;"><img src="${pageContext.request.contextPath}/resources/img/monginislogo.png" alt="logo"></td>
     </tr>
     <tr>
       <td colspan="2" align="center" style="padding:10px; border-bottom:1px solid #E7E7E7; font-size:12px; font-weight:bold; "><p>ORDER MEMO</p></td>
@@ -92,15 +92,15 @@ document.body.onload = function()
         <tbody>
           <tr>
             <th align="left" bgcolor="#ECECEC">Name</th>
-            <th bgcolor="#ECECEC">Qty</th>
+            <th bgcolor="#ECECEC">Kg</th>
             <th bgcolor="#ECECEC">Rate</th>
             <th align="center" bgcolor="#ECECEC">Amt</th>
           </tr>
           <tr>
             <td><p style="font-size:12px">${spCakeOrder.spName}</p></td>
-            <td align="center"><p style="font-size:12px">1</p></td>
-            <td align="center"><p style="font-size:12px">${spCakeOrder.spPrice}</p></td>
-            <td align="right"><p style="font-size:12px">${spCakeOrder.spSubTotal}</p></td>
+            <td align="center"><p style="font-size:11px">${spCakeOrder.spSelectedWeight}</p></td>
+            <td align="center"><p style="font-size:11px">${spCakeOrder.spPrice}</p></td>
+            <td align="right"><p style="font-size:11px">${spCakeOrder.spSubTotal}</p></td>
           </tr>
          
         <!--   <tr>
@@ -138,15 +138,15 @@ document.body.onload = function()
             </tr>
           <tr>
             <td rowspan="3">&nbsp;</td>
-            <td colspan="2" align="right"><strong>Total :</strong></td>
+            <td colspan="2" align="right"><strong>Total:</strong></td>
             <td align="right"><strong>${spCakeOrder.spSubTotal}</strong></td>
           </tr>
           <tr>
-            <td colspan="2" align="right"><strong>Advance :</strong></td>
+            <td colspan="2" align="right"><strong>Advance:</strong></td>
             <td align="right"><strong>${spCakeOrder.spAdvance}</strong></td>
           </tr>
           <tr>
-            <td colspan="2" align="right"><strong>Balance :</strong></td>
+            <td colspan="2" align="right"><strong>Balance:</strong></td>
             <td align="right"><strong>${spCakeOrder.rmAmount}</strong></td>
           </tr>
         </tbody>

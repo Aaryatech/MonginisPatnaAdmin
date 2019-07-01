@@ -115,7 +115,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Item</label>
 									<div class="col-sm-9 col-lg-3 controls">
 									<select name="item_id" id="item_id" data-rule-required="true" class="form-control" placeholder="Select Item">
-											<option value="-1">Select Item</option>
+											<option value="">Select Item</option>
 											
 												
 								</select>	
@@ -463,7 +463,7 @@
 					cat_id : catId,
 					ajax : 'true'
 				}, function(data) {
-					var html = '<option value="-1"selected >Select Item</option>';
+					var html = '<option value=""selected >Select Item</option>';
 					
 					var len = data.length;
 					for ( var i = 0; i < len; i++) {

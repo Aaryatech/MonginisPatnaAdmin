@@ -142,12 +142,12 @@
 					<div class="col-md-12" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Report All</button>
-						<button class="btn btn-info" onclick="searchReportExceptTP()">Search
-							Report Except T&P</button>
+					<!-- 	<button class="btn btn-info" onclick="searchReportExceptTP()">Search
+							Report Except T&P</button> -->
 
 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genPdf()">PDF</button>
+							onclick="genPdf()" disabled="disabled">PDF</button>
 
 
 
@@ -229,7 +229,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-		<p>2017 © Monginis.</p>
+		<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -239,7 +239,7 @@
 	<script type="text/javascript">
 		function searchReport() {
 			//	var isValid = validate();
-
+        
 			var selectedFr = $("#selectFr").val();
 			var routeId = $("#selectRoute").val();
 
@@ -273,12 +273,14 @@
 				if (data == "") {
 					alert("No records found !!");
 					document.getElementById("expExcel").disabled = true;
+					document.getElementById("PDFButton").disabled = true;
 
 				}
 				//alert("Length " +data.length);
 				$.each(data, function(key, report) {
 					document.getElementById("expExcel").disabled = false;
 					document.getElementById('range').style.display = 'block';
+					document.getElementById("PDFButton").disabled = false;
 					var index = key + 1;
 					//var tr = "<tr>";
 
@@ -321,11 +323,12 @@
 
 					var total = report.sgstRsSum + report.cgstRsSum;
 					var grandTotal = report.sgstRsSum + report.cgstRsSum+report.taxableAmtSum;
+					totalgrandTotal=totalgrandTotal+grandTotal
 					grandTotal = grandTotal.toFixed(2);
 					total = total.toFixed(2);
 
 					totalGst = totalGst + parseFloat(total);
-					totalgrandTotal=totalgrandTotal+grandTotal
+					
 
 					tr.append($('<td style="text-align:right;"></td>').html(
 							total));
@@ -335,7 +338,14 @@
 					$('#table_grid tbody').append(tr);
 
 				})
-
+				totalQty = (totalQty).toFixed(2);
+				totalBasicValue = (totalBasicValue).toFixed(2);
+			 	totalCgst = (totalCgst).toFixed(2);
+				totalSgst = (totalSgst).toFixed(2);
+				totalIgst = (totalIgst).toFixed(2);
+				totalGst = (totalGst).toFixed(2);
+				totalgrandTotal=(totalgrandTotal).toFixed(2);
+				
 				var tr = $('<tr></tr>');
 
 				tr.append($('<td></td>').html(""));
@@ -346,20 +356,20 @@
 						.html("Total"));
 
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalQty.toFixed(2)));
+						totalQty));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalBasicValue.toFixed(2)));
+						totalBasicValue));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalCgst.toFixed(2)));
+						totalCgst));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSgst.toFixed(2)));
+						totalSgst));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalIgst.toFixed(2)));
+						totalIgst));
 
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalGst.toFixed(2)));
+						totalGst));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalgrandTotal.toFixed(2)));
+						totalgrandTotal));
 
 				$('#table_grid tbody').append(tr);
 
@@ -460,9 +470,9 @@
 					totalGst = totalGst + parseFloat(total);
 					
 					var grandTotal= report.sgstRsSum + report.cgstRsSum + report.taxableAmtSum
-					grandTotal = grandTotal.toFixed(2);
+				
 					totalgrandTotal= totalgrandTotal + grandTotal
-
+					grandTotal = grandTotal.toFixed(2);
 					tr.append($('<td style="text-align:right;"></td>').html(total));
 					tr.append($('<td style="text-align:right;"></td>').html(grandTotal));
 					$('#table_grid tbody').append(tr);
@@ -585,14 +595,14 @@
 			var selectedFr = $("#selectFr").val();
 			var routeId = $("#selectRoute").val();
 			window
-					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportItemwisePdf/'
+					.open('${pageContext.request.contextPath}/pdf/showSaleReportItemwisePdf/'
 							+ from_date
 							+ '/'
 							+ to_date
 							+ '/'
 							+ selectedFr
 							+ '/' + routeId + '/');
-
+			document.getElementById("PDFButton").disabled = true;
 			//window.open('${pageContext.request.contextPath}/pdfForReport?url=showSaleReportItemwisePdf/'+from_date+'/'+to_date);
 
 		} //window.open('pdfForReport?url=showSaleBillwiseByFrPdf/'+from_date+'/'+to_date);

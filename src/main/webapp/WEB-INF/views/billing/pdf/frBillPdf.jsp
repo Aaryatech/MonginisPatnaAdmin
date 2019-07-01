@@ -31,7 +31,7 @@ page-break-inside: auto !important
 			
 	
 		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
-		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
+		<div style="text-align: right; font-size: 10px;">LLPIN: ${frDetails.company.cinNo}
 			</div>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
@@ -40,11 +40,10 @@ page-break-inside: auto !important
 					style="padding: 10px; color: #FFF; font-size: 15px;">&nbsp;</td>
 				<td width="60%" colspan="6"
 					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
-					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
-						FOODS LLP</h4>
+					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">${frDetails.company.compName}</h4>
 					<p style="color: #000; font-size: 10px; text-align: center; margin: 0px;">
-						Village-Fatehpur,Dist-Patna <br />
-						 Email: bihar.monginis@gmail.com
+						Village-${frDetails.company.factAddress} <br />
+						 Email: ${frDetails.company.email}
 					</p>
 				</td>
 				<td colspan="3" width="20%"
@@ -65,8 +64,8 @@ page-break-inside: auto !important
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
 						GSTIN:
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10AACFF8396C1ZP</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
-							State:&nbsp;10 BIHAR </span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.company.gstin}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
+							State:&nbsp;${frDetails.company.stateCode} ${frDetails.company.state} </span>
 					</p> <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
  -->
 					<p
@@ -98,7 +97,7 @@ page-break-inside: auto !important
 					</p> --%>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
+						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ${frDetails.company.state}</p>
 				</td>
 			</tr>
 			<tr>
@@ -291,7 +290,7 @@ page-break-inside: auto !important
 						
 								
 		<div style="text-align: center; font-size: 12px;"><b>TAX INVOICE</b></div>
-		<div style="text-align: right; font-size: 10px;">LLPIN: AAA6583
+		<div style="text-align: right; font-size: 10px;">LLPIN: ${frDetails.company.cinNo}
 			</div>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-left: 1px solid #313131; border-right: 1px solid #313131; border-top: 1px solid #313131;">
@@ -307,11 +306,10 @@ page-break-inside: auto !important
 					</p></td>
 				<td width="40%" colspan="5"
 					style="border-left: 1px solid #313131; padding: 5px; color: #000; font-size: 15px; text-align: center">
-					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">DEVOUR
-						FOODS LLP</h4>
+					<h4 style="color: #000; font-size: 16px; text-align: center; margin: 0px;">${frDetails.company.compName}</h4>
 					<p style="color: #000; font-size: 10px; text-align: center; margin: 0px;">
-						Village-Fatehpur,Dist-Patna <br />
-						 Email: bihar.monginis@gmail.com
+						${frDetails.company.factAddress} <br />
+						 Email: ${frDetails.company.email}
 					</p>
 				</td>
 				<td colspan="3" width="30%"
@@ -331,8 +329,8 @@ page-break-inside: auto !important
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
 						GSTIN:
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>10AACFF8396C1ZP</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
-							State:&nbsp;10 BIHAR </span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.company.gstin}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span>
+							State:&nbsp;${frDetails.company.stateCode} ${frDetails.company.state} </span>
 					</p> <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
  -->
 					<p
@@ -364,7 +362,7 @@ page-break-inside: auto !important
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; BIHAR</p>
+						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ${frDetails.company.state}</p>
 				</td>
 			</tr>
 			<tr>
@@ -759,9 +757,7 @@ page-break-inside: auto !important
 					style="border-left: 1px solid #313131; padding: 4px; color: #000; font-size: 10px;">
 					<p
 						style="color: #000; font-size: 12px; text-align: left; margin: 0px;">FSSAI
-						Declaration: We hereby certify that food mentioned in the Tax
-						Invoice is warranted to be of the nature and quality which it
-						purpose to be. FSSAI Lic. No: 10416000001698</p>
+						Declaration: ${frDetails.company.fdaDeclaration} FSSAI Lic. No: ${frDetails.company.fdaLicenceNo}</p>
 				</td>
 
 
@@ -808,7 +804,7 @@ page-break-inside: auto !important
 
 				<td align="center" colspan="5" width="38%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding-top: 4px; color: #000; font-size: 9px;"><p>
-						<b>For DEVOUR FOODS LLP<br></br> <br></br> <br></br>
+						<b>For ${frDetails.company.compName}<br></br> <br></br> <br></br>
 							
 						</b>
 					</p></td>

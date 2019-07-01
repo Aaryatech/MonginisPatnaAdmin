@@ -430,7 +430,7 @@ td, th {
 			</div></div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 
@@ -609,10 +609,10 @@ $.getJSON('${callSearchOrdersProcess}', {
   	tr.append($('<td></td>').html(orders.catName));
   	
 	if(isEdit==1){
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+" disabled >"));
   		
   	}else{
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+" disabled >"));
   		
   	}
 
@@ -621,7 +621,7 @@ if(isDelete==1){
 tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 
 }else{
-	 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=('+orders.orderId+');> </span></a>'));
+	 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
   	}
 
 
@@ -646,21 +646,21 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 	<script type="text/javascript">
 		function editQty(orderId)
 		{
-			var state=document.getElementById(orderId).disabled;
-			var textId=document.getElementById(orderId).value;
+			var state=document.getElementById("qty"+orderId).disabled;
+			var textId=document.getElementById("qty"+orderId).value;
 			//alert(textId);
 			//document.getElementById(orderId).disabled=false;
 			if(state)
 				{
 				$("#edit"+orderId).removeClass("glyphicon glyphicon-edit");
 				 $("#edit"+orderId).addClass("glyphicon glyphicon-ok");
-				document.getElementById(orderId).disabled=false;
+				document.getElementById("qty"+orderId).disabled=false;
 				
 				}
 			else{
 				$("#edit"+orderId).removeClass("glyphicon glyphicon-ok");
 				 $("#edit"+orderId).addClass("glyphicon glyphicon-edit");
-				document.getElementById(orderId).disabled=true;
+				document.getElementById("qty"+orderId).disabled=true;
 				$.getJSON('${callChangeQty}',
 						{
 					
@@ -711,6 +711,7 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 								document.getElementById("expExcel").disabled=false;
 								document.getElementById('range').style.display = 'block';
 							var tr = $('<tr></tr>');
+							tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
 
 						  	tr.append($('<td></td>').html(key+1));
 
@@ -721,21 +722,21 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 						  	tr.append($('<td></td>').html(orders.catName));
 						  	
 						  	if(isEdit==1){
-							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center; height: 24px;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+" disabled >"));
 
 						  		
 						  	}else{
-							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center; height: 24px;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+" disabled >"));
 
 						  		
 						  	}
-
+						  	tr.append($('<td></td>').html(orders.deliveryDate));
 						  	
  				if(isDelete==1){
 	 			tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 		
 				}else{
-							 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=('+orders.orderId+');> </span></a>'));
+							 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 						  	}
 
  	

@@ -331,7 +331,7 @@ $(document).ready(function() {
     $('#menu').change(
             function() {$('#table_grid td').remove();
           	 $('#loader').show();
-          	
+     
                 $.getJSON('${findItemsByCatId}', {
                     menuId : $(this).val(),
                     frId : $('#fr_id').val(),
@@ -379,7 +379,7 @@ $(document).ready(function() {
 			if(qty % minqty==0){
 			    var total = rate * qty;
 			
-			   $('#total'+id).html(total);
+			   $('#total'+id).html(total.toFixed(2));
 			}else
 			{
 				 var total =0;

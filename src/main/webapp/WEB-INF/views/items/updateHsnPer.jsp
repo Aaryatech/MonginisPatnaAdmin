@@ -366,7 +366,8 @@
 				
 				
 			}			 
-			
+			</script>
+			<script type="text/javascript">
 			function callData(){
 				
 				$.getJSON('${getTaxHsnForSubCat}', {
@@ -414,7 +415,8 @@
 					}
 				});
 			}
-			
+			</script>
+			<script type="text/javascript">
 			function catChange(cat_id) {
 				$('#loader').show();
 				$.getJSON('${getGroup2ByCatId}', {

@@ -26,8 +26,9 @@ contentType="text/html; charset=ISO8859_1"%>
     </td>
 
     <td width="50%" colspan="5" style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#FFF; font-size:15px;">
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;"> Credit Note No. : &nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnId}</b></p>
+        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;"> Credit Note No. : &nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnNo}</b></p>
         <p style="color:#000; font-size:13px; text-align:left;margin:0px;">Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnDate}</b></p>
+        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">Crn Id :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnId}</b></p>
     </td>
   </tr>
   <tr>

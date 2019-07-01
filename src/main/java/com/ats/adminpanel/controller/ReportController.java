@@ -894,7 +894,7 @@ public class ReportController {
 			document.open();
 
 			Paragraph heading = new Paragraph(
-					"NET SALES CODE TAX WISE SUMMERY Report \n From Date:" + fromdate + " To Date:" + todate);
+					"Product Order Report \n From Date:" + fromdate + " To Date:" + todate);
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
 
@@ -1074,13 +1074,6 @@ public class ReportController {
 		exportToExcelList.add(expoExcel);
 
 		HttpSession session = request.getSession();
-		session.setAttribute("exportExcelListNew", exportToExcelList);
-		session.setAttribute("excelNameNew", "HSNWiseReport");
-		session.setAttribute("reportNameNew", "View HSN Wise Report");
-		session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
-		session.setAttribute("mergeUpto1", "$A$1:$D$1");
-		session.setAttribute("mergeUpto2", "$A$2:$D$2");
-
 		session.setAttribute("exportExcelList", exportToExcelList);
 		session.setAttribute("excelName", "ItemReport");
 
@@ -1355,13 +1348,7 @@ public class ReportController {
 			exportToExcelList.add(expoExcel);
 
 			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelListNew", exportToExcelList);
-			session.setAttribute("excelNameNew", "HSNWiseReport");
-			session.setAttribute("reportNameNew", "View HSN Wise Report");
-			session.setAttribute("searchByNew", "From Date: " + fromdate + "  To Date: " + todate + " ");
-			session.setAttribute("mergeUpto1", "$A$1:$D$1");
-			session.setAttribute("mergeUpto2", "$A$2:$D$2");
-
+			
 			session.setAttribute("exportExcelList", exportToExcelList);
 			session.setAttribute("excelName", "ItemDetailReport");
 

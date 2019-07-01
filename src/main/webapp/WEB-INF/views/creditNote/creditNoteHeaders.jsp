@@ -154,7 +154,7 @@
 
 										<select data-placeholder="Choose Franchisee"
 											type="text" class="multiselect" multiple="multiple" role="multiselect" tabindex="6"
-											id="selectFr" name="selectFr" onchange="getDate()">
+											id="selectFr" name="selectFr" >
 											<option value="-1"><c:out value="All"/></option>
 
 											<c:forEach items="${unSelectedFrList}" var="fr"
@@ -206,6 +206,7 @@
 															onClick="selectBillNo(this)" /></th>
 														<th class="col-md-2">Date</th>
 														<th class="col-md-2">Crn Id</th>
+														<th class="col-md-2">Crn No</th>
 														<th class="col-md-2">Franchise Name</th>
 														<th class="col-md-2">Taxable Amt</th>
 														<th class="col-md-2">Tax Amt</th>
@@ -1059,8 +1060,9 @@
 			  	tr.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+headers.crnId+'></td>'));
 
 			  	tr.append($('<td></td>').html(headers.crnDate));
-			  	
 			  	tr.append($('<td></td>').html(headers.crnId));
+
+			  	tr.append($('<td></td>').html(headers.crnNo));
 
 
 			  	tr.append($('<td></td>').html(headers.frName));

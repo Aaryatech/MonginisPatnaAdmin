@@ -431,7 +431,7 @@ $(document).ready(function() {
 		
 		if (isValid) {
 			
-			document.getElementById("callsearch").disabled=true;
+			//document.getElementById("callsearch").disabled=true;
 			var productionDate = document.getElementById("datepicker").value;
 			var selectedMenu=$("#selectMenu").val();
 			$('#loader').show();
@@ -448,7 +448,7 @@ $(document).ready(function() {
 
 								//$('#table_grid td').remove();
 								
-								document.getElementById("callsearch").disabled=false;
+								//document.getElementById("callsearch").disabled=false;
 								
 								  if (data == "") {
 									//alert("No records found !!");
@@ -460,7 +460,7 @@ $(document).ready(function() {
 									
 								
 								$.each(data,function(key, order) {
-									$('#loader').hide();
+									//$('#loader').hide();
 									if(order.qty>0){
 										document.getElementById("callSubmit").disabled=false;
 									}
@@ -512,7 +512,9 @@ $(document).ready(function() {
 								 
 								 
 							$('#table1 tbody').append(tr);
-							
+							if (key == data.length- 1) {
+								$('#loader').hide();
+					          }
 														})
 							}
 														
@@ -531,7 +533,7 @@ $(document).ready(function() {
 				//$('#table_grid td').remove();
 				
 				
-				$('#loader').hide();
+				//$('#loader').hide();
 				 if (data == "") {
 				//	alert("No records found !!");
 					document.getElementById("callSubmit").disabled=true;
@@ -584,10 +586,13 @@ $(document).ready(function() {
 									tr.append($('<td></td>').html(order.qty));
 									
 									$('#table1 tbody').append(tr);
+									if (key == data.length- 1) {
+										$('#loader').hide();
+							          }
 								})
 				}
 									
-
+				
 			});
 
 

@@ -191,9 +191,9 @@
 
 			</div>
  -->
-			<form id="submitBillForm"
+			<form id="submitBillForm" 
 				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post">
+				method="post" onsubmit="submitBill.disabled = true; return confirm('Do you want to Generate Bill ?');">
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
@@ -232,9 +232,8 @@
  -->
 							<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
 								target="_blank">PDF</a> --%>
-							<button class="btn btn-info pull-right"
-								style="margin-right: 5px;" onclick="submitBill()">Submit
-								Bill</button>
+							<input type="submit" class="btn btn-info pull-right" id="submitBill"
+								style="margin-right: 5px;" value="Submit"  name="submitBill" disabled="disabled"/>
 						</div>
 					</div>
 				</div>
@@ -244,7 +243,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2017 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -289,12 +288,14 @@
 								},
 								function(data) {
 								//	alert("data is"+data);
+									document.getElementById("submitBill").disabled = false;
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
 
 									if (data == "") {
 										alert("No records found !!");
+										document.getElementById("submitBill").disabled = true;
 
 									}
 

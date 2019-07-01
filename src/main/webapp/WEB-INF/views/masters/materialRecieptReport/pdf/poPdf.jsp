@@ -17,10 +17,10 @@
   <tr>
     <td colspan="2" width="20%" style=" padding:10px;color:#FFF; font-size:15px;">&nbsp;</td>
     <td width="60%" colspan="6" style="border-left:1px solid #313131; padding:5px;color:#000; font-size:15px; text-align:center">
-    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">Galdhar Foods Pvt.Ltd</h4>
-   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667  <br>
-  Phone:0240-2466217, Email: aurangabad@monginis.net </p>
-  <p style="color:#000; font-size:10px; text-align:center;margin:0px;">GSTIIN: <b>27AHIPJ7279D1Z3</b></p>
+    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">Devour Foods</h4>
+ <!--   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667  <br>
+  Phone:0240-2466217, Email: aurangabad@monginis.net </p> -->
+  <p style="color:#000; font-size:10px; text-align:center;margin:0px;">GSTIIN: <b> - </b></p>
  </td>
     <td colspan="3" width="20%" style="border-left:1px solid #313131; padding:10px;color:#FFF; font-size:15px;">
    	<p style="color:#000; font-size:11px; text-align:center;margin:0px;"> Original for buyer <br />

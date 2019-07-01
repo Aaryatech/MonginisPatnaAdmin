@@ -66,6 +66,8 @@ th {
 				<th>GVN Value</th>
 				<th>Net Qty</th>
 				<th>Net Value</th>
+				<th>Royalty %</th>
+				<th>Royalty Value</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -77,7 +79,7 @@ th {
 			<c:set var="sumGvnValue" value="${0}" />
 			<c:set var="sumNetQty" value="${0}" />
 			<c:set var="sumNetValue" value="${0}" />
-
+			<c:set var="rAmtValue" value="${0}" />
 
 			<c:forEach items="${royaltyList.categoryList}" var="report" varStatus="count">
 				<tr>
@@ -145,7 +147,11 @@ th {
 
 								<td width="100" align="right"><fmt:formatNumber
 										type="number" maxFractionDigits="2" minFractionDigits="2" value="${netValue}" />		</td>	
-										
+								<c:set var="rAmt" value="${netValue* royPer/ 100}"></c:set>
+								<td width="100" align="right"><fmt:formatNumber
+										type="number" maxFractionDigits="2" minFractionDigits="2" value="${royPer}" />		</td>	
+										<td width="100" align="right"><fmt:formatNumber
+										type="number" maxFractionDigits="2" minFractionDigits="2" value="${rAmt}" />		</td>			
 										
 										
 										<c:set var="sumSaleQty" value="${royalty.tBillQty+sumSaleQty}"></c:set>
@@ -163,6 +169,7 @@ th {
 
 
 								<c:set var="sumNetValue" value="${netValue+sumNetValue}"></c:set>
+								<c:set var="rAmtValue" value="${rAmt+rAmtValue}"></c:set>
 											
 							</tr>
 						</c:when>
@@ -199,7 +206,9 @@ th {
 							
 							<td width="100" align="right"><b><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2" value="${sumNetValue}" /></b></td>
-							
+								<td width="100" align="right">-</td>
+							<td width="100" align="right"><b><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${rAmtValue}" /></b></td>
 							
 				<%-- <td></td>
 				<td><b><fmt:formatNumber type="number"

@@ -138,7 +138,7 @@
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="spck_hsncd" id="spck_hsncd"
 											placeholder="HSN Code" class="form-control"
-											data-rule-required="true" value="${spCkSupp.spHsncd}" />
+											data-rule-required="true" value="${hsnCode}" />
 									</div>
 								</div>
 								<div class="col2">
