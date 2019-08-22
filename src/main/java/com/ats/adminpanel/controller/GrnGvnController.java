@@ -243,7 +243,7 @@ public class GrnGvnController {
 				model.addObject("grnList", grnGateHeaderList);
 				model.addObject("selectedFr", frList);
 
-				System.err.println("grnGateHeaderList size  " + grnGateHeaderList.size());
+				System.err.println("grnGateHeaderList size  " + grnGateHeaderList.toString());
 
 				gateGrnHeaderFromDate = null;
 				gateGrnHeaderToDate = null;
@@ -616,7 +616,7 @@ public class GrnGvnController {
 			// update Grn GVN Header
 
 			gateHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
-
+			System.err.println("$$$$$$$$$$$$$$gateHeader"+gateHeader.toString());
 			gateHeader = restTemplate.postForObject(Constants.url + "updateGrnGvnHeader", gateHeader,
 					GrnGvnHeader.class);
 
@@ -634,7 +634,7 @@ public class GrnGvnController {
 		gateGrnHeaderFromDate = null;
 		gateGrnHeaderToDate = null;
 
-		return "redirect:/getGrnHeaderForGate";
+		return "redirect:/getGateGrnDetail/"+globalGateHeaderId;
 
 	}
 
@@ -723,7 +723,7 @@ public class GrnGvnController {
 
 			GrnGvnHeader gateHeader = new GrnGvnHeader();
 
-			System.out.println("globalGateHeaderId " + globalGateHeaderId);
+			System.err.println(grnGateHeaderList.toString()+"globalGateHeaderId " + globalGateHeaderId);
 
 			for (int i = 0; i < grnGateHeaderList.size(); i++) {
 
@@ -755,9 +755,9 @@ public class GrnGvnController {
 
 			} // End of For Loop
 
-			System.out.println("grnGateDetailList LIST SIZE : " + grnGateDetailList.size());
+			System.err.println("grnGateDetailList LIST SIZE : " + grnGateDetailList.size());
 
-			System.out.println("aprStatus count = " + aprStatus + " reJStatus count = " + rejStatus);
+			System.err.println("aprStatus count = " + aprStatus + " reJStatus count = " + rejStatus);
 
 			if (grnGateDetailList.size() == rejStatus) {
 
@@ -781,7 +781,7 @@ public class GrnGvnController {
 
 			// update Grn Gvn Header
 			gateHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
-
+			System.err.println("$$$$$$$$$$$$$$gateHeader"+gateHeader.toString());
 			gateHeader = restTemplate.postForObject(Constants.url + "updateGrnGvnHeader", gateHeader,
 					GrnGvnHeader.class);
 

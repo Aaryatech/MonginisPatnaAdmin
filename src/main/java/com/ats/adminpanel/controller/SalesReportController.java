@@ -2112,6 +2112,7 @@ public class SalesReportController {
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
+			int type = Integer.parseInt(request.getParameter("type"));
 
 			boolean isAllFrSelected = false;
 			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
@@ -2161,7 +2162,7 @@ public class SalesReportController {
 				// Web Service :getSalesReportRoyaltyFrAllFr
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
-
+				map.add("type", type);
 				ParameterizedTypeReference<List<SalesReportRoyaltyFr>> typeRef = new ParameterizedTypeReference<List<SalesReportRoyaltyFr>>() {
 				};
 				ResponseEntity<List<SalesReportRoyaltyFr>> responseEntity = restTemplate.exchange(
@@ -2177,7 +2178,7 @@ public class SalesReportController {
 				map.add("frIdList", selectedFr);
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
-
+				map.add("type", type);
 				ParameterizedTypeReference<List<SalesReportRoyaltyFr>> typeRef = new ParameterizedTypeReference<List<SalesReportRoyaltyFr>>() {
 				};
 				ResponseEntity<List<SalesReportRoyaltyFr>> responseEntity = restTemplate.exchange(

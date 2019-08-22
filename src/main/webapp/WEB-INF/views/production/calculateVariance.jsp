@@ -163,18 +163,15 @@
 								 
 												<thead>
 													<tr class="bgpink">
-														<th>Sr.No.</th>
+	                                                   <th>Sr.No.</th>
 														<th class="col-md-3">Item Name</th> 
-														<!-- <th >Opening Qty</th>  -->
-														<th>Current Stock</th> 
+														<th >Opening Qty</th> 
 														<th>plan Qty</th>
-														<!-- <th>production Qty</th> -->
-														 <th>Total</th>
+														<th>production Qty</th>
+														<th>Current Stock Total</th> 
 														<th>Order Qty</th>
-													<!-- 	<th>Rejected Qty</th> -->
-														<th>P2 Production</th>
-														
-
+<!-- 														<th>Rejected Qty</th>
+ -->														<th>P2 Production</th>
 
 													</tr>
 												</thead>
@@ -185,21 +182,16 @@
 										 
 												<thead>
 													<tr class="bgpink">
-														<th>Sr.No.</th>
+														   <th>Sr.No.</th>
 														<th class="col-md-3">Item Name</th> 
-														<!-- <th >Opening Qty</th>  -->
-														<th>Current Stock</th> 
+														<th >Opening Qty</th> 
 														<th>plan Qty</th>
-														<!-- <th>production Qty</th> -->
-														 <th>Total</th>
+														<th>production Qty</th>
+														<th>Current Stock Total</th> 
 														<th>Order Qty</th>
-													<!-- 	<th>Rejected Qty</th> -->
-														<th>P2 Production</th>
-														
-														
-
-
-													</tr>
+<!-- 														<th>Rejected Qty</th>
+ -->														<th>P2 Production</th>
+                                                 </tr>
 												</thead>
 												<tbody>
 													<c:set var="srNo" value="0" />
@@ -218,16 +210,21 @@
 																	 
 																</c:choose>
 															</c:forEach>
-															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td> 
+												<%-- 			<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td> 
 															
-															<%--  <td><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td> --%>
 															 <td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.planQty}" /></td>
 															  <td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.curClosingQty+postProdPlanHeaderDetailed.planQty}" /></td>
-<%-- 															<td><c:out value="${postProdPlanHeaderDetailed.productionQty}" /></td>
- --%>															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
+														<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
+															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
+											 --%>	
+											                <td><c:out value="${postProdPlanHeaderDetailed.curClosingQty}" /></td>
+															 <td><c:out value="${postProdPlanHeaderDetailed.planQty}" /></td>
+															<td><c:out value="${postProdPlanHeaderDetailed.productionQty}" /></td>
+															<td><c:out value="${postProdPlanHeaderDetailed.curOpeQty}" /></td> 
+															<td><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
 <%-- 															<td><c:out value="${postProdPlanHeaderDetailed.rejectedQty}" /></td>
- --%>															<td  style="text-align:right;"><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
-														</tr>
+ --%>															<td><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
+											 		</tr>
 													</c:forEach>
 													
 													
@@ -241,14 +238,14 @@
 														<tr>
 															<td><c:out value="${srNo+1}" /></td>
 															<c:set var="srNo" value="${srNo+1}" />
-															<td ><c:out value="${getVarianceorderlistforsort.itemName}" /></td>
-															<td style="text-align:right;"><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td> 
-<%-- 															<td><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
- --%>															<td  style="text-align:right;"><c:out value="${0}" /></td>
-															<td  style="text-align:right;"><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
-															<td  style="text-align:right;"><c:out value="${getVarianceorderlistforsort.orderQty}" /></td>
-															<%-- <td><c:out value="${0}" /></td> --%>
-															<td  style="text-align:right;">0<c:out value="${getVarianceorderlistforsort.remainingQty}" /></td>
+															<td><c:out value="${getVarianceorderlistforsort.itemName}" /></td>
+															<td><c:out value="${getVarianceorderlistforsort.curClosingQty}" /></td>
+															<td><c:out value="${0}" /></td>
+															<td><c:out value="${0}" /></td>
+															<td><c:out value="${getVarianceorderlistforsort.curOpeQty}" /></td> 
+															<td><c:out value="${getVarianceorderlistforsort.orderQty}" /></td>
+<%-- 															<td><c:out value="${0}" /></td>
+ --%>															<td><c:out value="${getVarianceorderlistforsort.remainingQty}" /></td>
 															
 															
 															
@@ -277,7 +274,7 @@
 													value="Complete Production">
 													<a href="${pageContext.request.contextPath}/insertProductionPlanWithoutCompletProd">
 													<input type="button" class="btn btn-primary" value="P 2 Production"></a>
-													<a href="${pageContext.request.contextPath}/showVariencePdf"
+													<a href="${pageContext.request.contextPath}/showVariencePdf1"
 													target="_blank"><input type="button" class="btn btn-primary" value="PDF"></a> 
 													 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" >
 									</div>
