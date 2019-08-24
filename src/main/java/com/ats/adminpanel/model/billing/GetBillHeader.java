@@ -18,8 +18,19 @@ public class GetBillHeader {
     private Integer status;
     private String remark;
     private Integer delStatus;
+    private String billDateTime;
+    
+    
 
-    public Integer getBillNo() {
+    public String getBillDateTime() {
+		return billDateTime;
+	}
+
+	public void setBillDateTime(String billDateTime) {
+		this.billDateTime = billDateTime;
+	}
+
+	public Integer getBillNo() {
         return billNo;
     }
 
@@ -139,9 +150,9 @@ public class GetBillHeader {
 		return "GetBillHeader [billNo=" + billNo + ", frName=" + frName + ", time=" + time + ", taxApplicable="
 				+ taxApplicable + ", invoiceNo=" + invoiceNo + ", billDate=" + billDate + ", frId=" + frId + ", frCode="
 				+ frCode + ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax
-				+ ", status=" + status + ", remark=" + remark + ", delStatus=" + delStatus + "]";
+				+ ", status=" + status + ", remark=" + remark + ", delStatus=" + delStatus + ", billDateTime="
+				+ billDateTime + "]";
 	}
 
-
-   
+	
 }
