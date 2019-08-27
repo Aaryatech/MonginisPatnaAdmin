@@ -247,11 +247,11 @@ public class SalesReportController {
 			rowData.add("Franchisee Name");
 			rowData.add("Franchisee Gst No");
 
-			rowData.add("cgst %");
-			rowData.add("sgst %");
+			rowData.add("CGST %");
+			rowData.add("SGST %");
 
-			rowData.add("cgst Amt");
-			rowData.add("sgst Amt");
+			rowData.add("CGST Amt");
+			rowData.add("SGST Amt");
 			rowData.add("Taxable Amt");
 			rowData.add("Total Tax");
 			rowData.add("Grand Total");
@@ -259,16 +259,22 @@ public class SalesReportController {
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
-
+            float cgstAmt=0.0f;  float sgstAmt=0.0f;float taxableAmt=0.0f;float taxAmt=0.0f;float grandAmt=0.0f;float billAmt=0.0f;
 			for (int i = 0; i < taxReportList.size(); i++) {
 				float finalTotal = 0;
 				for (int j = 0; j < taxReportList.size(); j++) {
 
 					if (taxReportList.get(j).getBillNo() == taxReportList.get(i).getBillNo()) {
-						finalTotal = finalTotal + taxReportList.get(j).getGrandTotal();
+						finalTotal = finalTotal + (roundUp(taxReportList.get(j).getTaxableAmt())+roundUp(taxReportList.get(j).getCgstAmt())+roundUp(taxReportList.get(j).getSgstAmt()));
 					}
 				}
-
+				cgstAmt=cgstAmt+roundUp(taxReportList.get(i).getCgstAmt());
+				sgstAmt=sgstAmt+roundUp(taxReportList.get(i).getSgstAmt());
+				taxableAmt=taxableAmt+roundUp(taxReportList.get(i).getTaxableAmt());
+				taxAmt=taxAmt+(roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()));
+				grandAmt=grandAmt+(roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()));
+				billAmt=billAmt+roundUp(finalTotal);
+				
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add((i + 1) + "");
@@ -281,17 +287,38 @@ public class SalesReportController {
 
 				rowData.add("" + taxReportList.get(i).getCgstPer());
 				rowData.add("" + taxReportList.get(i).getSgstPer());
-				rowData.add("" + taxReportList.get(i).getCgstAmt());
-				rowData.add("" + taxReportList.get(i).getSgstAmt());
-				rowData.add("" + taxReportList.get(i).getTaxableAmt());
-				rowData.add("" + taxReportList.get(i).getTotalTax());
-				rowData.add("" + taxReportList.get(i).getGrandTotal());
+				rowData.add("" + roundUp(taxReportList.get(i).getCgstAmt()));
+				rowData.add("" + roundUp(taxReportList.get(i).getSgstAmt()));
+				rowData.add("" + roundUp(taxReportList.get(i).getTaxableAmt()));
+				rowData.add((roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+"");
+				rowData.add((roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+"");
 
-				rowData.add("" + finalTotal);
+				rowData.add("" + roundUp(finalTotal));
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+
+			rowData.add("");
+			rowData.add("Total");
+
+			rowData.add(""+roundUp(cgstAmt));
+			rowData.add(""+roundUp(sgstAmt));
+			rowData.add(""+roundUp(taxableAmt));
+			rowData.add(""+roundUp(taxAmt));
+			rowData.add(""+roundUp(grandAmt));
+			rowData.add(""+roundUp(billAmt));
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
 			session.setAttribute("excelName", "Tax_Repot1");

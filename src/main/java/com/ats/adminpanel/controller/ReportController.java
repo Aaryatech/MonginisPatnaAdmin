@@ -205,18 +205,17 @@ public class ReportController {
 			List<String> rowData = new ArrayList<String>();
 
 			rowData.add("Sr. No.");
-			rowData.add("GSTIN/UIN of Recipient");
-			rowData.add("Receiver Name");
-			rowData.add("Blank");
-			rowData.add("Blank");
-			rowData.add("Credit Note Number");
-			rowData.add("Credit Note Issue date");
-			rowData.add("Document Type");
-			rowData.add("Place Of Supply");
-			rowData.add("Credit Note Full Value");
-			rowData.add("Applicable % of Tax Rate");
-			rowData.add("Full Return Value");
-			rowData.add("Taxable Value");
+			rowData.add("CRN No");
+			rowData.add("CRN Date");
+			rowData.add("Party Name");
+			rowData.add("GST No");
+			rowData.add("Tax Rate");
+			rowData.add("Crn Qty");
+			rowData.add("Taxable Amt");
+			rowData.add("Cgst Amt");
+			rowData.add("Sgst Amt");
+			rowData.add("Crn Amt");
+			rowData.add("Crn Total Amt");
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -224,39 +223,40 @@ public class ReportController {
 			float crnTaxable = 0.0f;
 			float cgstAmt = 0.0f;
 			float sgstAmt = 0.0f;
-			float crnAmt = 0.0f;
+			float crnAmt = 0.0f;float crnTotAmt = 0.0f;
 
 			for (int i = 0; i < crNoteRegItemList.size(); i++) {
 				float crnTotal = 0.0f;
 				for (int j = 0; j < crNoteRegItemList.size(); j++) {
 					if (crNoteRegItemList.get(i).getCrnId() == crNoteRegItemList.get(j).getCrnId()) {
-						crnTotal = crnTotal + roundUp(crNoteRegItemList.get(j).getCrnAmt());
+						crnTotal = crnTotal + (crNoteRegItemList.get(j).getCrnTaxable()+crNoteRegItemList.get(j).getCgstAmt()+crNoteRegItemList.get(j).getSgstAmt());
 					}
 				}
 
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
-				rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
-				rowData.add("" + crNoteRegItemList.get(i).getFrName());
-				rowData.add(" ");
-				rowData.add(" ");
-				rowData.add("" + crNoteRegItemList.get(i).getFrCode());
+				rowData.add("" + crNoteRegItemList.get(i).getCrnId());
 				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
-				rowData.add("Credit Note");
-				rowData.add("Bihar");
+
+				rowData.add("" + crNoteRegItemList.get(i).getFrName());
+				rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
+				rowData.add("" + (crNoteRegItemList.get(i).getCgstPer() + crNoteRegItemList.get(i).getSgstPer()));
+				rowData.add(""+crNoteRegItemList.get(i).getCrnQty());
+				rowData.add(""+roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
+				rowData.add(""+roundUp(crNoteRegItemList.get(i).getCgstAmt()));
+				rowData.add(""+roundUp(crNoteRegItemList.get(i).getSgstAmt()));
+				rowData.add(roundUp(crNoteRegItemList.get(i).getCrnTaxable())+roundUp(crNoteRegItemList.get(i).getCgstAmt())+roundUp(crNoteRegItemList.get(i).getSgstAmt())+"");
+
 				rowData.add("" + roundUp(crnTotal));
 
-				rowData.add("" + (crNoteRegItemList.get(i).getCgstPer() + crNoteRegItemList.get(i).getSgstPer()));
-				rowData.add("" + (crNoteRegItemList.get(i).getCgstAmt() + crNoteRegItemList.get(i).getSgstAmt()));
-				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
-
 				crnQty = crnQty + crNoteRegItemList.get(i).getCrnQty();
-				crnTaxable = crnTaxable + crNoteRegItemList.get(i).getCrnTaxable();
-				cgstAmt = cgstAmt + crNoteRegItemList.get(i).getCgstAmt();
-				sgstAmt = sgstAmt + crNoteRegItemList.get(i).getSgstAmt();
-				crnAmt = crnAmt + crNoteRegItemList.get(i).getCrnAmt();
-
+				crnTaxable = crnTaxable + roundUp(crNoteRegItemList.get(i).getCrnTaxable());
+				cgstAmt = cgstAmt + roundUp(crNoteRegItemList.get(i).getCgstAmt());
+				sgstAmt = sgstAmt + roundUp(crNoteRegItemList.get(i).getSgstAmt());
+				crnAmt = crnAmt + (roundUp(crNoteRegItemList.get(i).getCrnTaxable())+roundUp(crNoteRegItemList.get(i).getCgstAmt())+roundUp(crNoteRegItemList.get(i).getSgstAmt()));
+				crnTotAmt=crnTotAmt+roundUp(crnTotal);
+				
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
@@ -269,17 +269,13 @@ public class ReportController {
 			rowData.add("");
 			rowData.add("");
 			rowData.add("");
-			rowData.add("");
-			rowData.add("");
-			rowData.add("");
-
-			rowData.add("" + Math.round(crnAmt));
-			rowData.add("");
-			rowData.add("");
-
-			rowData.add("" + roundUp(crnTaxable));
-
-			rowData.add("");
+			
+			rowData.add(""+crnQty);
+			rowData.add(""+roundUp(crnTaxable));
+			rowData.add(""+roundUp(cgstAmt));
+			rowData.add(""+roundUp(sgstAmt));
+			rowData.add(""+roundUp(crnAmt));
+			rowData.add(""+roundUp(crnTotAmt));
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
