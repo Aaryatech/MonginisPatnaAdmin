@@ -60,7 +60,7 @@
 
 								<div class="table-responsive" style="border: 0">
 									<table width="100%" class="table table-advance" id="table1">
-										<thead>
+										<thead style="background-color: #f3b5db;">
 											<tr>
 												<th width="17" style="width: 18px">Sr No</th>
 												<th width="100" align="left">Current Stock</th>

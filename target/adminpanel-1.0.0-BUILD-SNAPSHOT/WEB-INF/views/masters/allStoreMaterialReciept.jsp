@@ -31,7 +31,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>show All Store Material Reciept
+					<i class="fa fa-file-o"></i>Show All Store Material Reciept
 				</h1>
 				
 				<!-- <h4>Bill for franchises</h4> -->
@@ -44,7 +44,7 @@
 		<div class="box" id="pending">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>show All Store Material Reciept
+					<i class="fa fa-bars"></i>Show All Store Material Reciept
 					
 				</h3>
 				<div class="box-tool">
@@ -55,10 +55,10 @@
 				<div class=" box-content">
 					<div class="row">
 					<div class="clearfix"></div>
-						<div class=" table-responsive">
-							<table class="table table-advance "
-								style="width: 100%" id="table_grid">
-								<thead>
+						<div class="table-responsive">
+							<table class="table table-advance"
+								 id="table_grid">
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										
@@ -212,7 +212,7 @@
 						 <input type="hidden" name="flag" id="flag" value="${flag}">
 							<table class="table table-advance "
 								style="width: 100%" id="table_grid1">
-								<thead>
+								<thead  style="background-color: #f3b5db;">
 								
 									<tr>
 										<th>Sr.No.</th>

@@ -9,9 +9,7 @@
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 <body>
-	<c:url var="gateEntryList" value="/gateEntryList"></c:url>
-	<c:url var="withPoRef" value="/withPoRef"></c:url>
-	<c:url var="withPoRefDate" value="/withPoRefDate"></c:url>
+	<c:url var="varianceDetailedCalculation" value="/varianceDetailedCalculation"></c:url>
 
 	 
 
@@ -34,12 +32,12 @@
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
 			<div class="page-title">
-				<div>
+			<!-- 	<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Variance Detailed
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -58,12 +56,12 @@
 						<div class="box-content">
 
 							<form id="completproduction"
-								action="${pageContext.request.contextPath}/updateOrderQtyinPlan"
+								action="${pageContext.request.contextPath}/varianceDetailedCalculation"
 								method="post">
 								<div class="box-content">
-									<div class="col-md-2">Production Date</div>
+								<div class="col-md-2">Production Date</div>
 
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" id="productionDate" name="productionDate"
 											value="${postProdPlanHeader.productionDate}"
 											class="form-control" readonly>
@@ -71,28 +69,28 @@
 
 
 
-								</div>
-								<br>
+								<!-- </div> -->
+								
 
 								
 
-								<div class="box-content">
+								<!-- <div class="box-content">
 
 
 									<div class="col-md-2">Time Slot</div>
-									<div class="col-md-3">
-										<input class="form-control" id="time_slot" size="16"
-											type="text" name="time_slot" value="${postProdPlanHeader.timeSlot}"
-											readonly />
-									</div>
+									<div class="col-md-3"> -->
+										<input class="form-control"  id="time_slot" size="16"
+											type="hidden" name="time_slot" value="${postProdPlanHeader.timeSlot}"
+											 />
+									<!-- </div>
 
 								</div>
-								<br>
+								<br> -->
 
-								<div class="box-content">
+							<!-- 	<div class="box-content"> -->
 
-									<div class="col-md-2">Cat Id</div>
-									<div class="col-md-3">
+									<div class="col-md-1">Category</div>
+									<div class="col-md-2">
 									<c:forEach items="${categoryList}" var="categoryList">
 									 	<c:choose>
 									 		<c:when test="${postProdPlanHeader.itemGrp1==categoryList.catId}">
@@ -109,15 +107,90 @@
 											class="form-control" readonly>
 
 									</div>
-								</div>
-								<br>
+								<!-- </div>
+								
+								
+								<div class="box-content">  -->
+								<div class="col-md-1">Menu :</div>
+									<div class="col-md-4">
+									
+									<select name="menu_id[]" id="menu_id" class="form-control chosen" tabindex="6" multiple="multiple" data-placeholder="Select Menu" >
+											 <option  value="0">All</option> 
+											<c:forEach items="${menuList}" var="menuList"> 
+												<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"></c:out> </option>
+											 </c:forEach>
+										</select>
+									 
+									</div>
+									</div>
+									<br><br>
 
-
-
-
-								<div class=" box-content">
-									<div class="row">
-										<div class="col-md-12 table-responsive">
+								<div class="box-content"> 
+								<div class="col-md-2">Select Franchisee </div>
+									<div class="col-md-4">
+									
+									<select name="fr_id[]" id="fr_id" class="form-control chosen" tabindex="6" multiple="multiple" data-placeholder="Select Franchisee" >
+											 <option  value="0">All</option> 
+											<c:forEach items="${allFrIdNameList}" var="allFrIdNameList"> 
+												<option value="${allFrIdNameList.frId}"><c:out value="${allFrIdNameList.frName}"></c:out> </option>
+											 </c:forEach>
+										</select>
+									 
+									</div>
+										<div class="col-md-1"><b>OR</b></div>
+								<div class="col-md-1"> Route</div>
+									<div class="col-md-4">
+									<select name="rtid[]" id="rtid" class="form-control chosen" multiple="multiple" data-placeholder="Select Route" tabindex="6">
+											 
+											<c:forEach items="${routeList}" var="routeList"> 
+												<option value="${routeList.routeId}"><c:out value="${routeList.routeName}"></c:out> </option>
+											 </c:forEach>
+										</select>
+									</div>
+								
+				 
+							</div><br><br>
+							
+							<div class="form-group">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+										<input type="submit" class="btn btn-primary" value="Calculate Variance" onclick="return ValidationEvent();">  
+ 									</div>
+								</div><br><br>
+									
+									 
+								<div id="table-scroll" class="table-scroll">
+							 
+									<!-- <div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2" class="main-table">
+											<thead>
+												<tr class="bgpink">
+														<th class="col-md-1">Sr No</th>
+														<th class="col-md-2">Item Name</th>
+														<th class="col-md-1">Current Closing</th>
+														<th class="col-md-1">plan Qty</th>
+														<th class="col-md-1">production Qty</th>
+														<th class="col-md-1">Order Qty</th>
+														<th class="col-md-1">Rejected Qty</th> 
+												</tr>
+												</thead>
+												</table>
+									
+									</div> -->
+									<%-- <div class="table-wrap">
+									
+										<table id="table1" class="table table-advance">
+											<thead>
+												<tr class="bgpink">
+														<th class="col-md-1">Sr No</th>
+														<th class="col-md-2">Item Name</th>
+														<th class="col-md-1">Current Closing</th>
+														<th class="col-md-1">plan Qty</th>
+														<th class="col-md-1">production Qty</th>
+														<th class="col-md-1">Order Qty</th>
+														<th class="col-md-1">Rejected Qty</th> 
+												</tr>
+												</thead>
+									<!-- 	<div class="col-md-12 table-responsive">
 											<table class="table table-bordered table-striped fill-head "
 												style="width: 100%" id="table_grid">
 												<thead>
@@ -128,13 +201,12 @@
 														<th>plan Qty</th>
 														<th>production Qty</th>
 														<th>Order Qty</th>
-														<th>Rejected Qty</th>
-														<th>Remaining Production</th>
+														<th>Rejected Qty</th> 
 														
 
 
 													</tr>
-												</thead>
+												</thead> -->
 												<tbody>
 													<c:set var="srNo" value="0" />
 													<c:forEach items="${postProdPlanHeaderDetailed}" var="postProdPlanHeaderDetailed"
@@ -156,60 +228,24 @@
 															<td><c:out value="${postProdPlanHeaderDetailed.planQty}" /></td>
 															<td><c:out value="${postProdPlanHeaderDetailed.productionQty}" /></td>
 															<td><c:out value="${postProdPlanHeaderDetailed.orderQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.rejectedQty}" /></td>
-															<td><c:out value="${postProdPlanHeaderDetailed.int4}" /></td>
+															<td><c:out value="${postProdPlanHeaderDetailed.rejectedQty}" /></td> 
 														</tr>
 													</c:forEach>
 													
-													
-													
-													
-										
-													<c:forEach items="${getVarianceorderlistforsort}" var="getVarianceorderlistforsort"
-														varStatus="count">
-
-
-														<tr>
-															<td><c:out value="${srNo+1}" /></td>
-															<c:set var="srNo" value="${srNo+1}" />
-															<td><c:out value="${getVarianceorderlistforsort.itemName}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${0}" /></td>
-															<td><c:out value="${getVarianceorderlistforsort.orderQty}" /></td>
-															
-															
-
-
-														</tr>
-													</c:forEach>
-
-
+													 
 
 
 												</tbody>
 											</table>
-										</div>
-									</div>
+										
+									</div> --%>
 								</div>
 
 
 
 								
 									
-									<div class="row">
-									<div class="col-md-12" style="text-align: center">
-
-												<input type="submit" class="btn btn-primary"
-													value="complet Production">
-													<a href="${pageContext.request.contextPath}/insertProductionPlanWithoutCompletProd">
-													<input type="button" class="btn btn-primary" value="P 2 Production"></a>
-													<a href="${pageContext.request.contextPath}/showVariencePdf"
-													target="_blank"><input type="button" class="btn btn-primary" value="PDF"></a> 
-									</div>
-									</div>
+									 
 													
 											 
 											</form>
@@ -301,8 +337,32 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-
-
-
+<script type="text/javascript"> 
+		function ValidationEvent() { 
+			 //alert("ala");
+		var fr_id = $("#fr_id").val();
+		var rtid = $("#rtid").val();
+		var menu_id = $("#menu_id").val();
+		//alert("fr_id"+fr_id);
+		//alert("rtid"+rtid);
+			if (fr_id ==null && rtid == null ) 
+			{ 
+				alert("Select Franchise Or Route");
+				return false;
+			} 
+			else  if(menu_id == null)
+				{
+				alert("Select Menu");
+				return false;
+				}
+			else
+			{
+				return true;
+				
+			}
+		}
+		
+		
+		</script>
 </body>
 </html>

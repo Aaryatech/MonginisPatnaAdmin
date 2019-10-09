@@ -68,7 +68,7 @@
 
 
 											<div class="box-content">
-												<form action="getItemsbyCatIdProcess" name="validation-from"
+												<form action="${pageContext.request.contextPath}/getItemsbyCatIdProcess" name="validation-from"
 													id="validation-from" method="get">
 
 

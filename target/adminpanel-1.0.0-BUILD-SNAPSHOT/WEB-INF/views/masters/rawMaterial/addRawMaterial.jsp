@@ -191,7 +191,7 @@
 						
 						<label class="col-sm-3 col-lg-2 control-label">RM GST % </label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<select name="rm_tax_id" class="form-control">
+							<select name="rm_tax_id" class="form-control" id="rm_tax_id" onchange="onChangeGst(this.value)">
 								<option value="">Select RM GST</option>
 								<c:forEach items="${rmTaxList}" var="rmTaxList"
 													varStatus="count">
@@ -223,7 +223,7 @@
 					<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
 
 						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" name="rm_clo_qty" class="form-control" placeholder="RM HSNCD" data-rule-required="true"data-rule-number="true"  />
+							<input type="text" name="rm_clo_qty" id="hsncode" readonly class="form-control" placeholder="RM HSNCD" data-rule-required="true" />
 						</div>
 						<label class="col-sm-3 col-lg-2 control-label">RM Rejected
 							Qty </label>
@@ -417,6 +417,8 @@ function validation() {
 	var bmsRolQty=parseFloat($("#rm_rol_qty").val());
 
 	var isValid = true;
+	  if(bmsMinQty!=0 || bmsMaxQty!=0 || bmsRolQty!=0){
+
 	if (bmsMinQty>=bmsMaxQty) { 
 		isValid = false;
 		alert("BMS maximum qty is always greater than minimum Qty ");
@@ -427,7 +429,7 @@ function validation() {
 		isValid = false;
 		alert("BMS reorder level qty is between minimum qty & maximum qty");
 	}
-	
+	  }
 	return isValid;
 }
 function validationForStore() {
@@ -437,6 +439,8 @@ function validationForStore() {
 	var storeRecQty=parseFloat($("#rm_recd_qty").val());
 
 	var isValid = true;
+    if(storeIssueQty!=0 || storeOpQty!=0 || storeRecQty!=0){
+
 	if (storeIssueQty>=storeOpQty) { 
 		isValid = false;
 		alert("Store maximum qty is always greater than minimum Qty");
@@ -447,13 +451,19 @@ function validationForStore() {
 		isValid = false;
 		alert("Store reorder level qty is between minimum qty & maximum qty");
 	}
-	
+    }
 	return isValid;
 }
 function validate() {
     return validation() && validationForStore();
 }
 </script> 
+<script type="text/javascript">
+function onChangeGst(id)
+{
+	document.getElementById("hsncode").value=$('#rm_tax_id option:selected').text();
+}
+</script>
 
 </body>
 </html>

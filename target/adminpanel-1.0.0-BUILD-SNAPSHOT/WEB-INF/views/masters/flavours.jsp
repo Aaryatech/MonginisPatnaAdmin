@@ -135,10 +135,11 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2"  class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-											<th width="17" style="width: 18px">#</th>
+									<th width="17" style="width: 18px">SELECT</th>
+									<th width="17" style="width: 18px">#</th>
 									<th width="348" align="left">Name</th>
 									<th width="322" align="left">Add on rate</th>
 									<th width="290" align="left">Type</th>
@@ -153,7 +154,8 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-											<th width="17" style="width: 18px">#</th>
+									<th width="17" style="width: 18px">SELECT</th>
+									<th width="17" style="width: 18px">#</th>
 									<th width="348" align="left">Name</th>
 									<th width="322" align="left">Add on rate</th>
 									<th width="290" align="left">Type</th>
@@ -163,6 +165,8 @@
 												<tbody>
 					<c:forEach items="${flavoursList}" var="flavoursList" varStatus="count">
 									<tr>
+			<td><input type="checkbox" class="chk" name="select_to_print" id="${flavoursList.spfId}"	value="${flavoursList.spfId}"/></td>
+									
 										<td><c:out value="${count.index+1}" /></td>
 										<td align="left"><c:out value="${flavoursList.spfName}" /></td>
 										<td align="left"><c:out
@@ -198,7 +202,10 @@
 					</div>
 				</div>
 				
-						</div>
+						</div><div class="form-group">				
+								<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" /></div>
 
 				<%-- <div class="box-content">
 <jsp:include page="/WEB-INF/views/include/tableSearch.jsp"></jsp:include>
@@ -319,6 +326,26 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript">
+function deleteById()
+{
 
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Flavours")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteFlavour/'+checkedVals;
+
+	}
+
+}
+</script>
 </body>
 </html>

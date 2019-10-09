@@ -7,10 +7,9 @@
 <body onload="calTotalGstOnLoad()">
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	
-	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	
 	<c:url var="getGroup2ByCatId" value="/getGroup2ByCatId" />
-
+    <c:url var="taxHsnForAddNewItemOnSubCatChange" value="/taxHsnForAddNewItemOnSubCatChange"></c:url>
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -117,7 +116,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Group2</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<select data-placeholder="Select Group" name="item_grp2"
+										<select data-placeholder="Select Group" name="item_grp2" onchange="callData(this.value)"
 											class="form-control chosen-select" tabindex="-1"
 											id="item_grp2" data-rule-required="true">
 											<option selected value="${selectedItemId}"><c:out value="${selectedItem}"></c:out></option>
@@ -170,42 +169,22 @@
 											class="form-control" data-rule-required="true" data-rule-number="true" />
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Local
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate1" id="item_rate1"
-											value="${item.itemRate1}" placeholder="Item Rate1"
-											class="form-control" data-rule-required="true" data-rule-number="true" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Out Station
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate2" id="item_rate2"
-											value="${item.itemRate2}" placeholder="Item Rate2"
-											class="form-control" data-rule-required="true" data-rule-number="true"/>
-									</div>
-								</div>
-
-                                 <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Special
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate3" id="item_rate3"
-											value="${item.itemRate3}" placeholder="Item Rate3"
-											class="form-control" data-rule-required="true" data-rule-number="true"/>
-									</div>
-								</div>
 								
+								 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="${(item.itemMrp1-item.itemRate1)/(item.itemRate1/100)}" onchange="calMrp()"/>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Local
 										Mrp</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp1" id="item_mrp1"
 											value="${item.itemMrp1}" placeholder="Item Mrp1"
-											class="form-control" data-rule-required="true" data-rule-number="true" />
+											class="form-control" data-rule-required="true" data-rule-number="true" onchange="calMrp()"/>
 									</div>
 								</div>
 
@@ -215,7 +194,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp2" id="item_mrp2"
 											value="${item.itemMrp2}" placeholder="Item Mrp2"
-											class="form-control" data-rule-required="true" data-rule-number="true"/>
+											class="form-control" data-rule-required="true" data-rule-number="true" onchange="calMrp()"/>
 									</div>
 								</div>
                                 <div class="form-group">
@@ -224,10 +203,37 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp3" id="item_mrp3"
 											value="${item.itemMrp3}" placeholder="Item Mrp3"
-											class="form-control" data-rule-required="true" data-rule-number="true"/>
+											class="form-control" data-rule-required="true" data-rule-number="true" onchange="calMrp()"/>
+									</div>
+								</div>
+                               <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Local
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate1" id="item_rate1"
+											value="${item.itemRate1}" placeholder="Item Rate1"
+											class="form-control" data-rule-required="true" data-rule-number="true" readonly/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Out Station
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate2" id="item_rate2"
+											value="${item.itemRate2}" placeholder="Item Rate2"
+											class="form-control" data-rule-required="true" data-rule-number="true" readonly/>
 									</div>
 								</div>
 
+                                 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Special
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate3" id="item_rate3"
+											value="${item.itemRate3}" placeholder="Item Rate3"
+											class="form-control" data-rule-required="true" data-rule-number="true" />
+									</div>
+								</div>
 <div> <input type="hidden" name="prevImage" value="${item.itemImage}"></div>
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Product Image</label>
@@ -260,7 +266,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">IGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax3" id="item_tax3"
+										<input type="text" name="item_tax3" id="item_tax3" readonly
 											value="${item.itemTax3}" placeholder="IGST"
 											class="form-control" data-rule-required="true" data-rule-number="true"value="0.0"onchange="calTotalGst()"/>
 									</div>
@@ -268,7 +274,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">CGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax2" id="item_tax2"
+										<input type="text" name="item_tax2" id="item_tax2" readonly
 											value="${item.itemTax2}" placeholder="CGST"
 											class="form-control" data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
 									</div>
@@ -277,7 +283,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">SGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_tax1" id="item_tax1"
+										<input type="text" name="item_tax1" id="item_tax1" readonly
 											value="${item.itemTax1}" placeholder="SGST"
 											class="form-control" data-rule-required="true" data-rule-number="true" value="0.0" />
 									</div>
@@ -368,7 +374,7 @@
 								</select>
 									</div>
 								</div>
-								
+								<%-- 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										SortId</label>
@@ -377,7 +383,7 @@
 											value="${item.itemSortId}" placeholder="Item Sort Id"
 											class="form-control" data-rule-required="true" data-rule-number="true"/>
 									</div>
-								</div>
+								</div> --%>
 								
 								<%-- <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">GRN 2
@@ -395,7 +401,7 @@
 								
 								
 								
-								
+								<%-- 
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">GRN Type</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -466,7 +472,7 @@
 												</c:choose>
 
 											</div>
-										</div>
+										</div> --%>
 										
 										 <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item Shelf Life</label>
@@ -585,6 +591,58 @@ $(document).ready(function() {
 				});
 			});
 });
+
+
+function callData(subCatId){
+	
+	$.getJSON('${taxHsnForAddNewItemOnSubCatChange}', {
+		subCatId : subCatId,
+		ajax : 'true'
+	}, function(data) {
+		//alert(data);
+		//$('#hsn_code').value=data.hsnCode;
+		if(data.taxHsnId==0){
+			//alert("In IF")
+			var x="0";
+			//document.getElementById("hsn_code").value=x
+				document.getElementById("item_tax1").setAttribute('value', x);
+
+			document.getElementById("item_tax2").setAttribute('value',
+					x);
+			document.getElementById("item_tax3").setAttribute('value',
+					x);
+			
+			// document.getElementById("hsn_code").readOnly = true; 
+			 document.getElementById("item_tax1").readOnly = true; 
+			document.getElementById("item_tax2").readOnly = true; 
+			 document.getElementById("item_tax3").readOnly = true; 
+			 calTotalGst();
+		}else{
+			//alert("In Else");
+			
+			//
+			
+			// var x=data.hsnCode;
+				//document.getElementById("hsn_code").value=x;
+				var sgst=data.sgstPer;
+				var cgst=data.cgstPer;
+				var igst=data.igstPer;
+				document.getElementById("item_tax1").setAttribute('value', sgst);
+
+				document.getElementById("item_tax2").setAttribute('value',
+						cgst);
+				document.getElementById("item_tax3").setAttribute('value',
+						igst);
+				
+				// document.getElementById("hsn_code").readOnly = true; 
+				 document.getElementById("item_tax1").readOnly = true; 
+				 document.getElementById("item_tax2").readOnly = true; 
+				 document.getElementById("item_tax3").readOnly = true; 
+				 calTotalGst(); 
+		}
+	});
+	
+}
 </script>
 
 <script>
@@ -613,5 +671,22 @@ function calTotalGstOnLoad() {
 		.setAttribute('value', totalGst);
 }
 </script>
+<script type="text/javascript">
+function calMrp()
+{
+	var mrp1 = parseFloat($("#item_mrp1").val());
+	var mrp2 = parseFloat($("#item_mrp2").val());
+	var mrp3 = parseFloat($("#item_mrp3").val());
+	var margin= parseFloat($("#margin").val());
+	
+	var calRate1=((mrp1*100)/(100+margin));      
+	var calRate2=((mrp2*100)/(100+margin));  
+	var calRate3=((mrp3*100)/(100+margin));  
+	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2));
+	document.getElementById("item_rate2").setAttribute('value',  (calRate2).toFixed(2));
+	document.getElementById("item_rate3").setAttribute('value',  (calRate3).toFixed(2));
+}
+</script>
+
 </body>
 </html>

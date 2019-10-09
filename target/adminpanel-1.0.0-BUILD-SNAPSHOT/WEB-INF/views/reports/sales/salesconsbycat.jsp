@@ -13,6 +13,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getBillList" value="/getSaleReportRoyConsoByCat"></c:url>
+	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
 
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse">
@@ -34,7 +35,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Royalty Report By Category
+					<i class="fa fa-file-o"></i>Item-wise Royalty Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -56,7 +57,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Sales Royalty by Category
+					<i class="fa fa-bars"></i>Item-wise Royalty Report
 				</h3>
 
 			</div>
@@ -100,7 +101,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -112,14 +115,14 @@
 						<div class="col-sm-6 col-lg-4">
 
 							<select data-placeholder="Choose Franchisee"
-								class="form-control chosen" multiple="multiple" tabindex="6"
+								class="form-control chosen" multiple="multiple" tabindex="-1"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -132,25 +135,26 @@
 
 					<div class="form-group">
 
-						<label class="col-sm-3 col-lg-2 control-label">Select
-							Category</label>
-						<div class="col-sm-3 col-lg-4">
+						<div class="col-md-2">Select Category</div>
+						<div class="col-md-4" style="text-align: left;">
+							<select data-placeholder="Select Group"
+								class="form-control chosen" name="item_grp1" tabindex="-1"
+								id="item_grp1" data-rule-required="true"
+								onchange="setCatOptions(this.value)" >
+								
 
-							<select data-placeholder="Choose Category"
-								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectCat" name="selectCat" onchange="disableRoute()">
-
-								<option value="-1"><c:out value="All"/></option>
-
-								<c:forEach items="${catList}" var="cat" varStatus="count">
-									<option value="${cat.catId}"><c:out value="${cat.catName}"/></option>
+								<c:forEach items="${catList}" var="mCategoryList">
+									<option value="${mCategoryList.catId}"><c:out
+											value="${mCategoryList.catName}"></c:out></option>
 								</c:forEach>
+
+
 							</select>
 						</div>
 
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Report</button>
-						<button class="btn search_btn" onclick="showChart()">Graph</button>
+						<!-- <button class="btn search_btn"  onclick="showChart()">Graph</button> -->
 
 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
@@ -193,7 +197,7 @@
 							<div class="col-md-12 table-responsive">
 								<table class="table table-bordered table-striped fill-head "
 									style="width: 100%" id="table_grid">
-									<thead>
+									<thead style="background-color: #f3b5db;">
 										<tr>
 											<th>Sr.No.</th>
 											<th>Item Name</th>
@@ -205,12 +209,24 @@
 											<th>GVN Value</th>
 											<th>Net Qty</th>
 											<th>Net Value</th>
+											<th>Royalty %</th>
+											<th>Royalty Amt</th>
 										</tr>
 									</thead>
 									<tbody>
 
 									</tbody>
 								</table>
+							</div>
+							<div class="form-group" style="display: none;" id="range">
+
+
+
+								<div class="col-sm-3  controls">
+									<input type="button" id="expExcel" class="btn btn-primary"
+										value="EXPORT TO Excel" onclick="exportToExcel();"
+										disabled="disabled">
+								</div>
 							</div>
 						</div>
 
@@ -244,7 +260,7 @@
 				var routeId = $("#selectRoute").val();
 				var isGraph = 0;
 
-				var selectedCat = $("#selectCat").val();
+				var selectedCat = $("#item_grp1").val();
 
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
@@ -270,8 +286,12 @@
 									$('#table_grid td').remove();
 									$('#loader').hide();
 
+									var royPer = ${royPer};
+									//alert(royPer);
+
 									if (data == "") {
 										alert("No records found !!");
+										document.getElementById("expExcel").disabled = true;
 
 									}
 
@@ -279,6 +299,10 @@
 											.each(
 													data.categoryList,
 													function(key, cat) {
+														document
+																.getElementById("expExcel").disabled = false;
+														document
+																.getElementById('range').style.display = 'block';
 
 														var tr = $('<tr></tr>');
 														tr
@@ -303,6 +327,16 @@
 																		.html(
 																				""));
 
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				""));
+														tr
+																.append($(
+																		'<td></td>')
+																		.html(
+																				""));
 														tr
 																.append($(
 																		'<td></td>')
@@ -370,7 +404,8 @@
 																						.append($(
 																								'<td></td>')
 																								.html(
-																										report.tBillTaxableAmt));
+																										(report.tBillTaxableAmt)
+																												.toFixed(2)));
 
 																				tr
 																						.append($(
@@ -414,6 +449,24 @@
 																								.html(
 																										netValue));
 
+																				tr
+																						.append($(
+																								'<td></td>')
+																								.html(
+																										royPer));
+
+																				rAmt = netValue
+																						* royPer
+																						/ 100;
+																				rAmt = rAmt
+																						.toFixed(2);
+
+																				tr
+																						.append($(
+																								'<td></td>')
+																								.html(
+																										rAmt));
+
 																				$(
 																						'#table_grid tbody')
 																						.append(
@@ -432,8 +485,6 @@
 
 		<script type="text/javascript">
 			function showChart() {
-
-				alert("Hi");
 
 				$("#PieChart_div").empty();
 				$("#chart_div").empty();
@@ -469,7 +520,7 @@
 								function(data) {
 
 									$('#loader').hide();
-									alert(data);
+
 									if (data == "") {
 										alert("No records found !!");
 
@@ -712,10 +763,53 @@
 			function genPdf() {
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
+				var selectedFr = $("#selectFr").val();
+				var routeId = $("#selectRoute").val();
+				var isGraph = 0;
+				var selectedCat = $("#selectCat").val();
 
-				window.open('pdfForReport?url=showSaleRoyaltyByCatPdf/'
-						+ from_date + '/' + to_date);
+				var selectedCat = $("#selectCat").val();
 
+				window
+						.open('pdfForReport?url=pdf/getSaleReportRoyConsoByCatPdf/'
+								+ from_date
+								+ '/'
+								+ to_date
+								+ '/'
+								+ selectedFr
+								+ '/' + routeId + '/' + selectedCat);
+
+			}
+			function exportToExcel() {
+
+				window.open("${pageContext.request.contextPath}/exportToExcel");
+				document.getElementById("expExcel").disabled = true;
+			}
+		</script>
+		<script type="text/javascript">
+			function setCatOptions(catId) {
+				if (catId == -1) {
+					$.getJSON('${getAllCatByAjax}', {
+						ajax : 'true'
+					}, function(data) {
+						var len = data.length;
+						$('#item_grp1').find('option').remove().end()
+
+						$("#item_grp1").append(
+								$("<option ></option>").attr("value", -1).text(
+										"Select All"));
+
+						for (var i = 0; i < len; i++) {
+
+							$("#item_grp1").append(
+									$("<option selected></option>").attr(
+											"value", data[i].catId).text(
+											data[i].catName));
+						}
+
+						$("#item_grp1").trigger("chosen:updated");
+					});
+				}
 			}
 		</script>
 		<!--basic scripts-->

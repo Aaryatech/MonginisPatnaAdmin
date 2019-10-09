@@ -29,7 +29,7 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-		<div class="page-title">
+		<%-- <div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Franchisee FR Invoice
@@ -47,7 +47,7 @@
 					class="divider"><i class="fa fa-angle-right"></i></span></li>
 				<li class="active">Franchise Bill</li>
 			</ul>
-		</div>
+		</div> --%>
 		<!-- END Breadcrumb -->
 
 		<!-- BEGIN Main Content -->
@@ -104,7 +104,7 @@
 				<div class="row">
 					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Select
-							Route</label>
+							</label>
 						<div class="col-sm-6 col-lg-4 controls">
 							<select data-placeholder="Select Route"
 								class="form-control chosen" name="selectRoute" id="selectRoute"
@@ -118,8 +118,8 @@
 							
 						</div>
 
-						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b> Select
-							Franchisee </label>
+						<label class="col-sm-3 col-lg-1 control-label"><b>OR</b> 
+							 </label>
 						<div class="col-sm-6 col-lg-4">
 
 							<select data-placeholder="Choose Franchisee"
@@ -135,8 +135,8 @@
 							</select>
 
 						</div>
-					</div>
-				</div>
+				<!--	</div>
+				 </div> -->
 
 
 				<%-- <div class="form-group col-md-9">
@@ -157,12 +157,11 @@
 
 				</div> --%>
 
-
+<!-- 
 				<br>
-				<div class="row">
-					<div class="col-md-12" style="text-align: center;">
-						<button class="btn btn-info" onclick="generateNewBill()">Search
-							Bill</button>
+				<div class="row"> -->
+					<div class="col-md-1" >
+						<button class="btn btn-info" onclick="generateNewBill()">Search</button>
 
 
 					</div>
@@ -185,27 +184,27 @@
 
 
 		<div class="box">
-			<div class="box-title">
+			<!-- <div class="box-title">
 				<h3>
 					<i class="fa fa-list-alt"></i>Bill
 				</h3>
 
 			</div>
-
-			<form id="submitBillForm"
+ -->
+			<form id="submitBillForm" 
 				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post">
+				method="post" onsubmit="submitBill.disabled = true; return confirm('Do you want to Generate Bill ?');">
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
-							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead>
+							<table class="table table-bordered table-striped fill-head "  border="1"
+								style="width: 100%" id="table_grid" >
+								<thead style="background-color: #f3b5db; ">
 									<tr>
-										<th>Sr.No.</th>
-										<th>Franchise Name</th>
-										<th>Menu Name</th>
-										<th>Item Name</th>
+										<th>Sr</th>
+										<th>Franchise</th>
+										<th>Menu</th>
+										<th>Item</th>
 										<th>Order Qty</th>
 										<th>Bill Qty</th>
 										<th>Base Rate</th>
@@ -215,6 +214,7 @@
 										<th>CGST Rs</th>
 										<th>IGST Rs</th>
 										<th>Total</th>
+										<th>Exp Date</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -232,9 +232,8 @@
  -->
 							<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
 								target="_blank">PDF</a> --%>
-							<button class="btn btn-info pull-right"
-								style="margin-right: 5px;" onclick="submitBill()">Submit
-								Bill</button>
+							<input type="submit" class="btn btn-info pull-right" id="submitBill"
+								style="margin-right: 5px;" value="Submit"  name="submitBill" disabled="disabled"/>
 						</div>
 					</div>
 				</div>
@@ -244,7 +243,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2017 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -288,12 +287,15 @@
 
 								},
 								function(data) {
+								//	alert("data is"+data);
+									document.getElementById("submitBill").disabled = false;
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
 
 									if (data == "") {
 										alert("No records found !!");
+										document.getElementById("submitBill").disabled = true;
 
 									}
 
@@ -305,34 +307,45 @@
 														if(bill.orderQty>0){
 
 														var index = key + 1;
+													
+															var tr ;
+															tr="<tr>";
+														
 
-														var tr = "<tr>";
-
-														var index = "<td>&nbsp;&nbsp;&nbsp;"
+														var index = "<td>&nbsp;"
 																+ index
 																+ "</td>";
 
-														var frName = "<td>&nbsp;&nbsp;&nbsp;"
+														var frName = "<td>&nbsp;"
 																+ bill.frName
 																+ "</td>";
 
-														var menuTitle = "<td>&nbsp;&nbsp;&nbsp;"
+														var menuTitle = "<td>&nbsp;"
 																+ bill.menuTitle
 																+ "</td>";
 
 														/* var itemId = "<td>&nbsp;&nbsp;&nbsp;"
 																+ bill.itemId
 																+ "</td>"; */
+															
+																
+																if(bill.menuId==67){
+																var itemName = "<td style='background-color:pink' >&nbsp;"
+																		+ bill.itemName
+																		+ "</td>";	
+																}else{
+																	var itemName = "<td  >&nbsp;"
+																		+ bill.itemName
+																		+ "</td>";	
+																	
+																}
+																
 
-														var itemName = "<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-																+ bill.itemName
-																+ "</td>";
-
-														var orderQty = "<td align=center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+														var orderQty = "<td align=center>&nbsp;"
 																+ bill.orderQty
 																+ "</td>";
 
-														 var billQty = "<td align=center><input type=number min=0 max=500 style='width: 5em' class=form-control   onkeyup= updateTotal("
+														 var billQty = "<td align=center><input type=number min=0  style='width: 5em' class=form-control   onkeyup= updateTotal("
 																+ bill.orderId + ","
 																+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id= billQty"+ bill.orderId+ " name=billQty"+bill.orderId+" value = "+ bill.orderQty+ "></td>"; 
 																
@@ -349,7 +362,7 @@
 														//var baseRateAmt=(bill.orderRate*100)/(100+bill.itemTax1+bill.itemTax2);
 														//alert("base Rate Amt ="+baseRateAmt);
 														baseRateAmt=baseRateAmt.toFixed(2);
-														var baseRate = "<td align=center>&nbsp;&nbsp;&nbsp;"
+														var baseRate = "<td align=center>&nbsp;"
 															+ baseRateAmt+ "</td>";
 															
 														/* var orderRate = "<td align=center id=billRate"+bill.orderId+"  value="
@@ -366,7 +379,7 @@
 																
 																taxableAmt=taxableAmt.toFixed(2);
 																//var taxableAmount = "<td align=center"+taxableAmt+">"+"</td>";
-																var taxableAmount ="<td align=center>&nbsp;&nbsp;&nbsp;"
+																var taxableAmount ="<td align=center>&nbsp;"
 																+ taxableAmt+ "</td>";
 																//alert("taxable amt "+taxableAmt);
 																
@@ -402,12 +415,12 @@
 																//var totalTax=sgstRS+cgstRS+igstRS;
 																//alert(totalTax);
 
-																var sgst = "<td align=center>&nbsp;&nbsp;&nbsp;"
+																var sgst = "<td align=center>&nbsp;"
 																	+ sgstRS+ "</td>";
 
-																var cgst = "<td align=center>&nbsp;&nbsp;&nbsp;"
+																var cgst = "<td align=center>&nbsp;"
 																	+ cgstRS+ "</td>";
-																var igst ="<td align=center>&nbsp;&nbsp;&nbsp;"
+																var igst ="<td align=center>&nbsp;"
 																	+ igstRS+ "</td>";
 																var totTaxP;
 																
@@ -419,7 +432,7 @@
 																	totTaxP=t3;
 																}
 																
-																var totTaxPer = "<td align=center>&nbsp;&nbsp;&nbsp;"
+																var totTaxPer = "<td align=center>&nbsp;"
 																	+ totTaxP+ "</td>";
 																
 																	
@@ -430,7 +443,22 @@
 														var totaLBill = "<td align=center id=billTotal"+bill.orderId+">"
 																+ total
 																+ "</td>";
+																		
+																var itemShelfLife =bill.itemShelfLife;
 
+																var deliveryDate =reformatDateString(bill.deliveryDate);
+
+																var calculatedDate = incrementDate(deliveryDate, itemShelfLife);
+                                                                 
+																// inc exp date if these menuId
+																/* if (bill.menuId == 44 || bill.menuId  == 45 || bill.menuId  == 46) {
+
+																	calculatedDate = incrementDate(calculatedDate, 1);
+																	
+																} */
+		
+															
+														var expDate = "<td align=center><input type='date' class=form-control  id=expDate"+bill.orderId+" name=expDate"+bill.orderId+" value="+ calculatedDate+ "></td>";
 														var trclosed = "</tr>";
 
 														$('#table_grid tbody')
@@ -480,7 +508,8 @@
 														$('#table_grid tbody')
 																.append(
 																		totaLBill);
-
+														$('#table_grid tbody')
+														.append(expDate);
 														$('#table_grid tbody')
 																.append(
 																		trclosed);
@@ -576,7 +605,31 @@ function disableRoute(){
 }
 
 </script>
-
+<script type="text/javascript">
+function reformatDateString(s) {
+	  var b = s.split(/\D/);
+	  return b.reverse().join('-');
+	}
+function incrementDate(date_str, incrementor) {
+    var parts = date_str.split("-");
+    var dt = new Date(
+        parseInt(parts[0], 10),      // year
+        parseInt(parts[1], 10) - 1,  // month (starts with 0)
+        parseInt(parts[2], 10)       // date
+    );
+    dt.setTime(dt.getTime() + incrementor * 86400000);
+    parts[0] = "" + dt.getFullYear();
+    parts[1] = "" + (dt.getMonth() + 1);
+    if (parts[1].length < 2) {
+        parts[1] = "0" + parts[1];
+    }
+    parts[2] = "" + dt.getDate();
+    if (parts[2].length < 2) {
+        parts[2] = "0" + parts[2];
+    }
+    return parts.join("-");
+};
+</script>
 	<!--basic scripts-->
 	<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

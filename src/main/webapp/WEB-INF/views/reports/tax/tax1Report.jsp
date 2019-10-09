@@ -115,7 +115,6 @@
 									<th>Taxable Amt</th>
 									<th>Total Tax</th>
 									<th>Grand Total</th>
-
 								</tr>
 							</thead>
 							<tbody>
@@ -133,9 +132,9 @@
 											value="${totalIgstAmt+taxList.sgstAmt}" />
 										<c:set var="totalTaxableAmt"
 											value="${totalTaxableAmt+taxList.taxableAmt}" />
-										<c:set var="totalTax" value="${totalTax+taxList.totalTax}" />
+										<c:set var="totalTax" value="${totalTax+(taxList.cgstAmt+taxList.sgstAmt)}" />
 										<c:set var="totalGrandTotal"
-											value="${totalGrandTotal+taxList.grandTotal}" />
+											value="${totalGrandTotal+(taxList.taxableAmt+taxList.cgstAmt+taxList.sgstAmt)}" />
 
 
 										<td><c:out value="${count.index+1}" /></td>
@@ -155,12 +154,16 @@
 												value="${taxList.sgstAmt}" /></td>
 										<td style="text-align: right;"><c:out
 												value="${taxList.taxableAmt}" /></td>
-										<td style="text-align: right;"><c:out
-												value="${taxList.totalTax}" /></td>
-										<td style="text-align: right;"><c:out
-												value="${taxList.grandTotal}" /></td>
-
-									</tr>
+										<td style="text-align: right;"><%-- c:out
+												value="${taxList.totalTax}" /> --%>
+										<fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${taxList.cgstAmt+taxList.sgstAmt}" /></td>
+										<td style="text-align: right;"><fmt:formatNumber
+											type="number" maxFractionDigits="2" minFractionDigits="2"
+											value="${taxList.taxableAmt+taxList.cgstAmt+taxList.sgstAmt}" /></td>
+											
+										</tr>
 								</c:forEach>
 
 								<tr>
@@ -195,7 +198,6 @@
 									<td style="text-align: right;"><fmt:formatNumber
 											type="number" maxFractionDigits="2" minFractionDigits="2"
 											value="${totalGrandTotal}" /></td>
-
 								</tr>
 
 

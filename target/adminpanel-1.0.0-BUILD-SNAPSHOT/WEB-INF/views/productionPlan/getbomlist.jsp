@@ -31,7 +31,7 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+	<!-- 		<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i> Search Bill Of Material List
@@ -39,7 +39,7 @@
 					
 				</div>
 				
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -62,8 +62,8 @@
 					
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid1">
-								<thead>
+								 id="table_grid1">
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										
@@ -109,7 +109,18 @@
 														<td><c:out value="${count.index+1}" /></td>
 
 														
-																
+														<c:set var="prod" value="PROD"></c:set>
+														<c:set var="mix" value="MIX"></c:set>
+														<c:choose>
+														 	<c:when test="${getbomList.fromDeptName==prod}">
+														 	<c:set var="depname" value="Production"></c:set>
+														 	
+														 	</c:when>
+														 	<c:when test="${getbomList.fromDeptName==mix}">
+														 	<c:set var="depname" value="Mixing"></c:set>
+														 	
+														 	</c:when>
+														</c:choose>
 																<td align="left"><c:out
 																value="${getbomList.fromDeptName}" /></td>
 																
@@ -351,6 +362,15 @@
 											function(key, itemList) {
 												
 												var bgcolor;
+												var deptname;
+												if(itemList.fromDeptName=='PROD')
+													{
+														deptname="Production";
+													}
+												else if(itemList.fromDeptName=='MIX')
+													{
+														deptname="Mixing";
+													}
 												
 												
 											 if(itemList.status==0)
@@ -359,7 +379,7 @@
 												var tr = $('<tr></tr>');
 											  	tr.append($('<td></td>').html(key+1));
 
-											  	tr.append($('<td></td>').html(itemList.fromDeptName));
+											  	tr.append($('<td></td>').html(deptname));
 											  	
 
 											  	tr.append($('<td></td>').html(itemList.reqDate));
@@ -376,7 +396,7 @@
 												var tr = $('<tr></tr>');
 											  	tr.append($('<td style="color:blue"></td>').html(key+1));
 
-											  	tr.append($('<td style="color:blue"></td>').html(itemList.fromDeptName));
+											  	tr.append($('<td style="color:blue"></td>').html(deptname));
 											  	
 
 											  	tr.append($('<td style="color:blue"></td>').html(itemList.reqDate));
@@ -392,7 +412,7 @@
 											var tr = $('<tr></tr>');
 										  	tr.append($('<td style="color:red"></td>').html(key+1));
 
-										  	tr.append($('<td style="color:red"></td>').html(itemList.fromDeptName));
+										  	tr.append($('<td style="color:red"></td>').html(deptname));
 										  	
 
 										  	tr.append($('<td style="color:red"></td>').html(itemList.reqDate));
@@ -417,7 +437,7 @@
 											var tr = $('<tr></tr>');
 										  	tr.append($('<td style="color:green"></td>').html(key+1));
 
-										  	tr.append($('<td style="color:green"></td>').html(itemList.fromDeptName));
+										  	tr.append($('<td style="color:green"></td>').html(deptname));
 										  	
 
 										  	tr.append($('<td style="color:green"></td>').html(itemList.reqDate));

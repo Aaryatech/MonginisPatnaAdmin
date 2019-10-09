@@ -86,13 +86,13 @@
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
 				method="post">
-				<div class=" box-content">
+				<div class="box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 						 <input type="hidden" name="flag" id="flag" value="${flag}">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead>
+								 id="table_grid">
+								<thead style="background-color: #f3b5db;">
 								
 									<tr>
 										<th>Sr.No.</th>
@@ -582,6 +582,10 @@
 										{
 											status="Requested to Purchase";
 										}
+										else if(itemList.poStatus==2)
+										{
+											status="Requested to Director";
+										}
 										else if(itemList.poStatus==3)
 										{
 										status="Rejected By Purchase";
@@ -731,7 +735,7 @@
 									  	 
 									  	if(itemList.poStatus==0 || itemList.poStatus==3)
 								  		{
-								  		tr.append($('<td></td>').html('  <a href="poHeaderWithDetailed/'+itemList.poId+'/'+flag+'" class="action_btn" > <abbr title="Detail"><i class="fa fa-list"></i></abbr></a> <a href="deletePoRecord/'+itemList.poId+'" onClick="return confirm("Are you sure want to delete this record");"><abbr title="Delete"></abbr><spanclass="glyphicon glyphicon-remove"></span></a><a href="deletePoRecord/'+itemList.poId+'" onClick="return confirm("Are you sure want to delete this record");"><abbr title="Delete"></abbr><span class="glyphicon glyphicon-remove"></span></a>'));
+								  		tr.append($('<td></td>').html('  <a href="poHeaderWithDetailed/'+itemList.poId+'/'+flag+'" class="action_btn" > <abbr title="Detail"><i class="fa fa-list"></i></abbr></a> <a href="deletePoRecord/'+itemList.poId+'" onClick="Confirm("Are you sure want to delete this record");"><abbr title="Delete"></abbr><spanclass="glyphicon glyphicon-remove"></span></a><a href="deletePoRecord/'+itemList.poId+'" onClick="return confirm("Are you sure want to delete this record");"><abbr title="Delete"></abbr><span class="glyphicon glyphicon-remove"></span></a>'));
 									  	
 								  		}
 								   
@@ -768,8 +772,9 @@
 		}
 	 
 }
-		
+	
+	 
 	</script>
-
+  
 </body>
 </html>

@@ -221,17 +221,17 @@
 					<div class="form-group">
 							<label class="col-sm-3 col-lg-2 control-label">RM GST % </label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<select name="rm_tax_id" id="rm_tax_id" class="form-control">
+							<select name="rm_tax_id" id="rm_tax_id" class="form-control"  onchange="onChangeGst(this.value)">
 								<option value="1">Select RM GST</option>
 								<c:forEach items="${rmTaxList}" var="rmTaxList"
 													varStatus="count">
 													
 													<c:choose>
 													<c:when test="${rawMaterialDetails.rmTaxId==rmTaxList.taxId}">
-														<option selected value="${rmTaxList.taxId}"><c:out value="${rmTaxList.sgstPer + rmTaxList.cgstPer}"/>%</option>
+														<option selected value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
 												</c:when>
 													<c:otherwise>
-  														<option value="${rmTaxList.taxId}"><c:out value="${rmTaxList.sgstPer + rmTaxList.cgstPer}"/>%</option>
+  														<option value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
 												 </c:otherwise>
  													 </c:choose>
 												 
@@ -266,7 +266,7 @@
 						<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
 
 						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmCloQty }" name="rm_clo_qty" id="rm_clo_qty" class="form-control" placeholder="RM HSNCD" data-rule-required="true" data-rule-number="true"/>
+							<input type="text" value="${rawMaterialDetails.rmCloQty}" readonly name="rm_clo_qty" id="hsncode" class="form-control" placeholder="RM HSNCD" data-rule-required="true" data-rule-number="true"/>
 						</div>
 
 						<label class="col-sm-3 col-lg-2 control-label">RM Rejected
@@ -510,6 +510,7 @@ function validation() {
 	var bmsRolQty=parseFloat($("#rm_rol_qty").val());
 
 	var isValid = true;
+	  if(bmsMinQty!=0 || bmsMaxQty!=0 || bmsRolQty!=0){
 	if (bmsMinQty>=bmsMaxQty) { 
 		isValid = false;
 		alert("BMS maximum qty is always greater than minimum Qty");
@@ -520,6 +521,7 @@ function validation() {
 		isValid = false;
 		alert("BMS reorder level qty is between minimum qty & maximum qty");
 	}
+	  }
 	
 	return isValid;
 }
@@ -528,8 +530,9 @@ function validationForStore() {
 	var storeIssueQty=parseFloat($("#rm_iss_qty").val());
 	var storeOpQty=parseFloat($("#rm_op_qty").val());
 	var storeRecQty=parseFloat($("#rm_recd_qty").val());
-
 	var isValid = true;
+
+    if(storeIssueQty!=0 || storeOpQty!=0 || storeRecQty!=0){
 	if (storeIssueQty>=storeOpQty) { 
 		isValid = false;
 		alert("Store maximum qty is always greater than minimum Qty");
@@ -540,12 +543,19 @@ function validationForStore() {
 		isValid = false;
 		alert("Store reorder level qty is between minimum qty & maximum qty");
 	}
-	
+    }
 	return isValid;
 }
 
 function validate() {
     return validation() && validationForStore();
 }</script> 
+<script type="text/javascript">
+function onChangeGst(id)
+{
+	document.getElementById("hsncode").value=$('#rm_tax_id option:selected').text();
+}
+</script>
+
 </body>
 </html>

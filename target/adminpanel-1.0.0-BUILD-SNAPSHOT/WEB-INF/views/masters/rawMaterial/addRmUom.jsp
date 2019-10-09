@@ -105,7 +105,7 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
 												<th width="55" style="width: 18px">Sr.No.</th>

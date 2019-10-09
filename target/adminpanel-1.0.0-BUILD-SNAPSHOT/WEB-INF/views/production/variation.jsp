@@ -30,13 +30,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i>Variance
+						<i class="fa fa-file-o"></i>Variation
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -45,7 +45,7 @@
 					<div class="box" id="todayslist">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-table"></i>Variance
+								<i class="fa fa-table"></i>Calculate Variation
 							</h3>
 							<div class="box-tool">
 								<input type="button" class="btn btn-primary" value="Back" onclick=""> <a data-action="collapse" href="#"><i
@@ -55,10 +55,43 @@
 						</div>
 						
 						<div class=" box-content">
-					<div class="row">
 					
+					<div id="table-scroll" class="table-scroll">
+							 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+												<th class="col-md-1">Sr.No.</th>
+										
+										<th class="col-md-2">Production Date</th>
+										<th class="col-md-6">Cat Name</th>
+									<!-- 	<th class="col-md-2">Time Slot</th> -->
+										
+										<th class="col-md-2">Action</th>
+										
+												</tr>
+												</thead>
+												</table>
+									
+									</div>
+									<div class="table-wrap">
+									
+										<table id="table_grid1" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+												<th class="col-md-1">Sr.No.</th>
+										
+										<th class="col-md-2">Plan Date</th>
+										<th class="col-md-6">Cat Name</th>
+									<!-- 	<th class="col-md-2">Time Slot</th> -->
+										
+										<th class="col-md-2">Action</th>
+										
+												</tr>
+												</thead>
 					
-						<div class="col-md-12 table-responsive">
+						<!-- <div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid1">
 								<thead>
@@ -72,7 +105,7 @@
 										<th>Action</th>
 										
 									</tr>
-								</thead>
+								</thead> -->
 								
 								<tbody>
 									<c:forEach items="${postProdPlanHeaderList}" var="postProdPlanHeaderList"
@@ -111,15 +144,15 @@
 														</c:forEach> --%>
 														
 															
-															<td align="left"><c:out	
+															<%-- <td align="left"><c:out	
 																value="${postProdPlanHeaderList.timeSlot}" />
 																</td>
-																
+																 --%>
 																
 														
 																
 																
-						<td><a href="${pageContext.request.contextPath}/varianceDetailed?productionHeaderId=${postProdPlanHeaderList.productionHeaderId}" class="action_btn" >
+						<td style="text-align: center;"><a href="${pageContext.request.contextPath}/varianceDetailed?productionHeaderId=${postProdPlanHeaderList.productionHeaderId}" class="action_btn" >
 						<abbr title="Edit"><i class="fa fa-list"></i></abbr></a></td>
 						
 																</tr>
@@ -131,7 +164,7 @@
 						</div>
 					</div>
 
-		</div>
+		
 			</div>			
 						
 					<div class="box" id="datewise_table" style="display: none">
@@ -233,7 +266,7 @@
 		</div>
 					</div>
 				</div>
-			</div>
+			</div></div>
 			<!-- END Main Content -->
 			<footer>
 			<p>2017 © MONGINIS.</p>

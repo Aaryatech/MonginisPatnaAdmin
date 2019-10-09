@@ -1105,9 +1105,9 @@ public class ItemController {
 					rowData.add("" + excelItems.get(i).getItemRate1());
 					rowData.add("" + excelItems.get(i).getItemRate2());
 					rowData.add("" + excelItems.get(i).getItemRate3());
-					rowData.add("" + excelItems.get(i).getItemRate1());
-					rowData.add("" + excelItems.get(i).getItemRate2());
-					rowData.add("" + excelItems.get(i).getItemRate3());
+					rowData.add("" + excelItems.get(i).getItemMrp1());
+					rowData.add("" + excelItems.get(i).getItemMrp2());
+					rowData.add("" + excelItems.get(i).getItemMrp3());
 					rowData.add("" + excelItems.get(i).getSgstPer());
 					rowData.add("" + excelItems.get(i).getCgstPer());
 					rowData.add("" + excelItems.get(i).getIgstPer());

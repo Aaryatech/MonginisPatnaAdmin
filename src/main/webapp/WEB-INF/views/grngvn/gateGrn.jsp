@@ -127,8 +127,8 @@
 
 																</c:when>
 																<c:when test="${grnList.grnGvnStatus==3}">
-																	<td><input type="checkbox" name="select_to_agree"
-																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></td>
+																	<td><%-- <input type="checkbox" name="select_to_agree"
+																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"> --%></td>
 
 																</c:when>
 
@@ -883,7 +883,7 @@ function getDate(){
 function checkQty(grnId,grnQty,aprQty,qty){
 	//alert("JJJ");
 	var entered=$("#gate_grn_qty"+grnId).val();
-	alert("received = " +entered);
+
 	if(entered>grnQty){
 		alert("Can not Enter Qty Greater than auto Qty ");
 		document.getElementById("gate_grn_qty"+grnId).value=qty;

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
  
   <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -67,10 +68,10 @@
 								name="validation-form" id="validation-form">
 								<div class="clearfix"></div>
 								<input type="hidden" name="isMix" value="${isMix}">
-
+	                            <input type="hidden" name="catId" value="${catId}">
 								<div class="table-responsive" style="border: 0">
-									<table width="100%" class="table table-advance" id="table1">
-										<thead>
+									<table class="table table-advance" id="table1">
+										<thead style="background-color: #f3b5db;">
 											<tr>
 												<th width="17" style="width: 18px">Sr No</th>
 <!-- 												<th width="100" align="left">Rm Id</th>
@@ -106,12 +107,13 @@
 														</c:when>
 
 													</c:choose>
+													<c:set var="total"><fmt:formatNumber type="number" groupingUsed="false" minFractionDigits="2" maxFractionDigits="2" value="${planDetailForBom.total}" /></c:set>
 													<td align="left"><c:out
-															value="${planDetailForBom.total}" /></td>
+															value="${total}" /></td>
 
 													<td align="left"><input type="text" id="editQty"
 														size="2" class="form-control" name="editQty${count.index}"
-														value="${planDetailForBom.total}"></td>
+														value="${total}"></td>
 
 													<td align="left"><c:out
 															value="${planDetailForBom.uom}"></c:out></td>

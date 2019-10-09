@@ -42,14 +42,14 @@
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-		<div id="breadcrumbs">
+		<%-- <div id="breadcrumbs">
 			<ul class="breadcrumb">
 				<li><i class="fa fa-home"></i> <a
 					href="${pageContext.request.contextPath}/home">Home</a> <span
 					class="divider"><i class="fa fa-angle-right"></i></span></li>
 				<li class="active">Bill Report</li>
 			</ul>
-		</div>
+		</div> --%>
 		<!-- END Breadcrumb -->
 
 		<!-- BEGIN Main Content -->
@@ -126,8 +126,21 @@
 				</div>
 
 				<br>
-				<div class="row">
-					<div class="col-md-12" style="text-align: center;">
+					<div class="row">
+					<div class="form-group">
+						<label class="col-sm-3 col-lg-2 control-label">GRN/CRN</label>
+						<div class="col-sm-3 col-lg-2">
+
+							<select data-placeholder="GRN/CRN"
+								class="form-control chosen"  tabindex="6"
+								id="type" name="type" >
+
+								<option value="1" >GRN</option>
+								<option value="2">CRN</option>
+							</select>
+						</div>
+					
+			
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Billwise Report</button>
 						<button class="btn search_btn" onclick="showChart()">Graph</button>
@@ -155,12 +168,12 @@
 
 
 		<div class="box">
-			<div class="box-title">
+		<!-- 	<div class="box-title">
 				<h3>
 					<i class="fa fa-list-alt"></i>Royalty Report (R6)
 				</h3>
 
-			</div>
+			</div> -->
 
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
@@ -222,7 +235,8 @@
 
 				var selectedFr = $("#selectFr").val();
 				var routeId=$("#selectRoute").val();
-				
+				var type= $("#type").val();
+
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
 
@@ -237,6 +251,7 @@
 									fromDate : from_date,
 									toDate : to_date,
 									route_id:routeId,
+									type:type,
 									ajax : 'true'
 
 								},

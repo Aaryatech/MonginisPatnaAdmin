@@ -119,7 +119,14 @@
 											<select name="mrntype" id="mrntype" class="form-control" tabindex="-1" required>
 												<option selected value="">Select MRN Type</option> 
 												<c:forEach items="${mrntype}" var="mrntype"> 
-													<option value="${mrntype.grpId}"><c:out value="${mrntype.grpName}"></c:out> </option> 
+												<c:choose>
+														<c:when test="${mrntype.grpId==materialRecNote.grpId}">
+														<option selected value="${mrntype.grpId}"><c:out value="${mrntype.grpName}"></c:out></option>
+														</c:when>
+														<c:otherwise>
+														<option value="${mrntype.grpId}" disabled><c:out value="${mrntype.grpName}"></c:out> </option> 
+														</c:otherwise>
+														</c:choose>
 												</c:forEach> 
 											</select>
 										</c:otherwise>
@@ -266,11 +273,12 @@
 											<c:choose>
 													<c:when test="${materialRecNote.status==2}">
 													<c:set var = "lable" value="${materialRecNote.approvalRemark}"/>
+													 <div class="col1">
+									<h4>&nbsp;&nbsp;&nbsp;&nbsp; Director Remark: <c:out value = "${lable}"/></h4>
+								</div><br><br>
 													</c:when>
 													</c:choose>
-							 <div class="col1">
-									<h4><c:out value = "${lable}"/></h4>
-								</div><br><br>
+							
 							
 							
 							<div class=" box-content">
@@ -278,7 +286,7 @@
 								<div class="col-md-12 table-responsive">
 									<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Item</th>

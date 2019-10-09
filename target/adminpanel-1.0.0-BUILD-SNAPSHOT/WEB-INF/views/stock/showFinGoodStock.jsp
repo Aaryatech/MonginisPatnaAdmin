@@ -2,17 +2,40 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
-
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
- 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+<%@ page import="java.util.Date"%>
+  	<style>
+ table{
+ 
+  border:1px solid #ddd;
+  
+}
+.form-control1 {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 5px 5px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+ </style>
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getFinGoodStock" value="/getFinGoodStock"></c:url>
 
 
 
 	<c:url var="finishedGoodDayEnd" value="/finishedGoodDayEnd"></c:url>
- 
+
 
 	<div class="container" id="main-container">
 
@@ -31,14 +54,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Finished Goods Stock
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -49,7 +72,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Goods Stock
+								<i class="fa fa-bars"></i> Finished Goods Stock
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -63,16 +86,17 @@
 						</div>
 
 						<div class="box-content">
-							<form class="form-horizontal" id="validation-form">
+							<form class="form-horizontal" id="validation-form1">
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
 
-									<div class="col-sm-9 col-lg-10 controls">
-										<select class="form-control chosen" name="catId" id="catId" onclick="DayEndEnable()">
+									<div class="col-sm-9 col-lg-3 controls">
+										<select class="form-control chosen" name="catId" id="catId"
+											onclick="DayEndEnable()">
 
 
-											<option value="-1" >All</option>
+											<option value="-1">All</option>
 
 											<c:forEach items="${catList}" var="catList">
 
@@ -83,10 +107,10 @@
 
 										</select>
 									</div>
-
+<!-- 
 								</div>
 
-								<div class="form-group">
+								<div class="form-group"> -->
 									<label class="col-sm-3 col-lg-2 control-label">Select
 										Option</label>
 									<div class="col-sm-5 col-lg-3 controls">
@@ -95,14 +119,20 @@
 											required>
 
 											<option value="1" id="currentStock">Get Current Stock</option>
-											<option value="2" id="monthStock">Get Stock Between Month</option>
+											<!-- <option value="2" id="monthStock">Get Stock Between Month</option> -->
 											<option value="3" id="dateStock">Get Stock Between Dates</option>
 										</select>
 									</div>
+<div class="col-sm-2">
 
+										<input type="button" class="btn btn-info" name="submit"
+											value="Get Stock " onclick="searchItemsByCategory()" />
+											
+											
+									</div>
 								</div>
 								<div class="form-group">
-									<div>
+									
 										<div class="colOuter" style="display: none"
 											id=select_month_year>
 											<div class="col-md-2">
@@ -129,10 +159,10 @@
 										</div>
 
 										<div class="colOuter" style="display: none" id=select_date>
-											<div class="col-md-2">
+										<div class="col-md-1"></div>	<div class="col-md-1">
 												<div class="col1title">From Date:</div>
 											</div>
-											<div class="col-md-2" align="left">
+											<div class="col-md-3" align="left">
 
 												<input class="form-control date-picker"
 													placeholder="From Date" name="from_datepicker"
@@ -140,12 +170,12 @@
 
 											</div>
 
-											<div class="col3"></div>
+										<div class="col-md-1"></div>
 
-											<div class="col-md-2">
+											<div class="col-md-1">
 												<div class="col1title">To Date:</div>
 											</div>
-											<div class="col-md-2" align="left">
+											<div class="col-md-3" align="left">
 												<input class="form-control date-picker"
 													placeholder="To Date" name="to_datepicker"
 													id="to_datepicker" type="text">
@@ -154,60 +184,102 @@
 
 										</div>
 
-									</div>
+									
 
 								</div>
 
 
 
 								<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
+									
+									
+									<div align="center" id="loader" style="display: none">
 
-										<input type="button" class="btn btn-info" name="submit"
-											value="Get Stock " onclick="searchItemsByCategory()" />
-									</div>
+									<span>
+										<h3>
+											<font color="#343690">Loading</font>
+										</h3>
+									</span> <span class="l-1"></span> <span class="l-2"></span> <span
+										class="l-3"></span> <span class="l-4"></span> <span
+										class="l-5"></span> <span class="l-6"></span>
+								</div>
 								</div>
 								<input type="hidden" id="selectedCatId" name="selectedCatId" />
 
 							</form>
-							<form action="insertOpeningStock" method="post"
-								id="validation-form">
+							<form method="post" id="validation-form">
 
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Finished Good
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
+									</div>
+									<br> -->
+									<div class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-4">
+										<!-- 										<input type="submit" class="btn btn-primary" value="Submit">
+ -->
+<input type="text" readonly    style="width: 134px; font: bold; height: 35px; color: maroon; size: 20px;"
+											value="" id="setDate" />
+										<input type="button" class="btn btn-danger"
+											value="Day End Process" id="dayEndButton" disabled="disabled" />
+
 									</div>
 
 									<div class="box-content">
 
 										<div class="clearfix"></div>
-										<div class="table-responsive" style="border: 0">
-											<table width="100%" class="table table-advance" id="table1">
+									<div id="table-scroll" class="table-scroll"> 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<table  class="table table-advance" id="table" border="1" width="100%">
 												<thead>
-													<tr>
-														<th width="30" align="left">Sr No</th>
-														<th width="120" align="left">Item Name</th>
-														<th width="50">T1</th>
-														<th width="50">T2</th>
-														<th width="50">T3</th>
-														<th width="50">Op Total</th>
+													<!-- <tr class="bgpink">
+														<th class="col-md-1" align="left">Sr</th>
+														<th class="col-md-2" align="left">ItemName</th>
+														<th class="col-md-1">T</th>
+														<th class="col-md-1">T-1</th>
+														<th class="col-md-1">T-2</th>
+														<th class="col-md-1">Op Tot</th>
 
-														<th width="50">Prod Qty</th>
-														<th width="50">Rej Qty</th>
-														<th width="50">Bill Qty</th>
-														<th width="50">Dummy Qty</th>
-														<th width="50">Current Closing</th>
-														<th width="50">Clo T1</th>
-														<th width="50">Clo T2</th>
-														<th width="50">Clo T3</th>
-														<th width="70">Total Closing</th>
+														<th class="col-md-1">Prod Qty</th>
+														<th class="col-md-1">Rej Qty</th>
+														<th class="col-md-1">Bill Qty</th>
+														<th class="col-md-1">Dumy Qty</th>
+														<th class="col-md-1">Curr Close</th>
+														<th class="col-md-1">Clo-T</th>
+														<th class="col-md-1">Clo-T1</th>
+														<th class="col-md-1">Clo-T2</th>
+														<th class="col-md-1">Total Close</th>
+													</tr> -->
+												</thead>
+												 
+											</table>
+									</div> 
+									<div class="table-wrap">
+											<table  class="table table-advance" id="table1" border="1" width="100%">
+												<thead>
+													<tr class="bgpink">
+														<th class="col-md-1" align="left">Sr</th>
+														<th class="col-md-3" align="left">Item</th>
+														<th class="col-md-1">T</th>
+														<th class="col-md-1">T-1</th>
+														<th class="col-md-1">T-2</th>
+														<th class="col-md-1">Op Tot</th>
+
+														<th class="col-md-1">Prod Qty</th>
+														<th class="col-md-1">Rej Qty</th>
+														<th class="col-md-1">Bill Qty</th>
+														<!-- <th class="col-md-1">Dumy Qty</th>
+														<th class="col-md-1">Curr Close</th>
+														<th class="col-md-1">Clos-T</th>
+														<th class="col-md-1">Clos-T1</th>
+														<th class="col-md-1">Clos-T2</th> -->
+														<th class="col-md-1">Total Clo</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -226,40 +298,27 @@
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
 										<!-- 										<input type="submit" class="btn btn-primary" value="Submit">
  -->
- 
- 
-											<input type="button" class="btn btn-danger"
-											value="Day End Process" id="dayEndButton"  disabled/>
+<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled>
+
 
 									</div>
 
-
-
 								</div>
-								<div align="center" id="loader" style="display: none">
 
-									<span>
-										<h4>
-											<font color="#343690">Loading</font>
-										</h4>
-									</span> <span class="l-1"></span> <span class="l-2"></span> <span
-										class="l-3"></span> <span class="l-4"></span> <span
-										class="l-5"></span> <span class="l-6"></span>
-								</div>
 							</form>
 						</div>
 
 
 					</div>
-					<!-- </form> -->
+					</form>
 				</div>
-
+	</div>
 			</div>
 
 
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<center><p>2018 © MONGINIS.</p></center>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -330,12 +389,13 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-		
-		
+
 
 	<script type="text/javascript">
 		function searchItemsByCategory() {
-
+			
+			
+			
 			var catId = $("#catId").val();
 			document.getElementById("selectedCatId").value = catId;
 			//var to_datepicker = document.getElementById("to_datepicker").value ;
@@ -347,15 +407,7 @@
 			
 			var option = $("#selectStock").val();
 			
-			if(option==1 && catId==-1){
-				alert("Inside Button Enable ");
-				$('#dayEndButton').removeAttr('disabled');
-			}
-			else{
-				alert("In Else Buttton Disabledd ");
-				$("#dayEndButton").disabled=true;
-				//$('#dayEndButton').removeAttr('enabled');
-			}
+			
 			$('#loader').show();
 
 			$
@@ -374,6 +426,22 @@
 								$('#table1 td').remove();
 
 								$('#loader').hide();
+								//alert("Day End " +data.isDayEndEnable);
+								document.getElementById("setDate").value =data.stockDate;
+								if(data.isDayEndEnable==1){
+									if(option==1 && catId==-1){
+										
+										//alert("in if enable true");
+										//$('#dayEndButton').removeAttr('disabled');
+										 document.getElementById("dayEndButton").disabled = false; 
+
+									}
+									else if(data.isDayEndEnable==0){
+										//alert("in else disable true");
+										document.getElementById("dayEndButton").disabled=true;
+									}
+								}
+
 								if (data == "") {
 									alert("No records found !!");
 
@@ -381,48 +449,48 @@
 
 								$
 										.each(
-												data,
+												data.stockDetail,
 												function(key, stock) {
-
+													
+													document.getElementById("expExcel").disabled=false;	
 													var index = key + 1;
 
 													var tr = "<tr>";
 
-													var index = "<td>&nbsp;&nbsp;&nbsp;"
-															+ index + "</td>";
+													var index = "<td>"+index+"</td>";
 
-													var itemName = "<td>&nbsp;&nbsp;&nbsp;"
-															+ stock.itemName
-															+ "</td>";
+													var itemName = "<td>"
+															+stock.itemName
+															+"</td>";
 
-													var t1 = "<td align=center ><input type=text size='3' class=form-control   value="+stock.opT1+"   ></td>";
+													var t1 = "<td align=center ><input type=text size='4' class=form-control1 style='font-size:8pt; height:20px; text-align:right;'  value="+stock.opT1+" readonly ></td>";
 
-													var t2 = "<td align=center ><input type=text size='3' class=form-control  value="+stock.opT2+"   ></td>";
+													var t2 = "<td align=center ><input type=text size='4' class=form-control1 style='font-size:8pt;height:20px;text-align:right;' value="+stock.opT2+" readonly></td>";
 
-													var t3 = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.opT3+"   ></td>";
+													var t3 = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.opT3+" readonly></td>";
 
-													var opTotal = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.opTotal+" ></td>";
+													var opTotal = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.opTotal+" readonly></td>";
 
 
-													var prodQty = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.prodQty+"  ></td>";
+													var prodQty = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;height:20px;text-align:right;'  value="+stock.prodQty+" readonly ></td>";
 													
-													var rejQty = "<td align=center ><input type=text size='3' class=form-control   value="+stock.rejQty+"  ></td>";
+													var rejQty = "<td align=center ><input type=text size='4' class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.rejQty+"  readonly></td>";
 													
 
-													var billQty = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.frSaleQty+"  ></td>";
+													var billQty = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;height:20px;text-align:right;'  value="+stock.frSaleQty+"  readonly></td>";
 													
-													var gateSaleQty = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.gateSaleQty+"  ></td>";
+													/* var gateSaleQty = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;' value="+stock.gateSaleQty+" readonly ></td>";
 													
-													var cloT1 = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.cloT1+"></td>";
+													var cloT1 = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;' value="+stock.cloT1+" readonly></td>";
 
-													var cloT2 = "<td align=center ><input type=text size='3'  class=form-control   value="+stock.cloT2+"></td>";
+													var cloT2 = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;' value="+stock.cloT2+" readonly></td>";
 
-													var cloT3 = "<td align=center ><input type=text  size='3' class=form-control   value="+stock.cloT3+"></td>";
+													var cloT3 = "<td align=center ><input type=text  size='4' class=form-control1 style='font-size:8pt;'  value="+stock.cloT3+" readonly></td>";
 
 													
-													var cloCurrent = "<td align=center ><input type=text  size='3' class=form-control   value="+stock.cloCurrent+"></td>";
-
-													var totalClosing = "<td align=center ><input type=text size='3' class=form-control   value="+stock.totalCloStk+"></td>";
+													var cloCurrent = "<td align=center ><input type=text  size='4' class=form-control1 style='font-size:8pt;'  value="+stock.cloCurrent+" readonly></td>";
+ */
+													var totalClosing = "<td align=center ><input type=text size='4' class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.totalCloStk+" readonly></td>";
 
 													var trclosed = "</tr>";
 
@@ -451,7 +519,7 @@
 
 													$('#table1 tbody').append(
 															billQty);
-
+/* 
 													$('#table1 tbody').append(
 															gateSaleQty);
 
@@ -466,7 +534,7 @@
 															cloT2);
 													
 													$('#table1 tbody').append(
-															cloT3);
+															cloT3); */
 													
 													
 													$('#table1 tbody').append(
@@ -478,40 +546,34 @@
 												})
 
 							});
-			if(stock.isDayEndEnable==1){
+			/* if(stock.isDayEndEnable==1){
 			$('#dayEndButton').removeAttr('disabled');
-			}
+			} */
+			document.getElementById("dayEndButton").disabled=true;
+
 		}
+		
+	
 	</script>
-
-
 
 	<script type="text/javascript">
 		$('#dayEndButton').click(function() {
 
 			var option = $("#selectStock").val();
 			if (option == 1) {
-				alert("Day End ");
-				$('#loader').show();
-				$.getJSON('${finishedGoodDayEnd}', {
-
-					ajax : 'true',
-
-				},
-				function(data) {
-				alert("Completed");
-					//$('#table1 td').remove();
-
-					$('#loader').hide();
-					if (data == "") {
-						alert("No records found !!");
-
-					}
+			var dayEnd=confirm("Day End ");
+				if(dayEnd==true){
+			 var form = document.getElementById("validation-form")
+			 
+			// alert(form);
+			  	  form.action ="${pageContext.request.contextPath}/finishedGoodDayEnd";
+			    form.submit();
+			    
 				}
-
-				);
-
-			} else {
+			    
+			}
+			
+			 else {
 
 				alert("Please Select Current Stock");
 
@@ -534,6 +596,12 @@
 
 			}
 
+		}
+		function exportToExcel()
+		{
+			 
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+					document.getElementById("expExcel").disabled=true;
 		}
 	</script>
 </body>

@@ -229,7 +229,7 @@ public class ReportController {
 				float crnTotal = 0.0f;
 				for (int j = 0; j < crNoteRegItemList.size(); j++) {
 					if (crNoteRegItemList.get(i).getCrnId() == crNoteRegItemList.get(j).getCrnId()) {
-						crnTotal = crnTotal + (crNoteRegItemList.get(j).getCrnTaxable()+crNoteRegItemList.get(j).getCgstAmt()+crNoteRegItemList.get(j).getSgstAmt());
+						crnTotal = crnTotal + (roundUp(crNoteRegItemList.get(j).getCrnTaxable())+roundUp(crNoteRegItemList.get(j).getCgstAmt())+roundUp(crNoteRegItemList.get(j).getSgstAmt()));
 					}
 				}
 

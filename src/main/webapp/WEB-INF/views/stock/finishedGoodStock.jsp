@@ -82,7 +82,7 @@
 								<input type="hidden" id="selectedCatId" name="selectedCatId" />
 
 							</form>
-							<form action="insertOpeningStock" method="post"
+							<form action="insertOpeningStock" method="post" onsubmit="fnstkinsert.disabled = true;return confirm('Do you want to Submit ?');"
 								id="validation-form">
 
 								<div class="box">
@@ -196,7 +196,7 @@
 
 									<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-										<input type="submit" class="btn btn-primary" value="Submit">
+										<input type="submit" class="btn btn-primary" value="Submit" id="fnstkinsert">
 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();"  >
 <input type="button" class="btn btn-primary" value="Pdf"  onclick="getPdf()"></a>
 										<!-- <input type="button" class="btn btn-danger"

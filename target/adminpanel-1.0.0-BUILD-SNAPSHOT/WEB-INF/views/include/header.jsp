@@ -23,6 +23,8 @@
 <!--flaty css styles-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/flaty.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/lightbox.css">
+
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/loader.css">
 
@@ -45,15 +47,13 @@
 	  <link rel="shortcut icon"
 	href="${pageContext.request.contextPath}/resources/img/monginislogo.png">
 
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
 											window.jQuery
 													|| document
 															.write('<script src="${pageContext.request.contextPath}/resources/assets/jquery/jquery-2.0.3.min.js"><\/script>')
 										</script>
-<script
-	src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
+
 	
 	<script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>

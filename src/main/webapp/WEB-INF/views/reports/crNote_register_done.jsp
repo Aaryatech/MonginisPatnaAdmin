@@ -259,7 +259,7 @@
 					//var tr = "<tr>";
 					var tr = $('<tr></tr>');
 					tr.append($('<td></td>').html("" + index));
-					tr.append($('<td></td>').html(report.frCode));
+					tr.append($('<td></td>').html(report.crnId));
 					tr.append($('<td></td>').html(report.crnDate));
 
 					tr.append($('<td style="text-align:left;"></td>').html(
@@ -267,10 +267,10 @@
 					tr.append($('<td style="text-align:left;"></td>').html(
 							report.frGstNo));
 					crnQty = crnQty + report.crnQty;
-					crnTaxable = crnTaxable + report.crnTaxable;
-					cgstAmt = cgstAmt + report.cgstAmt;
-					sgstAmt = sgstAmt + report.sgstAmt;
-					crnAmt = crnAmt + report.crnAmt;
+					crnTaxable = crnTaxable + (report.crnTaxable).toFixed(2);
+					cgstAmt = cgstAmt + (report.cgstAmt).toFixed(2);
+					sgstAmt = sgstAmt + (report.sgstAmt).toFixed(2);
+					crnAmt = crnAmt + (report.crnTaxable+report.cgstAmt+report.sgstAmt).toFixed(2);
 					tr.append($('<td style="text-align:left;"></td>').html(
 							(report.cgstPer + report.sgstPer).toFixed(2)));
 					tr.append($('<td style="text-align:center;"></td>').html(
@@ -284,7 +284,7 @@
 					tr.append($('<td style="text-align:right;"></td>').html(
 							report.sgstAmt.toFixed(2)));
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.crnAmt.toFixed(2)));
+							(report.crnTaxable+report.cgstAmt+report.sgstAmt).toFixed(2)));
 
 					$('#table_grid tbody').append(tr);
 
@@ -309,7 +309,7 @@
 				tr.append($('<td  style="text-align:right;"></td>').html(
 						"" + sgstAmt.toFixed(2)));
 				tr.append($('<td  style="text-align:right;"></td>').html(
-						"" + crnAmt.toFixed(0)));
+						"" + crnAmt.toFixed(2)));
 				$('#table_grid tbody').append(tr);
 
 			});

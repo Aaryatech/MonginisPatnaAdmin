@@ -2,13 +2,37 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+
+<style>
+.alert {
+    padding: 20px;
+    background-color: red;
+    color: white;
+    
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+</style>
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getGroup2ByCatId" value="/getGroup2ByCatId" />
-
+    <c:url var="taxHsnForAddNewItemOnSubCatChange" value="/taxHsnForAddNewItemOnSubCatChange"></c:url>
 
 	<div class="container" id="main-container">
 
@@ -32,6 +56,64 @@
 					<h1>
 						<i class="fa fa-file-o"></i> Items
 					</h1>
+	<c:choose>
+				<c:when test="${isError==true}">
+				<div class="alert">
+					<span class="closebtn"
+						onclick="this.parentElement.style.display='none';">&times;</span>
+					<strong>Failed !</strong>     Failed to Add New Item !!
+				</div>
+				</c:when>
+				</c:choose>
+					<c:set var="isEdit" value="0">
+					</c:set>
+					<c:set var="isView" value="0">
+					</c:set>
+					<c:set var="isAdd" value="0">
+					</c:set>
+
+					<c:forEach items="${sessionScope.newModuleList}" var="modules">
+						<c:forEach items="${modules.subModuleJsonList}" var="subModule">
+
+							<c:choose>
+								<c:when test="${subModule.subModuleMapping eq 'addItem'}">
+
+									<c:choose>
+										<c:when test="${subModule.editReject=='visible'}">
+											<c:set var="isEdit" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isEdit" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+									<c:choose>
+										<c:when test="${subModule.view=='visible'}">
+											<c:set var="isView" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isView" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+
+
+									<c:choose>
+										<c:when test="${subModule.addApproveConfig=='visible'}">
+											<c:set var="isAdd" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isAdd" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+							</c:choose>
+						</c:forEach>
+					</c:forEach>
 
 				</div>
 			</div>
@@ -46,8 +128,12 @@
 								<i class="fa fa-bars"></i> Add Items
 							</h3>
 							<div class="box-tool">
-								<a href="${pageContext.request.contextPath}/itemList">Back to List</a> <a data-action="collapse" href="#"><i
+
+								<a href="${pageContext.request.contextPath}/itemList">Back
+									to List</a> <a data-action="collapse" href="#"><i
 									class="fa fa-chevron-up"></i></a>
+
+
 							</div>
 							<!-- <div class="box-tool">
 								<a data-action="collapse" href="#"><i
@@ -55,8 +141,6 @@
 									class="fa fa-times"></i></a>
 							</div> -->
 						</div>
-
-
 
 
 						<div class="box-content">
@@ -78,7 +162,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_name" id="item_name"
 											placeholder="Item Name" class="form-control"
-											data-rule-required="true"  />
+											data-rule-required="true" />
 									</div>
 								</div>
 
@@ -107,7 +191,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Group2</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<select data-placeholder="Select Group"
-											class="form-control chosen-select" name="item_grp2"
+											class="form-control chosen-select" name="item_grp2" onchange="callData(this.value)"
 											tabindex="-1" id="item_grp2" data-rule-required="true">
 
 										</select>
@@ -138,52 +222,32 @@
 											data-rule-required="true" data-rule-number="true" />
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Local
-										Rate</label>
+							
+                              <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
 									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate1" id="item_rate1"
-											placeholder="Item Rate1" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Out Station
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate2" id="item_rate2"
-											placeholder="Item Rate2" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Special
-										Rate</label>
-									<div class="col-sm-9 col-lg-10 controls">
-										<input type="text" name="item_rate3" id="item_rate3"
-											placeholder="Item Rate3" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
-									</div>
-								</div>
-
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Local
 										MRP</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp1" id="item_mrp1"
 											placeholder="Item Mrp1" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Out Station
-										Mrp</label>
+									<label class="col-sm-3 col-lg-2 control-label">Out
+										Station Mrp</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp2" id="item_mrp2"
 											placeholder="Item Mrp2" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
 								<div class="form-group">
@@ -192,12 +256,40 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp3" id="item_mrp3"
 											placeholder="Item Mrp3" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0" onchange="calMrp()"/>
 									</div>
 								</div>
-
+                                	<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Local
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate1" id="item_rate1"
+											placeholder="Item Rate1" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+									</div>
+								</div>
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Product Image</label>
+									<label class="col-sm-3 col-lg-2 control-label">Out
+										Station Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate2" id="item_rate2"
+											placeholder="Item Rate2" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" readonly/>
+									</div>
+								</div>
+                         
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Special
+										Rate</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="item_rate3" id="item_rate3"
+											placeholder="Item Rate3" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="0" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Product
+										Image</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<div class="fileupload fileupload-new"
 											data-provides="fileupload">
@@ -214,21 +306,21 @@
 												<span class="btn btn-default btn-file"><span
 													class="fileupload-new">Select image</span> <span
 													class="fileupload-exists">Change</span> <input type="file"
-													class="file-input" name="item_image" id="item_image"
-													 /></span> <a href="#"
-													class="btn btn-default fileupload-exists"
+													class="file-input" name="item_image" id="item_image" /></span>
+												<a href="#" class="btn btn-default fileupload-exists"
 													data-dismiss="fileupload">Remove</a>
 											</div>
 										</div>
 
 									</div>
 								</div>
-									<div class="form-group">
+								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">IGST %</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_tax3" id="item_tax3"
 											placeholder="IGST" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+											data-rule-required="true" data-rule-number="true" value="0.0"
+											onchange="calTotalGst()" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -236,7 +328,8 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_tax2" id="item_tax2"
 											placeholder="CGST" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0.0"  onchange="calTotalGst()"/>
+											data-rule-required="true" data-rule-number="true" value="0.0"
+											onchange="calTotalGst()" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -244,20 +337,21 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_tax1" id="item_tax1"
 											placeholder="SGST" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="0.0"/>
+											data-rule-required="true" data-rule-number="true" value="0.0" />
 									</div>
 								</div>
-								
-							
-                                <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Total GST Applicable %</label>
+
+
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Total
+										GST Applicable %</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="total_gst_appli" id="total_gst_appli"
 											placeholder="Total GST Applicable" class="form-control"
-											data-rule-required="true" data-rule-number="true" disabled/>
+											data-rule-required="true" data-rule-number="true" disabled />
 									</div>
 								</div>
-								
+
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Is Used?</label>
 									<div class="col-sm-9 col-lg-10 controls">
@@ -271,16 +365,16 @@
 									</div>
 								</div>
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										SortId</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_sort_id" id="item_sort_id"
 											placeholder="Item Sort Id" class="form-control"
-											data-rule-number="true" />
+											data-rule-number="true" value="0" />
 									</div>
-								</div>
-								<div class="form-group">
+								</div> -->
+							<!-- 	<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">GRN Type</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<label class="radio-inline"> <input type="radio"
@@ -294,7 +388,7 @@
 											data-rule-required="false" />GRN3
 										</label>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Item
 										Shelf Life</label>
@@ -310,7 +404,21 @@
 
 								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
-										<input type="submit" class="btn btn-primary" value="Submit">
+										<c:choose>
+
+											<c:when test="${isAdd==1}">
+
+												<input type="submit" class="btn btn-primary" value="Save & Next">
+
+											</c:when>
+
+											<c:otherwise>
+												<input type="submit" disabled="disabled"
+													class="btn btn-primary" value="Save & Next">
+
+											</c:otherwise>
+										</c:choose>
+
 										<button type="button" class="btn">Cancel</button>
 									</div>
 								</div>
@@ -321,7 +429,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+				<p>2017 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -398,44 +506,126 @@
 
 
 	<script type="text/javascript">
-$(document).ready(function() { 
-	$('#item_grp1').change(
-			function() {
-				$.getJSON('${getGroup2ByCatId}', {
-					catId : $(this).val(),
-					ajax : 'true'
-				}, function(data) {
-					var html = '<option value="" selected >select Group 2</option>';
+		$(document)
+				.ready(
+						function() {
+							$('#item_grp1')
+									.change(
+											function() {
+												$
+														.getJSON(
+																'${getGroup2ByCatId}',
+																{
+																	catId : $(
+																			this)
+																			.val(),
+																	ajax : 'true'
+																},
+																function(data) {
+																	var html = '<option value="" selected >select Group 2</option>';
+
+																	var len = data.length;
+																	for (var i = 0; i < len; i++) {
+																		html += '<option value="' + data[i].subCatId + '">'
+																				+ data[i].subCatName
+																				+ '</option>';
+																	}
+																	html += '</option>';
+																	$(
+																			'#item_grp2')
+																			.html(
+																					html);
+																	$(
+																			'#item_grp2')
+																			.formcontrol(
+																					'refresh');
+
+																});
+											});
+						});
+		
+		
+function callData(subCatId){
+			
+			$.getJSON('${taxHsnForAddNewItemOnSubCatChange}', {
+				subCatId : subCatId,
+				ajax : 'true'
+			}, function(data) {
+				//alert(data);
+				//$('#hsn_code').value=data.hsnCode;
+				if(data.taxHsnId==0){
+					//alert("In IF")
+					var x="0";
+					//document.getElementById("hsn_code").value=x
+						document.getElementById("item_tax1").setAttribute('value', x);
+
+					document.getElementById("item_tax2").setAttribute('value',
+							x);
+					document.getElementById("item_tax3").setAttribute('value',
+							x);
 					
-					var len = data.length;
-					for ( var i = 0; i < len; i++) {
-						html += '<option value="' + data[i].subCatId + '">'
-								+ data[i].subCatName + '</option>';
-					}
-					html += '</option>';
-					$('#item_grp2').html(html);
-					$('#item_grp2').formcontrol('refresh');
+					// document.getElementById("hsn_code").readOnly = true; 
+					 document.getElementById("item_tax1").readOnly = true; 
+					document.getElementById("item_tax2").readOnly = true; 
+					 document.getElementById("item_tax3").readOnly = true; 
+					 calTotalGst();
+				}else{
+					//alert("In Else");
+					
+					//
+					
+					// var x=data.hsnCode;
+						//document.getElementById("hsn_code").value=x;
+						var sgst=data.sgstPer;
+						var cgst=data.cgstPer;
+						var igst=data.igstPer;
+						document.getElementById("item_tax1").setAttribute('value', sgst);
 
-				});
+						document.getElementById("item_tax2").setAttribute('value',
+								cgst);
+						document.getElementById("item_tax3").setAttribute('value',
+								igst);
+						
+						// document.getElementById("hsn_code").readOnly = true; 
+						 document.getElementById("item_tax1").readOnly = true; 
+						 document.getElementById("item_tax2").readOnly = true; 
+						 document.getElementById("item_tax3").readOnly = true; 
+						 calTotalGst(); 
+				}
 			});
-});
-</script>
+			
+		}
+	</script>
 
-<script>
-function calTotalGst() {
-	 var igst=parseFloat($("#item_tax3").val());
-	  var cgst=parseFloat($("#item_tax2").val());
-	  var sgst=parseFloat(igst-cgst);
-	  var totGst=parseFloat(cgst+sgst);
+	<script>
+		function calTotalGst() {
+			var igst = parseFloat($("#item_tax3").val());
+			var cgst = parseFloat($("#item_tax2").val());
+			var sgst = parseFloat(igst - cgst);
+			var totGst = parseFloat(cgst + sgst);
 
-	  document.getElementById("item_tax1")
-		.setAttribute('value', sgst);
-	  
-	  document.getElementById("total_gst_appli")
-		.setAttribute('value', totGst);
+			document.getElementById("item_tax1").setAttribute('value', sgst);
+
+			document.getElementById("total_gst_appli").setAttribute('value',
+					totGst);
+		}
+	</script>
+<script type="text/javascript">
+function calMrp()
+{
+	var mrp1 = parseFloat($("#item_mrp1").val());//local mrp
+	var mrp2 = parseFloat($("#item_mrp2").val());
+	var mrp3 = parseFloat($("#item_mrp3").val());
+	var margin= parseFloat($("#margin").val());
+	
+	var calRate1=((mrp1*100)/(100+margin));      
+	var calRate2=((mrp2*100)/(100+margin));  
+	var calRate3=((mrp3*100)/(100+margin));  
+	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2)); //local rate
+	document.getElementById("item_rate2").setAttribute('value', (calRate2).toFixed(2));
+	document.getElementById("item_rate3").setAttribute('value', (calRate3).toFixed(2));
 }
 </script>
-
 
 </body>
 </html>

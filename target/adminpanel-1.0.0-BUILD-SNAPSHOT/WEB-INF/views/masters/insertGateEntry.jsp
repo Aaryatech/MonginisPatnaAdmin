@@ -11,6 +11,8 @@
 <c:url var="gateEntryList" value="/gateEntryList"></c:url>
 	<c:url var="editRmQtyOnGate" value="/editRmQtyOnGate"></c:url>
 	<c:url var="deleteRmItem" value="/deleteRmItem"></c:url>
+<c:url var="getRmItemsByGrp" value="/getRmItemsByGrp"></c:url>
+<c:url var="getItemsByGrp" value="/getItemsByGrp"></c:url>
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
@@ -32,13 +34,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Material Receipt Gate Entry
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -64,23 +66,51 @@
 							enctype="multipart/form-data">
 							<div class="box-content">
 								<div class="col-md-2">InwardNo:</div>
-								<div class="col-md-3"><input type="text" id="mrn_no" name="mrn_no" value="${mrnno}" class="form-control" readonly>
+								<div class="col-md-1"><input type="text" id="mrn_no" name="mrn_no" value="${mrnno}" class="form-control" readonly>
 								</div>
 								
-							<div class="col-md-2"> Date</div> 
-							<div class="col-md-3">
+							<div class="col-md-1"> Date</div> 
+							<div class="col-md-2">
 							<jsp:useBean id="now" class="java.util.Date"/>    
                                     <fmt:formatDate value="${now}" pattern="dd-MMM-yyyy"/>
                                     <input type="hidden" id="nowDate" name="nowDate" value=" <fmt:formatDate value="${now}" pattern="dd-mm-yyyy"/>" class="form-control" readonly>
 								
 							</div>
 					
-							</div><br>
+						
+									<div class="col-md-2">
+										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
+										<option value="-1">Select Group</option>
+											 <c:forEach items="${groupList}" var="groupList"
+							varStatus="count">
+							
+									<c:choose>
+													<c:when test="${groupList.grpId==grpId}">
+														<option selected value="${groupList.grpId}"><c:out value="${groupList.grpName}"/></option>
+												</c:when>
+													<c:otherwise>
+  														 <option value="${groupList.grpId}"><c:out value="${groupList.grpName}"/></option>
+ 													 </c:otherwise>
+ 													 </c:choose>
+												</c:forEach>
+						
+
+										</select>
+									</div>
+									<div class="col-md-2">Vehicle No</div>
+									<div class="col-md-2">
+									<input class="form-control" id="vehicle_no" size="16"
+											type="text" name="vehicle_no"  required />
+									</div>
+								
+									
+									</div>
+							<br>
 							
 							<div class="box-content">
 							
 								<div class="col-md-2">Supplier</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 									
 									<select name="supp_id" id="supp_id" class="form-control chosen" tabindex="6" required>
 											<option value="">Select Supplier</option>
@@ -90,26 +120,22 @@
 										</select>
 									
 									</div>
-								<div class="col-md-2">Vehicle No</div>
-									<div class="col-md-3">
-									<input class="form-control" id="vehicle_no" size="16"
-											type="text" name="vehicle_no"  required />
-									</div>
 								
-				 
+				 <!-- 
 							</div><br>
 							
 							
-							<div class="box-content">
-							
+							<div class="box-content"> -->
+							<input type="hidden" id="isGateDaily" name="isGateDaily" 
+									class="form-control" value="0" >
 							<div class="col-md-2" >LR No</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" id="lr_no" name="lr_no" 
 									class="form-control" pattern="\d+" required >
 									</div>
 									
 									<div class="col-md-2">Transporter</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 									
 									<select name="tran_id" id="tran_id" class="form-control chosen" tabindex="6" required>
 									<option  value="">Select Transporter</option>
@@ -130,35 +156,35 @@
 							<div class="box-content">
 							
 									<div class="col-md-2" >Remark</div>
-									<div class="col-md-3"><input type="text" id="remark" name="remark" class="form-control" required>
+									<div class="col-md-6"><input type="text" id="remark" name="remark" class="form-control" required>
 									</div>
 									
-									<div class="col-md-2">No of Items</div>
-										<div class="col-md-3"><input type="text" id="no_of_items" name="no_of_items"  class="form-control" pattern="\d+" required>
-									</div>
+									<!-- <div class="col-md-2">No of Items</div> -->
+										<!-- <div class="col-md-3"> --><input type="hidden" id="no_of_items" name="no_of_items"  class="form-control" value="1" pattern="\d+" required>
+									<!-- </div> -->
 							
-							</div><br>
+						<!-- 	</div><br>
 							
 							
 							<div class="box-content">
-								 <div class="form-group">
+								 <div class="form-group"> -->
 									
-									<div class="col-md-2">Image</div>
-									<div class="col-md-3">
+								<!-- 	<div class="col-md-1">Image1</div> -->
+									<div class="col-md-1">
 										<div class="fileupload fileupload-new"
 											data-provides="fileupload">
 											<div class="fileupload-new img-thumbnail"
-												style="width: 150px; height: 150px;">
+												style="width: 00px; height: 00px;">
 												<img
 													src="http://www.placehold.it/150x150/EFEFEF/AAAAAA&amp;text=no+image"
 													alt="" />
 											</div>
 											<div
 												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+												style="max-width:00px; max-height:00px; line-height: 00px;"></div>
 											<div>
 												<span class="btn btn-default btn-file"><span
-													class="fileupload-new">Select image</span> <span
+													class="fileupload-new">Select image1</span> <span
 													class="fileupload-exists">Change</span> <input type="file"
 													class="file-input" name="image1" id="image1"
 													 /></span> <a href="#"
@@ -168,23 +194,23 @@
 										</div>
 
 									</div>
-									
-									<div class="col-md-2">Image</div>
-									<div class="col-md-2">
+									<div class="col-md-1"></div>
+									<!-- <div class="col-md-1">Image2</div> -->
+									<div class="col-md-1">
 										<div class="fileupload fileupload-new"
 											data-provides="fileupload">
 											<div class="fileupload-new img-thumbnail"
-												style="width: 200px; height: 150px;">
+												style="width: 0px; height: 00px;">
 												<img
 													src="http://www.placehold.it/150x150/EFEFEF/AAAAAA&amp;text=no+image"
 													alt="" />
 											</div>
 											<div
 												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+												style="max-width:00px; max-height:00px; line-height:0px;"></div>
 											<div>
 												<span class="btn btn-default btn-file"><span
-													class="fileupload-new">Select image</span> <span
+													class="fileupload-new">Select image2</span> <span
 													class="fileupload-exists">Change</span> <input type="file"
 													class="file-input" name="image2" id="image2"
 													 /></span> <a href="#"
@@ -193,15 +219,11 @@
 											</div>
 										</div>
 
-									</div>
+									<!-- </div> -->
 									
 								</div>
-							</div><br><br><br><br><br><br><br><br><br>
-							
-							
-							
-							<hr/>
-							
+							</div><br><br><br>
+						<div style="box-shadow: 0 6px 20px 0 rgba(38, 198, 218, 0.5);  "><br>
 							<div class="box-content">
 								
 									<div class="col-md-2" >Select Raw Material Name</div>
@@ -209,14 +231,14 @@
 										<select data-placeholder="Select RM Name" class="form-control chosen" name="rm_id" tabindex="-1"
 											id="rm_id" required>
 											<option selected value="">Select Raw Material Name</option>
-											
+										<%-- 	
 											<c:forEach items="${rmlist}" var="rmlist">
                                               
                                               
 														<option value="${rmlist.rmId}"><c:out value="${rmlist.rmName}"></c:out> </option>
 													
 
-											</c:forEach>
+											</c:forEach> --%>
 											</select>
 									</div>
 									
@@ -236,7 +258,7 @@
 								<div><input type="button" class="btn btn-info pull-right" onclick="addItem()" value="Add Item"></div>
 					 
 									</div>
-								</div><br><br><br><br>
+								</div><br><br></div><br>
 							
 							
 								<div align="center" id="loader" style="display: none">
@@ -257,7 +279,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color:#f3b5db ;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Name</th> 
@@ -275,7 +297,7 @@
 								</div>
 								
 							<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-5 col-lg-offset-5">
 										<input type="submit" class="btn btn-primary" value="Submit" onclick="check();">
 <!-- 										<button type="button" class="btn">Cancel</button>
  -->									</div>
@@ -373,7 +395,7 @@
 			
 				var rm_id = $("#rm_id").val();
 				var rm_qty = $("#rm_qty").val();
-				
+				var rm_group = $("#rm_group").val();
 				if(validation()==true){	
 					
 				
@@ -387,6 +409,7 @@
 									 
 									rm_id : rm_id,
 									rm_qty : rm_qty,
+									rm_group:rm_group,
 									ajax : 'true'
 
 								},
@@ -546,6 +569,75 @@ function check()
 	alert("Select Tranporter");
 	}
 }
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+    $('#rm_group').change(
+            function() {
+            	
+            
+            	
+            	if(($(this).val())==2 || ($(this).val())==3){
+                    $.getJSON('${getItemsByGrp}', {
+                    	grpId : $(this).val(),
+                        ajax : 'true'
+                    }, function(data) {
+                        var len = data.length;
+
+    					$('#rm_id')
+    				    .find('option')
+    				    .remove()
+    				    .end()
+    				    $("#rm_id").append(
+                                     $("<option></option>").attr(
+                                         "value","0").text("Select Rm Item")
+                                 );
+                        for ( var i = 0; i < len; i++) {
+                        	 
+                                    
+                            $("#rm_id").append(
+                                    $("<option></option>").attr(
+                                        "value", data[i].id).text(data[i].itemName)
+                                );
+                        }
+
+                        $("#rm_id").trigger("chosen:updated");
+                    });
+                	}
+            	else
+            		{
+            		
+                    $.getJSON('${getRmItemsByGrp}', {
+                    	grpId : $(this).val(),
+                        ajax : 'true'
+                    }, function(data) {
+                        var len = data.length;
+
+    					$('#rm_id')
+    				    .find('option')
+    				    .remove()
+    				    .end()
+    				    $("#rm_id").append(
+                                     $("<option></option>").attr(
+                                         "value","0").text("Select Rm Item")
+                                 );
+                        for ( var i = 0; i < len; i++) {
+                        	 
+                                    
+                            $("#rm_id").append(
+                                    $("<option></option>").attr(
+                                        "value", data[i].rmId).text(data[i].rmName)
+                                );
+                        }
+
+                        $("#rm_id").trigger("chosen:updated");
+                    });
+            		}
+            });
+});
 </script>
 	
 								

@@ -11,6 +11,11 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    <style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 <body onload="chkRequest(${isSave})">
 
 <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -36,14 +41,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Franchisee Target
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -68,8 +73,8 @@
         <form action="${pageContext.request.contextPath}/addFrTargetProcess" class="form-horizontal" method="post" id="validation-form">
 						<div class="box-content">
 							  <div class="col2">
-									<label class="col-sm-1 col-lg-2 control-label">Franchisee</label>
-									<div class="col-sm-9 col-lg-3 controls">
+									<div class="col-md-1">Franchisee</div>
+									<div class="col-md-3">
 									<select name="fr_id" id="fr_id" class="form-control" placeholder="Select Franchise" data-rule-required="true">
 											<option value="-1">Select Franchise</option>
 										 <c:forEach items="${franchiseeList}" var="franchiseeList">
@@ -87,9 +92,9 @@
 									</div>
 								</div>
                           <div class="col2">
-                          <label class="col-sm-1 col-lg-2 control-label">Select Year</label>
+                          <div class="col-md-1">Select Year</div>
                           
-                        <div class="container text-center">
+                        <div class="col-md-3">
 
                           <input class="date-own form-control" style="width: 200px;" type="text" name="year" id="year"placeholder="select Year" value="${thisYear}">
 
@@ -103,7 +108,7 @@
                         </div>							
                         </div>
                         <div class="col2">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+									<div class="col-md-3">
 										<input type="button" class="btn btn-primary" value="Search" onclick="searchFrMonthTarget();validation()">
 <!-- 										<button type="button" class="btn">Cancel</button>
  -->									</div>
@@ -124,16 +129,16 @@
 						    <br/>
 							
 								<div class="box">
-									<div class="box-title">
+									<!-- <div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i>Franchisee Target
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 <div class="col-md-9" ></div> 
@@ -147,18 +152,18 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-												<th width="10" style="width: 8px">Sr.No</th>
-             											<th width="10" >#</th>
+												<th class="col-md-1">Sr.No</th>
+             											<th class="col-md-1" >#</th>
 														
-														<th width="80" align="left">Month</th>
-														<th width="95" align="left">Target</th>
-														<th width="95" align="left">Achieved Target</th>
-														<th width="95" align="left">Award</th>
-														<th width="95" align="left">Remark</th>
-													    <th width="80" align="left">Status</th>
+														<th class="col-md-2" align="left">Month</th>
+														<th class="col-md-1" align="left">Target</th>
+														<th class="col-md-2" align="left">Achieved Target</th>
+														<th class="col-md-1" align="left">Award</th>
+														<th class="col-md-2" align="left">Remark</th>
+													    <th class="col-md-2" align="left">Status</th>
 												</tr>
 												</thead>
 												</table>
@@ -166,18 +171,18 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-												<th width="10" style="width: 8px">Sr.No</th>
-             											<th width="10" >#</th>
+												<th class="col-md-1">Sr.No</th>
+             											<th class="col-md-1" >#</th>
 														
-														<th width="80" align="left">Month</th>
-														<th width="95" align="left">Target</th>
-														<th width="95" align="left">Achieved Target</th>
-														<th width="95" align="left">Award</th>
-														<th width="95" align="left">Remark</th>
-													    <th width="80" align="left">Status</th>
+														<th class="col-md-2" align="left">Month</th>
+														<th class="col-md-1" align="left">Target</th>
+														<th class="col-md-2" align="left">Achieved Target</th>
+														<th class="col-md-1" align="left">Award</th>
+														<th class="col-md-2" align="left">Remark</th>
+													    <th class="col-md-2" align="left">Status</th>
 												</tr>
 												</thead>
 												<tbody>
@@ -218,10 +223,10 @@
 											</table>
 										</div>
 									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
-										<input type="submit" class="btn btn-primary" value="Submit" onclick="return validation()">
+								<br>
+								<div class="form-group"><div class="col-md-5"></div>
+									<div class="col-md-1">
+										<input type="submit" class="btn btn-primary" value="Submit" onclick="return validation()" id="targetSave" disabled>
 <!-- 										<button type="button" class="btn">Cancel</button>
  -->									</div>
 								</div>
@@ -229,10 +234,10 @@
 						</div></form>
 					</div>
 				</div>
-			</div>
+			</div></div></div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -322,7 +327,8 @@
 				}, function(data) {
 					var len = data.length;
 					$('#loader').hide();
-				
+					document.getElementById("targetSave").disabled = false;
+
 					$.each(data,function(key, frTarget) {
 						
 					status=1;

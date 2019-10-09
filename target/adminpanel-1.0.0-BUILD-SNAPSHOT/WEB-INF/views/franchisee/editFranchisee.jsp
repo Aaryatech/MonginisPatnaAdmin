@@ -80,8 +80,8 @@
 												Date</label>
 											<div class="col-sm-5 col-lg-3 controls">
 												<input class="form-control date-picker" id="dp1" size="16"
-													type="text" name="fr_opening_date" data-rule-required="true"
-													value="${franchiseeList.frOpeningDate}" required placeholder="Opening Date"/>
+													type="text" name="fr_opening_date" 
+													value="${franchiseeList.frOpeningDate}"  placeholder="Opening Date"/>
 											</div>
 										</div>
 
@@ -239,7 +239,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="fr_city" id="fr_city"
 													value="${franchiseeList.frCity}" placeholder="City"
-													class="form-control" data-rule-required="true" data-rule-minlength="3" />
+													class="form-control" data-rule-required="true"  />
 											</div>
 										</div>
 
@@ -347,7 +347,7 @@
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker" id="fr_birth_date" size="16"
 													type="text" name="fr_birth_date"
-													value="${franchiseeList.ownerBirthDate}"  required placeholder="Birthdate"/>
+													value="${franchiseeList.ownerBirthDate}"   placeholder="Birthdate"/>
 											</div>
 										</div>
                                           <div class="form-group">
@@ -355,7 +355,7 @@
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker" id="fr_license_date" size="16"
 													type="text" name="fr_license_date"value="${franchiseeList.fbaLicenseDate}"
-													required placeholder="FDA License Date"/>
+											required		 placeholder="FDA License Date"/>
 											</div>
 										</div>
 										 <div class="form-group">
@@ -363,7 +363,7 @@
 											<div class="col-sm-5 col-lg-4 controls">
 												<input class="form-control date-picker" id="fr_agreement_date" size="16"
 													type="text" name="fr_agreement_date"value="${franchiseeList.frAgreementDate}"
-													required placeholder="Agreement Date"/>
+													 placeholder="Agreement Date"/>
 											</div>
 										</div>
 										<div class="form-group">
@@ -388,7 +388,7 @@
                                                            
                                                                       </c:when>
                                                                       
-                                                                       <c:when test="${franchiseeList.frGstType=='7500000'}">
+                                                                       <c:when test="${franchiseeList.frGstType=='10000000'}">
                                                                          <option value="0" >Non Registered</option>
                                                                        
                                                                         <option value="2000000" >Composite</option>

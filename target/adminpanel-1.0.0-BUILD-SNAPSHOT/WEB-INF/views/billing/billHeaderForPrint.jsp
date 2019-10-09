@@ -5,10 +5,16 @@
 
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 <body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
+<c:url var="excelForFrBill" value="/excelForFrBill" />
 	<c:url var="callGetBillListProcess" value="/getBillListProcessForPrint" />
 
 	<div class="container" id="main-container">
@@ -28,14 +34,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+			<!-- <div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>View Your Bills for Print
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -46,7 +52,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Bill List
+								<i class="fa fa-bars"></i> View Your Bills for Print
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -62,7 +68,9 @@
 
 						<div class="box-content">
 							<form class="form-horizontal" method="get" id="validation-form">
-
+          					<input type="hidden" class="form-control" name="billnumber" id="billnumber"	value="0"  />
+							<input type="hidden" class="form-control" name="issinglepdf" id="issinglepdf" 	value="0" />
+						
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
@@ -85,7 +93,7 @@
 
 									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Select
 										Franchise </label>
-									<div class="col-sm-9 col-lg-10 controls">
+									<div class="col-sm-9 col-lg-3 controls">
 
 										<select class="form-control chosen" multiple="multiple"
 											tabindex="6" name="fr_id" id="fr_id">
@@ -99,13 +107,13 @@
 										</select>
 									</div>
 
+                          
+							
 
-									<h4 align="center">OR</h4>
 
-
-									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Select
+									<label for="textfield2" class="col-xs-3 col-lg-2 control-label"> <b>OR</b>  &nbsp; Select
 										Route </label>
-									<div class="col-sm-9 col-lg-10 controls">
+									<div class="col-sm-9 col-lg-3 controls">
 
 
 										<select class="form-control chosen" tabindex="6"
@@ -119,7 +127,7 @@
 
 										</select>
 									</div>
-								</div>
+							<!-- 	</div>
 
 
 
@@ -129,10 +137,10 @@
 
 
 
-								<div align="center" class="form-group">
+								<div align="center" class="form-group"> -->
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-										<input class="btn btn-primary" value="Submit" id="callSubmit"
+										class="col-sm-1">
+										<input class="btn btn-primary" type="button" value="Search" id="callSubmit"
 											onclick="callSearch()">
 
 
@@ -162,24 +170,26 @@
 								<!-- <tion="getBillListProcess" class="form-horizontal"
 								method="post" id="validation-form"> -->
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Bill List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 
-										<div align="center" class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Transport
+										<div align="center" class="form-group" style="color:white; height:65px; background: #0288d1;
+    background: -webkit-linear-gradient(45deg, #0288d1 0%, #26c6da 100%);
+    background: linear-gradient(45deg, #e693c6 0%,  #5cc8d6 100%);box-shadow: 0 6px 20px 0 rgba(38, 198, 218, 0.5);  ">
+										<br>	<label class="col-sm-3 col-lg-2 control-label">Transport
 												Mode </label>
 											<div class="col-sm-5 col-lg-3 controls">
-												<input type="text" class="form-control"
+												<input type="text" class="form-control" id="transport_mode"
 													name="transport_mode" value="By Road"
 													data-rule-required="true" />
 											</div>
@@ -187,6 +197,7 @@
 												</label>
 											<div class="col-sm-5 col-lg-3 controls">
 												<input type="text" class="form-control" name="vehicle_no"
+												id="vehicle_no"
 													value="0" data-rule-required="true" />
 											</div>
 														</div>
@@ -194,20 +205,19 @@
 
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="border: 0">
-											<table width="100%" class="table table-advance" id="table1">
-												<thead>
+											<table width="100%" class="table table-advance" id="table1"  border="1">
+												<thead style="background-color: #f3b5db; ">
 													<tr>
 													<th class="col-sm-1"><input type="checkbox"
-													onClick="selectBillNo(this)" /> Select All<br /></th>
-														<th class="col-sm-1">Sr
-															No</th>
-														<th class="col-md-1">Invoice No</th>
+													onClick="selectBillNo(this)" /> All<br /></th>
+														<th class="col-sm-1">Sr</th>
+														<th class="col-md-1">Inv No</th>
 														<th class="col-md-1">Date</th>
-														<th class="col-md-2">Franchise Name</th>
-														<th class="col-sm-1">Taxable Amt</th>
-														<th class="col-sm-1">Total tax</th>
-														<th class="col-md-1">Grand Total</th>
-														<th class="col-md-1">Action</th>
+														<th class="col-md-2">Franchise</th>
+														<th class="col-md-2">Taxable Amt</th>
+														<th class="col-sm-1">Tax Amt</th>
+														<th class="col-md-1">Total</th>
+														<th class="col-md-2">Action</th>
 														
 
 														<!-- 	<th width="300" align="center">Action</th> -->
@@ -222,10 +232,10 @@
 														
 															<td class="col-sm-1"><input type="checkbox" name="select_to_print"
 																id="${billHeadersList.billNo}"
-																value="${billHeadersList.billNo}" /></td>
-
+																value="${billHeadersList.billNo}"/></td>
+                                                          
 															<td class="col-sm-1"><c:out value="${count.index+1}" /></td>
-
+                                                           
 															<td class="col-md-1"><c:out
 																	value="${billHeadersList.invoiceNo}" /></td>
 
@@ -234,23 +244,23 @@
 
 															<td class="col-md-2"><c:out
 																	value="${billHeadersList.frName}" /></td>
-															<td class="col-sm-1" align="right"><c:out
+															<td class="col-md-2" style="text-align:right;"><c:out
 																	value="${billHeadersList.taxableAmt}" /></td>
-															<td class="col-sm-1" align="right"><c:out
+															<td class="col-sm-1" style="text-align:right;"><c:out
 																	value="${billHeadersList.totalTax}" /></td>
 															
-															<td class="col-md-1" align="right">
+															<td class="col-md-1" style="text-align:right;">
 															
 															<fmt:formatNumber type="number" maxFractionDigits="2" value="${billHeadersList.taxableAmt + billHeadersList.totalTax}" /></td>
 															
-															<td class="col-md-1" align="center">
+															<td class="col-md-2" align="center">
 															<div class="form-group">
-															<input type="checkbox" name="select_to_print"
-																id="${billHeadersList.billNo}"
-																value="${billHeadersList.billNo}"/>
+															
 															<input type="button"  id="btn_submit"
 															class="btn btn-primary" onclick="submitBill()"
-															value="BillDetail" /></div></td>
+															value="BillDetail" />&nbsp;&nbsp;<input type="button"  id="btn_submit_pdf"
+															class="btn btn-primary"
+															value="PDF" onclick="generateSinglePdf(${billHeadersList.billNo})"  /></div></td>
 
 																
 
@@ -267,9 +277,11 @@
 								style="margin-right: 5px;" onclick="submitBill()">Get
 								PDF</button> -->
 
-										<input type="button" margin-right: 5px;" id="btn_submit"
+										<input type="button"  id="btn"
 											class="btn btn-primary" onclick="submitBill()"
 											value="BillDetail" />
+											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="createExel();" >
+											 
 									</div>
 								</div>
 							</form>
@@ -338,24 +350,55 @@
 
 	<script type="text/javascript">
 		function submitBill() {
-
 			//submitBillForm.submit();
 			// window.open("${pageContext.request.contextPath}/pdf?url=showBillPdf");
-
-			// window.open("${pageContext.request.contextPath}/showBillListForPrint");
+//alert("In submit bill-pppp");
+			//window.open("${pageContext.request.contextPath}/getBillDetailForPrint");
+var form = document.getElementById("validation-form").target="_blank";
+var form = document.getElementById("validation-form");
+form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
+form.submit();
 		}
-
+		function submitBill1(selectedBills){
+			//alert("selectedBills " +selectedBills);
+			var vehicleNo = document.getElementById("vehicle_no").value;
+			var transportMode = document.getElementById("transport_mode").value;
+			
+			window.open("${pageContext.request.contextPath}/getBillDetailForPrint1/"+vehicleNo+'/'+transportMode+'/'+selectedBills);
+		}
 		$('#btn_submit')
 				.click(
 						function() {
-							var form = document
-									.getElementById("validation-form")
-							form.action = "${pageContext.request.contextPath}/BillDetailForPrint";
+							var form = document.getElementById("validation-form")
+							form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
 							form.submit();
 						});	
+		
 	</script>
 
 
+	<script type="text/javascript">
+	function submitBillPdf() {
+		document.getElementById("validation-form").target = "_blank";
+
+		var form = document.getElementById("validation-form");
+
+		form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+		form.submit();
+	}
+	function generateSinglePdf(billNo) {
+		
+		document.getElementById("billnumber").value=billNo;
+		document.getElementById("issinglepdf").value=1;
+		document.getElementById("validation-form").target = "_blank";
+
+		var form = document.getElementById("validation-form");
+
+		form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+		form.submit();
+	}
+		
+	</script>
 
 	<!--flaty scripts-->
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
@@ -462,19 +505,19 @@
 
 													tr
 															.append($(
-																	'<td class="col-sm-1" align="right"></td>')
+																	'<td class="col-md-2" style="text-align:right;"></td>')
 																	.html(
 																			bill.taxableAmt.toFixed(2)));
 
 													tr
 															.append($(
-																	'<td class="col-sm-1" align="right"></td>')
+																	'<td class="col-sm-1" style="text-align:right;"></td>')
 																	.html(
 																			bill.totalTax.toFixed(2)));
 
 													tr
 															.append($(
-																	'<td class="col-md-1" align="right"></td>')
+																	'<td class="col-md-1" style="text-align:right;"></td>')
 																	.html(
 																			bill.grandTotal.toFixed(2)));
 													
@@ -483,7 +526,7 @@
 													//tr.append($('<td></td>').html("<a href='${pageContext.request.contextPath}/updateBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='update' value='Update'/></a><a href='${pageContext.request.contextPath}/viewBillDetails/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='view' value='View'/></a><a href='${pageContext.request.contextPath}/deleteBill/"+bill.billNo+"/"+bill.frName+"'><input type='button' name='deleteBill' value='Delete'/></a>"));
 													
 													
-													tr.append($('<td class="col-md-1"></td>').html("<input type='checkbox' name='select_to_print' value="+bill.billNo+"><input type='button' id='btn_submit' name='btn_submit' onClick='submitBill()' value='BillDetail'>"));
+													tr.append($('<td class="col-md-2"></td>').html("<input type='button' id='btn_submit' name='btn_submit' onClick='submitBill1("+bill.billNo+")' value='BillDetail'  class='btn btn-primary'/> &nbsp;&nbsp; <input type='button' id='btn_submit_pdf' value='PDF'  class='btn btn-primary'   onclick=generateSinglePdf("+ bill.billNo+") '/>"));
 
 													$('#table1 tbody').append(
 															tr);
@@ -571,6 +614,58 @@
 
 							});
 
+		}
+	</script>
+	
+	<script type="text/javascript">
+	 
+		function createExel() {
+ 
+			var fromDate = document.getElementById("dp1").value;
+			var toDate = document.getElementById("dp2").value;
+			  var select_to_print = document.forms[0];
+			 // alert(JSON.stringify(select_to_print));
+    	var txt = "";
+    	var i;
+    	var flag=0;
+    	var all=0;
+    	 for (i = 0; i < select_to_print.length; i++) {
+        if (select_to_print[i].checked  && select_to_print[i].value!="on") {
+            txt = txt + select_to_print[i].value + ",";
+            flag=1;
+        }
+    } 
+			
+			 if(flag==1)
+				 {
+			$
+					.getJSON(
+							'${excelForFrBill}',
+							{
+								checkboxes : txt ,
+								all : all,
+								fromDate : fromDate,
+								toDate : toDate,
+								ajax : 'true'
+							},
+							function(data) {
+								
+							 alert("Excel Ready");
+								 exportToExcel();
+							 
+							});
+				 }
+			 else
+				 {
+				 alert("Select Minimum 1 Bill ");
+				 }
+
+		}
+		
+		function exportToExcel()
+		{
+			alert("Export Excel");
+			window.open("${pageContext.request.contextPath}/exportToExcel"); 
 		}
 	</script>
 

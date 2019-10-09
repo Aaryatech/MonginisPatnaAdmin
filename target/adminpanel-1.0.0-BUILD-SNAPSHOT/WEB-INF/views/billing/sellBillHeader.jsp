@@ -4,6 +4,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+	<style>
+	table{
+  width:100%;
+  border:1px solid #ddd;
+}</style>
 	<body>
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -26,14 +31,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Sell Bill Header
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -64,7 +69,7 @@
 
 									<label for="textfield2" class="col-xs-3 col-lg-2 control-label">Select
 										Franchisee </label>
-									<div class="col-sm-9 col-lg-6 controls">
+									<div class="col-sm-9 col-lg-8 controls">
 
 										<select class="form-control chosen" multiple="multiple"
 											tabindex="6" name="fr_id" id="fr_id" required>
@@ -95,9 +100,9 @@
 
 									</div>
 
-								</div>
-	            <br><br>
-								<div align="center" class="form-group">
+								<!-- </div>
+	        
+								<div align="center" class="form-group"> -->
 									<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
 										<input type="button" class="btn btn-primary" value="Search" id="callSubmit"
@@ -122,16 +127,16 @@
 								<!-- <tion="getBillListProcess" class="form-horizontal"
 								method="post" id="validation-form"> -->
 								<div class="box">
-									<div class="box-title">
+									<!-- <div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Sell Bill List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
 
@@ -140,20 +145,20 @@
 										<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
-										<th width="138" style="width: 18px" align="left">Sr
-															No</th>
-														<th width="138" align="left">Bill No</th>
-														<th width="159" align="left">Invoice No</th>
-														<th width="159" align="left">Bill date</th>
-														<th width="190" align="left">Franchisee Name</th>
-														<th width="159" align="left">Grand Total</th>
-														<th width="190" align="left">Payable Amount</th>
-														<th width="180" align="left">Paid Amount</th>
-														<th width="105" align="left">Pay Mode</th>
-														<th width="159" align="left">Action</th>
+										<th  class="col-md-1"align="left">Sr
+															</th>
+														<th class="col-md-1" align="left">Bill No</th>
+														<th class="col-md-2" align="left">Invoice No</th>
+														<th class="col-md-2" align="left">Bill date</th>
+														<th class="col-md-2" align="left">Fr Name</th>
+														<th class="col-md-1" align="left">GrandTotal</th>
+														<th class="col-md-1" align="left">Payable</th>
+														<th class="col-md-1" align="left">Paid</th>
+														<th class="col-md-1" align="left">PayMode</th>
+														<th class="col-md-1" align="left">Action</th>
 												</tr>
 												</thead>
 												</table>
@@ -161,20 +166,20 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table  class="table table-advance" id="table_grid" name="table_grid">
+										<table  class="table table-advance" id="table_grid"  border="1">
 											<thead>
 												<tr class="bgpink">
-										<th width="138" style="width: 18px" align="left">Sr
-															No</th>
-														<th width="138" align="left">Bill No</th>
-														<th width="159" align="left">Invoice No</th>
-														<th width="159" align="left">Bill date</th>
-														<th width="190" align="left">Franchisee Name</th>
-														<th width="159" align="left">Grand Total</th>
-														<th width="190" align="left">Payable Amount</th>
-														<th width="180" align="left">Paid Amount</th>
-														<th width="105" align="left">Pay Mode</th>
-														<th width="159" align="left">Action</th>
+										<th  class="col-md-1" align="left">Sr
+															</th>
+														<th class="col-md-1" align="left">Bill No</th>
+														<th class="col-md-2" align="left">Invoice No</th>
+														<th class="col-md-2" align="left">Bill date</th>
+														<th class="col-md-2" align="left">Fr Name</th>
+														<th class="col-md-1" align="left">GrandTotal</th>
+														<th class="col-md-1" align="left">Payable</th>
+														<th class="col-md-1" align="left">Paid</th>
+														<th class="col-md-1" align="left">PayMode</th>
+														<th class="col-md-1" align="left">Action</th>
 												</tr>
 												</thead>
 										
@@ -211,10 +216,10 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div></div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -318,73 +323,59 @@
 
 													var index = key + 1;
 
-													var tr = "<tr>";
+													var tr = $('<tr></tr>');
 
-													var indexfortable="<td>&nbsp;&nbsp;&nbsp;"
-														+  index
-														+ "</td>";
-													var sellBillNo = "<td>&nbsp;&nbsp;&nbsp;"
-															+ sellBillData.sellBillNo
-															+ "</td>";
-															var invoiceNo = "<td>&nbsp;&nbsp;&nbsp;"
-																+ sellBillData.invoiceNo
-																+ "</td>";
-																var billDate = "<td>&nbsp;&nbsp;&nbsp;"
-																	+ sellBillData.billDate
-																	+ "</td>";
-																	var frName = "<td>&nbsp;&nbsp;&nbsp;"
-																		+ sellBillData.frName
-																		+ "</td>";
-
-																	var grandTotal = "<td>&nbsp;&nbsp;&nbsp;"
-																		+ sellBillData.grandTotal
-																		+ "</td>";
-
-																		var PayableAmt = "<td>&nbsp;&nbsp;&nbsp;"
-						 													+ sellBillData.payableAmt
-						 													+ "</td>";
+													tr.append($(
+															'<td class="col-sm-1"></td>')
+															.html(key + 1));
+													
+													tr
+													.append($(
+															'<td class="col-md-1"></td>')
+															.html(sellBillData.sellBillNo));
+													
+													tr
+													.append($(
+															'<td class="col-md-2"></td>')
+															.html(sellBillData.invoiceNo));
+													
+													tr
+													.append($(
+															'<td class="col-md-2"></td>')
+															.html( sellBillData.billDate));
+													tr
+													.append($(
+															'<td class="col-md-2"></td>')
+															.html(sellBillData.frName));
+																
+															
+													tr
+													.append($(
+															'<td class="col-md-1"></td>')
+															.html(sellBillData.grandTotal));	
+													
+													tr
+													.append($(
+															'<td class="col-md-1"></td>')
+															.html(sellBillData.payableAmt));
+													
+													tr
+													.append($(
+															'<td  class="col-md-1"></td>')
+															.html(sellBillData.paidAmt));
+																	
+													tr
+													.append($(
+															'<td class="col-md-1"></td>')
+															.html(sellBillData.paymentMode));					
+																		
+													tr
+													.append($(
+															'<td class="col-md-1">&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/viewBillDetails?sellBillNo='+ sellBillData.sellBillNo+'&billDate='+sellBillData.billDate+'&frName='+sellBillData.frName+'" class="action_btn" name='+'><abbr title="Details"><i class="fa fa-list"></i></abbr></a></td>'));								
 																			
-						  													var paidAmt = "<td>&nbsp;&nbsp;&nbsp;"
-																				+ sellBillData.paidAmt
-																				+ "</td>";
-
-																			var paymentMode = "<td>&nbsp;&nbsp;&nbsp;"
-																				+ sellBillData.paymentMode
-																				+ "</td>";
-																				
-																				var viewBill = '<td>&nbsp;&nbsp;&nbsp;'
-																				+'<a href="${pageContext.request.contextPath}/viewBillDetails?sellBillNo='+ sellBillData.sellBillNo+'&billDate='+sellBillData.billDate+'&frName='+sellBillData.frName+'" class="action_btn" name='+'><abbr title="Details"><i class="fa fa-list"></i></abbr></a>'
-																				+ "</td>";
-													var trclosed = "</tr>";
-
-													$('#table_grid tbody')
-															.append(tr);
+													$('#table_grid tbody').append(
+															tr);
 													
-													$('#table_grid tbody')
-													.append(indexfortable);
-													$('#table_grid tbody')
-															.append(sellBillNo);
-													$('#table_grid tbody')
-													.append(invoiceNo);
-													$('#table_grid tbody')
-													.append(billDate);
-													$('#table_grid tbody')
-													.append(frName);
-													$('#table_grid tbody')
-													.append(grandTotal);
-													$('#table_grid tbody')
-													.append(PayableAmt);
-													$('#table_grid tbody')
-													.append(paidAmt);
-													
-													$('#table_grid tbody')
-													.append(paymentMode);
-													
-													$('#table_grid tbody')
-													.append(viewBill);
-													
-													$('#table_grid tbody')
-													.append(trclosed);
 												
 												})
 										

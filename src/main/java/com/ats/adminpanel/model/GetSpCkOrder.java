@@ -50,6 +50,20 @@ public class GetSpCkOrder {
 	
 	private String orderPhoto;
 	
+	private String spBookedForName;
+	
+	
+	
+	public String getSpBookedForName() {
+		return spBookedForName;
+	}
+
+
+	public void setSpBookedForName(String spBookedForName) {
+		this.spBookedForName = spBookedForName;
+	}
+
+
 	public String getItemId() {
 		return itemId;
 	}
@@ -264,10 +278,11 @@ public class GetSpCkOrder {
 				+ ", rmAmount=" + rmAmount + ", spDeliveryDate=" + spDeliveryDate + ", itemId=" + itemId
 				+ ", spDeliveryPlace=" + spDeliveryPlace + ", spCustName=" + spCustName + ", spEvents=" + spEvents
 				+ ", spEventsName=" + spEventsName + ", spCustMobNo=" + spCustMobNo + ", spfName=" + spfName
-				+ ", cusChoicePhoto=" + cusChoicePhoto + ", orderPhoto=" + orderPhoto + "]";
+				+ ", cusChoicePhoto=" + cusChoicePhoto + ", orderPhoto=" + orderPhoto + ", spBookedForName="
+				+ spBookedForName + "]";
 	}
-    
-	}
+
+}
 	
 
 	

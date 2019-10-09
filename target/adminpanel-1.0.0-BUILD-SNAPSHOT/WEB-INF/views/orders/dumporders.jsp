@@ -25,7 +25,13 @@
 }
 </style>
  
+  	<style>
+ table{
+  width:100%;
  
+  border:1px solid #ddd;
+}
+ </style>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
 
@@ -53,32 +59,32 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-		<div class="page-title">
+	<!-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Dump Orders
 				</h1>
 			</div>
-		</div>
+		</div> -->
 		<!-- END Page Title -->
 
-
+	<form id="submitDumpOrderForm"
+				action="${pageContext.request.contextPath}/submitDumpOrder"
+				method="post">
 		<!-- BEGIN Main Content -->
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Orders For Franchise
+					<i class="fa fa-bars"></i>Dump Orders For Franchise
 				</h3>
 
 			</div>
 			<div class="box-content">
-				<div class="row" >
+				
 					
-					<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Select
-							Menu</label>
-						<div class=" col-md-6 controls menu_select">
+					<div class="form-group">
+				<label class=" col-md-2 control-label menu_label">Menu</label>
+						<div class=" col-md-4 controls menu_select">
 
 							<select data-placeholder="Choose Menu"
 								class="form-control chosen" tabindex="6" id="selectMenu"
@@ -94,23 +100,23 @@
 
 							</select>
 						</div>
-					</div>
+					<!-- </div>
 					<div class="form-group col-md-8">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-						<label class=" col-md-3 control-label menu_label">Previous Order
+					<label class=" col-md-3 control-label franchisee_label"></label> -->
+						<label class=" col-md-2 control-label menu_label">Previous Order
 										Date
 							</label>
-						<div class=" col-md-6 controls menu_select">
+						<div class=" col-md-4 controls menu_select">
 
-							<input value="${todayDate }" class="form-control date-picker" id="dp2" size="16"
-											type="text" name="oreder_date"/>
+							<input value="${todayDate}" class="form-control date-picker" id="dp2" size="16"
+											type="text" name="order_date"/>
 						</div>
-					</div>
-					<div class="form-group col-md-8">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-								<label class=" col-md-3 control-label franchisee_label">Select
-							Franchise </label>
-						<div class=" col-md-6 controls franchisee_select">
+					 </div>
+					 <br><br>
+					<div class="form-group"> 
+<!-- 					<label class=" col-md-3 control-label franchisee_label"></label>
+ -->								<label class=" col-md-2 control-label franchisee_label">Franchise </label>
+						<div class=" col-md-4 controls franchisee_select">
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen " multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr">
@@ -128,14 +134,14 @@
 
 							</select>
 						</div>
-					</div>
+					<!-- </div>
 					
 					
 
-				</div>
+				
 
 				<div class="row">
-					<div class="col-md-12" style="text-align: center">
+					<div class="col-md-12" style="text-align: center"> -->
 						<input type="button" id="searchFr" class="btn btn-info" value="Search"
 							onclick="searchOrders()" />
 						
@@ -154,23 +160,41 @@
 				</div>
 
 			</div>
-		</div>
+		
 
 
 		<div class="box">
-			<div class="box-title">
+		<!-- 	<div class="box-title">
 				<h3>
-					<i class="fa fa-list-alt"></i>Order
+					<i class="fa fa-list-alt"></i>Dump Orders
 				</h3>
 
-			</div>
+			</div> -->
 
-			<form id="submitDumpOrderForm"
-				action="${pageContext.request.contextPath}/submitDumpOrder"
-				method="post">
+		
 				<div class=" box-content">
-					<div class="row">
-						<div class="col-md-12 table-responsive">
+					<div id="table-scroll" class="table-scroll">
+							 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<!-- <table id="table2" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+												<th class="col-md-1"></th>
+									
+												</tr>
+												</thead>
+												</table> -->
+									
+									</div>
+									<div class="table-wrap">
+									
+										<table id="table_grid" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+											
+												</tr>
+												</thead>
+					<!-- 	<div class="col-md-12 table-responsive">
 							<table class="table table-advance "
 								style="width: 100%" id="table_grid">
 								<thead>
@@ -181,30 +205,31 @@
 
 									
 
-								</thead>
+								</thead> -->
 								<tbody>
 
 								</tbody>
 							</table>
 						</div>
-					</div>
+					
 
 
 
 					<div class="row" align="center">
-						<div class="col-md-offset-6 col-md-6" align="center">
+						<div class="col-md-offset-6 col-md-5" align="center">
 
 							<button class="btn btn-info pull-right"
 								style="margin-right: 5px;" onclick="submitOrder()" id="submitOrder" disabled>Submit</button>
 						</div>
 					</div>
 				</div>
-			</form>
-		</div>
+				</div>
+			
+		</div></form>
 	</div>
 	<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -314,7 +339,7 @@
 
 													 
 														var tr = $('<tr></tr>');
-														 
+														tr.append($('<td></td>').html(""+index));
 													  	tr.append($('<td></td>').html(orderdata.itemName));
 
 													  
@@ -332,7 +357,7 @@
 													    	 		 }
 													    		 //var orderQty = "<td align=center><input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+orderdata.itemId+"orderQty"+ id+ " name=itemId"+orderdata.itemId+"orderQty"+id+" value = "+qty +"></td>"; 
 																
-													    		 tr.append($('<td></td>').html("<input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+orderdata.itemId+"orderQty"+ id+ " name=itemId"+orderdata.itemId+"orderQty"+id+" value = "+qty +">"));
+													    		 tr.append($('<td></td>').html("<input onkeypress='return IsNumeric(event);' ondrop='return false;' style='  height: 24px;'  onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+orderdata.itemId+"orderQty"+ id+ " name=itemId"+orderdata.itemId+"orderQty"+id+" value = "+qty +">"));
 													      });
 													    
 														
@@ -398,7 +423,8 @@
         var tr;
         tr = document.getElementById('table_grid').tHead.children[0];
 
-        tr.insertCell(0).outerHTML = "<th> ItemName</th>"
+        tr.insertCell(0).outerHTML = "<th>Sr.</th>"
+        tr.insertCell(1).outerHTML = "<th>ItemName</th>"
         $.each($("#selectFr option:selected"), function(){            
         	frName.push($(this).text());
         	i++;
@@ -406,7 +432,7 @@
         i=i-1;
         $.each(frName, function(){  
        
-            tr.insertCell(1).outerHTML = "<th>"+frName[i] +"</th>"
+            tr.insertCell(2).outerHTML = "<th>"+frName[i] +"</th>"
             i--;
        });
         	

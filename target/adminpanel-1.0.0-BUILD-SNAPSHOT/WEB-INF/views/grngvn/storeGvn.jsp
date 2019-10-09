@@ -48,65 +48,28 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search Store GVN
+								<i class="fa fa-bars"></i> Sale GVN<!-- Store GVN  -->
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
 									class="fa fa-chevron-up"></i></a>
 							</div>
-							<!-- <div class="box-tool">
-								<a data-action="collapse" href="#"><i
-									class="fa fa-chevron-up"></i></a> <a data-action="close" href="#"><i
-									class="fa fa-times"></i></a>
-							</div> -->
+							
 						</div>
-
-
 						<div class="box-content">
 							<form
-								action="${pageContext.request.contextPath}/showStoreGvnDetails"
-								class="form-horizontal" method="get" id="validation-form">
-
-
-
-
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">From
-										Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date" size="16"
-											type="text" name="from_date" value="${fromDate}" required 
-											onblur="getDate()"/>
-									</div>
-								
-									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16"
-											type="text" value="${toDate}" name="to_date" required 
-											onblur="getDate()" />
-									</div>
-								
-
-								<div class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-									<input type="submit" value="Submit" class="btn btn-primary"/>
-
-</div>
-
-								</div>
-
-
-							</form>
-
-
-							<form
 								action="${pageContext.request.contextPath}/insertStoreGvnByCheckBoxes"
-								class="form-horizontal" method="get" id="validation-form">
+								class="form-horizontal" method="post" id="validation-form">
+<input type="hidden" value="${headerId}" id="headerId" name="headerId">
+
+
+<input type="hidden" value="${type}" id="typeValue" name="typeValue">
 
 
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> GVN List
+											<i class="fa fa-table"></i> GVN List Date-${grnDate} srNo-${srNo}
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -121,14 +84,17 @@
 										<div class="table-responsive" style="border: 0">
 											<table width="100%"
 												class="table table-advance table-responsive table-position" id="table1">
-												<thead>
-													<tr>
-														<th width="30"></th>
+												<thead style="background-color:#f3b5db; ">
+													<tr >
+														<th width="30"><input type="checkbox" name="select_to_agree1"/></th>
 														<th width="50" style="width: 18px" align="left">Sr No</th>
-														<th width="100" align="left">Bill No</th>
+														<th width="100" align="left">Invoice No</th>
 														<th width="120" align="left">Franchise Name</th>
 														<th width="120" align="left">Item Name</th>
 														<th width="100" align="left">GVN Qty</th>
+														<th width="100" align="left">Apr Qty Dispatch</th>
+														
+														<th width="100">Edited Qty</th>
 														<th width="100" align="left">PHOTO 1</th>
 														<th width="100" align="left">PHOTO 2</th>
 														<th width="100" align="left">Status</th>
@@ -140,39 +106,50 @@
 													<c:forEach items="${gvnList}" var="gvnList"
 														varStatus="count">
 
-														<tr>
+														<c:choose>
+															<c:when
+																test="${gvnList.aprQtyGate!=gvnList.grnGvnQty}">
+
+																<c:set var="color" value="red"></c:set>
+															</c:when>
+															<c:otherwise>
+																<c:set var="color" value="white"></c:set>
+															</c:otherwise>
+														</c:choose>
+
+														<tr bgcolor="${color}">
 															<c:choose>
 																<c:when test="${gvnList.grnGvnStatus==2}">
 																	<td><input type="checkbox" name="select_to_agree"
 																		 id="${gvnList.grnGvnId}"
-																		value="${gvnList.grnGvnId}"></></td>
+																		value="${gvnList.grnGvnId}"></td>
 
 																</c:when>
 																<c:when test="${gvnList.grnGvnStatus==4}">
-																	<td><input type="checkbox" name="select_to_agree" disabled="disabled"
-																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></></td>
+																	<td>-<%-- <input type="checkbox" name="select_to_agree" disabled="disabled"
+																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"> --%></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==5}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></></td>
+																		id="${gvnList.grnGvnId}" value="${gvnList.grnGvnId}"></td>
 
 
 																</c:when>
 
 																<c:otherwise>
 
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${gvnList.grnGvnId}"
-																		value="${gvnList.grnGvnId}"></></td>
+																		value="${gvnList.grnGvnId}"> --%></td>
 
 
 																</c:otherwise>
 															</c:choose>
 															<td><c:out value="${count.index+1}" /></td>
 
-															<td align="left"><c:out value="${gvnList.billNo}" /></td>
+															<td align="left"><c:out value="${gvnList.invoiceNo}" /></td>
 
 															<td align="left"><c:out value="${gvnList.frName}" /></td>
 
@@ -181,10 +158,38 @@
 
 
 															<td align="left"><c:out value="${gvnList.grnGvnQty}" />
+															
+																<td align="left"><c:out value="${gvnList.aprQtyGate}" />
 																<input type="hidden"
 																name="approve_store_login${gvnList.grnGvnId}"
 																id="approve_store_login${gvnList.grnGvnId}"
 																value="${gvnList.approvedLoginStore}" /></td>
+																
+																<c:set var="qty" value="0"></c:set>
+
+
+																
+															<c:choose>
+
+																<c:when
+																	test="${gvnList.grnGvnStatus==1 or gvnList.grnGvnStatus==2 or gvnList.grnGvnStatus==3}">
+																	<c:set var="qty" value="${gvnList.aprQtyGate}" />
+																</c:when>
+
+																<c:otherwise>
+																	<c:set var="qty" value="${gvnList.aprQtyStore}" />
+																</c:otherwise>
+
+																
+															</c:choose>
+																
+																<%-- <td><input type="text" name="store_gvn_qty${gvnList.grnGvnId}" style="width: 50px;" class="form-control"
+															id='store_gvn_qty${gvnList.grnGvnId}' value="${qty}" onkeypress="checkQty(${gvnList.grnGvnId},${gvnList.grnGvnQty},${gvnList.aprQtyStore},${qty})"/></td>
+																 --%>
+																 
+																 <td><input type="text" name="store_gvn_qty${gvnList.grnGvnId}" style="width: 50px;" class="form-control"
+															id='store_gvn_qty${gvnList.grnGvnId}' value="${qty}" onkeyup="return validateQty(${gvnList.grnGvnId},${gvnList.grnGvnQty},${gvnList.aprQtyStore},${qty})"/></td>
+																
 
 															<td><a href="${url}${gvnList.gvnPhotoUpload1}"data-lightbox="image-1" >Image 1</a>
 																							</td>
@@ -198,32 +203,32 @@
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==2}">
-																	<td align="left"><c:out value="approvedByGate"></c:out></td>
+																	<td align="left"><c:out value="Approved From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==3}">
-																	<td align="left"><c:out value="rejectByGate"></c:out></td>
+																	<td align="left"><c:out value="Reject From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==4}">
-																	<td align="left"><c:out value="approvedBystore"></c:out></td>
+																	<td align="left"><c:out value="Approved From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==5}">
-																	<td align="left"><c:out value="rejectByStore"></c:out></td>
+																	<td align="left"><c:out value="Reject From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==6}">
-																	<td align="left"><c:out value="approvedByAcc"></c:out></td>
+																	<td align="left"><c:out value="Approved From Account"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==7}">
-																	<td align="left"><c:out value="rejectByAcc"></c:out></td>
+																	<td align="left"><c:out value="Reject From Account"></c:out></td>
 
 																</c:when>
 
@@ -714,7 +719,7 @@
 
 										<div
 											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-											<input type="submit" value="Submit" class="btn btn-primary">
+											<input type="submit" value="Approve" class="btn btn-primary">
 
 
 										</div>
@@ -730,7 +735,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -846,6 +851,10 @@ function insertGrnDisAgree(grnGvnId){
 var grnId=grnGvnId;
 var approve_store_login=$("#approve_store_login"+grnGvnId).val();
 var store_remark=$("#store_remark"+grnId).val();
+var store_gvn_qty=$("#store_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
+
+var typeValue = $("#typeValue").val();
 
 if($("#store_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
@@ -859,7 +868,10 @@ else{
 			
 			grnId : grnId,
 			approveStoreLogin : approve_store_login,
-			storeRemark : store_remark,				
+			storeRemark : store_remark,	
+			store_gvn_qty : store_gvn_qty,
+			headerId : headerId,
+			typeValue : typeValue,
 				ajax : 'true',
 			
 
@@ -907,6 +919,9 @@ function insertGrnCall(grnGvnId){
 var grnId=grnGvnId;
 var approve_store_login=$("#approve_store_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
+var store_gvn_qty=$("#store_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
+var typeValue = $("#typeValue").val();
 
 
 /* alert(grnId);
@@ -919,7 +934,9 @@ alert(approve_gate_login); */
 							
 							grnId : grnId,
 							approveStoreLogin:approve_store_login,
-								
+							store_gvn_qty : store_gvn_qty,
+							headerId : headerId,
+							typeValue : typeValue,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -1002,13 +1019,13 @@ for (i = 0; i < acc.length; i++) {
 
 function showGateGvnDetails(){
 	
-	alert("hi");
+	//alert("hi");
 		var fromDate=$("#from_date").val();
 	
 		var toDate=$("#to_date").val();
 		
-		alert(fromDate);
-		alert(toDate);
+		//alert(fromDate);
+		//alert(toDate);
 		
 		$.getJSON('${showGateGvnDetails}',
 				{
@@ -1022,6 +1039,17 @@ function showGateGvnDetails(){
 
 
 }
+
+
+function validateQty(grnId,grnQty,aprQty,qty){
+	
+	//alert("JJJ");
+	var entered=$("#store_gvn_qty"+grnId).val();
+	//alert("received = " +entered);
+	if(entered>grnQty){
+		alert("Can not Enter Qty Greater than auto Qty ");
+		document.getElementById("store_gvn_qty"+grnId).value=qty;
+	}
 
 </script>
 
@@ -1047,10 +1075,11 @@ function getDate(){
 
 }
 );
-
+	
 	
 }
-
+</script>
+<script type="text/javascript">
 
 </script>
 

@@ -66,8 +66,12 @@
 				<h3>
 					<i class="fa fa-bars"></i>Assign Access Role
 				</h3>
-
+				<div class="box-tool" style="text-align: right;">
+					<h3>	<a href="${pageContext.request.contextPath}/showRoleList">Role List</a></h3><a data-action="collapse" href="#"><i
+									class="fa fa-chevron-up"></i></a>
+              </div>							
 			</div>
+			
 			<div class=" box-content">
 				<form id="validation-form" action="submitAssignedRole" method="post">
 
@@ -126,7 +130,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 70%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Users Name</th>
@@ -144,7 +148,7 @@
 
 										<tr>
 
-
+                                            <c:set var="rId" value=""/>
 											<c:set var="empRoll" value="" />
 											<c:set var="btnClass" value="glyphicon glyphicon-plus" />
 											<c:set var="detail" value="" />
@@ -160,6 +164,7 @@
 												<c:choose>
 													<c:when test="${createdRoleList.roleId==userList.roleId}">
 														<c:set var="empRoll" value="${createdRoleList.roleName}" />
+														<c:set var="rId" value="${createdRoleList.roleId}" />
 
 														<c:set var="btnClass" value="glyphicon glyphicon-edit" />
 														<c:set var="detail" value="glyphicon glyphicon-th-list" />
@@ -178,7 +183,7 @@
 												data-toggle="tooltip" title='<c:out value="${add}" />'
 						  						onclick="editRole('${userList.username}', ${userList.id})"></span>
 												<a
-												href="${pageContext.request.contextPath}/showAssignUserDetail/<c:out value="${userList.id}" />/<c:out value="${userList.username}" />/${empRoll}"
+												href="${pageContext.request.contextPath}/showAssignUserDetail/<c:out value="${userList.id}" />/${rId}/<c:out value="${userList.username}" />/${empRoll}"
 												data-toggle="tooltip" title="Access Detail"> <span
 													class='<c:out value="${detail}" />'></span>
 											</a></td>

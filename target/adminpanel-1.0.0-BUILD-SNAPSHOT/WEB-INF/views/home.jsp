@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
- 
+ <html>
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
 <body>
@@ -48,13 +46,25 @@
 				</ul>
 			</div>
 			<!-- END Breadcrumb -->
+				<form action="${pageContext.request.contextPath}/searchOrdersCount" method="post"
+								id="validation-form">
+			<div class="container" id="main-container">
+			<div class="col-md-1">
+												<div class="col1title">Date:</div>
+											</div>
+	<div class="col-md-3">
+            	<input class="form-control"	placeholder="Date" name="from_datepicker"
+													id="from_datepicker" type="date"  format="dd-mm-yyyy" value="${cDate}"/> 
+                 </div>
+                 <div class="col-md-2">
+<input type="submit" name="submit" id="submit" class="btn btn-primary"/>
 
-
+                 </div>
+</div></form><br><br>
 			<!-- BEGIN Tiles -->
 			<div class="row">
-
-
-
+            
+                 
 					<div class="col-md-12">
 					<div class="row">
 					
@@ -63,10 +73,10 @@
 							<div class="col-md-3">
 								<div class="tile tile-orange">
 									<div class="img">
-										<i class="fa fa-comments"></i>
+										<i class="fa fa-shopping-cart fa-5x" ></i>
 									</div>
 									<div class="content">
-										<p class="big"><c:out value="${orderCounts.total}"></c:out></p>
+										<p class="big" ><c:out value="${orderCounts.total}"></c:out></p>
 										<p class="title"><c:out value="${orderCounts.menuTitle}"></c:out></p>
 									</div>
 								</div>

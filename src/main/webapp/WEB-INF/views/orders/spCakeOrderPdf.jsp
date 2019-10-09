@@ -16,7 +16,7 @@
     </title>
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
   </head>
-  <body>
+  <body style="background-color: #ffffff">
     <!-- code goes here -->
 
     <!-- scripts -->
@@ -36,15 +36,15 @@
  	<c:forEach items="${spCakeOrder}" var="spCakeOrder"
 														varStatus="count"> 
 														
-<table width="100%" style="font-family:arial; font-size:12px; border:1px solid #000000; margin-bottom:40px;">
-  <tr bgcolor=lightgrey >
+<table width="100%" style="font-family:arial; font-size:12px; border:1px solid #000000; margin-bottom:40px;background-color: #ffffff">
+<!--   <tr bgcolor=lightgrey >
     <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >PATNA MONGINIS</td>
-  </tr>
+  </tr> -->
   <tr >
   
-    <td width="15%"  style="border-bottom:1px solid #000000; padding:8px 20px; ">${from}</td>
-    <td width="45%"  style="font-family:arial; font-size:16px; border-left: 1px solid  #000000;border-bottom:1px solid #000000; padding:8px 20px;font-weight:bold;" align="center">${spCakeOrder.frName}</td>
-    <td width="40%"  style="border-bottom:1px solid #000000; padding:8px; border-left: 1px solid  #000000;">${spCakeOrder.orderDate}</td>
+<!--     <td width="15%"  style="border-bottom:1px solid #000000; padding:8px 20px; "></td>
+ -->    <td width="55%" colspan="2" style="font-family:arial; font-size:16px; border-left: 1px solid  #000000;border-bottom:1px solid #000000; padding:8px 20px;font-weight:bold;" align="left">${from} &nbsp;&nbsp;&nbsp;&nbsp;${spCakeOrder.frName}</td>
+    <td width="40%"  style="border-bottom:1px solid #000000;font-size:16px; padding:8px; border-left: 1px solid  #000000;font-weight:bold;">Order No-- ${spCakeOrder.spDeliveryPlace}  &nbsp;&nbsp;&nbsp; Date ${spCakeOrder.orderDate}</td>
   </tr>
   <tr>
     <td width="15%" style="font-size:12px; border-bottom:1px solid #000000; padding:1px 7px;font-weight:bold;">Sp,Cake Code / Name</td>
@@ -68,16 +68,16 @@
   <tr>
     <td  style=" font-size:12px;padding:5px 7px;font-weight:bold;border-bottom:1px solid #000000;">Date of Delivery </td>
     <td style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">${spCakeOrder.spDeliveryDate}</td>
-    <td  style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Order No-- ${spCakeOrder.spDeliveryPlace}</td>
+    <td  style=" font-size:16px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">No.Of Box:  ${spCakeOrder.spBookedForName}</td>
   </tr>
 
 <c:set var="from" value="${from+1}"/>
-<tr >
+<%-- <tr >
 <td style=" font-size:12px;padding:5px 7px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Photo</td>
 <td style="text-align:left; font-size:16px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Photo 1 :<img src="${imgUrl2}${spCakeOrder.orderPhoto}" height="60" width="60" style="border:medium;" alt="${imgUrl}${spCakeOrder.orderPhoto}"></td>
 
 <td  style=" text-align:left;font-size:16px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Photo 2 :<img src="${imgUrl}${spCakeOrder.cusChoicePhoto}" height="60" width="60" alt="${imgUrl2}${spCakeOrder.cusChoicePhoto}"></td>
-</tr></table>
+</tr> --%></table>
 
  </c:forEach>
  	<!-- scripts -->

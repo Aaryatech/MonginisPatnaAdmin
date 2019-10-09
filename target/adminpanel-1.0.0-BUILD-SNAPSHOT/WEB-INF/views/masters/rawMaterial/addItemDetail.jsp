@@ -5,6 +5,8 @@
 	 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+		 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
+	
 	<body>
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -20,7 +22,8 @@
 <c:url var="redirectToItemList" value="/redirectToItemList"/>
 	<c:url var="getRmCategory" value="/getRmCategory" />
 	<c:url var="getRmListByCatId" value="/getRmListByCatId" />
-
+<c:url var="getRmGroupFromStore" value="/getRmGroupFromStore" />
+<c:url var="getRmListByCatIdFromStore" value="/getRmListByCatIdFromStore" />
 
 	<div class="container" id="main-container">
 
@@ -107,7 +110,7 @@
 									</div></div>
 								<div class="form-group">
 									<label class="col-sm-2 col-lg-2 control-label">RM Type</label>
-									<div class="col-sm-6 col-lg-4 controls">
+									<div class="col-sm-6 col-lg-2 controls">
                                     <select name="rm_type" id="rm_type" class="form-control" placeholder="Raw Material Type"data-rule-required="true" onchange="return rmTypeChange()">
 											<option value="">Select RM Type</option>
 											<option value="1">Raw Material</option>
@@ -115,32 +118,52 @@
 									
 								   </select>									
 								   </div>
-                        <label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
-									<div class="col-sm-6 col-lg-4 controls">
+                        <%-- <label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
+									<div class="col-sm-6 col-lg-2 controls">
 										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
 										<option value="0" disabled="disabled" selected="selected">Select RM Group</option>
 											 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList"
 							varStatus="count">
+							<c:choose>
+							<c:when test="${rmItemGroupList.grpId!=2 && rmItemGroupList.grpId!=3}">
 							   <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
- 													 
-												</c:forEach>
+ 								</c:when>
+ 											 
+									
+							</c:choose>			</c:forEach>
+						
+
+										</select>
+									</div> --%>
+									
+									<label class="col-sm-3 col-lg-1 control-label">Rm Group</label>
+									<div class="col-sm-6 col-lg-2 controls">
+										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
+										<option value="0" disabled="disabled" selected="selected">Select RM Group</option>
+											 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList"
+							varStatus="count">
+							 
+							 
+							   <option value="${rmItemGroupList.catId}"><c:out value="${rmItemGroupList.catDesc}"/></option>
+ 								  
+							 		</c:forEach>
 						
 
 										</select>
 									</div>
 								
-								</div>
-									<div class="form-group">
+								<!-- </div>
+									<div class="form-group"> -->
 				<div class="col-sm-2 col-lg-2 control-label" >RM Category</div>
-									<div class="col-md-4">
+									<div class="col-md-2">
 									<select name="rm_cat" id="rm_cat" class="form-control" tabindex="6">
 										<option value="0"disabled="disabled" selected="selected">Select RM Category</option>
 											 
 										</select>
 									</div>
-			
-		                         <label class="col-sm-3 col-lg-1 control-label">Raw Material Item</label>
-								<div class="col-sm-6 col-lg-4 controls">
+				</div><div class="form-group">
+		                         <label class="col-sm-3 col-lg-2 control-label">Raw Material Item</label>
+								<div class="col-sm-6 col-lg-2 controls">
 									<select name="rm_id" id="rm_id"class="form-control chosen"  tabindex="6"  placeholder="Raw Material"data-rule-required="true">
 											<option value="0">Select Raw Material</option>
 										    
@@ -148,39 +171,39 @@
 				                 </div>
 				
 									
-									</div>
-								<div class="form-group">
+									
+								
 								<!-- <label class="col-sm-3 col-lg-2 control-label">RM Unit</label>
 									<div class="col-sm-6 col-lg-4 controls">-->
 						     	<input type="hidden" name="rm_unit_id" id="rm_unit_id "class="form-control"placeholder="RM Unit"/>
 									
 									<!--</div> -->
-								<label class="col-sm-3 col-lg-2 control-label">RM Qty</label>
-					      	    <div class="col-sm-6 col-lg-4 controls">
+								<label class="col-sm-3 col-lg-1 control-label">RM Qty</label>
+					      	    <div class="col-sm-6 col-lg-2 controls">
 							    <input type="text" name="rm_qty" id="rm_qty" class="form-control"placeholder="RM Qty" required/>
 					     	    </div>
 					     	    
-					     	    <label class="col-sm-3 col-lg-1 control-label">RM Weight</label>
-					      	    <div class="col-sm-5 col-lg-4 controls">
-							    <input type="text" name="rm_weight"   id="rm_weight" class="form-control"placeholder="RM Weight(KG)"data-rule-required="true"/>
-					     	    </div>
-								</div>
-								<div class="form-group">
+					     	   <!--  <label class="col-sm-3 col-lg-1 control-label">RM Weight</label>
+					      	    <div class="col-sm-5 col-lg-2 controls"> -->
+							    <input type="hidden" name="rm_weight"   id="rm_weight" class="form-control"placeholder="RM Weight(KG)" value="1"/>
+					     	    <!-- </div> -->
+								<!-- </div>
+								<div class="form-group"> -->
 				
 				                <label class="col-sm-3 col-lg-2 control-label">No. Of Pieces Per Item</label>
-								 	<div class="col-sm-6 col-lg-4 controls">
+								 	<div class="col-sm-6 col-lg-2 controls">
 						     	    <input type="text" name="base_qty" id="base_qty" class="form-control"placeholder="No. Of Pieces Per Item" value="${item.minQty}"   data-rule-required="true"/>
 									
 									</div> 
-								</div>
+							<!-- 	</div>
 								
 								
 					<div class="row">
-						<div class="col-md-12" style="text-align: center">
+						<div class="col-md-12" style="text-align: center"> -->
 							<input type="button" class="btn btn-info" value="ADD" name="add" id="add">
-                            <input type="button" class="btn btn-info" value="CANCEL" name="cancel" id="cancel">
+                          <!--   <input type="button" class="btn btn-info" value="CANCEL" name="cancel" id="cancel"> -->
 
-						</div>
+						<!-- </div> -->
 						<div align="center" id="loader" style="display: none">
 
 					<span>
@@ -193,26 +216,64 @@
 				</div>
 					</div>
 					</form>
-					</br>
+				
 					<form action="${pageContext.request.contextPath}/addItemDetail" method="post" class="form-horizontal" id=
 									"validation-form"
 										 method="post">
 						<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Item Detail List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="box-content">
-
+<div class="col-md-9" ></div> 
+					<label for="search" class="col-md-3" id="search">
+    <i class="fa fa-search" style="font-size:20px"></i>
+									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search.." title="Type in a name">
+										</label>  
 										<div class="clearfix"></div>
-										<div class="table-responsive" style="border: 0">
+										<div id="table-scroll" class="table-scroll">
+							 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2" class="table table-advance">
+											<thead>
+												<tr class="bgpink">
+									<th width="45" style="width: 18px">Sr.No.</th>
+														<th width="100" align="left">Item Name</th>
+														<th width="100" align="left">RM Type</th>
+														<th width="100" align="left">Raw Material</th>
+     													<th width="100" align="left">RM Weight</th>
+														<th width="100" align="left">RM Qty</th>
+														<th width="100" align="left">No. Of Pieces/Item</th>
+														<th width="81" align="left">Action</th>
+												</tr>
+												</thead>
+												</table>
+									
+									</div>
+									<div class="table-wrap">
+									
+										<table id="table1" class="table table-advance">
+											<thead>
+												<tr class="bgpink">
+											<th width="45" style="width: 18px">Sr.No.</th>
+														<th width="100" align="left">Item Name</th>
+														<th width="100" align="left">RM Type</th>
+														<th width="100" align="left">Raw Material</th>
+     													<th width="100" align="left">RM Weight</th>
+														<th width="100" align="left">RM Qty</th>
+														<th width="100" align="left">No. Of Pieces/Item</th>
+														<th width="81" align="left">Action</th>
+												</tr>
+												</thead>
+										<!-- <div class="table-responsive" style="border: 0">
 											<table width="100%" class="table table-advance" id="table1">
 												<thead>
 													<tr>
@@ -220,13 +281,12 @@
 														<th width="100" align="left">Item Name</th>
 														<th width="100" align="left">RM Type</th>
 														<th width="100" align="left">Raw Material</th>
-<!-- 														<th width="100" align="left">RM Unit</th>
- -->														<th width="100" align="left">RM Weight</th>
+     													<th width="100" align="left">RM Weight</th>
 														<th width="100" align="left">RM Qty</th>
 														<th width="100" align="left">No. Of Pieces/Item</th>
 														<th width="81" align="left">Action</th>
 													</tr>
-												</thead>
+												</thead> -->
 												<tbody>
 													 <c:forEach items="${itemDetailList}" var="itemDetailList" varStatus="count">
 														<tr>
@@ -293,10 +353,10 @@
 				         
 			          </div>
 		        </div>
-	     </div>
+	     </div>  </div>
 	<!-- END Main Content -->
 	<footer>
-	<p>2017 © MONGINIS.</p>
+	<p>2018 © MONGINIS.</p>
 	</footer>
 
 
@@ -637,7 +697,7 @@ $(document).ready(function() {
 	
 	});
  }
-	 document.getElementById("rm_weight").value="";
+	 document.getElementById("rm_weight").value="1";
 	 document.getElementById("rm_type").selectedIndex = "0"; 
 		var html = '<option value="0" selected >Select Raw Material</option>';
 		html += '</option>';
@@ -656,7 +716,7 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
 	$("#cancel").click(function() {
-		 document.getElementById("rm_weight").value="";
+		// document.getElementById("rm_weight").value="";
 		 document.getElementById("rm_type").selectedIndex = "0"; 
 			var html = '<option value="0" selected >Select Raw Material</option>';
 			html += '</option>';
@@ -722,13 +782,13 @@ function validation() {
 	} else if (rmId ==0) {
 		isValid = false;
 		alert("Please Select RM ");
-	}else if (rmQty == ""||rmQty=='0'||isNaN(rmQty) || rmQty < 1 ) {
+	}else if (rmQty == ""||rmQty=='0') {
 		isValid = false;
 		alert("Please Enter Valid RM Qty");
-	}else if (rmWeight == ""||rmWeight=='0'||isNaN(rmWeight) || rmWeight < 1) {
+	}else/*  if (rmWeight == ""||rmWeight=='0'||isNaN(rmWeight) || rmWeight < 1) {
 		isValid = false;
 		alert("Please Enter Valid RM Weight");
-	}else if (baseQty == ""||isNaN(baseQty) || baseQty < 1) {
+	}else */ if (baseQty == ""||isNaN(baseQty) || baseQty < 1) {
 		isValid = false;
 		alert("Please Enter No. of Pieces Per Item.");
 	}
@@ -808,7 +868,7 @@ function deleteItemDetail(key){
 </script>
 
 <script type="text/javascript">
-$(document).ready(function() { 
+/* $(document).ready(function() { 
 	$('#rm_group').change(
 			function() {
 				$.getJSON('${getRmCategory}', {
@@ -828,8 +888,31 @@ $(document).ready(function() {
 
 				});
 			});
-});
+}); */
+
 $(document).ready(function() { 
+	$('#rm_group').change(
+			function() {
+				$.getJSON('${getRmGroupFromStore}', {
+					grpId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					var html = '<option value="" disabled="disabled" selected >Select Category</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].grpId + '">'
+								+ data[i].grpCode +' &nbsp; '+data[i].grpDesc +'</option>';
+					}
+					html += '</option>';
+					$('#rm_cat').html(html);
+					$('#rm_cat').formcontrol('refresh');
+
+				});
+			});
+});
+
+/* $(document).ready(function() { 
 	$('#rm_cat').change(
 			function() {
 				$.getJSON('${getRmListByCatId}', {
@@ -849,8 +932,49 @@ $(document).ready(function() {
 
 				});
 			});
+}); */
+
+$(document).ready(function() { 
+	$('#rm_cat').change(
+			function() {
+				$.getJSON('${getRmListByCatIdFromStore}', {
+					catId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					var html = '<option value="" disabled="disabled" selected >Select Category</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].itemId + '">'
+								+ data[i].itemDesc + '</option>';
+					}
+					html += '</option>';
+					$('#rm_id').html(html);
+					$("#rm_id").trigger("chosen:updated");
+
+				});
+			});
 });
 
+</script>
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table1");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
 </script>
 </html>
 

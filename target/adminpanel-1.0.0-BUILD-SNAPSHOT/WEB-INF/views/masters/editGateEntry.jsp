@@ -53,8 +53,19 @@
 								<i class="fa fa-bars"></i>Edit Gate Entry
 							</h3>
 							<div class="box-tool">
+							<c:choose>
+								<c:when test="${flag==0}">
 								<a href="${pageContext.request.contextPath}/gateEntries">Back to List</a> <a data-action="collapse" href="#"><i
 									class="fa fa-chevron-up"></i></a>
+								</c:when>
+								<c:when test="${flag==1}">
+								
+								<a href="${pageContext.request.contextPath}/showAllStoreMaterialReciept">Back to List</a> <a data-action="collapse" href="#"><i
+									class="fa fa-chevron-up"></i></a>
+								</c:when>
+							
+							</c:choose>
+								
 							</div>
 							
 						</div>
@@ -189,13 +200,34 @@
 											placeholder="Remark" class="form-control"
 											data-rule-required="true">
 									</div>
+									<label class="col-sm-1 col-lg-2 control-label">Group</label>
+									<div class="col-md-3">
+									
+										<select name="rm_group" id="rm_group" class="form-control" tabindex="6">
+										<option value="-1">Select Group</option>
+											 <c:forEach items="${groupList}" var="groupList"
+							varStatus="count">
+							
+									<c:choose>
+													<c:when test="${groupList.grpId==grpId}">
+														<option  value="${groupList.grpId}" selected><c:out value="${groupList.grpName}"/></option>
+												</c:when>
+													<c:otherwise>
+  														 <option value="${groupList.grpId}" disabled ><c:out value="${groupList.grpName}"/></option>
+ 													 </c:otherwise>
+ 													 </c:choose>
+												</c:forEach>
+						
+
+										</select>
+									</div>
 								</div>
 								
 								<div class="form-group">
 									
 								</div>
 									<div class="col1">
-									<label class="col-sm-2 col-lg-2 control-label">Image ${imageUrl}${materialRecNoteHeader.photo2}</label>
+									<label class="col-sm-2 col-lg-2 control-label">Image</label>
 									<div class="col-sm-2 col-lg-4 controls">
 										<div class="fileupload fileupload-new"
 											data-provides="fileupload">
@@ -259,6 +291,9 @@
 											id="rm_id">
 											<option selected value="">Select Raw Material Name</option>
 											
+											<c:choose>
+											<c:when test="${grpId==1||grpId==6}">
+										
 											<c:forEach items="${rmlist}" var="rmlist">
                                               
                                               
@@ -266,6 +301,20 @@
 													
 
 											</c:forEach>
+												</c:when>
+												<c:otherwise>
+										
+											<c:forEach items="${itemList}" var="itemList">
+                                              
+                                              
+														<option value="${itemList.id}"><c:out value="${itemList.itemName}"></c:out> </option>
+													
+
+											</c:forEach>
+												</c:otherwise>
+											</c:choose>
+											
+											
 											</select>
 									</div>
 									
@@ -302,7 +351,7 @@
 								<div class="col-md-12 table-responsive">
 									<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Name</th>
@@ -349,7 +398,7 @@
 									
 							
 							<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-5 col-lg-offset-5">
 										<input type="submit" class="btn btn-primary" value="Submit">
 <!-- 										
  -->									</div>
@@ -441,8 +490,8 @@
 			  
 				var rm_id = $("#rm_id").val();
 				var rm_qty = $("#rm_qty").val();
-				
-				
+				var rm_group = $("#rm_group").val();
+				if(validation()==true){		
 				$('#loader').show();
 
 				$
@@ -453,6 +502,7 @@
 									 
 									rm_id : rm_id,
 									rm_qty : rm_qty,
+									rm_group:rm_group,
 									ajax : 'true'
 
 								},
@@ -487,7 +537,7 @@
 												})  
 								});
 
-			 
+				}
 		}
 		
 		function edit(key)
@@ -506,7 +556,7 @@
 			document.getElementById("recdQty"+key).disabled = true;
 			document.getElementById("edit"+key).style.visibility="visible";
 			document.getElementById("ok"+key).style.visibility="hidden";
-			alert(qty);
+			//alert(qty);
 			$
 			.getJSON(
 					'${editRmQtyinEditGate}',
@@ -574,5 +624,30 @@
 			
 		}
 	</script>
+	
+	<script type="text/javascript">
+function validation()
+{
+	
+	var rm_id = $("#rm_id").val();
+	var rm_qty = $("#rm_qty").val();
+	var isValid = true;
+	if(isNaN(rm_id) || rm_id < 0 || rm_id=="")
+	{
+	isValid = false;
+	alert("Please enter Raw Material");
+	}
+	
+	else if(isNaN(rm_qty) || rm_qty < 0 || rm_qty=="")
+	{
+	isValid = false;
+	alert("Please enter Quantity");
+	}
+	
+return isValid;
+	
+}
+ 
+</script>
 </body>
 </html>

@@ -9,7 +9,8 @@
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
+	<link rel="stylesheet"
+		href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 
 
 	<div class="container" id="main-container">
@@ -40,6 +41,45 @@
 			<!-- END Page Title -->
 
 
+			<c:set var="isEdit" value="0">
+			</c:set>
+
+			<c:set var="isDelete" value="0">
+			</c:set>
+
+			<c:forEach items="${sessionScope.newModuleList}" var="modules">
+				<c:forEach items="${modules.subModuleJsonList}" var="subModule">
+					<c:choose>
+						<c:when
+							test="${subModule.subModuleMapping eq 'listAllFranchisee'}">
+
+							<c:choose>
+								<c:when test="${subModule.editReject=='visible'}">
+									<c:set var="isEdit" value="1">
+									</c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="isEdit" value="0">
+									</c:set>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${subModule.deleteRejectApprove=='visible'}">
+									<c:set var="isDelete" value="1">
+									</c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="isDelete" value="0">
+									</c:set>
+								</c:otherwise>
+							</c:choose>
+						</c:when>
+					</c:choose>
+
+				</c:forEach>
+			</c:forEach>
+
+
 			<!-- BEGIN Main Content -->
 			<div class="row">
 				<div class="col-md-12">
@@ -57,15 +97,16 @@
 									</div>
 								</div>
 								<div class="box-content">
-								<div class="col-md-9" ></div> 
-					<label for="search" class="col-md-3" id="search">
-    <i class="fa fa-search" style="font-size:20px"></i>
-									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search.." title="Type in a name">
-										</label>  
+									<div class="col-md-9"></div>
+									<label for="search" class="col-md-3" id="search"> <i
+										class="fa fa-search" style="font-size: 20px"></i> <input
+										type="text" id="myInput" onkeyup="myFunction()"
+										placeholder="Search.." title="Type in a name">
+									</label>
 									<div class="clearfix"></div>
-									<div id="table-scroll" class="table-scroll">
+									<div id="table-scroll" class="table-scroll" >
 										<div id="faux-table" class="faux-table" aria="hidden">
-											<table id="table2" class="main-table">
+											<table id="table2" class="table table-advance" >
 												<thead>
 													<tr class="bgpink">
 														<th width="158" style="width: 18px" align="left">#</th>
@@ -87,7 +128,7 @@
 											</table>
 
 										</div>
-										<div class="table-wrap">
+										<div class="table-wrap"  style="overflow: auto;">
 
 											<table id="table1" class="table table-advance">
 												<thead>
@@ -219,12 +260,66 @@
 </c:choose>
               </td> --%>
 
-															<td align="left"><a
+
+
+
+
+
+
+															<c:choose>
+																<c:when test="${isEdit==1 and isDelete==1}">
+
+																	<td align="left"><a
+																		href="updateFranchisee/${franchiseeList.frId}"><span
+																			class="glyphicon glyphicon-edit"></span></a>&nbsp; <a
+																		href="deleteFranchisee/${franchiseeList.frId}"
+																		onClick="return confirm('Are you sure want to delete this record');"><span
+																			class="glyphicon glyphicon-remove"></span></a></td>
+																</c:when>
+
+																<c:when test="${isEdit==1 and isDelete==0}">
+
+																	<td align="left"><a
+																		href="updateFranchisee/${franchiseeList.frId}"><span
+																			class="glyphicon glyphicon-edit"></span></a>&nbsp; <a
+																		href="deleteFranchisee/${franchiseeList.frId}"
+																		class="disableClick"
+																		onClick="return confirm('Are you sure want to delete this record');"><span
+																			class="glyphicon glyphicon-remove"></span></a></td>
+																</c:when>
+
+																<c:when test="${isEdit==0 and isDelete==1}">
+
+																	<td align="left"><a
+																		href="updateFranchisee/${franchiseeList.frId}"
+																		class="disableClick"><span
+																			class="glyphicon glyphicon-edit"></span></a>&nbsp; <a
+																		href="deleteFranchisee/${franchiseeList.frId}"
+																		onClick="return confirm('Are you sure want to delete this record');"><span
+																			class="glyphicon glyphicon-remove"></span></a></td>
+																</c:when>
+
+																<c:otherwise>
+
+
+																	<td align="left"><a
+																		href="updateFranchisee/${franchiseeList.frId}"
+																		class="disableClick"><span
+																			class="glyphicon glyphicon-edit"></span></a>&nbsp; <a
+																		href="deleteFranchisee/${franchiseeList.frId}"
+																		class="disableClick"
+																		onClick="return confirm('Are you sure want to delete this record');"><span
+																			class="glyphicon glyphicon-remove"></span></a></td>
+
+																</c:otherwise>
+															</c:choose>
+
+															<%-- <td align="left"><a
 																href="updateFranchisee/${franchiseeList.frId}"><span
 																	class="glyphicon glyphicon-edit"></span></a>&nbsp; <a
 																href="deleteFranchisee/${franchiseeList.frId}"
 																onClick="return confirm('Are you sure want to delete this record');"><span
-																	class="glyphicon glyphicon-remove"></span></a></td>
+																	class="glyphicon glyphicon-remove"></span></a></td> --%>
 														</tr>
 
 													</c:forEach>
@@ -238,6 +333,15 @@
 								</div>
 
 
+							</div>
+							<div class="form-group" id="range">
+
+
+
+								<div class="col-sm-3  controls">
+									<input type="button" id="expExcel" class="btn btn-primary"
+										value="EXPORT TO Excel" onclick="exportToExcel();">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -319,7 +423,7 @@
 
 
 </body>
- 
+
 <script>
 function myFunction() {
   var input, filter, table, tr, td, i;
@@ -339,4 +443,12 @@ function myFunction() {
   }
 }
 </script>
+<script type="text/javascript">
+function exportToExcel()
+{
+	window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled=true;
+}
+</script>
+
 </html>

@@ -14,7 +14,8 @@
 		<c:url var="deleteItem" value="/deleteItem"></c:url>
 		<c:url var="getRmCategory" value="/getRmCategory" />
 		<c:url var="getRmListByCatId" value="/getRmListByCatId" />
-						<c:url var="getRmRateAndTax" value="/getRmRateAndTax" /> 
+						<c:url var="getRmRateAndTax" value="/getRmRateAndTax" />
+						<c:url var="getUomForRawMaterial" value="/getUomForRawMaterial" /> 
 
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse">
@@ -181,7 +182,7 @@
 									
 									<div class="box-content">
 										<div class="col-md-2" >Rm Group</div>
-											<div class="col-md-4">
+											<div class="col-md-3">
 											<select name="rm_group" id="rm_group" class="form-control chosen" tabindex="6" onchange="getCat()">
 											<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
 											 <c:forEach items="${RawmaterialList}" var="RawmaterialList"
@@ -193,50 +194,60 @@
 
 										</select>
 									</div>
-									<div class="col-md-2">Quantity </div>
-										<div class="col-md-3">
-										<input type="text" placeholder="Enetr RM Quantity" name="rm_qty" id="rm_qty" class="form-control">
-									</div>
-				 
-								</div><br/>
-								
-								<div class="box-content">
-			
-			<div class="col-md-2">RM Category </div>
-								<div class="col-md-4">
+									<div class="col-md-2">RM Category </div>
+								<div class="col-md-3">
 										<select name="rm_cat" id="rm_cat" class="form-control chosen" tabindex="6" onchange="getRm()">
 										<option value="-1"disabled="disabled" selected="selected">Select RM Category</option>
 											 
 										</select>
-				</div>
+								</div>
+									
+				 
+								</div><br/>
+								
+								<div class="box-content">
+								<div class="col-md-2" >Item</div>
+									<div class="col-md-3">
+										<select name="rm_id" id="rm_id" class="form-control chosen" placeholder="Select RM " tabindex="6">
+										<option value="-1" disabled="disabled" selected="selected">Select Raw Material</option> 
+										</select>
+									</div>	
+									<div class="col-md-2">Uom </div>
+								<div class="col-md-3">
+									<input type="text" placeholder="Uom" name="rm_uom" id="rm_uom" class="form-control" readonly>
+								</div>
+			
+								
 				
 				
-				<div class="col-md-2">Discount % </div>
-				<div class="col-md-3">
-					<input type="text" placeholder="Enter Discount %" name="disc_per" id="disc_per" value="0" class="form-control">
-				</div>
+				
 				
 									
 				 
 			</div><br>
-									
+										
 							<div class="box-content">
 			
-								<div class="col-md-2" >Item</div>
-									<div class="col-md-4">
-										<select name="rm_id" id="rm_id" class="form-control chosen" placeholder="Select RM " tabindex="6">
-										<option value="-1" disabled="disabled" selected="selected">Select Raw Material</option>
-											 
-						
-
-										</select>
-									</div>	
+								<div class="col-md-2">Quantity </div>
+										<div class="col-md-3">
+										<input type="text" placeholder="Enetr RM Quantity" name="rm_qty" id="rm_qty" class="form-control">
+									</div>
+								
 									
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
-				<input type="button" class="btn btn-info pull-right" onclick="addItem()" value="Add Item"> 
+									<div class="col-md-2">Discount % </div>
+								<div class="col-md-3">
+									<input type="text" placeholder="Enter Discount %" name="disc_per" id="disc_per" value="0" class="form-control">
+								</div>
+					</div><br/>	<br>
+					
 					 
-			</div>
+							<div class="box-content"> 
+									<div class="col-md-2"></div>
+									<div class="col-md-2"></div> 
+									<div class="col-md-2">
+									<input type="button" class="btn btn-info pull-right" onclick="addItem()" value="Add Item"> 
+										 
+								</div>
 					</div><br/>
 			
 			
@@ -262,7 +273,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Product</th>
@@ -339,7 +350,7 @@
 
 										</select>
 									</div>
-									<div class="col-md-2">PO Validity </div>
+									<div class="col-md-2">PO Validity In Days</div>
 				<div class="col-md-3">
 					<input type="text" name="po_validity" id="po_validity" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="${purchaseOrderHeader.validity}" class="form-control" required>
 				</div>
@@ -370,21 +381,45 @@
 
 										</select>
 									</div>
+									
+									<c:choose>
+										<c:when test="${purchaseOrderHeader.freidhtRem==1}">
+										<c:set var="freightAmt" value="Not Applicable"></c:set>
+										</c:when>
+										<c:when test="${purchaseOrderHeader.freidhtRem==2}">
+										<c:set var="freightAmt" value="On Your Side"></c:set>
+										</c:when>
+										<c:when test="${purchaseOrderHeader.freidhtRem==3}">
+										<c:set var="freightAmt" value="On Our Side"></c:set>
+										</c:when>
+									</c:choose>
 									<div class="col-md-2" >Freight</div>
 									<div class="col-md-3">
 										<select name="freight" id="freight" class="form-control chosen" tabindex="6" required>
-										<option value="">Select Freight</option>
+										<option value="${purchaseOrderHeader.freidhtRem}">${freightAmt}</option>
 										<option value="1">Not Applicable</option>
 										<option value="2">On Your Side</option>
 										<option value="3">On Our Side</option>
 										 </select>
 									</div>
 									</div><br/>
+									
+										<c:choose>
+											<c:when test="${purchaseOrderHeader.insuRem==1}">
+											<c:set var="InsuAmt" value="Not Applicable"></c:set>
+											</c:when>
+											<c:when test="${purchaseOrderHeader.insuRem==2}">
+											<c:set var="InsuAmt" value="On Your Side"></c:set>
+											</c:when>
+											<c:when test="${purchaseOrderHeader.insuRem==3}">
+											<c:set var="InsuAmt" value="On Our Side"></c:set>
+											</c:when>
+										</c:choose>
 									<div class="box-content">
 								<div class="col-md-2" >Insurance</div>
 									<div class="col-md-3">
 										<select name="insurance" id="insurance" class="form-control chosen" tabindex="6" required>
-										<option value="">Select Insurance Terms</option>
+										<option value="${purchaseOrderHeader.insuRem}">${InsuAmt}</option>
 										<option value="1">Not Applicable</option>
 										<option value="2">On Your Side</option>
 										<option value="3">On Our Side</option>
@@ -685,7 +720,7 @@
 			document.getElementById("poQty"+key).disabled = true;
 			document.getElementById("edit"+key).style.visibility="visible";
 			document.getElementById("ok"+key).style.visibility="hidden";
-			alert(qty);
+			//alert(qty);
 			$
 			.getJSON(
 					'${updateRmQtyInEdit}',
@@ -786,6 +821,55 @@
 	</script>
 
   <script type="text/javascript">
+  $(document).ready(function() { 
+		$('#rm_id').change(
+				function() {
+				var	rm_id =document.getElementById("rm_id").value; 
+				
+					$.getJSON('${getUomForRawMaterial}', { 
+						ajax : 'true'
+					}, function(uomlist) {
+						
+						 var uomlistlength = uomlist.length; 
+						 cId=document.getElementById("rm_cat").value; 
+									$.getJSON('${getRmListByCatId}', {
+										
+										catId : cId,
+										ajax : 'true'
+										
+									}, 
+									function(data) {
+										
+										var len = data.length;
+										var uom; 
+										for ( var i = 0; i < len; i++) { 
+												if(data[i].rmId==rm_id)
+													{
+													uom=data[i].rmUomId;
+													break;
+													} 
+										}
+										
+										for(var j = 0; j< uomlistlength; j++)
+										{
+										 
+										if(uom==uomlist[j].uomId)
+											{ 
+											document.getElementById("rm_uom").value=uomlist[j].uom;
+											break;
+											}
+										
+										}
+										
+										 
+									});
+
+					});
+					
+				 
+		
+				});
+	});
         var specialKeys = new Array();
         specialKeys.push(8); //Backspace
         function IsNumeric(e) {

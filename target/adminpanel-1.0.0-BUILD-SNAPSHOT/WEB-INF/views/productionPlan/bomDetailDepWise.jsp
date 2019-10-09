@@ -122,14 +122,24 @@
 								</div>
 								<br>
 
-								<div class="box-content">
-
-
+								<div class="box-content"> 
+								<c:set var="prod" value="PROD"></c:set>
+								<c:set var="mix" value="MIX"></c:set>
+									<c:choose>
+									 	<c:when test="${billOfMaterialHeader.fromDeptName==prod}">
+									 	<c:set var="depname" value="Production"></c:set>
+									 	
+									 	</c:when>
+									 	<c:when test="${billOfMaterialHeader.fromDeptName==mix}">
+									 	<c:set var="depname" value="Mixing"></c:set>
+									 	
+									 	</c:when>
+									</c:choose>
 									<div class="col-md-2">From Department Name</div>
 									<div class="col-md-3">
 										<input class="form-control" id="time_slot" size="16"
 											type="text" name="time_slot"
-											value="${billOfMaterialHeader.fromDeptName}" readonly />
+											value="${depname}" readonly />
 									</div>
 
 
@@ -161,7 +171,7 @@
 										<div class="col-md-12 table-responsive">
 											<table class="table table-bordered table-striped fill-head "
 												style="width: 100%" id="table_grid">
-												<thead>
+												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th>Sr.No.</th>
 														<th>Name</th>
@@ -254,7 +264,7 @@
 
 	<div style="text-align: center;">
 								<a href="${pageContext.request.contextPath}/showProdBOMPdf"
-								target="_blank">PDF</a>
+								target="_blank"><input type="button" value="PDF" class="btn btn-primary"/></a>
 								</div>
 
 								<div class="box-content"></div>

@@ -3,9 +3,9 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="insertGateGrnProcessAgree"
@@ -49,7 +49,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search GRN for Gate
+								<i class="fa fa-bars"></i>GRN for Gate
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -64,45 +64,16 @@
 
 
 						<div class="box-content">
-							<form
-								action="${pageContext.request.contextPath}/showGateGrnDetails"
-								class="form-horizontal" method="get" id="validation-form">
-
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">From
-										Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date"
-											size="16" type="text" name="from_date" value="${fromDate}"
-											required onblur="getDate()" />
-									</div>
-								<!-- </div>
-
-
-								<div class="form-group"> -->
-									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16"
-											type="text" value="${toDate}" name="to_date" required
-											onblur="getDate()" />
-									</div>
-							
-								<div class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-									<input type="submit" value="Submit" class="btn btn-primary">
-
-								</div>
-									</div>
-
-							</form>
 
 							<form
 								action="${pageContext.request.contextPath}/insertGateGrnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
+								<input type="hidden" value="${headerId}" id="headerId" name="headerId">
 
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> GRN List
+											<i class="fa fa-table"></i> GRN List Date:${grnDate} SrNo:${srNo }
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -118,59 +89,69 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
-														<th></th>
+														<th><input type="checkbox" name="select_to_agree1"/></th>
 														<th>Sr No</th>
-														<th align="center">Bill No</th>
+														<th align="center">Invoice No</th>
 														<th>Franchise Name</th>
 														<th>Item Name</th>
 														<th>TYPE of GRN</th>
-														<th align="center">Quantity</th>
+														<th>Auto Qty</th>
+														<th>Edited Qty</th>
+														<th align="center">Received Qty</th>
 														<th>Status</th>
-														<th>Action</th>
+														<th width="160px">Action</th>
 													</tr>
-
-
 
 												</thead>
 												<tbody>
 													<c:forEach items="${grnList}" var="grnList"
-														varStatus="count">
+														varStatus="count"> 
+														
+														 <c:choose> 
+														<c:when test="${grnList.grnGvnQtyAuto!=grnList.grnGvnQty}">
+														<c:set var="color" value="red"></c:set> 
+														</c:when>
+														<c:otherwise>
+														<c:set var="color" value="white"></c:set>
+														</c:otherwise>
+														</c:choose> 
 
-														<tr>
-															<c:choose>
+													<tr bgcolor="${color}">
+ 															<c:choose>
 																<c:when test="${grnList.grnGvnStatus==2}">
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${grnList.grnGvnId}"
-																		value="${grnList.grnGvnId}"></></td>
+																		value="${grnList.grnGvnId}"> --%></td>
 
 																</c:when>
 																<c:when test="${grnList.grnGvnStatus==3}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></></td>
+																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==1}">
 																	<td><input type="checkbox" name="select_to_agree"
-																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></></td>
+																		id="${grnList.grnGvnId}" value="${grnList.grnGvnId}"></td>
 
 
 																</c:when>
 
 																<c:otherwise>
 
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${grnList.grnGvnId}"
-																		value="${grnList.grnGvnId}"></></td>
+																		value="${grnList.grnGvnId}"> --%></td>
 
 
 																</c:otherwise>
 															</c:choose>
 															<td align="center"><c:out value="${count.index+1}" /></td>
 
-															<td align="center"><c:out value="${grnList.billNo}" /></td>
+															<td align="center"><c:out
+																	value="${grnList.invoiceNo}" /></td>
 
 															<td align="left"><c:out value="${grnList.frName}" /></td>
 
@@ -180,34 +161,60 @@
 															<c:choose>
 																<c:when test="${grnList.grnType==0}">
 																	<td align="left"><c:out value="GRN 1"></c:out></td>
-
 																</c:when>
-
-
 																<c:when test="${grnList.grnType==1}">
 																	<td align="left"><c:out value="GRN 2"></c:out></td>
-
 																</c:when>
-
-
 																<c:when test="${grnList.grnType==2}">
 																	<td align="left"><c:out value="GRN 3"></c:out></td>
-
 																</c:when>
-																
 																<c:when test="${grnList.grnType==4}">
-																	<td align="left"><c:out value="GRN 4"></c:out></td>
-
+																	<td align="left"><c:out value="GRN 3"></c:out></td>
 																</c:when>
-
 															</c:choose>
 
+															<td align="center"><c:out
+																	value="${grnList.grnGvnQtyAuto}" /></td>
 
 															<td align="center"><c:out
 																	value="${grnList.grnGvnQty}" /> <input type="hidden"
 																name="approve_gate_login${grnList.grnGvnId}"
 																id="approve_gate_login${grnList.grnGvnId}"
 																value="${grnList.approvedLoginGate}" /></td>
+															
+															<c:set var="qty" value="0"></c:set>
+
+															<c:choose>
+
+																<c:when test="${grnList.grnGvnStatus==1}">
+
+
+																	<c:set var="qty" value="${grnList.grnGvnQty}"></c:set>
+
+																	<%-- <td align="center"><input type="text"
+																		name="gate_grn_qty${grnList.grnGvnId}"
+																		class="form-control" style="width: 50px"
+																		id='gate_grn_qty${grnList.grnGvnId}'
+																		value="${grnList.grnGvnQty}" /></td> --%>
+																</c:when>
+
+																<c:otherwise>
+
+																	<c:set var="qty" value="${grnList.aprQtyGate}"></c:set>
+																	<%-- <td align="center"><input type="text"
+																		name="gate_grn_qty${grnList.grnGvnId}"
+																		class="form-control" style="width: 50px"
+																		id='gate_grn_qty${grnList.grnGvnId}'
+																		value="${grnList.aprQtyGate}" /></td> --%>
+																</c:otherwise>
+
+															</c:choose>
+
+															<td align="center"><input type="text"
+																name="gate_grn_qty${grnList.grnGvnId}"
+																class="form-control" style="width: 50px"
+																id='gate_grn_qty${grnList.grnGvnId}' onkeyup="checkQty(${grnList.grnGvnId},${grnList.grnGvnQty},${grnList.aprQtyGate},${qty})"
+																value="${qty}" /></td>
 
 
 															<c:choose>
@@ -217,32 +224,32 @@
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==2}">
-																	<td align="left"><c:out value="approvedByGate"></c:out></td>
+																	<td align="left"><c:out value="Approved From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==3}">
-																	<td align="left"><c:out value="rejectByGate"></c:out></td>
+																	<td align="left"><c:out value="Reject From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==4}">
-																	<td align="left"><c:out value="approvedBystore"></c:out></td>
+																	<td align="left"><c:out value="Approved From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==5}">
-																	<td align="left"><c:out value="rejectByStore"></c:out></td>
+																	<td align="left"><c:out value="Reject From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==6}">
-																	<td align="left"><c:out value="approvedByAcc"></c:out></td>
+																	<td align="left"><c:out value="Approved From Account"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==7}">
-																	<td align="left"><c:out value="rejectByAcc"></c:out></td>
+																	<td align="left"><c:out value="Reject From Account"></c:out></td>
 
 																</c:when>
 
@@ -267,19 +274,21 @@
 																					<div class="dropdown-menu">
 																						<div class="form">
 
-																						<select name="gate_remark${grnList.grnGvnId}" id="gate_remark${grnList.grnGvnId}" class="form-control">
-																						<c:forEach items="${remarkList}" var="remarkList">
-																						
-																						<option value="${remarkList.remark}">${remarkList.remark}</option>
-																																																																										
-																																										
-																						
-																						</c:forEach>
-																						</select>
-																						</br> <input class="btn btn-primary" value="Submit"
+																							<select name="gate_remark${grnList.grnGvnId}"
+																								id="gate_remark${grnList.grnGvnId}"
+																								class="form-control">
+																								<c:forEach items="${remarkList}"
+																									var="remarkList">
+
+																									<option value="${remarkList.remark}">${remarkList.remark}</option>
+
+
+
+																								</c:forEach>
+																							</select> </br> <input class="btn btn-primary" value="Submit"
 																								onclick="insertGrnDisAgree(${grnList.grnGvnId})" />
-																						
-																						
+
+
 																							<%-- Enter Remark
 																							<textarea name="gate_remark${grnList.grnGvnId}"
 																								id="gate_remark${grnList.grnGvnId}"
@@ -320,7 +329,7 @@
 
 																	<td>
 																		<ul class="table-menu">
-																			<li><a href="" id="callSubmit"  
+																			<li><a href="" id="callSubmit"
 																				onclick="insertGrnCall(${grnList.grnGvnId})"><i
 																					class="fa fa-check"></i></a></li>
 
@@ -330,21 +339,24 @@
 																						data-toggle="dropdown"><i class="fa fa-times"></i></a>
 																					<div class="dropdown-menu">
 																						<div class="form">
-																						
-																						<select name="gate_remark${grnList.grnGvnId}" id="gate_remark${grnList.grnGvnId}" class="form-control">
-																						<c:forEach items="${remarkList}" var="remarkList">
-																						
-																						<option value="${remarkList.remark}">${remarkList.remark}</option>
-																																																																										
-																																										
-																						
-																						</c:forEach>
-																						</select>
-																						</br> <input class="btn btn-primary" value="Submit"
+
+																							<select name="gate_remark${grnList.grnGvnId}"
+																								id="gate_remark${grnList.grnGvnId}"
+																								class="form-control">
+																								<c:forEach items="${remarkList}"
+																									var="remarkList">
+
+																									<option value="${remarkList.remark}">${remarkList.remark}</option>
+
+
+
+																								</c:forEach>
+																							</select> </br> <input class="btn btn-primary" value="Submit"
+																								disabled="disabled"
 																								onclick="insertGrnDisAgree(${grnList.grnGvnId})" />
-																						
-																						
-																						
+
+
+
 																							<%-- Enter Remark
 																							<textarea name="gate_remark${grnList.grnGvnId}"
 																								id="gate_remark${grnList.grnGvnId}"
@@ -387,7 +399,7 @@
 
 
 
-																		<ul class="table-menu">
+																		<ul class="table-menu" style="text-align: left;">
 
 																			<li><a href="" id="callSubmit"
 																				onclick="insertGrnCall(${grnList.grnGvnId})"><i
@@ -396,24 +408,25 @@
 																			<li>
 																				<div class="dropdown">
 																					<a class="dropdown-toggle" href="#"
-																						data-toggle="dropdown"><i
-																						class="fa fa-times"></i></a>
+																						data-toggle="dropdown"><i class="fa fa-times"></i></a>
 																					<div class="dropdown-menu">
 																						<div class="form">
-																						
-																						
-																						<select name="gate_remark${grnList.grnGvnId}" id="gate_remark${grnList.grnGvnId}" class="form-control">
-																					
-																						<c:forEach items="${remarkList}" var="remarkList">
-																						
-																						<option value="${remarkList.remarkId}">${remarkList.remark}</option>
-																																										
-																						</c:forEach>
-																						</select>
-																						</br> <input class="btn btn-primary" value="Submit"
+
+
+																							<select name="gate_remark${grnList.grnGvnId}"
+																								id="gate_remark${grnList.grnGvnId}"
+																								class="form-control">
+
+																								<c:forEach items="${remarkList}"
+																									var="remarkList">
+
+																									<option value="${remarkList.remark}">${remarkList.remark}</option>
+
+																								</c:forEach>
+																							</select> </br> <input class="btn btn-primary" value="Submit"
 																								onclick="insertGrnDisAgree(${grnList.grnGvnId})" />
-																						
-																						
+
+
 																							<%-- Enter Remark
 																							<textarea name="gate_remark${grnList.grnGvnId}"
 																								id="gate_remark${grnList.grnGvnId}"
@@ -462,26 +475,29 @@
 
 
 																			<li>
-																				<div class="dropdown">
-																					<a class="dropdown-toggle" href="#" 
+																				<div class="col1">
+																					<a class="dropdown-toggle" href="#" id="disableMe"
 																						data-toggle="dropdown"><i class="fa fa-times"></i></a>
 																					<div class="dropdown-menu">
 																						<div class="form">
-																						
-																						
-																						<select name="gate_remark${grnList.grnGvnId}" id="gate_remark${grnList.grnGvnId}" class="form-control">
-																						<c:forEach items="${remarkList}" var="remarkList">
-																						
-																						<option value="remarkList.remarkId">${remarkList.remark}</option>
-																																																																										
-																																										
-																						
-																						</c:forEach>
-																						</select>
-																						</br> <input class="btn btn-primary" value="Submit"
+
+
+																							<select name="gate_remark${grnList.grnGvnId}"
+																								id="gate_remark${grnList.grnGvnId}"
+																								class="form-control">
+																								<c:forEach items="${remarkList}"
+																									var="remarkList">
+
+																									<option value="${remarkList.remark}">${remarkList.remark}</option>
+
+
+
+																								</c:forEach>
+																							</select> </br> <input class="btn btn-primary" value="Submit"
+																								disabled
 																								onclick="insertGrnDisAgree(${grnList.grnGvnId})" />
-																						
-																						
+
+
 																							<%-- Enter Remark
 																							<textarea name="gate_remark${grnList.grnGvnId}"
 																								id="gate_remark${grnList.grnGvnId}"
@@ -498,7 +514,8 @@
 
 																				<div class="dropdown">
 																					<a class="dropdown-toggle" href="#"
-																						data-toggle="dropdown"><i class="fa fa-info-circle"></i></a>
+																						data-toggle="dropdown"><i
+																						class="fa fa-info-circle"></i></a>
 																					<div class="dropdown-menu">
 																						<div class="form">
 																							Franchisee Remark
@@ -544,8 +561,9 @@
 
 
 										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="submit" value="Submit" class="btn btn-primary">
+											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+											<input type="button" value="Approve" onclick="callSubmit()"
+												class="btn btn-primary">
 
 										</div>
 										<!-- </form> -->
@@ -560,7 +578,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -634,37 +652,28 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-	<!-- <script type="text/javascript">
-		/* $(document).ready(function() { */
-			/* $('#callSubmit').submit(function() { */
-				function callSubmitGrn(){
-					//var selectedGrn = $("#selectFr").val();
-					
-					
-					
-					
-				
-			
-			//alert("hello"),
-				 $.ajax({
-					type : "get",
-					
-					
-					
-					url : "insertGateGrnProcess" //this is my servlet
-				/*  data: "input=" +$('#ip').val()+"&output="+$('#op').val(), */
 
-				});
-			
- 
-		};
-	</script>
- -->
 
 
 	<!-- insertGrnDisAgree -->
 
 
+
+
+
+
+
+
+	<script type="text/javascript">
+
+function callSubmit(){
+			//alert("HIII");
+			
+		    var form = document.getElementById("validation-form");
+		    form.action ="${pageContext.request.contextPath}/insertGateGrnByCheckBoxes";
+		    form.submit();
+		}
+</script>
 	<script type="text/javascript">
 
 
@@ -673,6 +682,9 @@ function insertGrnDisAgree(grnGvnId){
 var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnId).val();
+
+var gate_grn_qty=$("#gate_grn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 if($("#gate_remark"+grnGvnId).val() == ''){
 	alert("Please  Grn Remark!");
@@ -686,7 +698,10 @@ else{
 			
 			grnId : grnId,
 			approveGateLogin : approve_gate_login,
-			gateRemark : gate_remark,				
+			gateRemark : gate_remark,
+		 gate_grn_qty:gate_grn_qty,
+		 headerId : headerId,
+
 				ajax : 'true',
 			
 
@@ -734,7 +749,9 @@ function insertGrnCall(grnGvnId){
 var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
+var gate_grn_qty=$("#gate_grn_qty"+grnGvnId).val();
 
+var headerId=$("#headerId").val();
 
 /* alert(grnId);
 alert(approve_gate_login); */
@@ -746,7 +763,8 @@ alert(approve_gate_login); */
 							
 							grnId : grnId,
 							approveGateLogin:approve_gate_login,
-								
+							gate_grn_qty:gate_grn_qty,
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -841,14 +859,12 @@ function getDate(){
 			toDate:toDate,
 				
 				ajax : 'true',
-			
 
 }
 );
 
 	
 }
-
 
 </script>
 
@@ -859,8 +875,24 @@ function getDate(){
 	        e.stopPropagation();
 	    });
 	});
+	
+	
+</script>
+<script type="text/javascript">
+
+function checkQty(grnId,grnQty,aprQty,qty){
+	//alert("JJJ");
+	var entered=$("#gate_grn_qty"+grnId).val();
+	alert("received = " +entered);
+	if(entered>grnQty){
+		alert("Can not Enter Qty Greater than auto Qty ");
+		document.getElementById("gate_grn_qty"+grnId).value=qty;
+	}
+}
+
 </script>
 
 
 </body>
 </html>
+

@@ -15,7 +15,7 @@
 			<c:url var="getRmListByCatId" value="/getRmListByCatId" />
 						<c:url var="getRmRateAndTax" value="/getRmRateAndTax" />
 
-	
+	<c:url var="getUomForRawMaterial" value="/getUomForRawMaterial" />
 
 
 	<!-- BEGIN Sidebar -->
@@ -88,7 +88,16 @@
 										<option value="" disabled="disabled" selected="selected">Select Supplier</option>
 											 <c:forEach items="${supplierList}" var="supplierList"
 							varStatus="count">
-							  <option value="${supplierList.suppId}"><c:out value="${supplierList.suppName}"/></option>
+							<c:choose>
+							<c:when test="${suppId==supplierList.suppId}">
+						  <option value="${supplierList.suppId}" selected><c:out value="${supplierList.suppName}"/></option>
+							
+							</c:when>
+							<c:otherwise>
+						  <option value="${supplierList.suppId}"><c:out value="${supplierList.suppName}"/></option>
+															
+							</c:otherwise>
+							</c:choose>
  													 
 												</c:forEach>
 						
@@ -156,65 +165,64 @@
 									
 									
 									<div class="box-content">
-				<div class="col-md-2" >Raw Material Group</div>
-									<div class="col-md-4">
-										<select name="rm_group" id="rm_group" class="form-control chosen" tabindex="6">
-										<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
-											 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList"
-							varStatus="count">
-							   <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
- 													 
-												</c:forEach>
-						
-
-										</select>
-									</div>
-									<div class="col-md-2">Quantity </div>
-				<div class="col-md-3">
-					<input type="text" placeholder="Enetr RM Quantity" name="rm_qty" id="rm_qty" class="form-control" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
-				</div>
-				 
-			</div><br/>
-			
-			<div class="box-content">
-			
-			<div class="col-md-2">Raw Material Category </div>
-								<div class="col-md-4">
-										<select name="rm_cat" id="rm_cat" class="form-control chosen" tabindex="6">
-										<option value="-1"disabled="disabled" selected="selected">Select RM Category</option>
+										<div class="col-md-2" >Raw Material Group</div>
+											<div class="col-md-3">
+												<select name="rm_group" id="rm_group" class="form-control chosen" tabindex="6">
+												<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
+													 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList" varStatus="count">
+									  						 <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+		 											</c:forEach> 
+												</select>
+											</div>
+								<div class="col-md-2">Raw Material Category </div>
+										<div class="col-md-3">
+											<select name="rm_cat" id="rm_cat" class="form-control chosen" tabindex="6">
+												<option value="-1"disabled="disabled" selected="selected">Select RM Category</option>
 											 
-										</select>
-				</div>
-				
-				
-				<div class="col-md-2">Discount % </div>
-				<div class="col-md-3">
-					<input type="text" placeholder="Enter Discount %" name="disc_per" id="disc_per" value="0" class="form-control" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
-				</div>
-				
+											</select>
+										</div>
 									
 				 
-			</div>
-			 <br/>
-			<div class="box-content">
+									</div><br/>
 			
+					<div class="box-content">
 								<div class="col-md-2" >Items</div>
-									<div class="col-md-4">
+									<div class="col-md-3">
 										<select name="rm_id" id="rm_id" class="form-control chosen"placeholder="Select RM " tabindex="6">
-										<option value="-1" disabled="disabled" selected="selected">Select Raw Material</option>
-											 
-						
-
+										<option value="-1" disabled="disabled" selected="selected">Select Raw Material</option> 
 										</select>
 									</div>	
+		 						<div class="col-md-2">Uom </div>
+								<div class="col-md-3">
+									<input type="text" placeholder="Uom" name="rm_uom" id="rm_uom" class="form-control" readonly>
+								</div>
 									
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
-				<input type="button" class="btn btn-info pull-right" onclick="addItem()" value="Add Item"> 
-					 
-			</div>
+					</div>
+			 		<br/>
+			 		
+			 		<div class="box-content">
+			
+								<div class="col-md-2">Quantity </div>
+										<div class="col-md-3">
+											<input type="text" placeholder="Enetr RM Quantity" name="rm_qty" id="rm_qty" class="form-control" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
+										</div> 
+								<div class="col-md-2">Discount % </div>
+								<div class="col-md-3">
+									<input type="text" placeholder="Enter Discount %" name="disc_per" id="disc_per" value="0" class="form-control" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
+								</div>
+								
+									
+								 
+					</div><br/><br>
+			 
+					<div class="box-content"> 
+								<div class="col-md-2"></div>
+								<div class="col-md-2"></div>
+								<div class="col-md-2">
+									<input type="button" class="btn btn-info pull-right" onclick="addItem()" value="Add Item"> 
+								</div>
 					</div><br/>
-			<br/>
+					<br/>
 			
 			
 				<div class=" box-content">
@@ -222,7 +230,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Product</th>
@@ -238,6 +246,29 @@
 								</thead>
 								<tbody>
 
+<c:forEach items="${purchaseOrderDetailList}" var="po" varStatus="cnt">
+											<tr>
+												<td>
+											<c:out value="${cnt.index+1}"/>  <input type="hidden" id="poRate${cnt.index+1}" value='${po.poRate}' readonly>
+												</td>
+												<td align="left"><c:out
+														value="${po.rmName}" /></td>
+											
+												<td align="left"><input type="text" id="poQty${cnt.index+1}" onkeyup="changeQty(${cnt.index+1});" name="poQty${cnt.index+1}"  value="${po.poQty}" class="form-control" disabled></td>
+											<td align="left"><c:out
+														value="${po.poRate}" /></td>		
+								        		
+										        <td align="left"><input type="text" id="discPer${cnt.index+1}" name="discPer${cnt.index+1}"  value="${po.discPer}" class="form-control" ></td>		
+												<td align="left"><input type="text" value="${po.poTaxable}" id="poValue${cnt.index+1}" class="form-control" disabled="disabled"></td>
+												
+												  <td align="left"><c:out
+														value="${po.schDays}" /></td>			
+												  <td align="left"><c:out
+														value="${po.specification}" /></td>							
+													
+													  <td align="left"><span class="glyphicon glyphicon-edit" id="edit${cnt.index+1}" onclick="edit(${cnt.index+1});"></span><span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit(${cnt.index+1});" id="ok${cnt.index+1}"></span><span class="glyphicon glyphicon-remove" id="delete${cnt.index+1}"></span></td>	
+													  </tr></c:forEach>  
+					
 								</tbody>
 							</table>
 						</div>
@@ -259,7 +290,7 @@
 
 										</select>
 									</div>
-									<div class="col-md-2">PO Validity </div>
+									<div class="col-md-2">PO Validity In Days </div>
 				<div class="col-md-3">
 					<input type="text"placeholder="Enter PO Validity" name="po_validity" id="po_validity" class="form-control" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" required>
 				</div>
@@ -705,7 +736,58 @@ $(document).ready(function() {
 	
 			});
 });
+ 
+ 
+ 
+ $(document).ready(function() { 
+	$('#rm_id').change(
+			function() {
+			var	rm_id =document.getElementById("rm_id").value; 
+			
+				$.getJSON('${getUomForRawMaterial}', { 
+					ajax : 'true'
+				}, function(uomlist) {
+					
+					 var uomlistlength = uomlist.length; 
+					 cId=document.getElementById("rm_cat").value; 
+								$.getJSON('${getRmListByCatId}', {
+									
+									catId : cId,
+									ajax : 'true'
+									
+								}, 
+								function(data) {
+									
+									var len = data.length;
+									var uom; 
+									for ( var i = 0; i < len; i++) { 
+											if(data[i].rmId==rm_id)
+												{
+												uom=data[i].rmUomId;
+												break;
+												} 
+									}
+									
+									for(var j = 0; j< uomlistlength; j++)
+									{
+									 
+									if(uom==uomlist[j].uomId)
+										{ 
+										document.getElementById("rm_uom").value=uomlist[j].uom;
+										break;
+										}
+									
+									}
+									
+									 
+								});
 
+				});
+				
+			 
+	
+			});
+});
 
 var specialKeys = new Array();
 specialKeys.push(8); //Backspace

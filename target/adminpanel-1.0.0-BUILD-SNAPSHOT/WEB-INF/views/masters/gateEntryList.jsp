@@ -63,7 +63,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										
@@ -89,6 +89,7 @@
 													</c:choose>
 
 													<tr>
+														<c:set var="transporter" value="-"></c:set> 
 														<td><c:out value="${count.index+1}" /></td>
 
 														
@@ -118,12 +119,13 @@
 													varStatus="count">
 																<c:choose>
 													<c:when test="${materialRecNoteList.transportId==transportlist.tranId}">
-													<td align="left"><c:out
-																value="${transportlist.tranName}" /></td> 
+												<c:set var="transporter" value="${transportlist.tranName}"></c:set> 
 													</c:when>
+													
 													 </c:choose> 
 													 </c:forEach>
-																
+																<td align="left"><c:out
+																value="${transporter}" /></td> 	
 														 <td><c:out value="${status}" /></td>
 						<td><a href="${pageContext.request.contextPath}/editGateEntry?mrnId=${materialRecNoteList.mrnId}&flag=0" class="action_btn" >
 						<span class="glyphicon glyphicon-edit" > </span></a></td>

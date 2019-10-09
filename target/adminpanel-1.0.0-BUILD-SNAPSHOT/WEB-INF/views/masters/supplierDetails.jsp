@@ -64,10 +64,10 @@
 					
 						<div class="row">
 					<div class="col-md-12" style="text-align: center" align="center">
-					<label class="col-sm-3 col-lg-2 control-label">Supplier Name</label>
+					<label class="col-sm-3 col-lg-2 control-label">Supplier Name*</label>
 					<div class="col-sm-6 col-lg-4 controls">
 						 <select  name="supplier" id="supplier"  class="form-control chosen "onchange="return supplierChange()">
-										<option value="-1">Select Suppiler </option>
+										<option value="-1">Select Supplier </option>
 										<c:forEach items="${supplierList}" var="supplierList"
 													varStatus="count">
 													<c:choose>
@@ -90,12 +90,12 @@
 										enctype="multipart/form-data" method="post" >
 							
 						<div class="form-group">
-										<label class="col-sm-3 col-lg-2 control-label">Supplier Name</label>
+										<label class="col-sm-3 col-lg-2 control-label">Supplier Name*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" id="supp_name" name="supp_name" class="form-control"placeholder="Enter Supplier Name "data-rule-required="true" />
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Supplier GSTIN </label>
+									<label class="col-sm-3 col-lg-2 control-label">Supplier GSTIN* </label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_gstin" id="supp_gstin" class="form-control" placeholder="Enter GSTIN " data-rule-required="true"/>
 									</div>
@@ -103,28 +103,64 @@
 								</div>
 							 
 								<div class="form-group">
-										<label class="col-sm-3 col-lg-2 control-label">Address</label>
+										<label class="col-sm-3 col-lg-2 control-label">Address*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_addr" id="supp_addr" class="form-control" placeholder="Address" data-rule-required="true"/>
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">City </label>
+									<label class="col-sm-3 col-lg-2 control-label">City*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_city" id="supp_city" class="form-control"  placeholder="Enter City "data-rule-required="true"/>
 									</div>
 								</div>
 							
 								<div class="form-group">
-										<label class="col-sm-3 col-lg-2 control-label">State</label>
+										<label class="col-sm-3 col-lg-2 control-label">State*</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										 <!-- <select  name="supp_state"  class="form-control"> 
-										<option value="1">Maharashtra</option>
-								</select>-->
-								<input type="text" name="supp_state" id="supp_state" class="form-control"  placeholder="Enter State "data-rule-required="true"/>
-									
+										<select data-placeholder="Select State" class="form-control chosen" name="supp_state" tabindex="-1"
+											id="supp_state"  >
+											<option  value="">Select State</option>
+										<option value="35-Andaman and Nicobar Islands-AN">35-Andaman and Nicobar Islands-AN</option>
+										<option value="28-Andhra Pradesh-AP">28-Andhra Pradesh-AP</option>
+										<option value="37-Andhra Pradesh (New)-AD">37-Andhra Pradesh (New)-AD</option>
+										<option value="12-Arunachal Pradesh-AR">12-Arunachal Pradesh-AR</option>
+										<option value="18-Assam-AS">18-Assam-AS</option>
+										<option value="10-Bihar-BH">10-Bihar-BH</option>
+										<option value="4-Chandigarh-CH">4-Chandigarh-CH</option>
+										<option value="22-Chattisgarh-CT">22-Chattisgarh-CT</option>
+										<option value="26-Dadra and Nagar Haveli-DN">26-Dadra and Nagar Haveli-DN</option>
+										<option value="25-Daman and Diu-DD">25-Daman and Diu-DD</option>
+										<option value="7-Delhi-DL">7-Delhi-DL</option>
+										<option value="30-Goa-GA">30-Goa-GA</option>
+										<option value="24-Gujarat-GJ">24-Gujarat-GJ</option>
+										<option value="6-Haryana-HR">6-Haryana-HR</option>
+										<option value="2-Himachal Pradesh-HP">2-Himachal Pradesh-HP</option>
+										<option value="1-Jammu and Kashmir-JK">1-Jammu and Kashmir-JK</option>
+										<option value="20-Jharkhand-JH">20-Jharkhand-JH</option>
+										<option value="29-Karnataka-KA">29-Karnataka-KA</option>
+										<option value="32-Kerala-KL">32-Kerala-KL</option>
+										<option value="31-Lakshadweep Islands-LD">31-Lakshadweep Islands-LD</option>
+										<option value="23-Madhya Pradesh-MP">23-Madhya Pradesh-MP</option>
+										<option value="27-Maharashtra-MH">27-Maharashtra-MH</option>
+										<option value="14-Manipur-MN">14-Manipur-MN</option>
+										<option value="17-Meghalaya-ME">17-Meghalaya-ME</option>
+										<option value="15-Mizoram-MI">15-Mizoram-MI</option>
+										<option value="13-Nagaland-NL">13-Nagaland-NL</option>
+										<option value="21-Odisha-OR">21-Odisha-OR</option>
+										<option value="34-Pondicherry-PY">34-Pondicherry-PY</option>
+										<option value="3-Punjab-PB">3-Punjab-PB</option>
+										<option value="8-Rajasthan-RJ">8-Rajasthan-RJ</option>
+										<option value="11-Sikkim-SK">11-Sikkim-SK</option>
+										<option value="33-Tamil Nadu-TN">33-Tamil Nadu-TN</option>
+										<option value="36-Telangana-TS">36-Telangana-TS</option>
+										<option value="16-Tripura-TR">16-Tripura-TR</option>
+										<option value="9-Uttar Pradesh-UP">9-Uttar Pradesh-UP</option>
+										<option value="5-Uttarakhand-UT">5-Uttarakhand-UT</option>
+										<option value="19-West Bengal-WB">19-West Bengal-WB</option>
+								</select>
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Country </label>
+									<label class="col-sm-3 col-lg-2 control-label">Country* </label>
 									<div class="col-sm-6 col-lg-4 controls">
 										  <!--<select  name="supp_country"  class="form-control">
 										<option value="1">India</option>
@@ -137,14 +173,14 @@
 								 	<br />
 							 
 								<div class="form-group">
-										<label class="col-sm-3 col-lg-2 control-label">Mobile 1</label>
+										<label class="col-sm-3 col-lg-2 control-label">Mobile 1*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_mob1" id="supp_mob1" class="form-control" placeholder="Enter Mobile 1 " data-rule-required="true" 
 													pattern="^\d{10}$" required
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Email 1</label>
+									<label class="col-sm-3 col-lg-2 control-label">Email 1*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="email" name="supp_email1" id="supp_email1" class="form-control"  placeholder="Enter Email 1 "data-rule-required="true"
 													data-rule-email="true"  />
@@ -153,7 +189,7 @@
 								</div>
 							 
 							 <div class="form-group">
-										<label class="col-sm-3 col-lg-2 control-label">Mobile 2</label>
+										<label class="col-sm-3 col-lg-2 control-label">Mobile 2*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_mob2" id="supp_mob2" class="form-control" placeholder="Enter Mobile 2 " data-rule-required="true"
 													pattern="^\d{10}$" required
@@ -162,7 +198,7 @@
 
 									<label class="col-sm-3 col-lg-2 control-label">Email 2</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email2" id="supp_email2" class="form-control"placeholder="Enter Email 2 "data-rule-required="true"
+										<input type="email" name="supp_email2" id="supp_email2" class="form-control"placeholder="Enter Email 2 "
 													data-rule-email="true"  />
 									</div>
 								 
@@ -170,14 +206,14 @@
 								 <div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Mobile 3</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="supp_mob3" id="supp_mob3" class="form-control" placeholder="Enter Mobile 3 "data-rule-required="true" 
-													 pattern="^\d{10}$" required
+										<input type="text" name="supp_mob3" id="supp_mob3" class="form-control" placeholder="Enter Mobile 3 "
+													 pattern="^\d{10}$" 
 													onKeyPress="return isNumberCommaDot(event)"   />
 									</div>
 
 									<label class="col-sm-3 col-lg-2 control-label">Email 3</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email3" id="supp_email3" class="form-control"placeholder="Enter Email 3 " data-rule-required="true"
+										<input type="email" name="supp_email3" id="supp_email3" class="form-control"placeholder="Enter Email 3 " 
 													data-rule-email="true" />
 									</div>
 								 
@@ -186,31 +222,44 @@
 									<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Phone 1</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="supp_phone1" id="supp_phone1" class="form-control" placeholder="Enter Phone 1 "data-rule-required="true" data-rule-minlength="10"
+										<input type="text" name="supp_phone1" id="supp_phone1" class="form-control" placeholder="Enter Phone 1 " data-rule-minlength="10"
 													data-rule-maxlength="11"
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
-
-									<label class="col-sm-3 col-lg-2 control-label">Email 4</label>
-									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email4" id="supp_email4" class="form-control" placeholder="Enter Email 4 "data-rule-required="true"
-													data-rule-email="true" />
-									</div>
-								 
+                                    <label class="col-sm-3 col-lg-2 control-label">RM Group</label>
+											<div class="col-sm-6 col-lg-4 controls">
+												<select name="rm_group" id="rm_group" class="form-control chosen" >
+												<option value="-1" disabled="disabled" selected="selected">Select RM Group</option>
+													 <c:forEach items="${rmItemGroupList}" var="rmItemGroupList" varStatus="count">
+									  						 <option value="${rmItemGroupList.grpId}"><c:out value="${rmItemGroupList.grpName}"/></option>
+		 											</c:forEach> 
+												</select>
+											</div>
+									
 								</div>
-								 
+								 	<div class="form-group">
+								 <label class="col-sm-3 col-lg-2 control-label">RM Items</label>
+									<div class="col-sm-6 col-lg-4 controls">
+									<select data-placeholder="Select RM Items" class="form-control chosen" name="supp_email4"  multiple="multiple"
+											id="supp_email4"  >
+											 <c:forEach items="${rawMaterialList}" var="rawMaterialList" varStatus="count">
+									  						 <option value="${rawMaterialList.rmId}"><c:out value="${rawMaterialList.rmName}"/></option>
+		 											</c:forEach> 
+										</select>
+									</div>
+									</div>
 								<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Phone 2</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="supp_phone2" id="supp_phone2" class="form-control" placeholder="Enter Phone 2 "data-rule-required="true" data-rule-minlength="10"
+										<input type="text" name="supp_phone2" id="supp_phone2" class="form-control" placeholder="Enter Phone 2 " data-rule-minlength="10"
 													data-rule-maxlength="11"
 													onKeyPress="return isNumberCommaDot(event)" />
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Email 5</label>
+									<label class="col-sm-3 col-lg-2 control-label">Lead Time</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="supp_email5" id="supp_email5" class="form-control"placeholder="Enter Email 5 "data-rule-required="true"
-													data-rule-email="true"  />
+										<input type="text" name="supp_email5" id="supp_email5" class="form-control" placeholder="Lead Time "
+													data-rule-required="true"  />
 									</div>
 								 
 								</div>
@@ -218,12 +267,12 @@
 								<br />
 							
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Supplier Contact Person</label>
+									<label class="col-sm-3 col-lg-2 control-label">Supplier Contact Person*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_c_person" id="supp_c_person" class="form-control" placeholder="Supplier contact person" data-rule-required="true"/>
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Supplier Pan No
+									<label class="col-sm-3 col-lg-2 control-label">Supplier Pan No*
 									</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_panno" id="supp_panno" class="form-control"  placeholder="Supplier Pan No"data-rule-required="true"/>
@@ -232,19 +281,19 @@
 								</div>
 								 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Supplier FDA Lic </label>
+									<label class="col-sm-3 col-lg-2 control-label">Supplier FDA Lic* </label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_fdalic" id="supp_fdalic" class="form-control" placeholder="Supplier FDA Lic"data-rule-required="true" />
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Supplier Pay Id</label>
+									<label class="col-sm-3 col-lg-2 control-label">Supplier Pay Id*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_pay_id" id="supp_pay_id" class="form-control" placeholder=" Supplier Pay Id" data-rule-number="true"  data-rule-required="true"/>
 									</div>
 								</div>
 							 
 								<div class="form-group" >
-									<label class="col-sm-3 col-lg-2 control-label">Supplier Credit days</label>
+									<label class="col-sm-3 col-lg-2 control-label">Supplier Credit days*</label>
 									<div class="col-sm-6 col-lg-4 controls">
 										<input type="text" name="supp_credit_days" id="supp_credit_days" class="form-control" data-rule-number="true"  placeholder="Supplier Credit days" onKeyPress="return isNumberCommaDot(event)" data-rule-required="true"/>
 									</div>
@@ -342,17 +391,37 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 	<script type="text/javascript">
-
+	
 			function supplierChange() {
 				var suppId=document.getElementById("supplier").value;
 				$.getJSON('${getSupplierDetails}', {
 					selectedSupplier :suppId,
 					ajax : 'true'
 				}, function(data) {
-				 
+					//--------------------------------------------------------------
+					// var rawMaterialList= JSON.parse('${rawMaterialList}');
+					/*  var html = '<option value="" disabled="disabled"  >Select Raw Material</option>';
+						
+						var len = rawMaterialList.length;
+						for ( var i = 0; i < len; i++) {
+							html += '<option value="' + rawMaterialList[i].rmId + '">'
+									+ rawMaterialList[i].rmName + '</option>';
+						}
+						html += '</option>';
+						$('#supp_email4').html(html);
+						$("#supp_email4").trigger("chosen:updated"); */
+					//--------------------------------------------------------------
+					
+					
 					document.getElementById("supp_name").value=data.suppName;
 					document.getElementById("supp_city").value=data.suppCity;
+					
 					document.getElementById("supp_state").value=data.suppState;
+					$("#supp_state").trigger("chosen:updated");
+					var str=data.suppEmail4;
+					var temp = new Array();
+					// this will return an array with strings "1", "2", etc.
+					temp = str.split(",");
 					document.getElementById("supp_country").value=data.suppCountry;
 					document.getElementById("supp_addr").value=data.suppAddr;
 					document.getElementById("supp_gstin").value=data.suppGstin;
@@ -364,7 +433,9 @@
 					document.getElementById("supp_email1").value=data.suppEmail1;
 					document.getElementById("supp_email2").value=data.suppEmail2;
 					document.getElementById("supp_email3").value=data.suppEmail3;
-					document.getElementById("supp_email4").value=data.suppEmail4;
+					//document.getElementById("supp_email4").value=temp;
+					$('#supp_email4').val(temp);
+					$("#supp_email4").trigger("chosen:updated");
 					document.getElementById("supp_email5").value=data.suppEmail5;
 					document.getElementById("supp_c_person").value=data.suppCPerson;
 					document.getElementById("supp_fdalic").value=data.suppFdaLic;
@@ -386,6 +457,28 @@ $('#btn_submit').click(function(){
 });
 
 </script>
+<script type="text/javascript">
+$(document).ready(function() { 
+	$('#rm_group').change(
+			function() {
+				$.getJSON('${getRmItems}', {
+					grpId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+               var html = '<option value="" disabled="disabled"  >Select Raw Material</option>';
+					
+					var len = data.length;
+					for ( var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].rmId + '">'
+								+ data[i].rmName + '</option>';
+					}
+					html += '</option>';
+					$('#supp_email4').html(html);
+					$("#supp_email4").trigger("chosen:updated");
 
+				});
+			});
+});
+</script>
 </body>
 </html>

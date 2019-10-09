@@ -85,8 +85,7 @@
 
 				<br>
 
-				<!-- <div class="col-sm-9 col-lg-5 controls">
- -->
+				
 				<div class="row">
 					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Select
@@ -128,7 +127,7 @@
 				<div class="row">
 					<div class="col-md-12" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
-							Billwise Report</button>
+							 Report</button>
 							
 							
 							<button class="btn btn-primary" value="PDF" id="PDFButton"
@@ -172,7 +171,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Item Name</th>
@@ -193,6 +192,14 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="form-group" style="display: none;" id="range">
+								 
+											 
+											 
+											<div class="col-sm-3  controls">
+											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
+											</div>
+											</div>
 					</div>
 
 				</div>
@@ -237,9 +244,24 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
+									
+									/* var totalSaleQty = 0;
+									var totalSaleValue = 0;
+									var totalGrnQty = 0;
+									var totalGrnValue = 0;
+									var totalGvnQty = 0;
+									var totalGvnValue = 0;
+									var totalNetQty = 0;
+									var totalNetValue = 0;
+									var totalRoyPer=0;
+									var totalRoyAmt=0; */
+									
+									var royPer=${royPer};
+									//alert(royPer);
 
 									if (data == "") {
 										alert("No records found !!");
+										  document.getElementById("expExcel").disabled=true;
 
 									}
 
@@ -247,7 +269,9 @@
 									.each(
 											data.categoryList,
 											function(key, cat) {
-												
+												  document.getElementById("expExcel").disabled=false;
+													document.getElementById('range').style.display = 'block';
+
 												var tr = $('<tr></tr>');
 												tr.append($('<td colspan="0"></td>').html(cat.catName));
 											  	//tr.append($('<td></td>').html(key+1));
@@ -279,31 +303,50 @@
 														//var index = key + 1;
 														 var tr = $('<tr></tr>');
 														//tr.append($('<td></td>').html(cat.catName));
+														
+														
+														/* 
+														totalSaleQty=totalSaleQty+report.tBillQty;
+														totalSaleValue=totalSaleValue+report.tBillTaxableAmt;
+														totalGrnQty=totalGrnQty+report.tGrnQty;
+														totalGrnValue=totalGrnValue+report.tGrnTaxableAmt;
+														totalGvnQty=totalGvnQty+report.tGvnQty;
+														totalGvnValue=totalGvnValue+report.tGvnTaxableAmt; */
+													
+														
+														
 													  	tr.append($('<td></td>').html(srNo));
 													  	tr.append($('<td></td>').html(report.item_name));
-													  	tr.append($('<td></td>').html(report.tBillQty));
-													  	tr.append($('<td></td>').html(report.tBillTaxableAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillQty.toFixed(2)));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillTaxableAmt.toFixed(2)));
 													  	
-													  	tr.append($('<td></td>').html(report.tGrnQty));
-														tr.append($('<td></td>').html(report.tGrnTaxableAmt));
-													  	tr.append($('<td></td>').html(report.tGvnQty));
-													  	tr.append($('<td></td>').html(report.tGvnTaxableAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGrnQty.toFixed(2)));
+														tr.append($('<td style="text-align:right;"></td>').html(report.tGrnTaxableAmt.toFixed(2)));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGvnQty.toFixed(2)));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
 													  	
 													  	var netQty=report.tBillQty-(report.tGrnQty+report.tGvnQty);
 													  	netQty=netQty.toFixed(2);
 													  	
-														var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
+														var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt.toFixed(2));
 														netValue=netValue.toFixed();
 														
-													  	tr.append($('<td></td>').html(netQty));
-													  	tr.append($('<td></td>').html(netValue));
-													  	var royPer=3;
-													  	tr.append($('<td></td>').html(royPer));
+													  	tr.append($('<td style="text-align:right;"></td>').html(netQty));
+													  	tr.append($('<td style="text-align:right;"></td>').html(netValue));
+													  	
+													  	tr.append($('<td style="text-align:right;"></td>').html(royPer.toFixed(2)));
+													  	
+													  	totalRoyPer=totalRoyPer+royPer;
 													  	
 													  	rAmt=netValue*royPer/100;
 													  	rAmt=rAmt.toFixed(2);
 													  	
-													  	tr.append($('<td></td>').html(rAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(rAmt.toFixed(2)));
+													  	
+													  	
+													/* 	totalNetQty=totalNetValue+parseFloat(netQty);
+													  	totalNetValue=totalNetValue+parseFloat(netValue);
+													 	totalRoyAmt=totalRoyAmt+parseFloat(rAmt);  */
 													  	
 														$('#table_grid tbody')
 																.append(
@@ -312,6 +355,42 @@
 														}//end of if
 														
 													})
+													
+													var tr = $('<tr></tr>');
+
+									tr.append($('<td></td>').html(""));
+
+									
+								
+									tr.append($('<td style="font-weight:bold;"></td>')
+											.html("Total"));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalSaleQty.toFixed(2)));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalSaleValue.toFixed(2)));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGrnQty.toFixed(2)));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGrnValue.toFixed(2)));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGvnQty.toFixed(2)));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGvnValue.toFixed(2)));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalNetQty.toFixed(2)));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalNetValue.toFixed(2)));
+									
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalRoyAmt.toFixed(2)));
+
+									$('#table_grid tbody').append(tr);
+													
+													
+													
 											})
 
 								});
@@ -405,11 +484,18 @@ function genPdf()
 {
 	var from_date = $("#fromDate").val();
 	var to_date = $("#toDate").val();
+	var selectedFr = $("#selectFr").val();
+	var routeId=$("#selectRoute").val();
 	
-	window.open('pdfForReport?url=showSaleRoyaltyByCatPdf/'+from_date+'/'+to_date);
+	window.open('pdfForReport?url=pdf/showSaleRoyaltyByCatPdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
 	
-	}
-
+}
+function exportToExcel()
+{
+	 
+	window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled=true;
+}
 </script>
 
 	<!--basic scripts-->

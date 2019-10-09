@@ -121,7 +121,7 @@ public class StockController {
 				FrMenu frMenu = getFrMenus.getFrMenus().get(i);
 
 				if (frMenu.getMenuId() == 26 || frMenu.getMenuId() == 31 || frMenu.getMenuId() == 33
-						|| frMenu.getMenuId() == 34 || frMenu.getMenuId() == 49) {
+						|| frMenu.getMenuId() == 34 || frMenu.getMenuId() == 49|| frMenu.getMenuId() == 81) {
 
 					filterFrMenus.add(frMenu);
 
@@ -186,7 +186,7 @@ public class StockController {
 	// Save item opening stock
 
 	@RequestMapping(value = "/saveFrOpeningStockProcess")
-	public ModelAndView saveOpeningStock(HttpServletRequest request, HttpServletResponse response) {
+	public String saveOpeningStock(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/showFrOpeningStock request mapping.");
 
@@ -261,7 +261,7 @@ public class StockController {
 
 			postFrItemStockHeader.setCatId(4);
 
-		} else if (menuId.equals("49")) {
+		} else if (menuId.equals("81")) {
 
 			postFrItemStockHeader.setCatId(6);
 
@@ -289,7 +289,7 @@ public class StockController {
 
 		model.addObject("frList", allFrIdNameList.getFrIdNamesList());
 
-		return model;
+		return "redirect:/showFrOpeningStock";
 	}
 
 }

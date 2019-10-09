@@ -2,11 +2,11 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
 	<c:url var="insertGateGvnProcessAgree"
 		value="/insertGateGvnProcessAgree" />
 
@@ -49,7 +49,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search GVN for Gate
+								<i class="fa fa-bars"></i> GVN for Gate
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -64,54 +64,18 @@
 
 
 						<div class="box-content">
-							<form
-								action="${pageContext.request.contextPath}/showGateGvnDetails"
-								class="form-horizontal" method="get" id="validation-form">
 
-
-
-
-								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">From
-										Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date"
-											size="16" type="text" name="from_date" value="${fromDate}"
-											required onblur="getDate()" />
-									</div>
-									<!-- </div>
-
-
-								<div class="form-group"> -->
-									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
-									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16"
-											type="text" value="${toDate}" name="to_date" required
-											onblur="getDate()" />
-									</div>
-									<!-- 	</div> -->
-
-
-									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-										<input type="submit" value="Submit" class="btn btn-primary" />
-
-
-
-									</div>
-								</div>
-
-							</form>
 
 							<form
 								action="${pageContext.request.contextPath}/insertGateGvnByCheckBoxes"
-								class="form-horizontal" method="get" id="validation-form">
+								class="form-horizontal" method="post" id="validation-form">
 
+<input type="hidden" value="${headerId}" id="headerId" name="headerId">
 
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> GVN List
+											<i class="fa fa-table"></i> GVN List GVN List Date-${grnDate} srNo-${srNo}
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -127,7 +91,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead style="background-color:#f3b5db; ">
 													<tr>
 														<!-- <th width="30"></th>
 														<th width="50" style="width: 18px" align="left">Sr No</th>
@@ -141,12 +105,13 @@
 														<th width="100" align="left">Action</th> -->
 
 
-														<th></th>
+														<th><input type="checkbox" name="select_to_agree1"/></th>
 														<th>Sr No</th>
-														<th>Bill No</th>
+														<th>Invoice No</th>
 														<th>Franchise Name</th>
 														<th>Item Name</th>
-														<th align="center">Gvn Qty</th>
+														<th>Gvn Qty</th>
+														<th>Edited Qty</th>
 														<th>PHOTO 1</th>
 														<th>PHOTO 2</th>
 														<th>Status</th>
@@ -161,6 +126,16 @@
 												<tbody>
 													<c:forEach items="${gvnList}" var="gvnList"
 														varStatus="count">
+														<%-- <c:choose>
+															<c:when
+																test="${gvnList.grnGvnQtyAuto!=gvnList.grnGvnQty}">
+
+																<c:set var="color" value="red"></c:set>
+															</c:when>
+															<c:otherwise>
+																<c:set var="color" value=""></c:set>
+															</c:otherwise>
+														</c:choose> --%>
 
 														<tr>
 															<c:choose>
@@ -182,16 +157,16 @@
 
 																<c:otherwise>
 
-																	<td><input type="checkbox" name="select_to_agree"
+																	<td>-<%-- <input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${gvnList.grnGvnId}"
-																		value="${gvnList.grnGvnId}"></></td>
+																		value="${gvnList.grnGvnId}"></> --%></td>
 
 
 																</c:otherwise>
 															</c:choose>
 															<td><c:out value="${count.index+1}" /></td>
 
-															<td align="left"><c:out value="${gvnList.billNo}" /></td>
+															<td align="left"><c:out value="${gvnList.invoiceNo}" /></td>
 
 															<td align="left"><c:out value="${gvnList.frName}" /></td>
 
@@ -205,6 +180,33 @@
 																id="approve_gate_login${gvnList.grnGvnId}"
 																value="${gvnList.approvedLoginGate}" /></td>
 
+
+
+
+															<c:set var="qty" value="0"></c:set>
+
+															<c:choose>
+																<c:when test="${gvnList.grnGvnStatus==1}">
+																	<c:set var="qty" value="${gvnList.grnGvnQty}"></c:set>
+																</c:when>
+																<c:otherwise>
+																	<c:set var="qty" value="${gvnList.aprQtyGate}"></c:set>
+																</c:otherwise>
+															</c:choose>
+
+
+
+															<td><input type="text"
+																name="gate_gvn_qty${gvnList.grnGvnId}"
+																style="width: 50px" class="form-control"
+																id='gate_gvn_qty${gvnList.grnGvnId}' value="${qty}"
+																onkeyup="checkQty(${gvnList.grnGvnId},${gvnList.grnGvnQty},${gvnList.aprQtyGate},${qty})" /></td>
+
+															<%-- 
+																<td align="center"><input type="text" name="gate_gvn_qty${gvnList.grnGvnId}" style="width: 50px" class="form-control"
+															id='gate_gvn_qty${gvnList.grnGvnId}' value="${gvnList.grnGvnQty}"/></td>
+																 --%>
+
 															<td><a href="${url}${gvnList.gvnPhotoUpload1}"
 																data-lightbox="image-1">Image 1</a></td>
 
@@ -217,32 +219,36 @@
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==2}">
-																	<td align="left"><c:out value="approvedByGate"></c:out></td>
+																	<td align="left"><c:out
+																			value="Approved From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==3}">
-																	<td align="left"><c:out value="rejectByGate"></c:out></td>
+																	<td align="left"><c:out
+																			value="Reject From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==4}">
-																	<td align="left"><c:out value="approvedBystore"></c:out></td>
+																	<td align="left"><c:out value="Approved From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==5}">
-																	<td align="left"><c:out value="rejectByStore"></c:out></td>
+																	<td align="left"><c:out value="Reject From Sales"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==6}">
-																	<td align="left"><c:out value="approvedByAcc"></c:out></td>
+																	<td align="left"><c:out
+																			value="Approved From Account"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${gvnList.grnGvnStatus==7}">
-																	<td align="left"><c:out value="rejectByAcc"></c:out></td>
+																	<td align="left"><c:out
+																			value="Reject From Account"></c:out></td>
 
 																</c:when>
 
@@ -308,7 +314,8 @@
 
 																		<ul class="table-menu">
 
-																			<li><a href="" id="callSubmit" class="disableClick"
+																			<li><a href="" id="callSubmit"
+																				class="disableClick"
 																				onclick="insertGrnCall(${gvnList.grnGvnId})"> <i
 																					class="fa fa-check"></i></a></li>
 
@@ -361,7 +368,7 @@
 
 																		<ul class="table-menu">
 
-																			<li><a href="" id="callSubmit" 
+																			<li><a href="" id="callSubmit"
 																				onclick="insertGrnCall(${gvnList.grnGvnId})"> <i
 																					class="fa fa-check"></i></a></li>
 
@@ -438,7 +445,7 @@
 
 																			<td><ul class="table-menu">
 
-																					<li><a href="" id="callSubmit" 
+																					<li><a href="" id="callSubmit"
 																						class="disableClick"
 																						onclick="insertGrnCall(${gvnList.grnGvnId})">
 																							<i class="fa fa-check"></i>
@@ -446,8 +453,8 @@
 
 																					<li>
 																						<div class="dropdown">
-																							<a class="dropdown-toggle" href="#" id="disableMe"
-																								data-toggle="dropdown"><i
+																							<a class="dropdown-toggle" href="#"
+																								id="disableMe" data-toggle="dropdown"><i
 																								class="fa fa-times"></i></a>
 																							<div class="dropdown-menu">
 																								<div class="form">
@@ -494,7 +501,7 @@
 																			<td>
 																				<ul class="table-menu">
 
-																					<li><a href="" id="callSubmit" 
+																					<li><a href="" id="callSubmit"
 																						class="disableClick"
 																						onclick="insertGrnCall(${gvnList.grnGvnId})">
 																							<i class="fa fa-check"></i>
@@ -502,8 +509,8 @@
 
 																					<li>
 																						<div class="dropdown">
-																							<a class="dropdown-toggle" href="#" id="disableMe"
-																								data-toggle="dropdown"><i
+																							<a class="dropdown-toggle" href="#"
+																								id="disableMe" data-toggle="dropdown"><i
 																								class="fa fa-times"></i></a>
 																							<div class="dropdown-menu">
 																								<div class="form">
@@ -563,7 +570,7 @@
 
 																				<ul class="table-menu">
 
-																					<li><a href="" id="callSubmit" 
+																					<li><a href="" id="callSubmit"
 																						class="disableClick"
 																						onclick="insertGrnCall(${gvnList.grnGvnId})">
 																							<i class="fa fa-check"></i>
@@ -571,8 +578,8 @@
 
 																					<li>
 																						<div class="dropdown">
-																							<a class="dropdown-toggle" href="#" id="disableMe"
-																								data-toggle="dropdown"><i
+																							<a class="dropdown-toggle" href="#"
+																								id="disableMe" data-toggle="dropdown"><i
 																								class="fa fa-times"></i></a>
 																							<div class="dropdown-menu">
 																								<div class="form">
@@ -629,7 +636,7 @@
 
 										<div
 											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-											<input type="submit" value="Submit" class="btn btn-primary">
+											<input type="submit" value="Approve" class="btn btn-primary">
 
 
 										</div>
@@ -645,7 +652,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -761,6 +768,8 @@ function insertGrnDisAgree(grnGvnId){
 var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnId).val();
+var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 if($("#gate_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
@@ -774,7 +783,9 @@ else{
 			
 			grnId : grnId,
 			approveGateLogin : approve_gate_login,
-			gateRemark : gate_remark,				
+			gateRemark : gate_remark,		
+			gate_gvn_qty : gate_gvn_qty,
+			headerId : headerId,
 				ajax : 'true',
 			
 
@@ -822,6 +833,8 @@ function insertGrnCall(grnGvnId){
 var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
+var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 
 /* alert(grnId);
@@ -834,7 +847,8 @@ alert(approve_gate_login); */
 							
 							grnId : grnId,
 							approveGateLogin:approve_gate_login,
-								
+							gate_gvn_qty:gate_gvn_qty,	
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -917,13 +931,13 @@ for (i = 0; i < acc.length; i++) {
 
 function showGateGvnDetails(){
 	
-	alert("hi");
+	//alert("hi");
 		var fromDate=$("#from_date").val();
 	
 		var toDate=$("#to_date").val();
 		
-		alert(fromDate);
-		alert(toDate);
+		//alert(fromDate);
+		//alert(toDate);
 		
 		$.getJSON('${showGateGvnDetails}',
 				{
@@ -978,5 +992,22 @@ function getDate(){
 	    });
 	});
 </script>
+
+	<script type="text/javascript">
+
+function checkQty(grnId,grnQty,aprQty,qty){
+	//alert("JJJ");
+	var entered=$("#gate_gvn_qty"+grnId).val();
+	//alert("received = " +entered);
+	if(entered>grnQty){
+		alert("Can not Enter Qty Greater than auto Qty ");
+		document.getElementById("gate_gvn_qty"+grnId).value=qty;
+	}
+}
+
+</script>
+
+
+
 </body>
 </html>

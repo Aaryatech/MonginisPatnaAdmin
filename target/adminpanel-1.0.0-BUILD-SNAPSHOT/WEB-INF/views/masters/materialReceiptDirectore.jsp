@@ -41,6 +41,10 @@
 				<h3>
 					<i class="fa fa-bars"></i>Material Receipt Director
 				</h3>
+				<div class="box-tool">
+								<a href="${pageContext.request.contextPath}/allDirectorMaterialReceiptNote">All Director Material Reciept</a> <a data-action="collapse" href="#"><i
+									class="fa fa-chevron-up"></i></a>
+							</div>
 
 			</div>
 
@@ -109,6 +113,12 @@
 								<input type="text" id="mrn_type" name="mrn_type"
 									value='<c:out value = "${mrnName}"/>' class="form-control"
 									readonly>
+							</div>
+							<div class="col-md-1"></div>
+							<div class="col-md-2">Store Remark</div>
+							<div class="col-md-3">
+
+								${materialRecNoteHeader.storesRemark}
 							</div>
 							</div><br>
 							
@@ -219,7 +229,7 @@
 								<div class="col-md-12 table-responsive">
 									<table class="table table-bordered table-striped fill-head "
 										style="width: 100%" id="table_grid">
-										<thead>
+										<thead style="background-color: #f3b5db;">
 											<tr>
 
 												<th align="left"><input type="checkbox"
@@ -314,13 +324,21 @@
 
 						</div>
 
+									<%-- <c:choose>
+										<c:when test="${materialRecNoteHeader.approvalRemark==null}">
+										<c:set var="sts" value="None"></c:set>
+										</c:when>
+										<c:otherwise>
+										<c:set var="sts" value="${materialRecNoteHeader.approvalRemark}"></c:set>
+										</c:otherwise>
+									</c:choose> --%>
 
 						<div class="box-content">
 
 							<div class="col-md-2">* Issue</div>
-							<div class="col-md-4" style="text-align: center">
-								<select name="issue" id="issue" class="form-control"
-									tabindex="6" required data-rule-required="true">
+							<div class="col-md-4" style="text-align: left;">
+								<select name="issue" id="issue" class="form-control chosen"
+									tabindex="1" required data-rule-required="true">
 									<option value="">None</option>
 									<c:forEach items="${allRemarksList}" var="allRemarksList"
 										varStatus="count">
@@ -345,9 +363,9 @@
 									onclick="rejectToAcc()"> <input type="button"
 									class="btn btn-info" id="btnApprov" value="Approve"
 									onclick="approve()" <c:out value = "${disabledFlag}"/>><br />
-								<br /> <input type="button" class="btn btn-info"
-									value="Back to List"
-									onclick="window.location.href='${pageContext.request.contextPath}/allMaterialReceiptNote'">
+								<br /> <a href='${pageContext.request.contextPath}/allDirectorMaterialReceiptNote'><input type="button" class="btn btn-info"
+									value="Back to List" >
+									</a>
 							</div>
 						</div>
 

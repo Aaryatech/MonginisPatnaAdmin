@@ -109,9 +109,10 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2"  class="table table-advance">
 											<thead>
 												<tr class="bgpink">
+													<th width="15" style="width: 18px">Select</th>
 										<th width="45" style="width: 18px">#</th>
 														<th width="939" align="left">Name</th>
 														<th width="81" align="left">Action</th>
@@ -125,6 +126,8 @@
 										<table id="table1" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
+							             	<th width="15" style="width: 18px">Select</th>
+												
 											<th width="45" style="width: 18px">#</th>
 														<th width="939" align="left">Name</th>
 														<th width="81" align="left">Action</th>
@@ -133,6 +136,8 @@
 												<tbody>
 							<c:forEach items="${spMessageList}" var="spMessageList" varStatus="count">
 														<tr>
+							<td><input type="checkbox" class="chk" name="select_to_print" id="${spMessageList.spMsgId}"	value="${spMessageList.spMsgId}"/></td>
+									
 															<td><c:out value="${count.index+1}"/></td>
 															<td align="left"><c:out
 																	value="${spMessageList.spMsgText}" /></td>
@@ -154,7 +159,10 @@
 					</div>
 				</div>
 				
-						</div>
+						</div><div class="form-group">		&nbsp;	&nbsp;	&nbsp;	&nbsp;			
+								<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" /></div>
 							<%-- 		<div class="box-content">
 
 										<div class="clearfix"></div>
@@ -268,5 +276,27 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+<script type="text/javascript">
+function deleteById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Message")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteSpMessage/'+checkedVals;
+
+	}
+
+}
+</script>
 </body>
 </html>

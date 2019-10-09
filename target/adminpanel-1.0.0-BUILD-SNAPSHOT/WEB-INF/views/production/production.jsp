@@ -6,6 +6,13 @@
  
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+ 	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 <script>
   $( function() {
@@ -40,14 +47,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Production
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -58,7 +65,7 @@
 						<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i> Search Production Order
+					<i class="fa fa-bars"></i> Add Order to Production Page
 				</h3>
 
 			</div>
@@ -83,11 +90,10 @@
 			<div class="box-content">
 						<div class="row" > -->
 					
-					<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Select
-										Category </label>
-									<div class="col-md-6 controls">
+					<div class="form-group" >
+					
+			<label class=" col-md-1 control-label menu_label">Category </label>
+									<div class="col-md-3 controls">
 
 										<select class="form-control chosen" data-placeholder="Choose Category"
 											 name="selectCategory" id="selectCategory" tabindex="-1" data-rule-required="true">
@@ -110,27 +116,26 @@
 									</div>
 
 
-								</div>
+								<!-- </div>
 							
 							<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Menu</label>
-									<div class="col-md-6 controls">
+					<label class=" col-md-3 control-label franchisee_label"></label> -->
+				<label class="col-md-1 control-label menu_label">Menu</label>
+									<div class="col-md-3 controls">
 										<select data-placeholder="Select Menu" multiple="multiple"
 											class="form-control chosen-select chosen" name="selectMenu"
 											tabindex="-1" id="selectMenu" data-rule-required="true">
-												
+										<option value="-1">ALL</option>
 										</select>
 									</div>
 
 
-								</div>
-<br/>
-								<div class="form-group col-md-8" align="left">
-					<label class=" col-md-3 control-label franchisee_label"></label>
-				<label class=" col-md-3 control-label menu_label">Production
+								<!-- </div><br></br>
+
+								<div class="form-group"><div class="col-md-1"></div> -->
+				<label class=" col-md-1 control-label menu_label">Production
 										Date</label>
-									<div class="col-md-6 controls">
+									<div class="col-md-2 controls">
 										<input value="${todayDate}" class="form-control date-picker" id="datepicker" size="16"
 											 type="text" name="production_date" required />
 									</div>
@@ -139,16 +144,16 @@
 
 
 
-								</div>
-	</div>
+							
+	<!-- </div>
 								<div class="row" align="center">
 									<div
-										class="col-md-12">
+										class="col-md-12"> -->
 										<input type="button" class="btn btn-info" value="Search" id="callsearch"
 											onclick="searchOrder()">
 
-									</div>
-								</div>
+									<!-- </div> -->
+								</div>	</div>
 
 </div>
 								<div align="center" id="loader" style="display: none">
@@ -164,25 +169,51 @@
 </div>
 								 
 								<div class="box">
-									<div class="box-title">
+								<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i>  Production List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
 												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
+											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
 									</div>
-									
+									 -->
 									
 								 <form action="submitProduction" method ="post">
 						
 
 									<div class="box-content">
-
-								<div class="row">
-										<div class="col-md-12 table-responsive" >
+<div id="table-scroll" class="table-scroll">
+							 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+	                                                 	<th width="60" style="width: 50px">Sr No</th>
+														<th width="100">Item Id</th>
+														<th width="170">Item Name</th> 
+														<th width="100">Current Opening Qty</th>
+														<th width="100">Order Quantity</th>
+												</thead>
+												</table>
+									
+									</div>
+									<div class="table-wrap">
+									
+										<table id="table1" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+											<th width="60" style="width: 50px">Sr No</th>
+														<th width="100">Item Id</th>
+														<th width="170">Item Name</th> 
+														<th width="100">Current Opening Qty</th>
+														<th width="100">Order Quantity</th>
+												</tr>
+												</thead>
+								
+										<!-- <div class="col-md-12 table-responsive" >
 										 
 											<table width="60%" class="table table-advance " id="table1" name="table1" align="left">
 												<thead>
@@ -192,9 +223,8 @@
 														<th width="100">Item Name</th> 
 														<th width="100">Current Opening Qty</th>
 														<th width="100">Order Quantity</th>
-													<!-- 	<th width="100">Production Quantity</th> -->
 													</tr>
-												</thead>
+												</thead> -->
 												<tbody>
 												
 												</tbody>
@@ -205,7 +235,7 @@
 
 
 
-</div>
+
 <br/><br/>
 									<div class="form-group col-md-8" align="left">
 										<label class=" col-md-3   "></label>
@@ -236,6 +266,7 @@
 										class="col-md-12">
 								<input type="submit" class="btn btn-primary"
 								  value="Submit" disabled id="callSubmit">
+								   <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
 						 </div>
 </div>
 
@@ -271,7 +302,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+			<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -364,21 +395,25 @@ $(document).ready(function() {
 					
 					var len = data.length;
 					$('#selectMenu').find('option').remove().end()
-					//var html = '<option value="-1"><c:out value=""/></option>';
+					var html = '<option value="-1">ALL</option>';
 					
 					for ( var i = 0; i < len; i++) {
 
-						
+						html += '<option value="' +data[i].menuId+ '">'
+						+ data[i].menuTitle + '</option>';
 
-						 $("#selectMenu").append(
+						/*  $("#selectMenu").append(
 
 		                           $("<option ></option>").attr(
 
 		                               "value", data[i].menuId).text(data[i].menuTitle)
 
-		                       );
+		                       ); */
 
 					} 
+					html += '</option>';
+					$("#selectMenu").html(html);
+
 					$("#selectMenu").trigger("chosen:updated");
 
 				});
@@ -414,16 +449,21 @@ $(document).ready(function() {
 								//$('#table_grid td').remove();
 								
 								document.getElementById("callsearch").disabled=false;
-								$('#loader').hide();
+								
 								  if (data == "") {
 									//alert("No records found !!");
 									document.getElementById("callSubmit").disabled=true;
-								}  
+								} 
+								  
 								//alert(data);
 								else{
-									document.getElementById("callSubmit").disabled=false;
+									
 								
 								$.each(data,function(key, order) {
+									$('#loader').hide();
+									if(order.qty>0){
+										document.getElementById("callSubmit").disabled=false;
+									}
 /* 
 									autoindex = autoindex +1 ;
 
@@ -459,15 +499,15 @@ $(document).ready(function() {
 
 												})
 													 */
-												
+													 document.getElementById("expExcel").disabled=false;		
 												var tr = $('<tr></tr>');
 
 							  	tr.append($('<td></td>').html(key+1));			  	
 							  	tr.append($('<td></td>').html(order.itemId));
 								tr.append($('<td></td>').html(order.itemName)); 
-								tr.append($('<td></td>').html(order.curOpeQty));
+								tr.append($('<td style="text-align:right;"></td>').html(order.curOpeQty));
 								
-								tr.append($('<td></td>').html(order.qty));
+								tr.append($('<td style="text-align:right;"></td>').html(order.qty));
 								 
 								 
 								 
@@ -492,15 +532,20 @@ $(document).ready(function() {
 				
 				
 				$('#loader').hide();
-				/* if (data == "") {
-					alert("No records found !!");
+				 if (data == "") {
+				//	alert("No records found !!");
+					document.getElementById("callSubmit").disabled=true;
 
-				} */
+				} 
 				//alert(data);
-
+				else{
 				
 				$.each(data,function(key, order) {
 					document.getElementById("callSubmit").disabled=false;
+					
+					if(order.qty>0){
+						document.getElementById("callSubmit").disabled=false;
+					}
 					autoindex =  autoindex +1;
 
 								/* 	var tr = "<tr>";
@@ -540,6 +585,7 @@ $(document).ready(function() {
 									
 									$('#table1 tbody').append(tr);
 								})
+				}
 									
 
 			});
@@ -582,6 +628,13 @@ $(document).ready(function() {
             var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
             
             return ret;
+        }
+        
+        function exportToExcel()
+        {
+        	 
+        	window.open("${pageContext.request.contextPath}/exportToExcel");
+        			document.getElementById("expExcel").disabled=true;
         }
 	</script>
 

@@ -4,7 +4,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.*"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta charset="utf-8">
@@ -50,11 +50,14 @@
 
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/js/common.js"></script>
-</head>
+</head> --%>
+	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+	<c:url var="findEventList" value="/findEventList" />
+
 <body onload="calTotalGstOnLoad()">
 
+	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include> 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
 
 	<div class="container" id="main-container">
@@ -103,6 +106,7 @@
 									<form action="updateSpCakeProcess" class="form-horizontal" id="validation-form"
 										enctype="multipart/form-data" method="post">
 
+<input type="hidden" name="suppId" id="suppId" value="${spCkSupp.id}" />
 
 
 										<div class="form-group">
@@ -162,7 +166,72 @@
 											</div>
 
 										</div>
+		<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="spck_hsncd" id="spck_hsncd"
+											placeholder="HSN Code" class="form-control"
+											data-rule-required="true" value="${spCkSupp.spHsncd}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">UOM</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="spck_uom" id="spck_uom" class="form-control"
+											placeholder="Special Cake UOM" data-rule-required="true"
+											onchange="uomChanged()">
+											<option value="">Select Special Cake UOM</option>
+											<c:forEach items="${rmUomList}" var="rmUomList"
+												varStatus="count">
+												<c:choose>
+													<c:when test="${rmUomList.uomId==spCkSupp.uomId}">
+														<option value="${rmUomList.uomId}" selected><c:out value="${rmUomList.uom}"/></option>
+													</c:when>
+													<c:otherwise>
+														<option value="${rmUomList.uomId}"><c:out value="${rmUomList.uom}"/></option>
+													</c:otherwise>
+												</c:choose>
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+								<input type="hidden" name="sp_uom_name" id="sp_uom_name"
+									value="${spCkSupp.spUom}" />
+							
 
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cut
+										Section</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select name="cut_section" id="cut_section"
+											class="form-control" data-rule-required="true">
+											<option value="">Select Cut Section</option>
+
+											<c:choose>
+												<c:when test="${spCkSupp.cutSection==0}">
+													<option value="0" selected>Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:when>
+												<c:when test="${spCkSupp.cutSection==1}">
+													<option value="0">Not Applicable</option>
+													<option value="1" selected>Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:when>
+												<c:when test="${spCkSupp.cutSection==2}">
+													<option value="0">Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2" selected>Double Cut</option>
+												</c:when>
+												<c:otherwise>
+													<option value="0">Not Applicable</option>
+													<option value="1">Single Cut</option>
+													<option value="2">Double Cut</option>
+												</c:otherwise>
+											</c:choose>
+										</select>
+									</div>
+								</div>
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Type</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -252,7 +321,7 @@
 											<label class="col-sm-3 col-lg-2 control-label">Sp Local Rate
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
-												<input type="text" name="sp_rate1" id="sp_rate1"
+												<input type="text" name="sp_rate1" id="sp_rate1" onchange="calMrp()"
 													 placeholder="Special Cake Rate 1" class="form-control"
 													data-rule-number="true" data-rule-required="true" value="${specialCake.spRate1}" />
 											</div>
@@ -262,7 +331,7 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate2" id="sp_rate2"
-													 placeholder="Special Cake Rate 2" class="form-control"
+													 placeholder="Special Cake Rate 2" class="form-control" onchange="calMrp()"
 													data-rule-number="true"  data-rule-required="true" value="${specialCake.spRate2}"/>
 											</div>
 										</div>
@@ -271,10 +340,18 @@
 											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="sp_rate3" id="sp_rate3"
-									                placeholder="Special Cake Rate 3" class="form-control"
+									                placeholder="Special Cake Rate 3" class="form-control" onchange="calMrp()"
 													data-rule-number="true"  data-rule-required="true" value="${specialCake.spRate3}"/>
 											</div>
 										</div>
+											 <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Margin %</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="margin" id="margin"
+											placeholder="Enter Margin %" class="form-control"
+											data-rule-required="true" data-rule-number="true" value="20" onchange="calMrp()"/>
+									</div>
+								</div>
 										  <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Local MRP Rate
 											</label>
@@ -330,7 +407,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_3" id="tax_3"
 													value="${specialCake.spTax3}" placeholder="IGST"
-													class="form-control"  data-rule-required="true"  data-rule-number="true" value="0.0"onchange="calTotalGst()"/>
+													class="form-control"  data-rule-required="true"  data-rule-number="true" onchange="calTotalGst()"/>
 											</div>
 										</div>
 										
@@ -341,7 +418,7 @@
 												<input type="text" name="tax_1"
 													value="${specialCake.spTax1 }" id="tax_1"
 													placeholder="CGST" class="form-control"
-													data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													data-rule-required="true" data-rule-number="true"  onchange="calTotalGst()"/>
 											</div>
 										</div>
 										
@@ -351,10 +428,18 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_2" id="tax_2"
 													value="${specialCake.spTax2}" placeholder="SGST"
-													class="form-control" data-rule-required="true" data-rule-number="true" value="0.0"onchange="calTotalGst()"/>
+													class="form-control" data-rule-required="true" data-rule-number="true" onchange="calTotalGst()"/>
 											</div>
 										</div>
-
+                                    <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cess(%)</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="text" name="sp_cess" id="sp_cess"
+											placeholder="Cess %" class="form-control"
+											data-rule-required="true" data-rule-number="true"
+											value="${spCkSupp.spCess}" />
+									</div>
+								</div>
                                  <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Total GST Applicable %</label>
 									<div class="col-sm-9 col-lg-10 controls">
@@ -370,9 +455,9 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Events"
 													class="form-control chosen" multiple="multiple"
-													tabindex="6" name="spe_id_list[]" id="spe_id_list[]"data-rule-required="true">
+													tabindex="6" name="spe_id_list[]" id="spe_id_list"data-rule-required="true" onchange="eventChange()">
+													<option value="0" >All</option>
 
-													<optgroup label="EVENTS">
 														<c:forEach items="${speEventNameId}" var="eventName">
 
 															<option selected value="${eventName.id}">${eventName.name}</option>
@@ -381,7 +466,6 @@
 
 															<option value="${eventList.speId}">${eventList.speName}</option>
 														</c:forEach>
-													</optgroup>
 
 												</select>
 											</div>
@@ -471,7 +555,7 @@
 											</div>
 										</div>
 										
-										<div class="form-group">
+										<%-- <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Type 2
 												Applicable ?</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -506,8 +590,8 @@
 												</c:choose>
 
 											</div>
-										</div>
-								
+										</div> --%>
+								 <input type="hidden"	name="type_2_applicable" id="type_2_applicable" value="1" />
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Is Used ?</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -728,5 +812,61 @@ function calTotalGstOnLoad() {
 		.setAttribute('value', totalGst);
 }
 </script>	
+
+<script type="text/javascript">
+function calMrp()
+{
+	var rate1 = parseFloat($("#sp_rate1").val());
+	var rate2 = parseFloat($("#sp_rate2").val());
+	var rate3 = parseFloat($("#sp_rate3").val());
+	var margin= parseFloat($("#margin").val());
+	
+	var calRate1=rate1+(rate1*margin/100);
+	var calRate2=rate2+(rate2*margin/100);
+	var calRate3=rate3+(rate3*margin/100);
+	document.getElementById("mrp_rate1").setAttribute('value', calRate1);
+	document.getElementById("mrp_rate2").setAttribute('value', calRate2);
+	document.getElementById("mrp_rate3").setAttribute('value', calRate3);
+}
+</script>
+<script>
+function eventChange()
+{
+ var event=$('#spe_id_list option:selected').val()
+  if(event==0){
+	  $.getJSON('${findEventList}', {
+			ajax : 'true'
+		}, function(data) {
+			$('#spe_id_list')
+		    .find('option')
+		    .remove()
+		    .end()
+
+	var html = '<option value="0">ALL</option>';
+	var len = data.length;
+	
+	
+	for ( var i = 0; i < len; i++) {
+
+       $("#spe_id_list").append(
+               $("<option selected></option>").attr(
+                   "value", data[i].speId).text(data[i].speName)
+           );
+	}
+
+	   $("#spe_id_list").trigger("chosen:updated");
+		});
+  }
+}
+</script>
+
+<script type="text/javascript">
+	function uomChanged() {
+
+		document.getElementById('sp_uom_name').value = $(
+				'#spck_uom option:selected').text();
+
+	}
+</script>
 </body>
 </html>

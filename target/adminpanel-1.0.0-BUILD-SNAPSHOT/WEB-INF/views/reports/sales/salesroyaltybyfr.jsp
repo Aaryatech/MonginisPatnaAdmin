@@ -34,7 +34,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Royalty Report By FR
+					<i class="fa fa-file-o"></i>Franchasee-wise Royalty Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -56,7 +56,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Sales Royalty by FR
+					<i class="fa fa-bars"></i>Franchasee-wise Royalty Report
 				</h3>
 
 			</div>
@@ -135,11 +135,6 @@
 							<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button>
 							
-							
-
-						<%-- 	<a href="${pageContext.request.contextPath}/pdfForReport?url=showSaleRoyaltyByCatPdf"
-								target="_blank">PDF</a>
- --%>
 					</div>
 				</div>
 
@@ -175,17 +170,19 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
-										<th>Fr Name</th>
+										<th>Franchise Name</th>
 										<th>City</th>
 										<th>Sale Value</th>
 										<th>GRN Value</th>
-										<th>%</th>
 										<th>GVN Value</th>
 										<th>Net Value</th>
-										<th>Royalty Amt</th>
+										<th>%</th>
+										
+										
+										<th>Royalty Amount</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -193,20 +190,19 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="form-group" style="display: none;" id="range">
+								 
+											<div class="col-sm-3  controls">
+											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
+											</div>
+											</div>
 					</div>
 				</div>
 
 
-
-				<!--  <table class="columns">
-      <tr>
-        <td><div id="chart_div" style="width: 100%" ></div></td>
-        <td><div id="PieChart_div" style="width: 100%"></div></td>
-      </tr>
-    </table>
-      -->
-				<div id="chart_div" style="width: 100%"></div>
-				<div id="PieChart_div" style="width: 100%"></div>
+				
+				<div id="chart_div" style="width: 100%; height: 100%" ></div>
+				<div id="PieChart_div" style="width: 100%; height:100% "></div>
 			</form>
 		</div>
 	</div>
@@ -245,46 +241,74 @@
 
 								},
 								function(data) {
+									
+								
+									var totalSaleValue = 0;
+									var totalGrnValue = 0;
+									var totalGvnValue = 0;
+									var totalNetValue = 0;
+									var totalRoyAmt=0;
+									
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
 
 									if (data == "") {
 										alert("No records found !!");
+										  document.getElementById("expExcel").disabled=true;
 
 									}
 
-							
+									var royPer=${royPer};
+									//alert(royPer);
+
 									$
 									.each(
 											data,
 											function(key, report) {
-														
+												  document.getElementById("expExcel").disabled=false;
+													document.getElementById('range').style.display = 'block';
 														//alert("Hi");
 														 srNo=key+1;
 														//var index = key + 1;
 														 var tr = $('<tr></tr>');
 														//tr.append($('<td></td>').html(cat.catName));
+														
+															
+													 totalSaleValue=totalSaleValue+report.tBillTaxableAmt;
+													totalGrnValue=totalGrnValue+report.tGrnTaxableAmt;
+													totalGvnValue=totalGvnValue+report.tGvnTaxableAmt; 
+														
+														
 													  	tr.append($('<td></td>').html(srNo));
 													  	tr.append($('<td></td>').html(report.frName));
 													  	tr.append($('<td></td>').html(report.frCity));
-													  	tr.append($('<td></td>').html(report.tBillTaxableAmt));
-														tr.append($('<td></td>').html(report.tGrnTaxableAmt));
-														var royPer=3;
-													  	tr.append($('<td></td>').html(royPer));
-													  	tr.append($('<td></td>').html(report.tGvnTaxableAmt));
-
-													  	var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
-														netValue=netValue.toFixed();
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillTaxableAmt.toFixed(2)));
+														tr.append($('<td style="text-align:right;"></td>').html(report.tGrnTaxableAmt.toFixed(2)));
+														tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
+														var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
+														netValue=netValue.toFixed(2);
 														
-													  	tr.append($('<td></td>').html(netValue));
+														
+														
+														
+													  	tr.append($('<td style="text-align:right;"></td>').html(netValue));
+													  	tr.append($('<td style="text-align:right;"></td>').html(royPer));
+													  
+
+														
+													  	
+													  	
 													  	//alert("netVAlue"+netValue);
 													  	//alert("Per"+royPer);
 													  	rAmt=parseFloat(netValue) * parseFloat(royPer)/100;
 													  //	alert("Amt="+rAmt)
 													  	rAmt=rAmt.toFixed(2);
 													  	
-													  	tr.append($('<td></td>').html(rAmt));
+													  	tr.append($('<td style="text-align:right;"></td>').html(rAmt));
+													  	
+													  totalNetValue=totalNetValue+parseFloat(netValue);
+													 	totalRoyAmt=totalRoyAmt+parseFloat(rAmt); 
 													  	
 														$('#table_grid tbody')
 																.append(
@@ -293,6 +317,41 @@
 														
 														
 													})
+													
+													var tr = $('<tr></tr>');
+
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+
+									
+									tr.append($('<td style="font-weight:bold;"></td>')
+											.html("Total"));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalSaleValue.toFixed(2)));
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGrnValue.toFixed(2)));
+									
+								
+									
+								
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalGvnValue.toFixed(2)));
+								
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalNetValue.toFixed(2)));
+									
+									tr.append($('<td></td>').html(""));
+									
+									
+									tr.append($('<td style="text-align:right;"></td>').html(
+											totalRoyAmt.toFixed(2)));
+
+									$('#table_grid tbody')
+									.append(
+											tr);
+							 
 											
 
 								});
@@ -345,12 +404,7 @@
 	<script>
 $('.datepicker').datepicker({
     format: {
-        /*
-         * Say our UI should display a week ahead,
-         * but textbox should store the actual date.
-         * This is useful if we need UI to select local dates,
-         * but store in UTC
-         */
+       
     	 format: 'mm/dd/yyyy',
     	    startDate: '-3d'
     }
@@ -387,8 +441,6 @@ function disableRoute(){
 	<script type="text/javascript">
 function showChart(){
 	
-	//alert("Hi");
-		
 	$("#PieChart_div").empty();
 	$("#chart_div").empty();
 		document.getElementById('chart_div').style.display = "block";
@@ -402,13 +454,6 @@ function showChart(){
 			var from_date = $("#fromDate").val();
 			var to_date = $("#toDate").val();
 			
-			//alert("fr "+selectedFr);
-
-			//alert(from_date);
-			//alert(to_date);
-			//alert(routeId);
-			
-				  //document.getElementById('btn_pdf').style.display = "block";
 			$.getJSON(
 					'${getBillList}',
 
@@ -427,7 +472,8 @@ function showChart(){
 
 								}
 							 var i=0;
-							 
+							 var royPer=${royPer};
+							 //alert(royPer);
 							 google.charts.load('current', {'packages':['corechart', 'bar']});
 							 google.charts.setOnLoadCallback(drawStuff);
 
@@ -453,7 +499,7 @@ function showChart(){
 						       
 						       $.each(data,function(key, report) {
 
-						    	   var royPer=3;											  	
+						    	  								  	
 									var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
 									//netValue=netValue.toFixed();
 									
@@ -479,7 +525,7 @@ function showChart(){
 								             
 								           ]);
 								   
-								   alert("g1");
+								   //alert("g1");
 								   
 								   piedataTable.addRows([
 									 
@@ -528,11 +574,11 @@ function showChart(){
 						        var Piechart = new google.visualization.PieChart(
 						                document.getElementById('PieChart_div'));
 						       chart.draw(dataTable,
-						          {width: 1100, height: 600, title: 'Sales Royalty Group By Fr'});
+						          {title: 'Sales Royalty Group By Fr'});
 						       
 						       
 						       Piechart.draw(piedataTable,
-								          {width: 1100, height: 600, title: 'Sales royalty Group By Fr',is3D:true});
+								          {title: 'Sales royalty Group By Fr',is3D:true});
 						      // drawMaterialChart();
 							 };
 							 
@@ -545,12 +591,18 @@ function genPdf()
 {
 	var from_date = $("#fromDate").val();
 	var to_date = $("#toDate").val();
-	
-	window.open('pdfForReport?url=showSaleRoyaltyByFrPdf/'+from_date+'/'+to_date);
+	var selectedFr = $("#selectFr").val();
+	var routeId=$("#selectRoute").val();
+	window.open('pdfForReport?url=pdf/showSaleRoyaltyByFrPdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
 	
 	}
 
-
+function exportToExcel()
+{
+	 
+	window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled=true;
+}
 </script>
 
 	<!--basic scripts-->

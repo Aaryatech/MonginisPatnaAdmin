@@ -11,7 +11,21 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public class VpsImageUpload {
+	
 
+	public static final String FR_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/FR/";
+	public static final String ITEM_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/ITEM/";
+
+	public static final String MSG_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/MSG/";
+	
+	public static final String M_SP_CAKE_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/MSPCAKE/";
+	
+	public static final String RAW_MAT_IMAGE_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/RAWMAT/";
+
+	public static final String GATE_ENTRY_IMAGE_FOLDER = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/GATEENTRY/";
+	
+	public static final String LOGIS_BILL_FILE= "/home/devour/apache-tomcat-9.0.12/webapps/uploads/MSPCAKE/";
+/*
 	public static final String FR_FOLDER = "/opt/apache-tomcat-8.5.6/webapps/uploads/FR/";
 	public static final String ITEM_FOLDER = "/opt/apache-tomcat-8.5.6/webapps/uploads/ITEM/";
 
@@ -23,7 +37,7 @@ public class VpsImageUpload {
 
 	public static final String GATE_ENTRY_IMAGE_FOLDER = "/opt/apache-tomcat-8.5.6/webapps/uploads/GATEENTRY/";
 	
-	public static final String LOGIS_BILL_FILE= "/opt/apache-tomcat-8.5.6/webapps/uploads/MSPCAKE/";
+	public static final String LOGIS_BILL_FILE= "/opt/apache-tomcat-8.5.6/webapps/uploads/MSPCAKE/";*/
 
 	private static final String FIELDMAP_FOLDER = null;
 	private static final String KYC_FOLDER = null;

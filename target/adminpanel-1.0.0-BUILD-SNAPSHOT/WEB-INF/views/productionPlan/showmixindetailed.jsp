@@ -29,13 +29,13 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Mix Request Detailed
 					</h1>
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 			<div class="row">
@@ -57,26 +57,26 @@
 								action="${pageContext.request.contextPath}/updateProdctionQty"
 								method="post">
 								<div class="box-content">
-									<div class="col-md-2">Mix Request Date</div>
+									<div class="col-md-1">Mix Req Date</div>
 									<c:set var="mdate" value="${mixheader.mixDate}">
 									
 									</c:set>
 
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" id="mix_date" name="mix_date"
 											value="<fmt:formatDate pattern = "dd-MM-yyyy" value = "${mixheader.mixDate}" />"
 											class="form-control" readonly>
 									</div>
 
 
-
+<!-- 
 								</div>
 								<br>
 
-								<div class="box-content">
+								<div class="box-content"> -->
 
-									<div class="col-md-2">Status</div>
-									<div class="col-md-3">
+									<div class="col-md-1">Status</div>
+									<div class="col-md-2">
 									<c:choose>
 										<c:when test="${mixheader.status==0}">
 											<c:set var="sts" value="Pending"></c:set>
@@ -96,33 +96,33 @@
 										<input type="hidden" id="status" name="status"
 											value="${mixheader.status}" class="form-control" readonly>
 									</div>
-								</div>
+								<!-- </div>
 								<br>
 
-								<div class="box-content">
+								<div class="box-content"> -->
 
 
-									<div class="col-md-2">Time Slot</div>
-									<div class="col-md-3">
+								<!-- 	<div class="col-md-1">Time Slot</div>
+									<div class="col-md-2"> -->
 										<input class="form-control" id="time_slot" size="16"
-											type="text" name="time_slot" value="${mixheader.timeSlot}"
+											type="hidden" name="time_slot" value="${mixheader.timeSlot}"
 											readonly />
-									</div>
+									<!-- </div> -->
 
-								</div>
+							<!-- 	</div>
 								<br>
 
 								<div class="box-content">
-
-									<div class="col-md-2">Production Batch</div>
-									<div class="col-md-3">
-										<input type="text" id="production_batch"
+ -->
+								<!-- 	<div class="col-md-1">Production Batch</div>
+									<div class="col-md-2"> -->
+										<input type="hidden" id="production_batch"
 											name="production_batch" value="${mixheader.productionBatch}"
 											class="form-control" readonly>
 
-									</div>
+									<!-- </div>
 								</div>
-								<br>
+								<br> -->
 
 
 
@@ -131,18 +131,19 @@
 									<div class="row">
 										<div class="col-md-12 table-responsive">
 											<table class="table table-bordered table-striped fill-head "
-												style="width: 100%" id="table_grid">
-												<thead>
+												id="table_grid">
+												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th>Sr.No.</th>
 														<th>Sf Name</th>
 														<th>Original Qty</th>
+														 <th>Multiplication Factor</th>
 														<th>Auto Order Qty</th>
 														<th>Received Qty</th>
 														<th>Production Qty</th>
 														<th>Rejected Qty</th> 
-														<th>Mixing Date</th>
-
+													<!-- 	<th>Mixing Date</th> -->
+                                                       
 
 													</tr>
 												</thead>
@@ -156,19 +157,21 @@
 															<td><c:out value="${count.index+1}" /></td>
 															<c:set var="srNo" value="${srNo+1}" />
 															<td><c:out value="${mixwithdetaild.sfName}" /></td>
-															<td><c:out value="${mixwithdetaild.originalQty}" /></td>
-															<td><c:out value="${mixwithdetaild.autoOrderQty}" /></td>
+															<td style="text-align:right;"><c:out value="${mixwithdetaild.originalQty}" /></td>
+															<td style="text-align:right;"><c:out value="${mixwithdetaild.autoOrderQty/mixwithdetaild.originalQty}" /></td>
+														
+															<td style="text-align:right;">  <c:out value="${mixwithdetaild.autoOrderQty}" /></td>
 
-															<td><c:out value="${mixwithdetaild.receivedQty}" /></td>
+															<td style="text-align:right;"><c:out value="${mixwithdetaild.receivedQty}" /></td>
 
 															<c:choose>
 																<c:when test="${(mixheader.status!=2) and (deptId==15)}">
-																	<td><input type="text"
+																	<td style="text-align:right;"><input type="text"
 																		name='production_Qty<c:out
 																		value="${mixwithdetaild.mixing_detailId}" />'
 																		class="form-control"
-																		value=<c:out value="${mixwithdetaild.productionQty}" /> pattern="[+-]?([0-9]*[.])?[0-9]+" required></td>
-																<td><input type="text"
+																		value=<c:out value="${mixwithdetaild.receivedQty}" /> pattern="[+-]?([0-9]*[.])?[0-9]+" required></td>
+																<td style="text-align:right;"><input type="text" 
 																		name='rejected_Qty<c:out  
 																		value="${mixwithdetaild.mixing_detailId}" />'
 																		class="form-control"
@@ -176,14 +179,14 @@
 																
 																</c:when>
 																<c:otherwise>
-																	<td><c:out value="${mixwithdetaild.productionQty}" /></td>
-																	<td><c:out value="${mixwithdetaild.rejectedQty}" /></td>
+																	<td style="text-align:right;"><c:out value="${mixwithdetaild.productionQty}" /></td>
+																	<td style="text-align:right;"><c:out value="${mixwithdetaild.rejectedQty}" /></td>
 																</c:otherwise>
 															</c:choose>
 															 
-															<td><fmt:formatDate pattern = "dd-MM-yyyy" value = "${mixwithdetaild.mixingDate}" /></td>
-
-
+														<%-- 	<td style="text-align:right;"><fmt:formatDate pattern = "dd-MM-yyyy" value = "${mixwithdetaild.mixingDate}" /></td>--%>
+ 
+ 
 														</tr>
 													</c:forEach>
 
@@ -198,19 +201,14 @@
 								<div class="form-group">
 									<div align="center" class="form-group">
 										<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
-											<c:choose>
-												<c:when test="${(mixheader.status!=2) and (deptId==15)}">
-										 			<input type="submit" class="btn btn-primary"
-													value="complet Production">
-											    </c:when>
-											</c:choose>
+											
 								
 						
 											<c:choose>
 												<c:when test="${(mixheader.status!=2) and (deptId==15)}">
 													<c:choose>
-														<c:when test="${mixheader.isBom==0}"> 
-															<a href="${pageContext.request.contextPath}/showBom/${mixheader.mixId}/0/${date}/0"><input type="button" class="btn btn-primary"
+														<c:when test="${mixheader.isBom==0}"> <!-- /showBom/${mixheader.mixId}/0/${date}/0/0 <--last 0 is cat id for mixing -->
+															<a href="${pageContext.request.contextPath}/showBom/${mixheader.mixId}/0/${date}/0/0"><input type="button" class="btn btn-primary"
 													value="Request to Bom"> </a>
  
 														</c:when>
@@ -227,15 +225,17 @@
 										 
 												</c:when> 
 											</c:choose>
+											
+											<c:choose>
+												<c:when test="${(mixheader.status!=2) and (deptId==15)}">
+										 			<input type="submit" class="btn btn-primary"
+													value="Complete Production">
+											    </c:when>
+											</c:choose>
 										</div>
 								</div>
 							</div>
 						</div>
-
-								<div class="box-content"></div>
-								<br>
-								<br>
-								<br>
 
 <input type="hidden" name="mixId" value="${mixheader.mixId}">
 <input type="hidden" name="isMixing" value="1">
@@ -243,7 +243,7 @@
 
 	<div style="text-align: center;">
 								<a href="${pageContext.request.contextPath}/showMixReqPdf"
-								target="_blank">PDF</a>
+								target="_blank"><input type="button" value="PDF" class="btn btn-primary"/></a>
 								</div>
 
 							</form>

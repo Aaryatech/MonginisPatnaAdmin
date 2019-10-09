@@ -264,7 +264,7 @@ table {
 															style="width: 50px;">Code</span></th>
 														<th style="text-align: center; width: 5%;">Weight</th>
 														<th style="text-align: center; width: 10%;">Flavour</th>
-														<th style="text-align: center; width: 5%;">No.of
+														<th style="text-align: center; width: 14%;">No.of
 															Boxes</th>
 														<th style="text-align: center; width: 5%;">Is
 															AddonAcc</th>

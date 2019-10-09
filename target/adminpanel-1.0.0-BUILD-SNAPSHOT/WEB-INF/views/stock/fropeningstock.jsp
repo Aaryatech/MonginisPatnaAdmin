@@ -31,7 +31,7 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-		<div class="page-title">
+	<%-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Franchise Opening Stock
@@ -51,14 +51,14 @@
 					class="divider"><i class="fa fa-angle-right"></i></span></li>	
 				<li class="active">Franchise Opening Stock</li>
 			</ul>
-		</div>
+		</div> --%>
 		<!-- END Breadcrumb -->
 
 		<!-- BEGIN Main Content -->
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Menu
+					<i class="fa fa-bars"></i>Franchise Opening Stock
 				</h3>
 
 			</div>
@@ -68,7 +68,7 @@
 					<div class="form-group col-md-9">
 						<label class=" col-md-2 control-label franchisee_label">Select
 							Franchise </label>
-						<div class=" col-md-7 controls franchisee_select">
+						<div class=" col-md-3 controls franchisee_select">
 							<select class="form-control chosen " tabindex="6" id="selectFr"
 								name="selectFr" onchange="getMenu()">
 
@@ -79,18 +79,22 @@
 
 							</select>
 						</div>
-					</div>
+					<!-- </div>
 
-					<div class="form-group col-md-9">
+					<div class="form-group col-md-9"> -->
 						<label class=" col-md-2 control-label menu_label">Select
 							Menu</label>
-						<div class=" col-md-5 controls menu_select">
+						<div class=" col-md-3 controls menu_select">
 
 							<select data-placeholder="Choose Menu"
 								class="form-control chosen" tabindex="6" id="selectMenu"
 								name="selectMenu">
 							</select>
 						</div>
+						<div class="col-md-1">
+								<button class="btn btn-primary" onclick="getItems()">Search</button>
+
+							</div>
 					</div>
 
 					<div class="form-group col-md-9">
@@ -104,13 +108,13 @@
 							class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 						<span class="l-6"></span>
 					</div>
-						<div class="row" align="left">
+						<!-- <div class="row" align="left">
 							<div class="col-md-12" style="text-align: center">
 								<button class="btn btn-primary" onclick="getItems()">Search</button>
 
 							</div>
 
-						</div>
+						</div> -->
 					</div>
 
 				</div>
@@ -131,13 +135,13 @@
 						<div class="row">
 							<div class="col-md-12 table-responsive">
 								<table class="table table-bordered table-striped fill-head "
-									style="width:50%" id="table_grid" align="left">
-									<thead>
+									style="width:50%" id="table_grid" align="left "  border="1">
+									<thead style="background-color: #f3b5db; ">
 										<tr>
-											<th width="10">Sr.No.</th>
-											<th width="40">Item Id</th>
-											<th width="200">Item Name</th>
-											<th width="50">Opening Quantity</th>
+											<th class="col-md-1">Sr.No.</th>
+											<th class="col-md-2">Item Id</th>
+											<th class="col-md-4">Item Name</th>
+											<th class="col-md-4">Opening Quantity</th>
 
 										</tr>
 									</thead>
@@ -149,7 +153,7 @@
 						</div>
 					
 						<div class="row">
-							<div class="col-md-offset-6 col-md-6">
+							<div class="col-md-offset-4 col-md-1">
 								<button  id="submitStock"  style="display:none;" class="btn btn-info pull-right"
 									style="margin-right: 5px;" onclick="submitForm()">Submit</button>
 							</div>
@@ -170,13 +174,13 @@
 		<script type="text/javascript">
 				function getMenu() {
 					var selectedFr = $("#selectFr").val();
-				
+				//alert(selectedFr);
 					
 					$.getJSON('${getMenuForFr}', {
 						fr_id: selectedFr,
 						ajax : 'true'
 					}, function(data) {
-						
+						//alert(data);
 						var len = data.length;
 						
 						$('#selectMenu')
@@ -226,6 +230,8 @@
 					}, function(data) {
 						
 						var len = data.length;
+					
+						
 						$('#table_grid td').remove();
 						$('#loader').hide();
 						
@@ -243,8 +249,8 @@
 									+ index
 									+ "</td>";
 
-							var itemId = "<td>&nbsp;&nbsp;&nbsp;"
-									+ item.itemId
+							var itemCode = "<td>&nbsp;&nbsp;&nbsp;"
+									+ item.itemCode
 									+ "</td>";
 
 							var itemName = "<td>&nbsp;&nbsp;&nbsp;"
@@ -254,11 +260,11 @@
 						
 
 							var itemStockQty = "<td align=center><input type=number min=0 max=500 class=form-control   id= stockQty"
-									+ item.id
+									+ item.itemId
 									+ " name=stockQty"
-									+ item.id
+									+ item.itemId
 									+ " value = "
-									+ 0
+									+ item.regOpeningStock
 									+ "></td>";
 
 
@@ -268,7 +274,7 @@
 							$('#table_grid tbody').append(tr);
 							$('#table_grid tbody').append(index);
 							
-							$('#table_grid tbody').append(itemId);
+							$('#table_grid tbody').append(itemCode);
 							$('#table_grid tbody').append(itemName);
 							$('#table_grid tbody').append(itemStockQty);
 							

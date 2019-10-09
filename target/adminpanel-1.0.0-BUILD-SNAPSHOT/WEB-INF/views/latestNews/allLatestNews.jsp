@@ -63,10 +63,11 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-												<th width="17" style="width: 18px">#</th>
+					                    <th width="17" style="width: 18px">SELECT</th>
+										    <th width="17" style="width: 18px">#</th>
 											<th width="163" align="left">Date</th>
 											<th width="358" align="left">Message</th>
 											<th width="194" align="left">Occasion Name</th>
@@ -81,14 +82,15 @@
 									
 										<table id="table1" class="table table-advance">
 											<thead>
-												<tr class="bgpink">
+										<tr class="bgpink">
+								            <th width="17" style="width: 18px">SELECT</th>
 											<th width="17" style="width: 18px">#</th>
 											<th width="163" align="left">Date</th>
 											<th width="358" align="left">Message</th>
 											<th width="194" align="left">Occasion Name</th>
 											<th width="102" align="left">Status</th>
 											<th width="88" align="left">Action</th>
-												</tr>
+										</tr>
 												</thead>
 												<tbody>
 											
@@ -98,6 +100,8 @@
 
 
 											<tr>
+						<td><input type="checkbox" class="chk" name="select_to_print" id="${schedulerList.schId}"	value="${schedulerList.schId}"/></td>
+					
 												<td>	<%=c++%>
 											<c:out
 														value="${c}" /> 
@@ -144,7 +148,12 @@
 				</div>
 				
 				</div>
-
+               <div >&nbsp;&nbsp;&nbsp;&nbsp;
+               	<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" />
+               
+               </div>
 
 						<%-- <div class="box-content">
 
@@ -306,6 +315,27 @@ function myFunction() {
       }
     }       
   }
+}
+</script>
+<script type="text/javascript">
+function deleteById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Record")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteNews/'+checkedVals;
+
+	}
+
 }
 </script>
 </html>

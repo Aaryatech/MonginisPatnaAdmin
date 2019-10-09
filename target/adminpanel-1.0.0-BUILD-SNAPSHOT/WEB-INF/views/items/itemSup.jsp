@@ -5,12 +5,12 @@
 	 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+	<body onload="onCatIdChange(${suppCatId},${suppId})">
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	
 	<c:url var="getItemsByCatId" value="/getItemsByCatId" />
-
+	<c:url var="getTaxHsnForItemSupItem" value="/getTaxHsnForItemSupItem" />
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -93,10 +93,18 @@
 								<div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
 									<div class="col-sm-9 col-lg-3 controls">
-									<select name="cat_id" id="cat_id" data-rule-required="true" class="form-control" placeholder="Select Category">
+									<select name="cat_id" id="cat_id" data-rule-required="true" class="form-control" placeholder="Select Category" onchange="onCatIdChange(this.value,0)">
 											<option value="-1">Select Category</option>
 										 <c:forEach items="${mCategoryList}" var="mCategoryList">
-										            	  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+										 <c:choose>
+										 <c:when test="${mCategoryList.catId==suppCatId}">
+										  <option value="${mCategoryList.catId}" selected><c:out value="${mCategoryList.catName}"></c:out></option>
+										 </c:when>
+										 <c:otherwise>
+										  <option value="${mCategoryList.catId}"><c:out value="${mCategoryList.catName}"></c:out></option>
+										 </c:otherwise>
+										 </c:choose>
+										            	 
 										</c:forEach> 
 												
 								</select>	
@@ -107,7 +115,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Item</label>
 									<div class="col-sm-9 col-lg-3 controls">
 									<select name="item_id" id="item_id" data-rule-required="true" class="form-control" placeholder="Select Item">
-											<option value="-1">Select Item</option>
+											<option value="">Select Item</option>
 											
 												
 								</select>	
@@ -156,7 +164,7 @@
 									</div>
 							  </div>
 							  <input type="hidden" name="uom" id="uom" value="${itemSupp.itemUom}"/> 
-							  <div class="col2">
+							  <%-- <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Actual Weight</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="actual_weight" id="actual_weight"
@@ -171,16 +179,56 @@
 											placeholder="Base Weight" class="form-control"
 											data-rule-required="true" data-rule-number="true" value="${itemSupp.baseWeight}"/>
 									</div>
-							  </div>
-							  <div class="col2">
-									<label class="col-sm-3 col-lg-2 control-label">Input Per Unit</label>
+							  </div> --%>
+							<%--    <div class="col2">
+									<label class="col-sm-3 col-lg-2 control-label">Short Name</label>
 									<div class="col-sm-9 col-lg-3 controls">
-										<input type="text" name="input_per_qty" id="input_per_qty"
-											placeholder="Input Per Unit" class="form-control"
-											data-rule-required="true"  data-rule-number="true" value="${itemSupp.inputPerQty}"/>
+										<input type="text" name="short_name" id="short_name"
+											placeholder="Short Name" class="form-control"
+											data-rule-required="true"  value="${itemSupp.shortName}"/>
 									</div>
-							  </div>
-						    <div class="form-group">
+							  </div>  --%>
+							 <!--  <div class="col2">
+									<label class="col-sm-3 col-lg-2 control-label">Input Per Unit</label>
+									<div class="col-sm-9 col-lg-3 controls"> -->
+										<input type="hidden" name="input_per_qty" id="input_per_qty"
+											placeholder="Input Per Unit" class="form-control"
+											data-rule-required="true"  data-rule-number="true" value="1"/>
+									<!-- </div>
+							  </div> -->
+							  <%--   <div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Cut Section</label>
+									<div class="col-sm-9 col-lg-3 controls">
+										<select name="cut_section" id="cut_section" class="form-control"
+												 data-rule-required="true">
+											<option value="">Select Cut Section</option>
+											
+										<c:choose>
+										<c:when test="${itemSupp.cutSection==0}">
+										<option value="0" selected>Not Applicable</option>
+											<option value="1">Single Cut</option>
+											<option value="2">Double Cut</option>
+										</c:when>
+											<c:when test="${itemSupp.cutSection==1}">
+											<option value="0" >Not Applicable</option>
+											<option value="1"selected>Single Cut</option>
+											<option value="2">Double Cut</option>
+											</c:when>
+											<c:when test="${itemSupp.cutSection==2}">
+											<option value="0" >Not Applicable</option>
+											<option value="1">Single Cut</option>
+											<option value="2"selected>Double Cut</option>
+											</c:when>
+											<c:otherwise>
+										    <option value="0">Not Applicable</option>
+											<option value="1">Single Cut</option>
+											<option value="2">Double Cut</option>
+											</c:otherwise>
+										</c:choose>
+										</select>
+									</div>
+							  </div> --%>
+						    <div class="col2">
 									<label class="col-sm-3 col-lg-2 control-label">Type Of Tray</label>
 									<div class="col-sm-9 col-lg-3 controls">
 												<select name="tray_type" id="tray_type" class="form-control"placeholder="Type Of Tray"
@@ -200,7 +248,7 @@
 										</select>
 									</div>
 							  </div>
-							    <div class="col2">
+							    <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">No. Of Item Per Tray</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="no_of_item" id="no_of_item"
@@ -208,7 +256,7 @@
 											data-rule-required="true"  data-rule-number="true" value="${itemSupp.noOfItemPerTray}"/>
 									</div>
 							  </div> 
-							      <div class="form-group">
+							      <div class="col2" style="visibility: hidden;">
 									<label class="col-sm-3 col-lg-2 control-label">Gate Sale Allowed?</label>
 									<div class="col-sm-9 col-lg-3 controls">
 												<c:choose>
@@ -243,7 +291,7 @@
 												</c:choose>
 									</div>
 							  </div>
-							    <div class="col2">
+							    <div class="form-group" style="visibility: hidden;">
 									<label class="col-sm-3 col-lg-2 control-label">Gate Sale Discount Allowed?</label>
 									<div class="col-sm-9 col-lg-3 controls">
 												<c:choose>
@@ -278,9 +326,13 @@
 												</c:choose>
 									</div>
 							  </div>
-							    <div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Allowed For Employee Birthday?</label>
-									<div class="col-sm-9 col-lg-3 controls">
+							  
+							  
+							    <div class="col2">
+							    
+							    
+									<!-- <label class="col-sm-3 col-lg-2 control-label">Allowed For Employee Birthday?</label> -->
+									<div class="col-sm-9 col-lg-3 controls" style="visibility: hidden;">
 												<c:choose>
 												<c:when test="${itemSupp.isAllowBday==0}">
 												<label class="radio-inline"> <input type="radio"
@@ -313,6 +365,8 @@
 												</c:choose>
 									</div>
 							  </div>
+							  
+							 
 								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
 										<input type="submit" class="btn btn-primary" value="Submit">
@@ -399,29 +453,40 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 
-</body>
+
 <script type="text/javascript">
-$(document).ready(function() { 
-	$('#cat_id').change(
-			function() {
+/* $(document).ready(function() { 
+	$('#cat_id').change( */
+			function onCatIdChange(catId,itemId) {
 				
 				$.getJSON('${getItemsByCatId}', {
-					cat_id : $(this).val(),
+					cat_id : catId,
 					ajax : 'true'
 				}, function(data) {
-					var html = '<option value="-1"selected >Select Item</option>';
+					var html = '<option value=""selected >Select Item</option>';
 					
 					var len = data.length;
 					for ( var i = 0; i < len; i++) {
-						html += '<option value="' + data[i].id + '">'
+						if(data[i].id==itemId){
+						html += '<option value="' + data[i].id + '"selected>'
 								+ data[i].itemName + '</option>';
+								
+						document.getElementById('item_name').value=data[i].itemName;	
+						}
+						else
+							{
+							html += '<option value="' + data[i].id + '">'
+							+ data[i].itemName + '</option>';	
+							}
 					}
 					html += '</option>';
 					$('#item_id').html(html);
 
 				});
-			});
-});
+                document.getElementById('sel_item_id').value=itemId;
+				
+			}/* );
+}); */
 </script>
 <script type="text/javascript">
 $(document).ready(function() { 
@@ -430,6 +495,27 @@ $(document).ready(function() {
 				document.getElementById('sel_item_id').value=$(this).val();
 				
 				document.getElementById('item_name').value=$('#item_id option:selected').text();
+				
+				
+
+				$.getJSON('${getTaxHsnForItemSupItem}', {
+					id : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					
+					if(data.taxHsnId==0){
+						//alert("In IF")
+						var x=""
+						document.getElementById("item_hsncd").value=x
+					}else{
+						
+						 var x=data.hsnCode;
+							document.getElementById("item_hsncd").value=x;
+					}
+					
+					
+				});
+				
 
 			});
 });
@@ -442,4 +528,5 @@ $(document).ready(function() {
 				
 			}
 </script>
+</body>
 </html>

@@ -7,6 +7,13 @@
   
  <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+  	<style>
+ table{
+  width:100%;
+ 
+  border:1px solid #ddd;
+}
+ </style>
 <body>
 
 
@@ -30,14 +37,14 @@
 		<!-- BEGIN Content -->
 		<div id="main-content">
 			<!-- BEGIN Page Title -->
-			<div class="page-title">
+		<!-- 	<div class="page-title">
 				<div>
 					<h1>
 						<i class="fa fa-file-o"></i>Production Header
 					</h1>
 
 				</div>
-			</div>
+			</div> -->
 			<!-- END Page Title -->
 
 
@@ -48,7 +55,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> View Production
+								<i class="fa fa-bars"></i> View Production Headers
 							</h3>
 							<div class="box-tool">
 								<a href=""></a> <a data-action="collapse" href="#"><i
@@ -68,8 +75,8 @@
 
 
 
-								<input type="hidden" name="mode_add" id="mode_add"
-									value="add_att">
+							<!-- 	<input type="hidden" name="mode_add" id="mode_add"
+									value="add_att"> -->
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
@@ -99,25 +106,56 @@
 
 
 								<div class="clearfix"></div>
-
-								<div class="table-responsive" style="border: 0">
+<div id="table-scroll" class="table-scroll">
+							 
+									<div id="faux-table" class="faux-table" aria="hidden">
+									<table id="table2"  class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+												<th width="70" style="width: 10px">Sr.No</th>
+										<th width="180" style="width: 90px">Prod ID</th>
+												<th width="200" align="left">Production Date</th>
+												<th width="358" align="left">Category</th>
+												<th width="194" align="left">Status</th>
+												<th width="102" align="left">IsPlanned</th>
+												<th width="88" align="left">Action</th>
+												</tr>
+												</thead>
+												</table>
+									
+									</div>
+									<div class="table-wrap">
+									
+										<table id="table1" class="table table-advance" border="1">
+											<thead>
+												<tr class="bgpink">
+												<th width="70" style="width: 10px">Sr.No</th>
+												<th width="180" style="width: 90px">Prod ID</th>
+												<th width="200" align="left">Production Date</th>
+												<th width="358" align="left">Category</th>
+												<th width="194" align="left">Status</th>
+												<th width="102" align="left">IsPlanned</th>
+												<th width="88" align="left">Action</th>
+												</tr>
+												</thead>
+							<!-- 	<div class="table-responsive" style="border: 0">
 									<table width="100%" class="table table-advance" id="table1">
 										<thead>
 											<tr>
-												<th width="17" style="width: 18px">Prod ID</th>
-												<th width="163" align="left">Date</th>
+												<th width="180" style="width: 90px">Prod ID</th>
+												<th width="200" align="left">Production Date</th>
 												<th width="358" align="left">Category</th>
 												<th width="194" align="left">Status</th>
 												<th width="102" align="left">IsPlanned</th>
 												<th width="88" align="left">Action</th>
 											</tr>
-										</thead>
+										</thead> -->
 										<tbody>
 
-											<c:forEach items="${planHeader}" var="planHeader">
+											<c:forEach items="${planHeader}" var="planHeader" varStatus="count">
 
 												<tr>
-
+	                        	<td><c:out value="${count.index+1}" /></td>
 													<td align="left"><c:out
 															value="${planHeader.productionHeaderId}" /></td>
 													<td align="left"><c:out
@@ -169,7 +207,13 @@
 													<td align="left"><a
 														href="${pageContext.request.contextPath}/getProdDetail/${planHeader.productionHeaderId}"><span
 															class="glyphicon glyphicon-info-sign"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-
+                                              <c:choose>
+														<c:when test="${planHeader.isPlanned==1 and planHeader.productionStatus!=4 and planHeader.productionStatus!=5}">
+											<a href="deletePlanHeader/${planHeader.productionHeaderId}/${fromDate}/${toDate}"
+											onClick="return confirm('Are you sure want to delete this record');"><span
+												class="glyphicon glyphicon-remove"></span></a>
+                                                 </c:when>
+                                                 </c:choose>
 													</td>
 												</tr>
 											</c:forEach>
@@ -178,7 +222,7 @@
 									</table>
 								</div>
 
-							
+							</div>
 							</form>
 						</div>
 					</div>
@@ -199,7 +243,7 @@
 	<!-- END Container -->
 
 	<!--basic scripts-->
-	<script
+	 <script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script>
 		window.jQuery
@@ -251,15 +295,23 @@
 		src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
-	<script type="text/javascript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script type="text/javascript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
-	<script type="text/javascript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-</body>
+ <script type="text/javascript">
+ $('.date-picker').datepicker({
+     format: "dd-mm-yyyy",
+     autoclose: true,
+}).on('changeDate', function (ev) {
+     $(this).datepicker('hide');
+});
+</script>
+ </body>
 </html>

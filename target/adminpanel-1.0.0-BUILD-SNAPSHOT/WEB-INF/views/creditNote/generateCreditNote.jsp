@@ -5,14 +5,14 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
-
+	<c:url value="/getCreditNoteType" var="getCreditNoteType" />
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -39,8 +39,82 @@
 			</div>
 			<!-- END Page Title -->
 
+			<form action="/insertCreNoteProcess" class="form-horizontal"
+				method="post" id="validation">
+
+				<div class="form-group">
+					<label class="col-sm-4 col-lg-1 control-label"><b>Type</b></label>
+					<div class="col-sm-5 col-lg-2 controls">
+						<select class="form-control" name="selectType" id="selectType" required>
+						<c:choose>
+						<c:when test="${type==0}">
+						
+							<option value="1">GRN Credit Note</option>
+							<option value="0" selected>GVN Credit Note</option>
+						</c:when>
+						<c:when test="${type==1}">
+						
+							<option value="1" selected>GRN Credit Note</option>
+							<option value="0">GVN Credit Note</option>
+						</c:when>
+						<c:otherwise>
+						
+							<option value="1">GRN Credit Note</option>
+							<option value="0">GVN Credit Note</option>
+						</c:otherwise>
+						</c:choose>
+							
+						</select>
+					</div>
+					
+						<label class="col-sm-3 col-lg-2 control-label"><b>
+							Franchisee</b></label>
+						<div class="col-sm-6 col-lg-3">
+
+							<select data-placeholder="Choose Franchisee"
+								class="form-control chosen" multiple="multiple" tabindex="6"
+								id="selectFr" name="selectFr" required >
+
+								
+                                
+								<c:forEach items="${franchiseeList}" var="fr"
+									varStatus="count">
+									      <c:set var = "flag"  value = "0"/>
+									
+									<c:forEach items="${frList}" var="frId"
+									varStatus="cnt">
+									<c:choose>
+									<c:when test="${frId==fr.frId}">
+									 <c:set var = "flag"  value = "1"/>
+									 <option value="${fr.frId}" selected><c:out value="${fr.frName}"/></option>
+									</c:when>
+									
+									</c:choose>
+									</c:forEach>
+									<c:choose>
+									<c:when test="${flag==0}">
+									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									</c:when>
+									</c:choose>
+									
+								</c:forEach>
+							</select>
+
+						</div>
+					<section>
+						<div class="col-sm-25 col-sm-offset-3 col-lg-4 col-lg-offset-0">
+							<input type="button" value="Search" onclick="getGrnGvnDetail()"
+								class="btn btn-primary">&nbsp;&nbsp; <input
+								type="button" value="View Credit Notes"
+								onclick="viewCreditNotes()" class="btn btn-primary">
+						</div>
+					</section>
+
+					<div class="col-sm-5 col-lg-3 controls"></div>
+				</div>
+			</form>
 			<form action="${pageContext.request.contextPath}/insertCreditNote"
-				class="form-horizontal" method="post" id="validation-form">
+				class="form-horizontal" method="post" id="validation-form" onsubmit="submitCRNote.disabled = true; return confirm('Do you want to Generate Credit Note ?');">
 
 
 
@@ -68,14 +142,19 @@
 
 								<div class="table-responsive" style="border: 0">
 									<table width="100%" class="table table-advance" id="table1">
-										<thead>
+										<thead style="background-color:#f3b5db; ">
 											<tr>
 												<th width="50" align="left"><input type="checkbox"
 													onClick="selectcreditnote(this)" /> Select All<br /></th>
 												<th width="17" style="width: 18px">Sr No</th>
 												<th width="150" align="left">Grn-Gvn Date</th>
+
+												<th width="150" align="left">Grn-Gvn SrNo</th>
+
+												<th width="150" align="left">Grn-Gvn Id</th>
+
 												<th width="150" align="left">Franchisee Name</th>
-												<th width="100" align="left">Bill No</th>
+												<th width="100" align="left">Invoice No</th>
 												<th width="88" align="left">Type:Grn/Gvn</th>
 
 												<th width="102" align="left">Item Name</th>
@@ -84,8 +163,9 @@
 											</tr>
 										</thead>
 										<tbody>
-											
-											<c:forEach items="${creditNoteList}" var="creditNoteList" varStatus="count">
+
+											<c:forEach items="${creditNoteList}" var="creditNoteList"
+												varStatus="count">
 
 
 
@@ -93,17 +173,21 @@
 													<td><input type="checkbox" name="select_to_credit"
 														id="select_to_credit" value="${creditNoteList.grnGvnId}"></td>
 
-													<td><c:out value="${count.index+1}"/></td>
+													<td><c:out value="${count.index+1}" /></td>
 
-												
 
+
+													<td align="left"><fmt:formatDate pattern = "dd-MM-yyyy" value = "${creditNoteList.grnGvnDate}" /></td>
 													<td align="left"><c:out
-															value="${creditNoteList.grnGvnDate}" /></td>
+															value="${creditNoteList.grngvnSrno}" /></td>
+													<td align="left"><c:out
+															value="${creditNoteList.grnGvnHeaderId}" /></td>
+
 													<td align="left"><c:out
 															value="${creditNoteList.frName}" /></td>
 
 													<td align="left"><c:out
-															value="${creditNoteList.billNo}" /></td>
+															value="${creditNoteList.invoiceNo}" /></td>
 
 													<c:choose>
 														<c:when test="${creditNoteList.isGrn==1}">
@@ -124,11 +208,11 @@
 
 
 													<td align="left"><c:out
-															value="${creditNoteList.grnGvnQty}" /></td>
+															value="${creditNoteList.aprQtyAcc}" /></td>
 
 
 													<td align="left"><c:out
-															value="${creditNoteList.grnGvnAmt}" /></td>
+															value="${creditNoteList.aprGrandTotal}" /></td>
 
 
 												</tr>
@@ -136,8 +220,12 @@
 
 										</tbody>
 									</table>
-									<input type="submit" value="Generate Credit Note" />
 
+									<div
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+										<input type="submit" class="btn btn-primary"
+											value="Generate Credit Note" id="submitCRNote"/>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -146,7 +234,7 @@
 			</form>
 			<!-- END Main Content -->
 			<footer>
-			<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -229,6 +317,50 @@
 		}
 		
 	</script>
+	<script>
+	function getGrnGvnDetail(){
+		
+		var selectedType = $("#selectType").val();
+		if(validate()){
+		
+	        var form = document.getElementById("validation");
+	        form.action ="${pageContext.request.contextPath}/insertCreNoteProcess";
+	        form.submit();
+	        $("#selectType").value=selectedType;
+	    	
+		}
+
+
+	}
 	
+function viewCreditNotes(){
+		
+	window.open('${pageContext.request.contextPath}/showCreditNotes');
+
+		//alert("Hi "+selectedType);
+	       // var form = document.getElementById("validation");
+	        //form.action ="${pageContext.request.contextPath}/showCreditNotes";
+	       // form.submit();
+	       
+
+	}
+	
+	</script>
+<script type="text/javascript">
+		function validate() {
+
+			var selectedFr = $("#selectFr").val();
+		
+			var isValid = true;
+
+			if (selectedFr == "" || selectedFr == null  ) {
+ 					alert("Please Select Franchisee");
+					isValid = false;
+				}
+ 
+			return isValid;
+
+		}
+	</script>
 </body>
 </html>

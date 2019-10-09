@@ -10,7 +10,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 	<div class="container" id="main-container">
-
+ 
 		<!-- BEGIN Sidebar -->
 		<div id="sidebar" class="navbar-collapse collapse">
 
@@ -35,6 +35,58 @@
 				</div>
 			</div>
 			<!-- END Page Title -->
+			
+			
+			<c:set var="isEdit" value="0">
+					</c:set>
+					<c:set var="isView" value="0">
+					</c:set>
+					<c:set var="isDelete" value="0">
+					</c:set>
+
+					<c:forEach items="${sessionScope.newModuleList}" var="modules">
+						<c:forEach items="${modules.subModuleJsonList}" var="subModule">
+
+							<c:choose>
+								<c:when test="${subModule.subModuleMapping eq 'itemList'}">
+
+									<c:choose>
+										<c:when test="${subModule.editReject=='visible'}">
+											<c:set var="isEdit" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isEdit" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+									<c:choose>
+										<c:when test="${subModule.view=='visible'}">
+											<c:set var="isView" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isView" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+
+
+									<c:choose>
+										<c:when test="${subModule.deleteRejectApprove=='visible'}">
+											<c:set var="isDelete" value="1">
+											</c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="isDelete" value="0">
+											</c:set>
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+							</c:choose>
+						</c:forEach>
+					</c:forEach>
+			
 
 			<div class="row hidden-xs">
 				<div class="col-md-12">
@@ -134,7 +186,7 @@
 <div class="col-md-9" ></div> 
 					<label for="search" class="col-md-3" id="search">
     <i class="fa fa-search" style="font-size:20px"></i>
-									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search items by name.." title="Type in a name">
+									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search items by Name or Code" title="Type in a name">
 										</label>  
 
 							<div class="clearfix"></div>
@@ -142,16 +194,19 @@
 								<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="main-table">
+									<table id="table2" class="table table-advance">
 											<thead>
 												<tr class="bgpink">
-														<th width="138" style="width: 18px" align="left">Sr No</th>
+											<th class="col-md-1">SELECT</th>
+                                            <th class="col-md-1">Sr No</th>
 											<th class="col-md-2">Item Id</th>
-											<th class="col-md-2">Item Name</th>
-											<th class="col-md-2">Image</th>
-											<th class="col-md-1">Rate</th>
-											<th class="col-md-2">MRP</th>
-											<th class="col-md-2">Action</th>
+											<th class="col-md-3">Item Name</th>
+<!-- 										<th class="col-md-2">Image</th>
+ -->										<th class="col-md-1">Rate</th>
+											<th class="col-md-1">MRP</th>
+											<th class="col-md-1">Status</th>
+											
+											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
 												</table>
@@ -159,41 +214,121 @@
 									</div>
 									<div class="table-wrap">
 									
-										<table id="table1" class="table table-advance">
+										<table id="table1" class="table table-advance" style="">
 											<thead>
+											
+											
 												<tr class="bgpink">
-													<th width="138" style="width: 18px" align="left">Sr No</th>
+												<th class="col-md-1">SELECT</th>
+													<th class="col-md-1">Sr No</th>
 											<th class="col-md-2">Item Id</th>
-											<th class="col-md-2">Item Name</th>
-											<th class="col-md-2">Image</th>
-											<th class="col-md-1">Rate</th>
-											<th class="col-md-2">MRP</th>
-											<th class="col-md-2">Action</th>
+											<th class="col-md-3">Item Name</th>
+<!-- 											<th class="col-md-2">Image</th>
+ -->											<th class="col-md-1">Rate</th>
+											<th class="col-md-1">MRP</th>
+												<th class="col-md-1">Status</th>
+											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
 												<tbody>
 											
 	<c:forEach items="${itemsList}" var="itemsList" varStatus="count">
 											<tr>
+										<td><input type="checkbox" class="chk" name="select_to_print" id="${itemsList.id}"	value="${itemsList.id}"/></td>
+
 												<td><c:out value="${count.index+1}" /></td>
 												<td align="left"><c:out value="${itemsList.itemId}" /></td>
 												<td align="left"><c:out value="${itemsList.itemName}"/></td>
 												
-												<td align="left">
+											<%-- 	<td align="left">
 												<img
 													src="${url}${itemsList.itemImage}" width="120" height="100"
 													onerror="this.src='${pageContext.request.contextPath}/resources/img/No_Image_Available.jpg';"/>
 													
-												</td>
+												</td> --%>
 												<td align="left"><c:out value="${itemsList.itemRate1}" /></td>
 												<td align="left"><c:out value="${itemsList.itemMrp1}" /></td>
-												<td align="left"><a href="updateItem/${itemsList.id}"><span
+												
+												<td align="left">
+												<c:choose>
+												<c:when test="${itemsList.itemIsUsed==1}">
+													<c:out value="Active" />
+												</c:when>
+												<c:when test="${itemsList.itemIsUsed==2}"><c:out value="Special Days"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==3}"><c:out value="Sp Day Cake"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==4}"><c:out value="InActive"/></c:when>
+												</c:choose>
+											
+												</td>
+												
+												
+												
+												<c:choose>
+																	<c:when test="${isEdit==1 and isDelete==1}">
+																		<td align="left"><a href="updateItem/${itemsList.id}"><span
 														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
                                              <a href="showItemDetail/${itemsList.id}"><span
 														class="glyphicon glyphicon-list"></span></a>
-													&nbsp;&nbsp;<a href="deleteItem/${itemsList.id}"
+													&nbsp;&nbsp;
+													<a href="deleteItem/${itemsList.id}"
 													onClick="return confirm('Are you sure want to delete this record');"><span
 														class="glyphicon glyphicon-remove"></span></a></td>
+														
+																	</c:when>
+
+																	<c:when test="${isEdit==1 and isDelete==0}">
+																		<td align="left"><a href="updateItem/${itemsList.id}"><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                             <a href="showItemDetail/${itemsList.id}"><span
+														class="glyphicon glyphicon-list"></span></a>
+													&nbsp;&nbsp;
+													<a href="deleteItem/${itemsList.id}" class="disableClick"
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a></td>
+														
+																	</c:when>
+
+																	<c:when test="${isEdit==0 and isDelete==1}">
+																		<td align="left"><a href="updateItem/${itemsList.id}" class="disableClick"><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                             <a href="showItemDetail/${itemsList.id}"><span
+														class="glyphicon glyphicon-list"></span></a>
+													&nbsp;&nbsp;
+													<a href="deleteItem/${itemsList.id}"
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a></td>
+														
+																	</c:when>
+
+																	<c:otherwise>
+
+																		<td align="left"><a href="updateItem/${itemsList.id}" class="disableClick"><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                             <a href="${pageContext.request.contextPath}/showItemDetail/${itemsList.id}"><span
+														class="glyphicon glyphicon-list"></span></a>
+													&nbsp;&nbsp;
+													<a href="${pageContext.request.contextPath}/deleteItem/${itemsList.id}" 
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a></td>
+														
+
+																	</c:otherwise>
+																</c:choose>
+												
+												
+												
+												
+												
+												<%-- <td align="left"><a href="updateItem/${itemsList.id}"><span
+														class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;
+                                             <a href="showItemDetail/${itemsList.id}"><span
+														class="glyphicon glyphicon-list"></span></a>
+													&nbsp;&nbsp;
+													<a href="deleteItem/${itemsList.id}" class="disableClick"
+													onClick="return confirm('Are you sure want to delete this record');"><span
+														class="glyphicon glyphicon-remove"></span></a></td>
+														 --%>
+														
 											</tr>
 
 										</c:forEach>
@@ -206,6 +341,19 @@
 				</div>
 				
 						</div>
+						
+						
+						<div class="form-group"  id="range">
+											
+								<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();">
+											
+								<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="deleteById()" 
+											value="Delete" />
+												<input type="button" margin-right: 5px;" id="btn_delete"
+											class="btn btn-primary" onclick="inactiveById()" 
+											value="InActive" /></div>
+							
 					</div>
 				</div>
 			</div>
@@ -288,22 +436,77 @@
  
 <script>
 function myFunction() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td,td1, i;
   input = document.getElementById("myInput");
   filter = input.value.toUpperCase();
   table = document.getElementById("table1");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
-    if (td) {
+    td = tr[i].getElementsByTagName("td")[3];
+    td1 = tr[i].getElementsByTagName("td")[2];
+    if (td || td1) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
-      } else {
+      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }  else {
         tr[i].style.display = "none";
       }
     }       
-  }
+  }//end of for
+  
+ 
+  
 }
 </script>
 
+<script type="text/javascript">
+function exportToExcel()
+{
+	window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled=true;
+}
+</script>
+<script type="text/javascript">
+function deleteById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Item")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/deleteItem/'+checkedVals;
+
+	}
+
+}
+</script>
+<script type="text/javascript">
+function inactiveById()
+{
+
+var checkedVals = $('.chk:checkbox:checked').map(function() {
+    return this.value;
+}).get();
+checkedVals=checkedVals.join(",");
+
+if(checkedVals=="")
+	{
+	alert("Please Select Item")
+	}
+else
+	{
+	window.location.href='${pageContext.request.contextPath}/inactiveItem/'+checkedVals;
+
+	}
+
+}
+</script>
 </html>
