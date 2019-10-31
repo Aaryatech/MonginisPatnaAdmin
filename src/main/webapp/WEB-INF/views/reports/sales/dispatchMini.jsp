@@ -256,7 +256,7 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 	{
 		 
 		window.print();
-		window.close();
+	//	window.close();
 	} 
 	
 	</script>

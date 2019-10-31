@@ -1105,7 +1105,7 @@ public class OrderController {
 			orderId.append(Integer.toString(spCakeOrderList.get(i).getSpOrderNo()) + ",");
 		}
 
-		orderId.setLength(orderId.length() - 1);
+		orderId.setLength(orderId.length() - 1);System.err.println("orderId" + orderId.toString());
 		map.add("spOrderNo", orderId);
 		List<GetSpCkOrder> orderListResponse = restTemp.postForObject(Constants.url + "getSpCKOrderBySpOrderNo", map,
 				List.class);
