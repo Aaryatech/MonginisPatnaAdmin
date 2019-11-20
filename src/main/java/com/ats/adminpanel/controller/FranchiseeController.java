@@ -51,6 +51,7 @@ import com.ats.adminpanel.model.ConfigureFrListResponse;
 import com.ats.adminpanel.model.ConfiguredSpDayCkResponse;
 import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.GetConfiguredSpDayCk;
+import com.ats.adminpanel.model.GetSubCat;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.ItemNameId;
 import com.ats.adminpanel.model.Route;
@@ -75,6 +76,7 @@ import com.ats.adminpanel.model.item.FrItemStockConfiResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfigure;
 import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.item.ItemSup;
+import com.ats.adminpanel.model.item.SubCategory;
 import com.ats.adminpanel.model.masters.FrListForSupp;
 import com.ats.adminpanel.model.mastexcel.Franchisee;
 import com.ats.adminpanel.model.mastexcel.ItemList;
@@ -717,7 +719,7 @@ public class FranchiseeController {
 	public String configureFranchiseeProcess(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("franchisee/configureFr");
 		try {
-
+			RestTemplate rest = new RestTemplate();
 			String date[];
 			String day[];
 			String convertedDate = "0";
@@ -739,28 +741,42 @@ public class FranchiseeController {
 
 			System.out.println("Converted From Time: " + sqlFromTime.toString() + " To time: " + sqlToTime.toString());
 
+			MultiValueMap<String, Object> map = null;
+			
+			int menuId = Integer.parseInt(request.getParameter("menu"));
+			System.out.println("menuId" + menuId);
+			
+			map = new LinkedMultiValueMap<String, Object>();
+			map.add("menuId", menuId);
+			Menu getMenuCat = rest.postForObject(Constants.url + "getMenuByMenuId", map,
+					Menu.class);
+			
+			logger.info("Menu Cat-------"+getMenuCat);
+			
+			selectedCatId=getMenuCat.getMainCatId();
+			System.out.println("seatlected catId:" + selectedCatId);
+			
+			int subCat = Integer.parseInt(request.getParameter("sub_cat"));
+			logger.info("Sub Cat-------"+subCat);
+			
 			int frId = Integer.parseInt(request.getParameter("fr_id"));
 			System.out.println("FRID" + frId);
 
-			int menuId = Integer.parseInt(request.getParameter("menu"));
-			System.out.println("menuId" + menuId);
-
-			System.out.println("seatlected catId:" + selectedCatId);
-
-			String[] subCat = request.getParameterValues("items[]");
-			System.out.println(" array is" + subCat[0]);
+			String[] items = request.getParameterValues("items[]");
+			System.out.println(" array is" + items[0]);
 
 			StringBuilder sb = new StringBuilder();
 
-			for (int i = 0; i < subCat.length; i++) {
-				sb = sb.append(subCat[i] + ",");
+			for (int i = 0; i < items.length; i++) {
+				sb = sb.append(items[i] + ",");
 
 			}
-			String items = sb.toString();
-			items = items.substring(0, items.length() - 1);
+			String itemsList = sb.toString();
+			itemsList = itemsList.substring(0, itemsList.length() - 1);
 
-			System.out.println("items" + items);
+			System.out.println("items" + itemsList);
 
+			
 			int settingType = Integer.parseInt(request.getParameter("typeselector"));
 			System.out.println("settingType" + settingType);
 
@@ -797,17 +813,18 @@ public class FranchiseeController {
 				// date ="0";
 			}
 
-			RestTemplate rest = new RestTemplate();
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			
+			map = new LinkedMultiValueMap<String, Object>();
 			map.add("fromTime", sqlFromTime.toString());
 			map.add("toTime", sqlToTime.toString());
 			map.add("frId", frId);
 			map.add("menuId", menuId);
 			map.add("catId", selectedCatId);
-			map.add("itemShow", items);
+			map.add("itemShow", itemsList);
 			map.add("settingType", settingType);
 			map.add("date", convertedDate);
 			map.add("day", convertedDays);
+			map.add("subCat", subCat);
 
 			ErrorMessage errorMessage = rest.postForObject(Constants.url + "configureFranchisee", map,
 					ErrorMessage.class);
@@ -952,6 +969,21 @@ public class FranchiseeController {
 		return itemList;
 
 	}
+	
+	public List<Item> subCatItem(int subCatId) {
+		System.out.println("Sub Cat Id----------"+subCatId);
+		RestTemplate restTemplate = new RestTemplate();
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("subCatId", subCatId);
+
+		Item[] item = restTemplate.postForObject(Constants.url + "/itemsBySubCatId", map, Item[].class);
+		List<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+		System.out.println("Filter Item List " + itemList.toString());
+
+		return itemList;
+
+	}
 
 	@RequestMapping(value = "/getItemByIdUpdateHsn", method = RequestMethod.GET)
 	public @ResponseBody List<Item> getItemByIdUpdateHsn(HttpServletRequest request, HttpServletResponse response) {
@@ -1004,7 +1036,7 @@ public class FranchiseeController {
 
 		ModelAndView model = new ModelAndView("franchisee/editConfigureFr");
 
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -1018,6 +1050,14 @@ public class FranchiseeController {
 		ConfigureFrBean franchiseeList = restTemplate.getForObject(
 				Constants.url + "getFrConfUpdate?settingId={settingId}", ConfigureFrBean.class, settingId);
 		model.addObject("franchiseeList", franchiseeList);
+		
+		System.out.println("Sub Cat Id Found--------------------"+ franchiseeList.getSubCatId());
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("subCatId", franchiseeList.getSubCatId());
+		
+		GetSubCat subCat = restTemplate.postForObject(Constants.url + "/getSubCatById", map,GetSubCat.class);		
+		model.addObject("subCatInfo", subCat);
+		logger.info("Sub Cat Info---------"+subCat);
 
 		System.out.println("-------------SELECTED FRANCHISEE-------------" + franchiseeList.getItemShow());
 
@@ -1084,7 +1124,8 @@ public class FranchiseeController {
 					model.addObject("remItems", tempAllSpCkList);
 					model.addObject("catId", menuList.get(i).getMainCatId());
 				} else {
-					List<Item> getItemByMenuId = itemById(menuList.get(i).getMainCatId());
+					System.out.println("Fr Sub Cat---------"+franchiseeList.getSubCatId());
+					List<Item> getItemByMenuId = subCatItem(franchiseeList.getSubCatId());
 					List<Item> tempAllItemsList = getItemByMenuId;
 					List<Item> selectedItems = new ArrayList<Item>();
 					String frPrevItems = franchiseeList.getItemShow();
@@ -1345,6 +1386,56 @@ public class FranchiseeController {
 		}
 
 		return commonConfList;
+	}
+	
+	@RequestMapping(value = "/findCatItemsByMenuId", method = RequestMethod.GET)
+    public @ResponseBody List<GetSubCat> findAllSubCat(@RequestParam int menuId) {
+		List<GetSubCat> subCatList = null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("menuId", menuId);
+			
+			
+			GetSubCat[] subCatArr = restTemplate.postForObject(Constants.url + "/getAllSubCatByMenuId", map,GetSubCat[].class);
+			subCatList = new ArrayList<GetSubCat>(Arrays.asList(subCatArr));
+			logger.info("Sub Cat List---------"+subCatList);
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return subCatList;
+		
+	}
+    
+    @RequestMapping(value = "/findItemsBySubCatId", method = RequestMethod.GET)
+    public @ResponseBody List<CommonConf> findItemsBySubCatId(@RequestParam int subCatId) {
+		List<Item> itemList = null;
+		List<CommonConf> commonConfList = new ArrayList<CommonConf>();
+		try {
+			System.out.println("Sub Cat------"+subCatId);
+			RestTemplate restTemplate = new RestTemplate();
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("subCatId", subCatId);
+
+			Item[] item = restTemplate.postForObject(Constants.url + "/itemsBySubCatId", map, Item[].class);
+			itemList = new ArrayList<Item>(Arrays.asList(item));
+			
+			
+			for (Item items : itemList) {
+				CommonConf commonConf = new CommonConf();
+				commonConf.setId(items.getId());
+				commonConf.setName(items.getItemName());
+				commonConfList.add(commonConf);
+				System.out.println("itemCommonConf Item List" + commonConf.toString());
+			}
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return commonConfList;
+		
 	}
 
 	// ----------------------------------------END---------------------------------------------------------

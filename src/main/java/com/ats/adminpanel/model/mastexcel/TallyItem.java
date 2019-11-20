@@ -33,6 +33,7 @@ public class TallyItem {
 	private float itemMrp2; 
 	private float itemMrp3; 
 	private String itemCode;
+	private int itemShelfLife;
 
 	public int getId() {
 		return id;
@@ -186,15 +187,22 @@ public class TallyItem {
 		this.itemCode = itemCode;
 	}
 
+	public int getItemShelfLife() {
+		return itemShelfLife;
+	}
+
+	public void setItemShelfLife(int itemShelfLife) {
+		this.itemShelfLife = itemShelfLife;
+	}
+
 	@Override
 	public String toString() {
 		return "TallyItem [id=" + id + ", itemName=" + itemName + ", itemGroup=" + itemGroup + ", subGroup=" + subGroup
 				+ ", subSubGroup=" + subSubGroup + ", hsnCode=" + hsnCode + ", uom=" + uom + ", sgstPer=" + sgstPer
 				+ ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", cessPer=" + cessPer + ", delStatus=" + delStatus
 				+ ", itemRate1=" + itemRate1 + ", itemRate2=" + itemRate2 + ", itemRate3=" + itemRate3 + ", itemMrp1="
-				+ itemMrp1 + ", itemMrp2=" + itemMrp2 + ", itemMrp3=" + itemMrp3 + ", itemCode=" + itemCode + "]";
+				+ itemMrp1 + ", itemMrp2=" + itemMrp2 + ", itemMrp3=" + itemMrp3 + ", itemCode=" + itemCode
+				+ ", itemShelfLife=" + itemShelfLife + "]";
 	}
-	
-	
 
 }

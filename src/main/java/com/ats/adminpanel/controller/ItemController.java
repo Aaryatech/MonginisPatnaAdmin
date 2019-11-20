@@ -1067,24 +1067,25 @@ public class ItemController {
 				List<String> rowData = new ArrayList<String>();
 
 				rowData.add("Sr. No.");
-				rowData.add("Id");
+				//rowData.add("Id");
 				rowData.add("Item Code");
 				rowData.add("Item Name");
 				rowData.add("Category");
-				rowData.add("Group1");
+				rowData.add("Sub Category");
 				rowData.add("Group2");
-				rowData.add("HsnCode");
-				rowData.add("UOM");
+				//rowData.add("HsnCode");
+				//rowData.add("UOM");
 				rowData.add("Rate1");
 				rowData.add("Rate2");
 				rowData.add("Rate3");
 				rowData.add("Mrp1");
 				rowData.add("Mrp2");
 				rowData.add("Mrp3");
-				rowData.add("Sgst %");
-				rowData.add("Cgst %");
-				rowData.add("Igst %");
-				rowData.add("Cess %");
+				//rowData.add("Sgst %");
+				//rowData.add("Cgst %");
+				//rowData.add("Igst %");
+				//rowData.add("Cess %");
+				rowData.add("Shelf Life");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -1093,25 +1094,26 @@ public class ItemController {
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add("" + (i + 1));
-					rowData.add("" + excelItems.get(i).getId());
+					//rowData.add("" + excelItems.get(i).getId());
 					rowData.add(excelItems.get(i).getItemCode());
 					rowData.add(excelItems.get(i).getItemName());
 					rowData.add(excelItems.get(i).getItemGroup());
 					rowData.add(excelItems.get(i).getSubGroup());
 					rowData.add(excelItems.get(i).getSubSubGroup());
-					rowData.add(excelItems.get(i).getHsnCode());
+					//rowData.add(excelItems.get(i).getHsnCode());
 
-					rowData.add(excelItems.get(i).getUom());
+					//rowData.add(excelItems.get(i).getUom());
 					rowData.add("" + excelItems.get(i).getItemRate1());
 					rowData.add("" + excelItems.get(i).getItemRate2());
 					rowData.add("" + excelItems.get(i).getItemRate3());
 					rowData.add("" + excelItems.get(i).getItemMrp1());
 					rowData.add("" + excelItems.get(i).getItemMrp2());
 					rowData.add("" + excelItems.get(i).getItemMrp3());
-					rowData.add("" + excelItems.get(i).getSgstPer());
-					rowData.add("" + excelItems.get(i).getCgstPer());
-					rowData.add("" + excelItems.get(i).getIgstPer());
-					rowData.add("" + excelItems.get(i).getCessPer());
+					//rowData.add("" + excelItems.get(i).getSgstPer());
+					//rowData.add("" + excelItems.get(i).getCgstPer());
+					//rowData.add("" + excelItems.get(i).getIgstPer());
+					//rowData.add("" + excelItems.get(i).getCessPer());
+					rowData.add("" + excelItems.get(i).getItemShelfLife());
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);

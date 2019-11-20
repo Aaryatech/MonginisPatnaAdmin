@@ -204,6 +204,15 @@
 													data-rule-required="true" readonly="readonly" />
 											</div>
 										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<input data-placeholder="Select Sub Category" name="sub_cat"
+													class="form-control" id="sub_cat" value="${subCatInfo.subCatName}"
+													data-rule-required="true" readonly="readonly">
+											</div>
+										</div>
 
 
 										<div class="form-group">

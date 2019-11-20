@@ -122,7 +122,8 @@ select {
 
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 
-	<c:url var="findItemsByCatId" value="/getCommonByMenuId" />
+	<c:url var="findItemsByCatId" value="/findCatItemsByMenuId" /><!-- getCommonByMenuId -->
+	<c:url var="findItemsBySubCatId" value="/findItemsBySubCatId" /> 
 	<c:url var="findAllMenus" value="/getAllMenus" />
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
@@ -209,6 +210,20 @@ select {
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Menu" name="menu"
 													class="form-control chosen" tabindex="-1" id="menu"
+													data-rule-required="true">
+	                                             <optgroup label="All Menus">                                                     
+
+													</optgroup>
+
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Sub Category</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<select data-placeholder="Select Sub Category" name="sub_cat"
+													class="form-control chosen" tabindex="-1" id="sub_cat"
 													data-rule-required="true">
 	                                             <optgroup label="All Menus">                                                     
 
@@ -435,6 +450,38 @@ $(document).ready(function() {
                 
                     var len = data.length;
 
+					$('#sub_cat')
+				    .find('option')
+				    .remove()
+				    .end()
+				 $("#sub_cat").append($("<option></option>").text("Select Sub Category"));
+                    for ( var i = 0; i < len; i++) {
+                            
+                                
+                        $("#sub_cat").append(
+                                $("<option></option>").attr(
+                                    "value", data[i].subCatId).text(data[i].subCatName)
+                            );
+                    }
+
+                    $("#sub_cat").trigger("chosen:updated");
+                });
+            });
+});
+
+ $(document).ready(function() {
+	
+	
+    $('#sub_cat').change(
+            function() {
+            	
+                $.getJSON('${findItemsBySubCatId}', {
+                    subCatId : $(this).val(),
+                    ajax : 'true'
+                }, function(data) {
+                
+                    var len = data.length;
+
 					$('#items')
 				    .find('option')
 				    .remove()
@@ -452,7 +499,7 @@ $(document).ready(function() {
                     $("#items").trigger("chosen:updated");
                 });
             });
-});
+}); 
 </script>
 
 
@@ -496,11 +543,11 @@ $(document).ready(function() { // if all label selected set all items selected
 $('#items').change(
 		function () {
 			 var selected=$('#items').val();
-			 var menu=$('#menu').val();
+			 var subCatId=$('#sub_cat').val();
 	
         if(selected==-1){
-			$.getJSON('${findItemsByCatId}', {
-				 menuId : menu,
+			$.getJSON('${findItemsBySubCatId}', {
+				subCatId : subCatId,
 				ajax : 'true'
 			}, function(data) {
 				var html = '<option value="">Items</option>';
