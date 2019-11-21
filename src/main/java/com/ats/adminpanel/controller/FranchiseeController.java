@@ -1051,13 +1051,6 @@ public class FranchiseeController {
 				Constants.url + "getFrConfUpdate?settingId={settingId}", ConfigureFrBean.class, settingId);
 		model.addObject("franchiseeList", franchiseeList);
 		
-		System.out.println("Sub Cat Id Found--------------------"+ franchiseeList.getSubCatId());
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("subCatId", franchiseeList.getSubCatId());
-		
-		GetSubCat subCat = restTemplate.postForObject(Constants.url + "/getSubCatById", map,GetSubCat.class);		
-		model.addObject("subCatInfo", subCat);
-		logger.info("Sub Cat Info---------"+subCat);
 
 		System.out.println("-------------SELECTED FRANCHISEE-------------" + franchiseeList.getItemShow());
 
@@ -1124,8 +1117,7 @@ public class FranchiseeController {
 					model.addObject("remItems", tempAllSpCkList);
 					model.addObject("catId", menuList.get(i).getMainCatId());
 				} else {
-					System.out.println("Fr Sub Cat---------"+franchiseeList.getSubCatId());
-					List<Item> getItemByMenuId = subCatItem(franchiseeList.getSubCatId());
+					List<Item> getItemByMenuId = itemById(franchiseeList.getCatId());
 					List<Item> tempAllItemsList = getItemByMenuId;
 					List<Item> selectedItems = new ArrayList<Item>();
 					String frPrevItems = franchiseeList.getItemShow();
