@@ -224,7 +224,7 @@ select {
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Sub Category" name="sub_cat"
 													class="form-control chosen" tabindex="-1" id="sub_cat"
-													data-rule-required="true">
+													data-rule-required="true" multiple="multiple" >
 	                                             <optgroup label="All Menus">                                                     
 
 													</optgroup>
@@ -470,34 +470,30 @@ $(document).ready(function() {
 });
 
  $(document).ready(function() {
-	
-	
     $('#sub_cat').change(
             function() {
-            	
+            	$('#items')
+			    .find('option')
+			    .remove()
+			    .end()
+            	 var select=$(this).val();
+            	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
+            	$('#sub_cat option:selected').each(function() {
+            	                	
                 $.getJSON('${findItemsBySubCatId}', {
-                    subCatId : $(this).val(),
+                    subCatId :$(this).val(),
                     ajax : 'true'
                 }, function(data) {
-                
                     var len = data.length;
-
-					$('#items')
-				    .find('option')
-				    .remove()
-				    .end()
-				 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
                     for ( var i = 0; i < len; i++) {
-                            
-                                
-                        $("#items").append(
+                       $("#items").append(
                                 $("<option></option>").attr(
                                     "value", data[i].id).text(data[i].name)
                             );
                     }
-
                     $("#items").trigger("chosen:updated");
                 });
+            	});
             });
 }); 
 </script>
@@ -546,18 +542,21 @@ $('#items').change(
 			 var subCatId=$('#sub_cat').val();
 	
         if(selected==-1){
+        	
+              	$('#items')
+  			    .find('option')
+  			    .remove()
+  			    .end()
+  			   
+            	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
+            	$('#sub_cat option:selected').each(function() {
 			$.getJSON('${findItemsBySubCatId}', {
-				subCatId : subCatId,
+				subCatId : $(this).val(),
 				ajax : 'true'
 			}, function(data) {
 				var html = '<option value="">Items</option>';
 			
 				var len = data.length;
-				
-				$('#items')
-			    .find('option')
-			    .remove()
-			    .end()
 			
 				for ( var i = 0; i < len; i++) {
     
@@ -569,10 +568,11 @@ $('#items').change(
 		
 				   $("#items").trigger("chosen:updated");
 			});
+            	});
   }
-});
-});
 
+});
+});
 
 
 </script>

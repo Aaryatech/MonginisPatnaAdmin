@@ -756,8 +756,8 @@ public class FranchiseeController {
 			selectedCatId=getMenuCat.getMainCatId();
 			System.out.println("seatlected catId:" + selectedCatId);
 			
-			int subCat = Integer.parseInt(request.getParameter("sub_cat"));
-			logger.info("Sub Cat-------"+subCat);
+			/*int subCat = Integer.parseInt(request.getParameter("sub_cat"));
+			logger.info("Sub Cat-------"+subCat);*/
 			
 			int frId = Integer.parseInt(request.getParameter("fr_id"));
 			System.out.println("FRID" + frId);
@@ -824,7 +824,7 @@ public class FranchiseeController {
 			map.add("settingType", settingType);
 			map.add("date", convertedDate);
 			map.add("day", convertedDays);
-			map.add("subCat", subCat);
+			map.add("subCat", 11);
 
 			ErrorMessage errorMessage = rest.postForObject(Constants.url + "configureFranchisee", map,
 					ErrorMessage.class);
