@@ -1315,9 +1315,19 @@ public class FranchiseeController {
 
 	}
 	// ----------------------------------------END---------------------------------------------------------
-
-	// ---------------------------------------GET COMMON ITEMS BY MENU
-	// ID--------------------------------------------
+	@RequestMapping(value = "/findCatId", method = RequestMethod.GET)
+	public @ResponseBody int  findCatId(@RequestParam(value = "menuId", required = true) int menuId) {
+		menuList = franchiseeAndMenuList.getAllMenu();
+		Menu frMenu = new Menu();
+		for (Menu menu : menuList) {
+			if (menu.getMenuId() == menuId) {
+				frMenu = menu;
+				break;
+			}
+		}
+		return frMenu.getMainCatId();
+	}
+	// ---------------------------------------GET COMMON ITEMS BY MENU ID--------------------------------------------
 	@RequestMapping(value = "/getCommonByMenuId", method = RequestMethod.GET)
 	public @ResponseBody List<CommonConf> commonItemById(@RequestParam(value = "menuId", required = true) int menuId) {
 

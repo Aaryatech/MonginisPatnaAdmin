@@ -123,6 +123,8 @@ select {
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 
 	<c:url var="findItemsByCatId" value="/findCatItemsByMenuId" /><!-- getCommonByMenuId -->
+	<c:url var="findItemsByMenu" value="/getCommonByMenuId" />
+	<c:url var="findCatId" value="/findCatId" />
 	<c:url var="findItemsBySubCatId" value="/findItemsBySubCatId" /> 
 	<c:url var="findAllMenus" value="/getAllMenus" />
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
@@ -234,7 +236,9 @@ select {
 										</div>
 
 											<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Items</label>
+											<label class="col-sm-3 col-lg-2 control-label">
+														Items
+											</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Items" name="items[]"
 													class="form-control chosen" tabindex="-1" id="items" multiple="multiple"
@@ -437,45 +441,110 @@ $('#select_all').click(function() {
 </script>
 
 <script type="text/javascript">
+var catId;
 $(document).ready(function() {
-	
-	
     $('#menu').change(
             function() {
-            	
-                $.getJSON('${findItemsByCatId}', {
-                    menuId : $(this).val(),
-                    ajax : 'true'
-                }, function(data) {
-                
-                    var len = data.length;
-
-					$('#sub_cat')
+            
+            	$('#sub_cat')
 				    .find('option')
 				    .remove()
-				    .end()
-				 $("#sub_cat").append($("<option></option>").text("Select Sub Category"));
-                    for ( var i = 0; i < len; i++) {
-                            
-                                
-                        $("#sub_cat").append(
-                                $("<option></option>").attr(
-                                    "value", data[i].subCatId).text(data[i].subCatName)
-                            );
-                    }
+				    .end();
+            	  $("#sub_cat").trigger("chosen:updated");
+            	 $('#items')
+ 			    .find('option')
+ 			    .remove()
+ 			    .end();
+            	  $("#items").trigger("chosen:updated");
+            	var menuId=$(this).val();
+            	$.getJSON('${findCatId}', {
+                    menuId :menuId,
+                    ajax : 'true'
+                }, function(cat) {
+                	catId=cat;
+               
+                    if(cat!=5){
+                        $.getJSON('${findItemsByCatId}', {
+                            menuId : menuId,
+                            ajax : 'true'
+                        }, function(data) {
+                        
+                            var len = data.length;
+                           
+        					$('#sub_cat')
+        				    .find('option')
+        				    .remove()
+        				    .end()
+        				 $("#sub_cat").append($("<option></option>").text("Select Sub Category"));
+                            for ( var i = 0; i < len; i++) {
+                                    
+                                        
+                                $("#sub_cat").append(
+                                        $("<option></option>").attr(
+                                            "value", data[i].subCatId).text(data[i].subCatName)
+                                    );
+                            }
 
-                    $("#sub_cat").trigger("chosen:updated");
+                            $("#sub_cat").trigger("chosen:updated");
+                        });
+                        }else
+                        	{
+                        	 $.getJSON('${findItemsByCatId}', {
+                                 menuId : menuId,
+                                 ajax : 'true'
+                             }, function(data) {
+                             
+                                 var len = data.length;
+
+             					$('#sub_cat')
+             				    .find('option')
+             				    .remove()
+             				    .end()
+             				 $("#sub_cat").append($("<option></option>").text("Select Sub Category"));
+                                 for ( var i = 0; i < len; i++) {
+                                         
+                                             
+                                     $("#sub_cat").append(
+                                             $("<option></option>").attr(
+                                                 "value", data[i].subCatId).text(data[i].subCatName)
+                                         );
+                                 }
+
+                                 $("#sub_cat").trigger("chosen:updated");
+                       	$.getJSON('${findItemsByMenu}', {
+                               menuId : menuId,
+                               ajax : 'true'
+                           }, function(data) {
+                           	 var len = data.length;
+                         	$('#items')
+            			    .find('option')
+            			    .remove()
+            			    .end();
+                        	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
+
+                                for ( var i = 0; i < len; i++) {
+                                   $("#items").append(
+                                            $("<option></option>").attr(
+                                                "value", data[i].id).text(data[i].name)
+                                        );
+                                }
+                                $("#items").trigger("chosen:updated");
+                               
+                           });
+                       	
+                   });
+                        }
                 });
-            });
 });
-
+});
  $(document).ready(function() {
     $('#sub_cat').change(
             function() {
+            	if(catId!=5){
             	$('#items')
 			    .find('option')
 			    .remove()
-			    .end()
+			    .end();
             	 var select=$(this).val();
             	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
             	$('#sub_cat option:selected').each(function() {
@@ -494,21 +563,29 @@ $(document).ready(function() {
                     $("#items").trigger("chosen:updated");
                 });
             	});
+            	}
             });
 }); 
 </script>
-
-
 <script type="text/javascript">
 $(document).ready(function() { 
 	$('#fr_id').change(
 			function() {
+				$('#sub_cat')
+			    .find('option')
+			    .remove()
+			    .end();
+        	  $("#sub_cat").trigger("chosen:updated");
+        	 $('#items')
+			    .find('option')
+			    .remove()
+			    .end();
+        	  $("#items").trigger("chosen:updated");
 				$.getJSON('${findAllMenus}', {
 					fr_id : $(this).val(),
 					ajax : 'true'
 				}, function(data) {
 					var html = '<option value="">Menu</option>';
-				
 					var len = data.length;
 					
 					$('#menu')
@@ -523,8 +600,7 @@ $(document).ready(function() {
 					
 					for ( var i = 0; i < len; i++) {
                         $("#menu").append(
-                                $("<option></option>").attr(
-                                    "value", data[i].menuId).text(data[i].menuTitle)
+                                $("<option></option>").attr("value", data[i].menuId).text(data[i].menuTitle)
                             );
 					}
 					   $("#menu").trigger("chosen:updated");
@@ -532,54 +608,72 @@ $(document).ready(function() {
 			});
 });
 </script>
-
 <script type="text/javascript">
 $(document).ready(function() { // if all label selected set all items selected
-	
-$('#items').change(
-		function () {
-			 var selected=$('#items').val();
-			 var subCatId=$('#sub_cat').val();
-	
-        if(selected==-1){
-        	
-              	$('#items')
-  			    .find('option')
-  			    .remove()
-  			    .end()
-  			   
-            	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
-            	$('#sub_cat option:selected').each(function() {
-			$.getJSON('${findItemsBySubCatId}', {
-				subCatId : $(this).val(),
-				ajax : 'true'
-			}, function(data) {
-				var html = '<option value="">Items</option>';
-			
-				var len = data.length;
-			
-				for ( var i = 0; i < len; i++) {
-    
-                   $("#items").append(
-                           $("<option selected></option>").attr(
-                               "value", data[i].id).text(data[i].name)
-                       );
-				}
-		
-				   $("#items").trigger("chosen:updated");
-			});
-            	});
-  }
+	 $('#items').change(function () {
+	 		 var selected=$('#items').val();
+	 		 var subCatId=$('#sub_cat').val();
+	         if(selected==-1){
+	        	
+	               	$('#items')
+	   			    .find('option')
+	   			    .remove()
+	   			    .end();
+	               	
+	   			var menuId=$('#menu').val();
+            	$.getJSON('${findCatId}', {
+                    menuId :menuId,
+                    ajax : 'true'
+                }, function(catId) {  
+	            if(catId!=5){ 	
+	             	$('#sub_cat option:selected').each(function() {
+	 			$.getJSON('${findItemsBySubCatId}', {
+	 				subCatId : $(this).val(),
+	 				ajax : 'true'
+	 			}, function(data) {
+	 				var html = '<option value="">Items</option>';
+	 			
+	 				var len = data.length;
+	            	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
 
-});
-});
+	 				for ( var i = 0; i < len; i++) {
+	     
+	                    $("#items").append(
+	                            $("<option selected></option>").attr(
+	                                "value", data[i].id).text(data[i].name)
+	                        );
+	 				}
+	 		
+	 				   $("#items").trigger("chosen:updated");
+	 			});
+	             	});
+	            }
+	            else
+	            	{
+	            	$.getJSON('${findItemsByMenu}', {
+                       menuId : menuId,
+                       ajax : 'true'
+                   }, function(data) {
+                   	 var len = data.length;
+                	 $("#items").append($("<option></option>").attr( "value",-1).text("ALL"));
 
-
+                        for ( var i = 0; i < len; i++) {
+                           $("#items").append(
+                                    $("<option selected></option>").attr(
+                                        "value", data[i].id).text(data[i].name)
+                                );
+                        }
+                        $("#items").trigger("chosen:updated");
+	            	});
+	              }
+                });
+	         }
+	 });
+	 });
 </script>
 <script>
 $( "#date" ).datepicker({ 
     // Add this line
-
     stepMonths: 0,
 });
 </script>
