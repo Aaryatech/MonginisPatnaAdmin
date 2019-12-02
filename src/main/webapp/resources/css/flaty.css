@@ -8,8 +8,9 @@
 /* ========================================================
    General
 ======================================================== */
-/* Import Font */
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700);
+/* Import Font 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700); change 24-08-2018*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
 
 html {
     min-height: 100%;
@@ -21,7 +22,7 @@ html {
 body {
     padding-bottom: 0;
     min-height: 100%;
-    font-family: 'Open Sans';
+    font-family:'Open Sans';/* 'Roboto', sans-serif;*/
     font-size: 13px;
     color: #393939;
     -webkit-font-smoothing: antialiased;
@@ -1070,7 +1071,14 @@ hr.margin-0  {margin: 0;}
     border-radius: 0!important;
 }
 .table thead > tr > th {
-    border-bottom-width: 1px;
+    border-bottom-width: 0px; /*  border-bottom-width: 0px; prev code (change 24-08-2018) */
+   /*  padding: 20px 15px; */
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  text-shadow: 0 1px 0 #ffffff;
+  color: #ffffff;
+  text-transform: uppercase;
 }
 .table.fill-head thead {
     background: #efefef;
@@ -1083,6 +1091,7 @@ hr.margin-0  {margin: 0;}
 .table-advance thead {
     background: #efefef;
     border-left: 4px solid #efefef;
+    
 }
 .table-advance i[class^="fa-"] {
     margin-right: 5px;
@@ -1106,7 +1115,7 @@ hr.margin-0  {margin: 0;}
 .table-advance th,
 .table-advance td {
     border-top: 0;
-    color: #888;
+    color: #421a31;
 }
 
 .table thead > tr > th > a.sort-asc,
@@ -2459,7 +2468,10 @@ a.tile:hover {
 .tile-blue       {background-color: #0a59c0;}
 .tile-dark-blue  {background-color: #381095;}
 .tile-red        {background-color: #b9231f;}
-.tile-orange     {background-color: #e79712;}
+.tile-orange     {box-shadow: 0 6px 20px 0 rgba(255, 111, 0, 0.3);
+    background: #ff6f00;
+    background: -webkit-linear-gradient(45deg, #ff6f00 0%, #ffca28 100%);
+    background:linear-gradient(45deg, #d66f3f 0%, #e696ca 100%);}
 .tile-pink       {background-color: #c7266c;}
 .tile-magenta    {background-color: #8b4787;}
 .tile-green {background-color: #31a221;}
@@ -4679,7 +4691,7 @@ div.tagsinput .not_valid {
 .sidebar-collapsed .nav-list > li.open:hover > a    {color: #fff;}
 
 .navbar {
-    background: #343690; border-bottom:1px solid #ec268f;
+    background: #8d8ab7; /* border-bottom:1px solid #ec268f; 24-8-2018 change*/
 }
 .flaty-nav > li > a > .badge {
     border-color: #58b1fc;
@@ -4748,7 +4760,7 @@ div.tagsinput .not_valid {
 #main-content                                       {background: #eee;}          /* Content Background */
 
 .box > .box-title {
-    background-color: #b6d1f2;
+    background-color: #f3b5db;
     text-shadow: 0 1px 0 #aecef4;
 }
 
