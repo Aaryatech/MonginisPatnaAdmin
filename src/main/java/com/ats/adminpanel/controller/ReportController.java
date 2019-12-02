@@ -204,7 +204,7 @@ public class ReportController {
 			ExportToExcel expoExcel = new ExportToExcel();
 			List<String> rowData = new ArrayList<String>();
 
-			rowData.add("Sr. No.");
+		/*	rowData.add("Sr. No.");
 			rowData.add("CRN No");
 			rowData.add("CRN Date");
 			rowData.add("Party Name");
@@ -215,7 +215,22 @@ public class ReportController {
 			rowData.add("Cgst Amt");
 			rowData.add("Sgst Amt");
 			rowData.add("Crn Amt");
-			rowData.add("Crn Total Amt");
+			rowData.add("Crn Total Amt");*/
+			
+			rowData.add("Sr. No.");
+			rowData.add("GSTIN/UIN of Recipient");
+			rowData.add("Receiver Name");
+			rowData.add("Invoice/Advance Receipt Number");
+			rowData.add("Invoice/Advance Receipt date");
+			rowData.add("Note/Refund Voucher Number");
+			rowData.add("Note/Refund Voucher date");
+			rowData.add("Document Type");
+			rowData.add("Place Of Supply");
+			rowData.add("Note/Refund Voucher Value");
+			rowData.add("Applicable % of Tax Rate");
+			rowData.add("Rate");
+			rowData.add("Taxable Value");
+			rowData.add("Cess Amount");
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -235,7 +250,23 @@ public class ReportController {
 
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
+				
 				rowData.add("" + (i + 1));
+				rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
+				rowData.add("" + crNoteRegItemList.get(i).getFrName());
+				rowData.add("");
+				rowData.add("");
+				rowData.add("" + crNoteRegItemList.get(i).getCrnId());
+				rowData.add("");
+				rowData.add("");
+				rowData.add("Patna");
+				rowData.add("" + roundUp(crnTotal));
+				rowData.add("");
+				rowData.add("" + (crNoteRegItemList.get(i).getCgstPer() + crNoteRegItemList.get(i).getSgstPer()));
+				rowData.add(""+roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
+				rowData.add(""+0);
+				
+				/*	
 				rowData.add("" + crNoteRegItemList.get(i).getCrnId());
 				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
 
@@ -248,7 +279,7 @@ public class ReportController {
 				rowData.add(""+roundUp(crNoteRegItemList.get(i).getSgstAmt()));
 				rowData.add(roundUp(crNoteRegItemList.get(i).getCrnTaxable())+roundUp(crNoteRegItemList.get(i).getCgstAmt())+roundUp(crNoteRegItemList.get(i).getSgstAmt())+"");
 
-				rowData.add("" + roundUp(crnTotal));
+				rowData.add("" + roundUp(crnTotal));*/
 
 				crnQty = crnQty + crNoteRegItemList.get(i).getCrnQty();
 				crnTaxable = crnTaxable + roundUp(crNoteRegItemList.get(i).getCrnTaxable());
@@ -256,6 +287,8 @@ public class ReportController {
 				sgstAmt = sgstAmt + roundUp(crNoteRegItemList.get(i).getSgstAmt());
 				crnAmt = crnAmt + (roundUp(crNoteRegItemList.get(i).getCrnTaxable())+roundUp(crNoteRegItemList.get(i).getCgstAmt())+roundUp(crNoteRegItemList.get(i).getSgstAmt()));
 				crnTotAmt=crnTotAmt+roundUp(crnTotal);
+				
+				
 				
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -270,12 +303,19 @@ public class ReportController {
 			rowData.add("");
 			rowData.add("");
 			
-			rowData.add(""+crnQty);
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add(""+roundUp(crnTotAmt));
+			rowData.add("");
+			rowData.add("");
+			rowData.add(""+roundUp(crnTaxable));
+			/*rowData.add(""+crnQty);
 			rowData.add(""+roundUp(crnTaxable));
 			rowData.add(""+roundUp(cgstAmt));
 			rowData.add(""+roundUp(sgstAmt));
 			rowData.add(""+roundUp(crnAmt));
-			rowData.add(""+roundUp(crnTotAmt));
+			rowData.add(""+roundUp(crnTotAmt));*/
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -577,6 +617,7 @@ public class ReportController {
 						.exchange(Constants.url + "getHsnBillReport", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
 				hsnListBill = responseEntity.getBody();
+				System.out.println("HSN List-------------"+hsnListBill);
 			}
 			if (type == 2 || type == 3) {
 				ParameterizedTypeReference<List<HSNWiseReport>> typeRef1 = new ParameterizedTypeReference<List<HSNWiseReport>>() {
@@ -890,7 +931,7 @@ public class ReportController {
 			document.open();
 
 			Paragraph heading = new Paragraph(
-					"Product Order Report \n From Date:" + fromdate + " To Date:" + todate);
+					"HSN wise Summary Report \n From Date:" + fromdate + " To Date:" + todate);
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
 

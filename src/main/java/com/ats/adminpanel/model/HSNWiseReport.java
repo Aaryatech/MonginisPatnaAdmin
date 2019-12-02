@@ -4,9 +4,7 @@ import java.util.Date;
 
 public class HSNWiseReport {
 	
-	
-	
-
+	private String id;
 	private String itemHsncd;
 
 	private float itemTax1;
@@ -19,6 +17,14 @@ public class HSNWiseReport {
 	private float cgstRs;
 	private float sgstRs;
 	private float grnGvnQty;
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getItemHsncd() {
 		return itemHsncd;
@@ -86,9 +92,9 @@ public class HSNWiseReport {
 
 	@Override
 	public String toString() {
-		return "HSNWiseReport [itemHsncd=" + itemHsncd + ", itemTax1=" + itemTax1 + ", itemTax2=" + itemTax2
-				+ ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstRs=" + cgstRs + ", sgstRs=" + sgstRs
-				+ ", grnGvnQty=" + grnGvnQty + "]";
+		return "HSNWiseReport [id=" + id + ", itemHsncd=" + itemHsncd + ", itemTax1=" + itemTax1 + ", itemTax2="
+				+ itemTax2 + ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstRs=" + cgstRs + ", sgstRs="
+				+ sgstRs + ", grnGvnQty=" + grnGvnQty + "]";
 	}
-
+	
 }

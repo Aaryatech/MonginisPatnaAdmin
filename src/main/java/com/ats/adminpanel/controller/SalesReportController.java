@@ -240,7 +240,7 @@ public class SalesReportController {
 			ExportToExcel expoExcel = new ExportToExcel();
 			List<String> rowData = new ArrayList<String>();
 
-			rowData.add("Sr.No.");
+			/*rowData.add("Sr.No.");
 			rowData.add("Invoice No");
 			rowData.add("Bill No");
 			rowData.add("Bill Date");
@@ -255,7 +255,23 @@ public class SalesReportController {
 			rowData.add("Taxable Amt");
 			rowData.add("Total Tax");
 			rowData.add("Grand Total");
-			rowData.add("Bill Total");
+			rowData.add("Bill Total");*/
+			
+			rowData.add("Sr.No.");
+			rowData.add("GSTIN/UIN of Recipient");
+			rowData.add("Receiver Name");
+			rowData.add("Invoice No");
+			rowData.add("Invoice Date");
+			rowData.add("Invoice Value");
+			rowData.add("Place of Supply");
+			rowData.add("Reverse Charge");
+
+			rowData.add("Applicable % of Tax Rate");
+			rowData.add("Invoice Type");
+			rowData.add("E Commerce GSTIN");
+			rowData.add("Rate");
+			rowData.add("Taxable Value");
+			rowData.add("Cess Amount");
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -278,44 +294,46 @@ public class SalesReportController {
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add((i + 1) + "");
-				rowData.add("" + taxReportList.get(i).getInvoiceNo());
-				rowData.add("" + taxReportList.get(i).getBillNo());
-				rowData.add("" + taxReportList.get(i).getBillDate());
-
-				rowData.add("" + taxReportList.get(i).getFrName());
 				rowData.add("" + taxReportList.get(i).getFrGstNo());
-
-				rowData.add("" + taxReportList.get(i).getCgstPer());
-				rowData.add("" + taxReportList.get(i).getSgstPer());
-				rowData.add("" + roundUp(taxReportList.get(i).getCgstAmt()));
-				rowData.add("" + roundUp(taxReportList.get(i).getSgstAmt()));
+				rowData.add("" + taxReportList.get(i).getFrName());
+				//rowData.add("" + taxReportList.get(i).getBillNo());
+				rowData.add("" + taxReportList.get(i).getInvoiceNo());				
+				rowData.add("" + taxReportList.get(i).getBillDate());
+				
+				rowData.add((roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+""); //Grand Total
+				
+				rowData.add("Patna"); //Place Of Supply
+				rowData.add("N"); //Reverse Charge
+				rowData.add(""); //Applicable % of Tax Rate
+				rowData.add("Regular"); 
+				rowData.add(""); //E Commerce GSTIN
+				
+				rowData.add("" + (taxReportList.get(i).getCgstPer()+taxReportList.get(i).getSgstPer()));
 				rowData.add("" + roundUp(taxReportList.get(i).getTaxableAmt()));
-				rowData.add((roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+"");
-				rowData.add((roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+"");
-
-				rowData.add("" + roundUp(finalTotal));
+				rowData.add(""); //Cess Amt
+				
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
+			rowData.add("Total");
 			rowData.add("");
 			rowData.add("");
 			rowData.add("");
 			rowData.add("");
-			rowData.add("");
-			rowData.add("");
+			rowData.add(""+roundUp(grandAmt));
 
-			rowData.add("");
+			/*rowData.add("");
 			rowData.add("Total");
 
 			rowData.add(""+roundUp(cgstAmt));
 			rowData.add(""+roundUp(sgstAmt));
 			rowData.add(""+roundUp(taxableAmt));
 			rowData.add(""+roundUp(taxAmt));
-			rowData.add(""+roundUp(grandAmt));
-			rowData.add(""+roundUp(billAmt));
+			rowData.add(""+roundUp(grandAmt));*/
+			
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 
@@ -5193,4 +5211,36 @@ public class SalesReportController {
 		}
 	}
 
+	@RequestMapping(value = "/showHsnWiseSummaryReport", method = RequestMethod.GET)
+	public ModelAndView showHsnWiseSummaryReport(HttpServletRequest request, HttpServletResponse response) {
+		
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+
+		
+			model = new ModelAndView("reports/hsnwiseReport");
+
+			// Constants.mainAct =2;
+			// Constants.subAct =20;
+
+			try {
+				ZoneId z = ZoneId.of("Asia/Calcutta");
+
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				todaysDate = date.format(formatters);
+				model.addObject("todaysDate", todaysDate);
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in show   report hsn wise  " + e.getMessage());
+				e.printStackTrace();
+			}
+	
+		return model;
+
+	
+		
+	}
+	
 }
