@@ -300,8 +300,8 @@ public class SalesReportController {
 				rowData.add("" + taxReportList.get(i).getInvoiceNo());				
 				rowData.add("" + taxReportList.get(i).getBillDate());
 				
-				rowData.add((roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+""); //Grand Total
-				
+				//rowData.add((roundUp(taxReportList.get(i).getTaxableAmt())+roundUp(taxReportList.get(i).getCgstAmt())+roundUp(taxReportList.get(i).getSgstAmt()))+""); //Grand Total
+				rowData.add("" + taxReportList.get(i).getGrandTotal());
 				rowData.add("Patna"); //Place Of Supply
 				rowData.add("N"); //Reverse Charge
 				rowData.add(""); //Applicable % of Tax Rate

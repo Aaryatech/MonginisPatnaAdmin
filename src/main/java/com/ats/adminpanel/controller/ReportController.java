@@ -255,9 +255,9 @@ public class ReportController {
 				rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
 				rowData.add("" + crNoteRegItemList.get(i).getFrName());
 				rowData.add("");
-				rowData.add("");
+				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
 				rowData.add("" + crNoteRegItemList.get(i).getCrnId());
-				rowData.add("");
+				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
 				rowData.add("");
 				rowData.add("Patna");
 				rowData.add("" + roundUp(crnTotal));
