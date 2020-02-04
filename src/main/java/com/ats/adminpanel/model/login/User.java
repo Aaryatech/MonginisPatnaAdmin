@@ -18,8 +18,8 @@ public class User implements Serializable {
     private String message;
     private int roleId;
     private int deptId;
-    
-    
+    private String email;
+    private String contact;
         
     
     public User() {
@@ -28,7 +28,7 @@ public class User implements Serializable {
     
     
 	public User(int id, String username, String password, int usertype, int delStatus, boolean error,
-			String message,int deptId, int roleId) {
+			String message,int deptId, int roleId, String email, String contact) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -39,6 +39,8 @@ public class User implements Serializable {
 		this.message = message;
 		this.deptId=deptId;
 		this.roleId=roleId;
+		this.email=email;
+		this.contact=contact;
 	}
 
 
@@ -117,15 +119,32 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", usertype=" + usertype
 				+ ", delStatus=" + delStatus + ", error=" + error + ", message=" + message + ", roleId=" + roleId
-				+ ", deptId=" + deptId + "]";
+				+ ", deptId=" + deptId + ", email=" + email + ", contact=" + contact + "]";
 	}
 
-
-	 
 	
 }

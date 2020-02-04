@@ -6,6 +6,8 @@
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
+<c:url var="getUniqueEmail" value="/getUniqueEmail" />
+	<c:url var="getUniqueContact" value="/getUniqueContact" />	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<div class="container" id="main-container">
 
@@ -91,6 +93,30 @@
 									
 									<span class="" id="cpass"></span>
 								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Email</label>
+									<div class="col-sm-6 col-lg-4 controls">
+										<input type="text" name="email" id="email"
+											value="${user.email}" onkeyup="sameEmail()"
+											class="form-control" placeholder="Email"
+											data-rule-required="true" />
+									</div>
+									<span class="" id="pass"></span>
+									<!-- </div>
+						<div class="form-group"> -->
+									<label class="col-sm-3 col-lg-2 control-label">Contact
+										</label>
+									<div class="col-sm-6 col-lg-4 controls">
+										<input type="text" name="contact" maxlength="10"
+											value="${user.contact}" id="contact"
+											onkeyup="sameContact()" class="form-control"
+											placeholder="Contact" data-rule-required="true" />
+									</div>
+									
+									<span class="" id="cpass"></span>
+								</div>
+								
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Select
 										Department</label>
@@ -116,7 +142,7 @@
 										</select>
 									</div>
 									<!-- </div>
-								<div class="form-group"> -->
+								<div class="form-group">	-->
 									<label class="col-sm-3 col-lg-2 control-label">Select
 										User Type</label>
 									<div class="col-sm-6 col-lg-4 controls">
@@ -309,13 +335,13 @@
 	}
 	
 	function submitUser(){
-	alert("in fun");
+	//alert("in fun");
 		var valid=validate();
 	 if(!valid)
 		 {
-		 alert("in If");
+		/* alert("in If"); */
 		 var form= document.getElementById("validation-form");
-		 alert("form = " +form);
+		/*  alert("form = " +form); */
 		 form.action='${pageContext.request.contextPath}/editUserProcess';
 		 form.submit();
 		
@@ -344,7 +370,75 @@
 		return flag;
 	}
 	</script>
+<script>
+function validateEmail(email) {
+    
+	var eml = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
+	if (eml.test($.trim(email)) == false) {
+
+
+	return false;
+
+	}
+
+	return true;
+
+}
+function  sameEmail(){
+	var valid = true
+		var email = $("#email").val();
+		//alert(email);
+		$(document)
+				.ready(
+						function() {
+							$
+									.getJSON(
+											'${getUniqueEmail}',
+											{
+												email : email,
+												ajax : 'true'
+											},
+											function(data) {
+												//alert(JSON.stringify(data))
+												if(data.error===false){
+													alert("Email Id Already Exist!")
+													document.getElementById("email").value="";
+												}
+
+											});
+
+						});
+
+	}
+
+function  sameContact(){
+	var valid = true
+		var contact = $("#contact").val();
+	//	alert(contact);
+		$(document)
+				.ready(
+						function() {
+							$
+									.getJSON(
+											'${getUniqueContact}',
+											{
+												contact : contact,
+												ajax : 'true'
+											},
+											function(data) {
+												//alert(JSON.stringify(data))
+												if(data.error===false){
+													alert("Contact No Already Exist!")
+													document.getElementById("contact").value="";
+												}
+
+											});
+
+						});
+
+	}
+</script>
 </body>
 </html>
 

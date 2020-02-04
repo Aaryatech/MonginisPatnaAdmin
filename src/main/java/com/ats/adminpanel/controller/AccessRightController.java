@@ -563,6 +563,9 @@ public class AccessRightController {
 
 			int deptId = Integer.parseInt(request.getParameter("dept_id"));
 			int userType = Integer.parseInt(request.getParameter("user_type"));
+			String email = request.getParameter("email");
+			String contact = request.getParameter("contact");
+			
 			User editUser = new User();
 			user.setDeptId(deptId);
 			user.setUsertype(userType);
@@ -571,7 +574,10 @@ public class AccessRightController {
 			editUser.setDeptId(deptId);
 			editUser.setUsertype(userType);
 			editUser.setPassword(upass);
+			editUser.setContact(contact);
+			editUser.setEmail(email);
 			editUser.setId(user.getId());
+			System.err.println("Edit User---------"+editUser);
 			Info info = rest.postForObject(Constants.url + "updateUser", editUser, Info.class);
 			System.err.println("Update User Response  " + info.toString());
 			System.err.println("Param for update " + upass + "dept Id " + deptId + "userType  " + userType);
