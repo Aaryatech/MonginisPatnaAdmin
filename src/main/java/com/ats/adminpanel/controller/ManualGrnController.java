@@ -99,15 +99,20 @@ public class ManualGrnController {
 		String invoiceNo = null;
 
 		if (length == 1)
-
+		{
 			invoiceNo = curStrYear + "-" + frCode + "-" + "000" + settingValue;
+		}else
 		if (length == 2)
-
+		{
 			invoiceNo = curStrYear + "-" + frCode + "-" + "00" + settingValue;
-
+		}else
 		if (length == 3)
-
+		{
 			invoiceNo = curStrYear + "-" + frCode + "-" + "0" + settingValue;
+		}else
+		{
+			invoiceNo = curStrYear + "-" + frCode + "-" + settingValue;
+		}
 
 		System.out.println("*** invoiceNo= " + invoiceNo);
 		return invoiceNo;
