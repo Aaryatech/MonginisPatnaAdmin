@@ -217,6 +217,10 @@ public class FranchiseeController {
 	@RequestMapping(value = "/updateFrMenuTime")
 	public String updateFrMenuTimeProcess(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView("franchisee/confFrMenuTime");
+		String date[];
+		String day[];
+		String convertedDate = "0";
+		String convertedDays = "0";
 		String fromTime = request.getParameter("frm_time");
 
 		System.out.println(fromTime);
@@ -266,14 +270,50 @@ public class FranchiseeController {
 		frId = frId.substring(1);
 		int menuId = Integer.parseInt(request.getParameter("menu"));
 		System.out.println("menuId" + menuId);
+		int settingType = Integer.parseInt(request.getParameter("typeselector"));
+		if (settingType == 1) {
+			// date ="0";
+			// day = "0";
+		} else if (settingType == 2) {
+			date = request.getParameterValues("date[]");
 
+			StringBuilder sbForDate = new StringBuilder();
+
+			for (int i = 0; i < date.length; i++) {
+				sbForDate = sbForDate.append(date[i] + ",");
+
+			}
+			convertedDate = sbForDate.toString();
+			convertedDate = convertedDate.substring(0, convertedDate.length() - 1);
+
+			System.out.println("date" + convertedDate);
+			// day ="0";
+		} else {
+			day = request.getParameterValues("day[]");
+
+			StringBuilder sbForDay = new StringBuilder();
+
+			for (int i = 0; i < day.length; i++) {
+				sbForDay = sbForDay.append(day[i] + ",");
+
+			}
+			convertedDays = sbForDay.toString();
+			convertedDays = convertedDays.substring(0, convertedDays.length() - 1);
+			System.out.println("day:" + convertedDays);
+
+			// date ="0";
+		}
+	
 		RestTemplate rest = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("fromTime", sqlFromTime.toString());
 		map.add("toTime", sqlToTime.toString());
 		map.add("frIdList", frId);
 		map.add("menuId", menuId);
-
+		
+		map.add("settingType", settingType);
+		map.add("date", convertedDate);
+		map.add("day", convertedDays);
 		Info errorMessage = rest.postForObject(Constants.url + "updateFrConfMenuTime", map, Info.class);
 
 		System.err.println("Update Response " + errorMessage.toString());
@@ -530,10 +570,21 @@ public class FranchiseeController {
 			map.add("frIdList", frIdList);
 			map.add("menuId", menuId);
 			map.add("catId", selectedCatId);
+             String addorremove=request.getParameter("addorremove");
+			
+			if(addorremove.equals("1")) {
+		
 			Info errorMessage = rest.postForObject(Constants.url + "updateConfiguredItems", map, Info.class);
-
 			if (errorMessage.getError() == false) {
 				System.err.println("stock");
+			}
+
+			}else {
+				Info errorMessage = rest.postForObject(Constants.url + "updateConfiguredItemsRemove", map, Info.class);
+				if (errorMessage.getError() == false) {
+					System.err.println("stock");
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

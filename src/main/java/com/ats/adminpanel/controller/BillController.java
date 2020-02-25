@@ -51,6 +51,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -71,8 +72,11 @@ import com.ats.adminpanel.model.GenerateBillList;
 import com.ats.adminpanel.model.GetSellBillDetail;
 import com.ats.adminpanel.model.GetSellBillHeader;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.Orders;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.SalesVoucherList;
+import com.ats.adminpanel.model.SpCakeResponse;
+import com.ats.adminpanel.model.SpecialCake;
 import com.ats.adminpanel.model.RawMaterial.GetItemSfHeader;
 import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.billing.FrBillHeaderForPrint;
@@ -88,8 +92,11 @@ import com.ats.adminpanel.model.billing.PostBillDetail;
 import com.ats.adminpanel.model.billing.PostBillHeader;
 import com.ats.adminpanel.model.billing.SlabwiseBillList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
+import com.ats.adminpanel.model.franchisee.CommonConf;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
+import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
+import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.franchisee.SubCategory;
 import com.ats.adminpanel.model.grngvn.GetGrnGvnDetails;
@@ -97,6 +104,7 @@ import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfiResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfigure;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
+import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.item.MCategoryList;
 import com.ats.adminpanel.model.modules.ErrorMessage;
 import com.sun.org.apache.bcel.internal.generic.INVOKEINTERFACE;
@@ -106,27 +114,24 @@ import com.sun.org.apache.bcel.internal.generic.INVOKEINTERFACE;
 public class BillController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BillController.class);
-
 	public AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
 	public List<Menu> menuList = new ArrayList<Menu>();
 	public String selectedFrArray;
 	public String selectedDate;
+	
 	public GenerateBillList generateBillList = new GenerateBillList();
 	public List<GenerateBill> staticGetGenerateBills = new ArrayList<>();
 	public List<String> frList = new ArrayList<>();
-
+	LinkedHashMap<Integer, List<GetBillDetail>>	billDetailsListHMap=null;
+	LinkedHashMap<Integer, GetBillHeader>	billHeaderListHMap=null;
+	
 	public List<GetBillDetail> billDetailsList;
-
+	List<Orders> orderList=null;
 	public List<GetBillDetailPrint> billDetailsListForPrint;
-
 	public GetBillHeader getBillHeader;
-
 	public List<GetBillHeader> billHeadersList = new ArrayList<>();
-
 	public List<FrBillHeaderForPrint> billHeadersListForPrint = new ArrayList<>();
-
 	public List<FrBillPrint> billPrintList;
-
 	public List<GetSellBillHeader> getSellBillHeaderList;
 	public List<GetSellBillDetail> getSellBillDetailList;
 	public int bQty;
@@ -189,11 +194,6 @@ public class BillController {
 	@RequestMapping(value = "/submitNewBill", method = RequestMethod.POST)
 	public String submitNewBill(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.info("/submitNewBill request mapping.");
-
-		int settingValue = 0;
-		String invoiceNo = null;
-
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
@@ -205,12 +205,7 @@ public class BillController {
 
 			e.printStackTrace();
 		}
-
-		System.out.println("Bill Date " + billDate);
-
 		ModelAndView model = new ModelAndView("billing/generatebill");
-
-		// settingValue
 		try {
 
 			PostBillDataCommon postBillDataCommon = new PostBillDataCommon();
@@ -240,59 +235,14 @@ public class BillController {
 				postBillDetailsList = new ArrayList();
 
 				float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0;
-				float sumT1 = 0;
-				float sumT2 = 0;
-				float sumT3 = 0;
-				Map<Integer, String> frIdInvoiceMap = new HashMap<Integer, String>();
 
 				for (int j = 0; j < tempGenerateBillList.size(); j++) {
 
-					// String invNo = getInvoiceNo();
-
-					/*
-					 * if (frIdInvoiceMap.containsKey(frId)) {
-					 * 
-					 * System.out.println("prev id found " + frId);
-					 * 
-					 * header.setInvoiceNo(frIdInvoiceMap.get(frId));
-					 * 
-					 * } else { System.out.println("New id found " + frId);
-					 * 
-					 * String invNo = getInvoiceNo(); frIdInvoiceMap.put(frId, invNo);
-					 * header.setInvoiceNo(invNo); map = new LinkedMultiValueMap<String, Object>();
-					 * 
-					 * String settingKey = new String();
-					 * 
-					 * settingKey = "PB";
-					 * 
-					 * map.add("settingKeyList", settingKey);
-					 * 
-					 * FrItemStockConfigureList settingList = restTemplate.postForObject(
-					 * Constants.url + "getDeptSettingValue", map, FrItemStockConfigureList.class);
-					 * 
-					 * System.out.println("SettingKeyList" + settingList.toString());
-					 * 
-					 * settingValue =
-					 * settingList.getFrItemStockConfigure().get(0).getSettingValue();
-					 * 
-					 * settingValue = settingValue + 1;
-					 * System.out.println("inside update setting Value " + settingValue);
-					 * 
-					 * map.add("settingValue", settingValue);
-					 * 
-					 * map.add("settingKey", Constants.SETTING_KEY);
-					 * 
-					 * Info updateSetting = restTemplate.postForObject(Constants.url +
-					 * "updateSeetingForPB", map, Info.class); }
-					 */
 					GenerateBill gBill = tempGenerateBillList.get(j);
 
 					System.out.println("Inner For frId " + gBill.getFrId());
 
 					if (gBill.getFrId() == frId) {
-						// map.add(frId,"sd");
-
-						System.out.println("If condn true " + gBill.getFrId());
 
 						PostBillDetail billDetail = new PostBillDetail();
 
@@ -301,7 +251,7 @@ public class BillController {
 
 						String expDate = request
 								.getParameter("" + "expDate" + tempGenerateBillList.get(j).getOrderId());
-						// billQty = String.valueOf(gBill.getOrderQty());
+					
 						Float orderRate = (float) gBill.getOrderRate();
 						Float tax1 = (float) gBill.getItemTax1();
 						Float tax2 = (float) gBill.getItemTax2();
@@ -342,15 +292,9 @@ public class BillController {
 							igstRs = (taxableAmt * tax3) / 100;
 							totalTax = igstRs;
 						}
-
 						sgstRs = roundUp(sgstRs);
 						cgstRs = roundUp(cgstRs);
 						igstRs = roundUp(igstRs);
-
-						// header.setSgstSum(sumT1);
-						// header.setCgstSum(sumT2);
-						// header.setIgstSum(sumT3);
-
 						totalTax = roundUp(totalTax);
 
 						Float grandTotal = totalTax + taxableAmt;
@@ -385,15 +329,8 @@ public class BillController {
 						billDetail.setTotalTax(totalTax);
 						billDetail.setGrandTotal(grandTotal);
 						if (gBill.getCatId() == 5) {
-
-							// System.out.println("cat id is 5");
-							System.out.println("cat id is 5:::" + gBill.getSpDeliveryPlace());
-
 							billDetail.setRemark(gBill.getSpDeliveryPlace());
-							// billDetail.setRemark("");
-
 						} else {
-							System.out.println("cat id is not 5");
 							billDetail.setRemark("");
 						}
 
@@ -406,22 +343,8 @@ public class BillController {
 						header.setCgstSum(header.getCgstSum() + billDetail.getCgstRs());
 						header.setIgstSum(header.getIgstSum() + billDetail.getIgstRs());
 
-						/*
-						 * int itemShelfLife = gBill.getItemShelfLife();
-						 * 
-						 * String deliveryDate = gBill.getDeliveryDate();
-						 * 
-						 * String calculatedDate = incrementDate(deliveryDate, itemShelfLife);
-						 * 
-						 * // inc exp date if these menuId if (gBill.getMenuId() == 44 ||
-						 * gBill.getMenuId() == 45 || gBill.getMenuId() == 46) {
-						 * 
-						 * calculatedDate = incrementDate(calculatedDate, 1);
-						 * 
-						 * }
-						 */
 						DateFormat Df = new SimpleDateFormat("yyyy-MM-dd");// prev dd-MM-yyyy and above comment added on
-																			// 16 jan 4:11am
+																			// 16 jan 19
 
 						Date expiryDate = null;
 						try {
@@ -433,11 +356,6 @@ public class BillController {
 
 						billDetail.setExpiryDate(expiryDate);
 						postBillDetailsList.add(billDetail);
-
-						// header.setInvoiceNo(invoiceNo);
-						// header.setSgstSum(sumT1);
-						// header.setCgstSum(sumT2);
-						// header.setIgstSum(sumT3);
 						header.setFrCode(gBill.getFrCode());
 						header.setBillDate(billDate);
 						header.setRemark("");
@@ -447,24 +365,14 @@ public class BillController {
 
 				}
 
-				// header.setTaxApplicable((int)sumT1+(int)sumT2+(int)sumT3);
-				// header.setSgstSum(sumT1);
-				// header.setCgstSum(sumT2);
-				// header.setIgstSum(sumT3);
 				header.setTaxableAmt(sumTaxableAmt);
 				header.setGrandTotal(Math.round(sumGrandTotal));
-
-				System.err.println("sumof grand total beofre " + sumGrandTotal);
-
-				System.err.println("Math round up Sum " + header.getGrandTotal());
 				header.setTotalTax(sumTotalTax);
-
 				header.setStatus(1);
 				header.setPostBillDetailsList(postBillDetailsList);
 
 				ZoneId zoneId = ZoneId.of("Asia/Calcutta");
 				ZonedDateTime zdt = ZonedDateTime.now(zoneId);
-				// System.out.println("time ==" + zdt.format(null));
 
 				SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss ");
 				TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");
@@ -476,38 +384,12 @@ public class BillController {
 				Calendar cal = Calendar.getInstance();
 
 				header.setRemark(dateFormat.format(cal.getTime()));
-				// System.out.println("time ==" + strtime);
 				header.setTime(strtime);
 				postBillHeaderList.add(header);
-
 			}
-
 			postBillDataCommon.setPostBillHeadersList(postBillHeaderList);
 
-			System.out.println("Test data : " + postBillDataCommon.toString());
-
 			Info info = restTemplate.postForObject(Constants.url + "insertBillData", postBillDataCommon, Info.class);
-
-			System.out.println("Info Data " + info.toString());
-
-			// model.addObject("postBillDataCommon","");
-
-			// if (info.getError() == false) {
-
-			/*
-			 * map = new LinkedMultiValueMap<String, Object>();
-			 * 
-			 * settingValue = settingValue + 1;
-			 * 
-			 * map.add("settingValue", settingValue);
-			 * 
-			 * map.add("settingKey", Constants.SETTING_KEY);
-			 * 
-			 * Info updateSetting = restTemplate.postForObject(Constants.url +
-			 * "updateSeetingForPB", map, Info.class);
-			 */
-
-			// }.
 
 		} catch (Exception e) {
 			System.out.println("Exc in Inserting bill " + e.getMessage());
@@ -528,7 +410,7 @@ public class BillController {
 			System.out.println("Exception while incrementing date " + e.getMessage());
 			e.printStackTrace();
 		}
-		c.add(Calendar.DATE, day); // number of days to add
+		c.add(Calendar.DATE, day);
 		date = sdf.format(c.getTime());
 
 		return date;
@@ -541,8 +423,6 @@ public class BillController {
 
 	@RequestMapping(value = "/showGenerateBill")
 	public ModelAndView showGenerateBill(HttpServletRequest request, HttpServletResponse response) {
-
-		logger.info("/showGenerateBill request mapping.");
 
 		Constants.mainAct = 2;
 		Constants.subAct = 19;
@@ -622,11 +502,8 @@ public class BillController {
 	public @ResponseBody List<GenerateBill> generateNewBill(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("/generateNewBill AJAX Call mapping.");
-
 		selectedFrArray = null;
-
 		List<GenerateBill> genBills = new ArrayList<>();
-
 		List<GenerateBill> tempGenBills = new ArrayList<>();
 
 		try {
@@ -704,11 +581,7 @@ public class BillController {
 
 					generateBillList = restTemplate.postForObject(Constants.url + "generateBillForAllFrAllMenu", map,
 							GenerateBillList.class);
-					System.out.println("generate bill list All Fr All Menu " + generateBillList.toString());
-					/*
-					 * System.out.println("generate bill list All Fr All place " +
-					 * generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
-					 */
+				
 
 				} else if (isAllMenuSelected) {
 
@@ -717,14 +590,7 @@ public class BillController {
 
 					generateBillList = restTemplate.postForObject("" + Constants.url + "generateBillForAllMenu", map,
 							GenerateBillList.class);
-					System.out.println("generate bill list  All Menu " + generateBillList.toString());
-
-					System.out.println("g bill first size " + generateBillList.getGenerateBills().size());
-					/*
-					 * System.out.println("generate bill list All Fr All place " +
-					 * generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
-					 */
-
+					
 				} else if (isAllFrSelected) {
 
 					map.add("menuId", selectedMenu);
@@ -732,11 +598,7 @@ public class BillController {
 
 					generateBillList = restTemplate.postForObject("" + Constants.url + "generateBillForAllFr", map,
 							GenerateBillList.class);
-					System.out.println("generate bill list All Fr" + generateBillList.toString());
-					/*
-					 * System.out.println("generate bill list All Fr All place " +
-					 * generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
-					 */
+			
 
 				} else {
 
@@ -746,71 +608,8 @@ public class BillController {
 
 					generateBillList = restTemplate.postForObject("" + Constants.url + "generateBill", map,
 							GenerateBillList.class);
-					System.out.println("generate bill list " + generateBillList.toString());
-
-					System.out.println("g bill first size " + generateBillList.getGenerateBills().size());
-					/*
-					 * System.out.println("generate bill list All Fr All place " +
-					 * generateBillList.getGenerateBills().get(0).getSpDeliveryPlace());
-					 */
 
 				}
-
-				/*
-				 * // new code
-				 * 
-				 * //GenerateBillList generateBillList = new GenerateBillList();
-				 * 
-				 * genBills=generateBillList.getGenerateBills();
-				 * 
-				 * for (int c = 0; c < genBills.size(); c++) {
-				 * 
-				 * if (genBills.get(c).getMenuId() == 32 ) {
-				 * 
-				 * int frId=genBills.get(c).getFrId();
-				 * 
-				 * for (int d = 0; d < genBills.size(); d++) {
-				 * 
-				 * if(genBills.get(d).getMenuId()==31 && frId==genBills.get(d).getFrId() &&
-				 * genBills.get(d).getItemId()==genBills.get(c).getItemId() ) {
-				 * 
-				 * genBills.get(d).setOrderQty(genBills.get(d).getOrderQty()+genBills.get(c).
-				 * getOrderQty());
-				 * 
-				 * genBills.get(c).setOrderQty(0);
-				 * 
-				 * genBills.get(c).setIsPositive(1);
-				 * 
-				 * }
-				 * 
-				 * }
-				 * 
-				 * } }
-				 * 
-				 * 
-				 * for(int i=0;i<genBills.size();i++) {
-				 * 
-				 * if(genBills.get(i).getOrderQty()>0) {
-				 * 
-				 * tempGenBills.add(genBills.get(i));
-				 * 
-				 * }
-				 * 
-				 * }
-				 * 
-				 * 
-				 * generateBillList = new GenerateBillList();
-				 * 
-				 * //generateBillList.setGenerateBills(tempGenBills);
-				 * 
-				 * generateBillList.setGenerateBills(genBills);
-				 * 
-				 * System.out.println("new tempGenBills  bill List "+tempGenBills.toString());
-				 * 
-				 * System.out.println(" new size tempGenBills = "+tempGenBills.size());
-				 * 
-				 * //end of new Code
-				 */
 
 			} catch (Exception e) {
 				System.out.println("Exception " + e.getMessage());
@@ -821,10 +620,6 @@ public class BillController {
 			System.out.println("Exc in generate bill data " + e.getMessage());
 			e.printStackTrace();
 		}
-
-		// return generateBillList.getGenerateBills();
-
-		// return tempGenBills;
 
 		return generateBillList.getGenerateBills();
 	}
@@ -843,7 +638,8 @@ public class BillController {
 			model = new ModelAndView("accessDenied");
 
 		} else {
-
+			billDetailsListHMap = new LinkedHashMap<Integer, List<GetBillDetail>>();
+        	billHeaderListHMap = new LinkedHashMap<Integer, GetBillHeader>();
 			model = new ModelAndView("billing/viewbillheader");
 			frIdString = null;
 			Constants.mainAct = 2;
@@ -877,7 +673,6 @@ public class BillController {
 
 				map.add("fromDate", todaysDate);
 				map.add("toDate", todaysDate);
-				// System.out.println("Inside is All fr Selected " + isAllFrSelected);
 
 				GetBillHeaderResponse billHeaderResponse = restTemplate
 						.postForObject(Constants.url + "getBillHeaderForAllFr", map, GetBillHeaderResponse.class);
@@ -903,9 +698,6 @@ public class BillController {
 
 	@RequestMapping(value = "/showBillListForPrint", method = RequestMethod.GET)
 	public ModelAndView showBillListForPrint(HttpServletRequest request, HttpServletResponse response) {
-
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
 
 		ModelAndView model = null;
 		HttpSession session = request.getSession();
@@ -955,15 +747,12 @@ public class BillController {
 
 					map.add("fromDate", todaysDate);
 					map.add("toDate", todaysDate);
-					// map.add("fromDate", "08-01-2018");
-					// map.add("toDate", "08-01-2018");
 
 					ParameterizedTypeReference<List<FrBillHeaderForPrint>> typeRef = new ParameterizedTypeReference<List<FrBillHeaderForPrint>>() {
 					};
 					ResponseEntity<List<FrBillHeaderForPrint>> responseEntity = restTemplate.exchange(
 							Constants.url + "getBillHeaderForPrint", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
-					// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 					billHeadersListForPrint = new ArrayList<>();
 					billHeadersListForPrint = responseEntity.getBody();
 				} else {
@@ -1004,17 +793,7 @@ public class BillController {
 			int all = Integer.parseInt(request.getParameter("all"));
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
-			System.out.println("checkboxes " + checkboxes);
-			/*
-			 * StringBuilder sb = new StringBuilder(); String string = new String();
-			 * 
-			 * for (int i = 0; i < checkboxes.length; i++) { sb = sb.append(checkboxes[i] +
-			 * ",");
-			 * 
-			 * }
-			 * 
-			 * string = sb.toString();
-			 */
+			
 			if (all == 0)
 				checkboxes = checkboxes.substring(0, checkboxes.length() - 1);
 			System.out.println("string " + checkboxes);
@@ -1143,9 +922,6 @@ public class BillController {
 	public @ResponseBody List<FrBillHeaderForPrint> getBillListProcessForPrint(HttpServletRequest request,
 			HttpServletResponse response) {
 
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
-
 		billHeadersList = new ArrayList<>();
 
 		try {
@@ -1215,13 +991,9 @@ public class BillController {
 				};
 				ResponseEntity<List<FrBillHeaderForPrint>> responseEntity = restTemplate.exchange(
 						Constants.url + "getBillHeaderForPrint", HttpMethod.POST, new HttpEntity<>(map), typeRef);
-				// billHeadersListForPrint=new ArrayList<>();
-				// billHeadersListForPrint=responseEntity.getBody();
-
+			
 				billHeadersListForPrint = new ArrayList<>();
 				billHeadersListForPrint = responseEntity.getBody();
-
-				// model.addObject("billHeadersList",billHeadersListForPrint);
 
 			} else { // few franchisee selected
 
@@ -1235,26 +1007,13 @@ public class BillController {
 				ResponseEntity<List<FrBillHeaderForPrint>> responseEntity = restTemplate.exchange(
 						Constants.url + "getBillHeaderForPrintByFrId", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 				billHeadersListForPrint = new ArrayList<>();
-				// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
+			
 				billHeadersListForPrint = responseEntity.getBody();
 
-				/*
-				 * GetBillHeaderResponse billHeaderResponse =
-				 * restTemplate.postForObject(Constants.url + "getBillHeader", map,
-				 * GetBillHeaderResponse.class);
-				 * 
-				 * billHeadersList = billHeaderResponse.getGetBillHeaders();
-				 */
 			}
 
-			System.out.println("bill header for Print Using Ajax call  " + billHeadersListForPrint.toString());
-		} catch (
-
-		Exception e) {
-
-			System.out
-					.println("Ex in getting billHeader List  for print using date and frId Ajax call" + e.getMessage());
-			e.printStackTrace();
+		} catch (Exception e) {
+              	e.printStackTrace();
 		}
 
 		return billHeadersListForPrint;
@@ -1312,48 +1071,6 @@ public class BillController {
 			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
 			billHeadersListForPrint = new ArrayList<>();
 
-			// billHeadersListForPrint=getBillListProcessForPrint(request, response);
-			// List<FrBillHeaderForPrint> getBillListProcessForPrint
-
-			/*
-			 * List<String> billing=Arrays.asList(billList);
-			 * 
-			 * for(int a=0;a<billing.size();a++) {
-			 * 
-			 * if(billHeadersListForPrint.get(a).getBillNo()!=Integer.parseInt(billing.get(a
-			 * )) ){
-			 * 
-			 * System.out.println("billHeader print removing bill"+billHeadersListForPrint.
-			 * get(a));
-			 * 
-			 * billHeadersListForPrint.remove(a);
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
-
-			/*
-			 * List<GetBillDetail> billDetailsResponse =
-			 * restTemplate.postForObject(Constants.url + "getBillDetailsForPrint", map,
-			 * List.class);
-			 * 
-			 * 
-			 */
-			/*
-			 * List<FrBillHeaderForPrint> tempList=new ArrayList<>();
-			 * tempList=billHeadersListForPrint;
-			 * System.out.println("temp List Before"+tempList); for(int
-			 * p=0;p<selectedBills.length;p++) { System.out.println("selected Bill List "+p
-			 * +""+selectedBills[p]);
-			 * if(Integer.parseInt(selectedBills[p])==billHeadersListForPrint.get(p).
-			 * getBillNo()) {
-			 * 
-			 * tempList.remove(p); }
-			 * 
-			 * } System.out.println("temp List After"+tempList); billHeadersListForPrint=new
-			 * ArrayList<>(); billHeadersListForPrint=tempList;
-			 */
 
 			map = new LinkedMultiValueMap<String, Object>();
 
@@ -1368,35 +1085,8 @@ public class BillController {
 			// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 			billHeadersListForPrint = responseEntity2.getBody();
 
-			System.out.println("in new BHLFP" + billHeadersListForPrint.toString());
-			/*
-			 * List<FrBillHeaderForPrint> temHeaderList=billHeadersListForPrint;
-			 * 
-			 * System.out.println("length of bil String "+selectedBills.length); for(int
-			 * k=0;k<selectedBills.length;k++) { System.out.println("Inside for Loop 1 ");
-			 * 
-			 * for(int y=0;y<temHeaderList.size();y++) {
-			 * System.out.println("Inside for Loop 2 ");
-			 * 
-			 * 
-			 * int bNo=Integer.valueOf(selectedBills[k]);
-			 * 
-			 * System.out.println("bill No "+bNo);
-			 * if(temHeaderList.get(y).getBillNo()==bNo){
-			 * 
-			 * System.out.println("Inside If Loop ");
-			 * 
-			 * System.out.println("billHeader print removing bill"+temHeaderList.get(k));
-			 * billHeadersListForPrint.remove(y);
-			 * 
-			 * } } }
-			 */
-
 			billDetailsListForPrint = new ArrayList<GetBillDetailPrint>();
 			billDetailsListForPrint = billDetailsResponse;
-			System.out.println(" *** get Bill detail for Print response :: " + billDetailsListForPrint.toString());
-
-			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
 
 			FrBillPrint billPrint;
 			for (int i = 0; i < billHeadersListForPrint.size(); i++) {
@@ -1405,13 +1095,8 @@ public class BillController {
 				List<GetBillDetailPrint> billDetails = new ArrayList<>();
 
 				for (int j = 0; j < billDetailsListForPrint.size(); j++) {
-					System.out.println("Inside inner for " + j);
-					System.out.println("Header bill no  " + billHeadersListForPrint.get(i).getBillNo());
-					System.out.println("detail bill no " + billDetailsListForPrint.get(j).getBillNo());
 
 					if (billHeadersListForPrint.get(i).getBillNo().equals(billDetailsListForPrint.get(j).getBillNo())) {
-
-						System.out.println("Inside If  Bill no  = " + billHeadersListForPrint.get(i).getBillNo());
 
 						billPrint.setBillNo(billHeadersListForPrint.get(i).getBillNo());
 						billPrint.setFrAddress(billHeadersListForPrint.get(i).getFrAddress());
@@ -1420,10 +1105,7 @@ public class BillController {
 						billPrint.setInvoiceNo(billHeadersListForPrint.get(i).getInvoiceNo());
 						billPrint.setIsSameState(billHeadersListForPrint.get(i).getIsSameState());
 						billPrint.setBillDate(billHeadersListForPrint.get(i).getBillDate());
-
 						billDetails.add(billDetailsListForPrint.get(j));
-
-						// FrBillTax billTax=new FrBillTax(); not used
 
 					} // end of if
 
@@ -1436,15 +1118,12 @@ public class BillController {
 
 			}
 
-			System.out.println(" after adding detail List : bill Print List " + billPrintList.toString());
 			model.addObject("billDetails", billPrintList);
-			// HttpSession ses= request.getSession();
-			// ses.setAttribute("billDetails", billPrintList);
+		
 			model.addObject("vehicleNo", vehicleNo);
 			model.addObject("transportMode", transportMode);
 			model.addObject("selectedBills", billList);
 		} catch (Exception e) {
-			System.out.println("Exce in getting bill Detail for Print " + e.getMessage());
 			e.printStackTrace();
 
 		}
@@ -1458,8 +1137,7 @@ public class BillController {
 		ModelAndView model = new ModelAndView("billing/billDetailPdf");
 		billPrintList = new ArrayList<>();
 		String billList = new String();
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
+
 		try {
 
 			vehicleNo = request.getParameter("vehicle_no");
@@ -1490,7 +1168,6 @@ public class BillController {
 			};
 			ResponseEntity<List<GetBillDetailPrint>> responseEntity = restTemplate.exchange(
 					Constants.url + "getBillDetailsForPrint", HttpMethod.POST, new HttpEntity<>(map), typeRef);
-			// List<GetBillDetailPrint> billDetailsResponse =new ArrayList<>();
 
 			List<GetBillDetailPrint> billDetailsResponse = responseEntity.getBody();
 
@@ -1499,49 +1176,6 @@ public class BillController {
 			System.out.println("selected bills for Printing " + billList);
 			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
 			billHeadersListForPrint = new ArrayList<>();
-
-			// billHeadersListForPrint=getBillListProcessForPrint(request, response);
-			// List<FrBillHeaderForPrint> getBillListProcessForPrint
-
-			/*
-			 * List<String> billing=Arrays.asList(billList);
-			 * 
-			 * for(int a=0;a<billing.size();a++) {
-			 * 
-			 * if(billHeadersListForPrint.get(a).getBillNo()!=Integer.parseInt(billing.get(a
-			 * )) ){
-			 * 
-			 * System.out.println("billHeader print removing bill"+billHeadersListForPrint.
-			 * get(a));
-			 * 
-			 * billHeadersListForPrint.remove(a);
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
-
-			/*
-			 * List<GetBillDetail> billDetailsResponse =
-			 * restTemplate.postForObject(Constants.url + "getBillDetailsForPrint", map,
-			 * List.class);
-			 * 
-			 * 
-			 */
-			/*
-			 * List<FrBillHeaderForPrint> tempList=new ArrayList<>();
-			 * tempList=billHeadersListForPrint;
-			 * System.out.println("temp List Before"+tempList); for(int
-			 * p=0;p<selectedBills.length;p++) { System.out.println("selected Bill List "+p
-			 * +""+selectedBills[p]);
-			 * if(Integer.parseInt(selectedBills[p])==billHeadersListForPrint.get(p).
-			 * getBillNo()) {
-			 * 
-			 * tempList.remove(p); }
-			 * 
-			 * } System.out.println("temp List After"+tempList); billHeadersListForPrint=new
-			 * ArrayList<>(); billHeadersListForPrint=tempList;
-			 */
 
 			map = new LinkedMultiValueMap<String, Object>();
 
@@ -1553,32 +1187,10 @@ public class BillController {
 					Constants.url + "getFrBillHeaderForPrintSelectedBill", HttpMethod.POST, new HttpEntity<>(map),
 					typeRef2);
 			billHeadersListForPrint = new ArrayList<>();
-			// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 			billHeadersListForPrint = responseEntity2.getBody();
 
 			System.out.println("in new BHLFP" + billHeadersListForPrint.toString());
-			/*
-			 * List<FrBillHeaderForPrint> temHeaderList=billHeadersListForPrint;
-			 * 
-			 * System.out.println("length of bil String "+selectedBills.length); for(int
-			 * k=0;k<selectedBills.length;k++) { System.out.println("Inside for Loop 1 ");
-			 * 
-			 * for(int y=0;y<temHeaderList.size();y++) {
-			 * System.out.println("Inside for Loop 2 ");
-			 * 
-			 * 
-			 * int bNo=Integer.valueOf(selectedBills[k]);
-			 * 
-			 * System.out.println("bill No "+bNo);
-			 * if(temHeaderList.get(y).getBillNo()==bNo){
-			 * 
-			 * System.out.println("Inside If Loop ");
-			 * 
-			 * System.out.println("billHeader print removing bill"+temHeaderList.get(k));
-			 * billHeadersListForPrint.remove(y);
-			 * 
-			 * } } }
-			 */
+		
 
 			billDetailsListForPrint = new ArrayList<GetBillDetailPrint>();
 			billDetailsListForPrint = billDetailsResponse;
@@ -1611,8 +1223,6 @@ public class BillController {
 
 						billDetails.add(billDetailsListForPrint.get(j));
 
-						// FrBillTax billTax=new FrBillTax(); not used
-
 					} // end of if
 
 				}
@@ -1623,11 +1233,7 @@ public class BillController {
 					billPrintList.add(billPrint);
 
 			}
-
-			System.out.println(" after adding detail List : bill Print List " + billPrintList.toString());
 			model.addObject("billDetails", billPrintList);
-			// HttpSession ses= request.getSession();
-			// ses.setAttribute("billDetails", billPrintList);
 			model.addObject("vehicleNo", vehicleNo);
 			model.addObject("transportMode", transportMode);
 			model.addObject("selectedBills", billList);
@@ -1647,12 +1253,9 @@ public class BillController {
 		ModelAndView model = new ModelAndView("billing/billDetailPdf");
 		billPrintList = new ArrayList<>();
 		String billList = new String();
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
+	
 		try {
 
-			// vehicleNo = request.getParameter("vehicle_no");
-			// transportMode = request.getParameter("transport_mode");
 			transportMode = transportMode.replaceAll("\\s", "-");
 			System.out.println("Vehicle No " + vehicleNo + "Transport Mode = " + transportMode);
 
@@ -1661,7 +1264,6 @@ public class BillController {
 			RestTemplate restTemplate = new RestTemplate();
 
 			String selectedBill = request.getParameter("select_to_print");
-			// String[] selectedBills = request.getParameterValues("select_to_print");
 
 			for (int i = 0; i < selectedBills.length; i++) {
 				billList = selectedBills[i] + "," + billList;
@@ -1689,85 +1291,15 @@ public class BillController {
 			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
 			billHeadersListForPrint = new ArrayList<>();
 
-			// billHeadersListForPrint=getBillListProcessForPrint(request, response);
-			// List<FrBillHeaderForPrint> getBillListProcessForPrint
-
-			/*
-			 * List<String> billing=Arrays.asList(billList);
-			 * 
-			 * for(int a=0;a<billing.size();a++) {
-			 * 
-			 * if(billHeadersListForPrint.get(a).getBillNo()!=Integer.parseInt(billing.get(a
-			 * )) ){
-			 * 
-			 * System.out.println("billHeader print removing bill"+billHeadersListForPrint.
-			 * get(a));
-			 * 
-			 * billHeadersListForPrint.remove(a);
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
-
-			/*
-			 * List<GetBillDetail> billDetailsResponse =
-			 * restTemplate.postForObject(Constants.url + "getBillDetailsForPrint", map,
-			 * List.class);
-			 * 
-			 * 
-			 */
-			/*
-			 * List<FrBillHeaderForPrint> tempList=new ArrayList<>();
-			 * tempList=billHeadersListForPrint;
-			 * System.out.println("temp List Before"+tempList); for(int
-			 * p=0;p<selectedBills.length;p++) { System.out.println("selected Bill List "+p
-			 * +""+selectedBills[p]);
-			 * if(Integer.parseInt(selectedBills[p])==billHeadersListForPrint.get(p).
-			 * getBillNo()) {
-			 * 
-			 * tempList.remove(p); }
-			 * 
-			 * } System.out.println("temp List After"+tempList); billHeadersListForPrint=new
-			 * ArrayList<>(); billHeadersListForPrint=tempList;
-			 */
-
 			map = new LinkedMultiValueMap<String, Object>();
-
 			map.add("billNoList", billList);
-
 			ParameterizedTypeReference<List<FrBillHeaderForPrint>> typeRef2 = new ParameterizedTypeReference<List<FrBillHeaderForPrint>>() {
 			};
 			ResponseEntity<List<FrBillHeaderForPrint>> responseEntity2 = restTemplate.exchange(
 					Constants.url + "getFrBillHeaderForPrintSelectedBill", HttpMethod.POST, new HttpEntity<>(map),
 					typeRef2);
 			billHeadersListForPrint = new ArrayList<>();
-			// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 			billHeadersListForPrint = responseEntity2.getBody();
-
-			System.out.println("in new BHLFP" + billHeadersListForPrint.toString());
-			/*
-			 * List<FrBillHeaderForPrint> temHeaderList=billHeadersListForPrint;
-			 * 
-			 * System.out.println("length of bil String "+selectedBills.length); for(int
-			 * k=0;k<selectedBills.length;k++) { System.out.println("Inside for Loop 1 ");
-			 * 
-			 * for(int y=0;y<temHeaderList.size();y++) {
-			 * System.out.println("Inside for Loop 2 ");
-			 * 
-			 * 
-			 * int bNo=Integer.valueOf(selectedBills[k]);
-			 * 
-			 * System.out.println("bill No "+bNo);
-			 * if(temHeaderList.get(y).getBillNo()==bNo){
-			 * 
-			 * System.out.println("Inside If Loop ");
-			 * 
-			 * System.out.println("billHeader print removing bill"+temHeaderList.get(k));
-			 * billHeadersListForPrint.remove(y);
-			 * 
-			 * } } }
-			 */
 
 			billDetailsListForPrint = new ArrayList<GetBillDetailPrint>();
 			billDetailsListForPrint = billDetailsResponse;
@@ -1797,16 +1329,12 @@ public class BillController {
 						billPrint.setInvoiceNo(billHeadersListForPrint.get(i).getInvoiceNo());
 						billPrint.setIsSameState(billHeadersListForPrint.get(i).getIsSameState());
 						billPrint.setBillDate(billHeadersListForPrint.get(i).getBillDate());
-
 						billDetails.add(billDetailsListForPrint.get(j));
-
-						// FrBillTax billTax=new FrBillTax(); not used
 
 					} // end of if
 
 				}
 				billPrint.setBillDetailsList(billDetails);
-				// billPrintList=new ArrayList<>();
 
 				if (billPrint != null)
 					billPrintList.add(billPrint);
@@ -1815,8 +1343,6 @@ public class BillController {
 
 			System.out.println(" after adding detail List : bill Print List " + billPrintList.toString());
 			model.addObject("billDetails", billPrintList);
-			// HttpSession ses= request.getSession();
-			// ses.setAttribute("billDetails", billPrintList);
 			model.addObject("vehicleNo", vehicleNo);
 			model.addObject("transportMode", transportMode);
 			model.addObject("selectedBills", billList);
@@ -1838,36 +1364,21 @@ public class BillController {
 		billPrintList = new ArrayList<>();
 
 		try {
-
-			// vehicleNo=request.getParameter("vehicle_no");
-			// transportMode=request.getParameter("transport_mode");
-
-			System.out.println("Vehicle No " + vehicleNo + "Transport Mode = " + transportMode);
-
-			System.out.println("Inside new form action ");
-
 			RestTemplate restTemplate = new RestTemplate();
-
-			// String[] selectedBills=request.getParameterValues("select_to_print");
 			String billList = new String();
 
 			for (int i = 0; i < selectedBills.length; i++) {
 				billList = selectedBills[i] + "," + billList;
 			}
-
 			billList = billList.substring(0, billList.length() - 1);
 
-			System.out.println("selected bills for Printing " + billList);
-
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-
 			map.add("billNoList", billList);
 
 			ParameterizedTypeReference<List<GetBillDetailPrint>> typeRef = new ParameterizedTypeReference<List<GetBillDetailPrint>>() {
 			};
 			ResponseEntity<List<GetBillDetailPrint>> responseEntity = restTemplate.exchange(
 					Constants.url + "getBillDetailsForPrint", HttpMethod.POST, new HttpEntity<>(map), typeRef);
-			// List<GetBillDetailPrint> billDetailsResponse =new ArrayList<>();
 
 			List<GetBillDetailPrint> billDetailsResponse = responseEntity.getBody();
 
@@ -1892,49 +1403,6 @@ public class BillController {
 			System.out.println("Size Here Now  " + billHeadersListForPrint.size());
 			billHeadersListForPrint = new ArrayList<>();
 
-			// billHeadersListForPrint=getBillListProcessForPrint(request, response);
-			// List<FrBillHeaderForPrint> getBillListProcessForPrint
-
-			/*
-			 * List<String> billing=Arrays.asList(billList);
-			 * 
-			 * for(int a=0;a<billing.size();a++) {
-			 * 
-			 * if(billHeadersListForPrint.get(a).getBillNo()!=Integer.parseInt(billing.get(a
-			 * )) ){
-			 * 
-			 * System.out.println("billHeader print removing bill"+billHeadersListForPrint.
-			 * get(a));
-			 * 
-			 * billHeadersListForPrint.remove(a);
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
-
-			/*
-			 * List<GetBillDetail> billDetailsResponse =
-			 * restTemplate.postForObject(Constants.url + "getBillDetailsForPrint", map,
-			 * List.class);
-			 * 
-			 * 
-			 */
-			/*
-			 * List<FrBillHeaderForPrint> tempList=new ArrayList<>();
-			 * tempList=billHeadersListForPrint;
-			 * System.out.println("temp List Before"+tempList); for(int
-			 * p=0;p<selectedBills.length;p++) { System.out.println("selected Bill List "+p
-			 * +""+selectedBills[p]);
-			 * if(Integer.parseInt(selectedBills[p])==billHeadersListForPrint.get(p).
-			 * getBillNo()) {
-			 * 
-			 * tempList.remove(p); }
-			 * 
-			 * } System.out.println("temp List After"+tempList); billHeadersListForPrint=new
-			 * ArrayList<>(); billHeadersListForPrint=tempList;
-			 */
-
 			map = new LinkedMultiValueMap<String, Object>();
 
 			map.add("billNoList", billList);
@@ -1945,32 +1413,7 @@ public class BillController {
 					Constants.url + "getFrBillHeaderForPrintSelectedBill", HttpMethod.POST, new HttpEntity<>(map),
 					typeRef2);
 			billHeadersListForPrint = new ArrayList<>();
-			// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 			billHeadersListForPrint = responseEntity2.getBody();
-
-			System.out.println("in new BHLFP" + billHeadersListForPrint.toString());
-			/*
-			 * List<FrBillHeaderForPrint> temHeaderList=billHeadersListForPrint;
-			 * 
-			 * System.out.println("length of bil String "+selectedBills.length); for(int
-			 * k=0;k<selectedBills.length;k++) { System.out.println("Inside for Loop 1 ");
-			 * 
-			 * for(int y=0;y<temHeaderList.size();y++) {
-			 * System.out.println("Inside for Loop 2 ");
-			 * 
-			 * 
-			 * int bNo=Integer.valueOf(selectedBills[k]);
-			 * 
-			 * System.out.println("bill No "+bNo);
-			 * if(temHeaderList.get(y).getBillNo()==bNo){
-			 * 
-			 * System.out.println("Inside If Loop ");
-			 * 
-			 * System.out.println("billHeader print removing bill"+temHeaderList.get(k));
-			 * billHeadersListForPrint.remove(y);
-			 * 
-			 * } } }
-			 */
 
 			CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
 					CategoryListResponse.class);
@@ -1987,10 +1430,6 @@ public class BillController {
 			subCat.setSubCatId(0);
 			subCat.setDelStatus(0);
 			subCatAList.add(subCat);
-
-			System.out.println("subCatAList:" + subCatAList.toString());
-
-			// List<MCategoryList> filteredCatList=new ArrayList<MCategoryList>();
 
 			billDetailsListForPrint = new ArrayList<GetBillDetailPrint>();
 			billDetailsListForPrint = billDetailsResponse;
@@ -2057,18 +1496,11 @@ public class BillController {
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 
-			System.out.println("time in Gen Bill PDF ==" + dateFormat.format(cal.getTime()));
 			model.addObject("billDetails", billPrintList);
 			model.addObject("slabwiseBillList", slabwiseBillList);
 			model.addObject("vehicleNo", vehicleNo);
 			model.addObject("transportMode", transportMode);
 			model.addObject("dateTime", dateFormat.format(cal.getTime()));
-
-			// allFrIdNameList = new AllFrIdNameList();
-
-			// model.addObject("catList",filteredCatList);
-
-			System.out.println("after Data ");
 
 		} catch (Exception e) {
 
@@ -2087,9 +1519,6 @@ public class BillController {
 	@RequestMapping(value = "/getBillListProcess", method = RequestMethod.GET)
 	public @ResponseBody List<GetBillHeader> getBillListProcess(HttpServletRequest request,
 			HttpServletResponse response) {
-
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
 
 		billHeadersList = new ArrayList<>();
 
@@ -2187,13 +1616,9 @@ public class BillController {
 
 	}
 
-	// new call after submit update Bill Details Page
-
 	@RequestMapping(value = "/getSelectedBillHeader", method = RequestMethod.GET)
 	public @ResponseBody ModelAndView getSelectedBillHeader(HttpServletRequest request, HttpServletResponse response) {
 
-		// Constants.mainAct = 8;
-		// Constants.subAct = 83;
 		ModelAndView model = new ModelAndView("billing/viewbillheader");
 
 		billHeadersList = new ArrayList<>();
@@ -2204,24 +1629,8 @@ public class BillController {
 
 			RestTemplate restTemplate = new RestTemplate();
 
-			/*
-			 * routeId = "0"; frIdString = "";
-			 * 
-			 * System.out.println("inside getBillListProcess ajax call");
-			 * 
-			 * frIdString = request.getParameter("fr_id_list"); fromDate =
-			 * request.getParameter("from_date"); toDate = request.getParameter("to_date");
-			 * routeId = request.getParameter("route_id");
-			 * 
-			 * System.out.println("routeId= " + routeId);
-			 */
 			boolean isAllFrSelected = false;
-			System.out.println("frIdString= " + frIdString);
-
-			/*
-			 * frIdString = frIdString.substring(1, frIdString.length() - 1); frIdString =
-			 * frIdString.replaceAll("\"", "");
-			 */
+			
 			ZoneId z = ZoneId.of("Asia/Calcutta");
 
 			LocalDate date = LocalDate.now(z);
@@ -2351,17 +1760,6 @@ public class BillController {
 			billDetailsList = new ArrayList<GetBillDetail>();
 			billDetailsList = billDetailsResponse.getGetBillDetails();
 
-			System.out.println(" *** get Bill response  " + billDetailsResponse.getGetBillDetails().toString());
-
-			/*
-			 * for (int i = 0; i < billDetailsList.size(); i++) {
-			 * 
-			 * model.addObject("billNo", billDetailsList.get(i).getBillNo());
-			 * model.addObject("billDate", billDetailsList.get(i).getBillDate());
-			 * 
-			 * }
-			 */
-
 			model.addObject("billNo", billDetailsList.get(0).getBillNo());
 			model.addObject("billDate", billDetailsList.get(0).getBillDate());
 			model.addObject("frName", frName);
@@ -2377,12 +1775,12 @@ public class BillController {
 
 	}
 
-	LinkedHashMap<Integer, ArrayList<GetBillDetail>> hashMap = new LinkedHashMap<Integer, ArrayList<GetBillDetail>>();
-
+	FranchiseeAndMenuList franchiseeAndMenuList=null;
 	@RequestMapping(value = "/updateBillDetails/{billNo}/{frName}", method = RequestMethod.GET)
 	public ModelAndView updateBillDetails(@PathVariable int billNo, @PathVariable String frName) {
 
 		ModelAndView model = new ModelAndView("billing/editBillDetails");
+		orderList= new ArrayList<Orders>();
 
 		try {
 
@@ -2397,14 +1795,48 @@ public class BillController {
 
 			billDetailsList = new ArrayList<GetBillDetail>();
 			billDetailsList = billDetailsResponse.getGetBillDetails();
-			hashMap.put(billNo, (ArrayList<GetBillDetail>) billDetailsList);
+			billDetailsListHMap.put(billNo, (ArrayList<GetBillDetail>) billDetailsList);
 			System.out.println(" *** get Bill response  " + billDetailsResponse.getGetBillDetails().toString());
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
 
+			GetBillHeader 	getBillHeader1 = restTemplate.postForObject(Constants.url + "getBillHeaderByBillNo", map,
+					GetBillHeader.class);
+			billHeaderListHMap.put(billNo, getBillHeader1);
+			model.addObject("getBillHeader", getBillHeader1);
+			model.addObject("frList", allFrIdNameList.getFrIdNamesList());
 			model.addObject("frName", frName);
 			model.addObject("billNo", billDetailsList.get(0).getBillNo());
 			model.addObject("billDate", billDetailsList.get(0).getBillDate());
 			model.addObject("billDetails", billDetailsList);
+			List<Menu> confMenuList = new ArrayList<Menu>();
 
+			try {
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("frId", getBillHeader1.getFrId());
+				Integer[] configuredMenuId = restTemplate.postForObject(Constants.url + "getConfiguredMenuId", map,
+						Integer[].class);
+
+				ArrayList<Integer> configuredMenuList = new ArrayList<Integer>(Arrays.asList(configuredMenuId));
+				franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+
+				List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
+
+				for (Menu menu : menuList) {
+					if (menu.getMainCatId() != 5) {
+						for (int i = 0; i < configuredMenuList.size(); i++) {
+							if (menu.getMenuId() == configuredMenuList.get(i)) {
+								confMenuList.add(menu);
+							}
+
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			model.addObject("menuList", confMenuList);
 		} catch (Exception e) {
 
 			System.out.println("exce in showing  Bill update page " + e.getMessage());
@@ -2414,15 +1846,76 @@ public class BillController {
 		return model;
 
 	}
-
+	@RequestMapping(value = "/getItemsByMenuIdForBill", method = RequestMethod.GET)
+	 public @ResponseBody List<CommonConf> getItemsByMenuIdForBill(@RequestParam(value ="menuId", required = true) int menuId) {
+	
+	 RestTemplate restTemplate = new RestTemplate();
+	  
+	  List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
+	  Menu frMenu = new  Menu(); 
+	  for (Menu menu : menuList) { 
+		  if (menu.getMenuId() == menuId) { 
+			  frMenu= menu; 
+			  break; 
+			  }
+		  }
+	  int selectedCatId = frMenu.getMainCatId();
+	
+	  List<SpecialCake> specialCakeList = new ArrayList<SpecialCake>();
+	 
+	  List<CommonConf> commonConfList = new ArrayList<CommonConf>();
+	  
+	  if (selectedCatId == 5) { 
+		/*  SpCakeResponse spCakeResponse=restTemplate.getForObject(Constants.url + "showSpecialCakeList", SpCakeResponse.class);
+	
+	     specialCakeList = spCakeResponse.getSpecialCake();
+	  
+	  for (SpecialCake specialCake : specialCakeList) { 
+		  CommonConf commonConf = new CommonConf(); 
+		  commonConf.setId(specialCake.getSpId());
+	      commonConf.setName(specialCake.getSpCode() + "-" + specialCake.getSpName());
+	      commonConfList.add(commonConf);
+	  }
+		*/
+	  } else {
+		  
+	  MultiValueMap<String, Object> map = new LinkedMultiValueMap<String,  Object>(); 
+	  map.add("itemGrp1", selectedCatId);
+	  
+	  Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class); 
+	  ArrayList<Item> itemList = new  ArrayList<Item>(Arrays.asList(item)); 
+	  
+	  for (Item items : itemList) { 
+		  CommonConf commonConf = new CommonConf();
+		  commonConf.setId(items.getId()); 
+		  commonConf.setName(items.getItemName());
+		  commonConf.setQty(items.getMinQty());
+		  commonConfList.add(commonConf); 
+	  } 
+	  }
+	  
+	  return commonConfList;
+	 }
 	@RequestMapping(value = "/updateBillDetailsProcess", method = RequestMethod.POST)
 	public String updateBillDetailsProcess(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("billing/viewbillheader");
-
-		DecimalFormat df = new DecimalFormat("#.00");
-		try {
+		 
+		 orderList = new ArrayList<Orders>();
+		 DecimalFormat df = new DecimalFormat("#.00");
+	  try {
+			
 			RestTemplate restTemplate = new RestTemplate();
+			int frId = Integer.parseInt(request.getParameter("frId"));
+			String invoiceNo=request.getParameter("invoiceNo");
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
+			map.add("frId", frId);
+
+			FranchiseeList franchiseeList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
+					FranchiseeList.class, frId);
+			
 			PostBillDataCommon postBillDataCommon = new PostBillDataCommon();
 			List<PostBillHeader> postBillHeadersList = new ArrayList<>();
 
@@ -2433,9 +1926,9 @@ public class BillController {
 			PostBillDetail postBillDetail = new PostBillDetail();
 			PostBillHeader postBillHeader = new PostBillHeader();
 
-			int key = Integer.parseInt(request.getParameter("bill_no"));
-			System.err.println("Key " + key);
-			billDetailsList = hashMap.get(key);
+			int billNo = Integer.parseInt(request.getParameter("bill_no"));
+		
+			billDetailsList = billDetailsListHMap.get(billNo);
 			for (int i = 0; i < billDetailsList.size(); i++) {
 
 				Integer newBillQty = Integer
@@ -2447,10 +1940,6 @@ public class BillController {
 				float newCgstPer = Float
 						.parseFloat(request.getParameter("cgstPer" + billDetailsList.get(i).getBillDetailNo()));
 
-				// System.out.println("new bill qty = " + newBillQty);
-				// System.out.println("new BillRate = " + newBillRate);
-				// System.out.println("new SgstPer = " + newSgstPer);
-				// System.out.println("new CgstPer = " + newCgstPer);
 
 				GetBillDetail getBillDetail = billDetailsList.get(i);
 
@@ -2510,44 +1999,28 @@ public class BillController {
 				postBillDetail.setTaxableAmt(Float.valueOf(df.format(taxableAmt)));
 				postBillDetail.setTotalTax(Float.valueOf(df.format(totalTax)));
 				postBillDetail.setGrandTotal(Float.valueOf(df.format(grandTotal)));
-				// System.out.println("base rate " + baseRate);
-				// System.out.println("set rate " + postBillDetail.getRate() + "new rate " +
-				// newBillRate);
-				// System.out.println("set getTaxableAmt " + postBillDetail.getTaxableAmt()+
-				// "new taxableAmt " + taxableAmt);
-				// System.out.println("set sgst " + postBillDetail.getSgstPer() + "new
-				// newSgstPer " + newSgstPer);
-				// System.out.println("set cgst " + postBillDetail.getCgstPer() + "new
-				// newCgstPer " + newCgstPer);
-				//// System.out.println("set grandTotal " + grandTotal);
-
 				postBillDetailsList.add(postBillDetail);
 
 			} // End of for
 
 			for (int j = 0; j < billHeadersList.size(); j++) {
 
-				if (billHeadersList.get(j).getBillNo() == key) {
-					System.err.println("Key matched ");
-
-					DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				if (billHeadersList.get(j).getBillNo() == billNo) {
 					Date billDate = null;
 					try {
-						billDate = formatter.parse(billHeadersList.get(j).getBillDate());
-						System.err.println("Bill Date " + billDate);
+						billDate = formatter.parse(request.getParameter("bill_date"));
 					} catch (ParseException e) {
-						System.out.println("exc in formatting bill Date " + e.getMessage());
+						billDate = formatter.parse(billHeadersList.get(j).getBillDate());
 						e.printStackTrace();
 					}
 					postBillHeader.setBillDate(billDate);
 
 					postBillHeader.setBillNo(billHeadersList.get(j).getBillNo());
-					System.err.println("bill no setted " + postBillHeader.getBillNo());
 					postBillHeader.setDelStatus(0);
-					postBillHeader.setFrCode(billHeadersList.get(j).getFrCode());
-					postBillHeader.setFrId(billHeadersList.get(j).getFrId());
+					postBillHeader.setFrCode(franchiseeList.getFrCode());
+					postBillHeader.setFrId(frId);
 					postBillHeader.setGrandTotal(Float.valueOf(df.format(sumGrandTotal)));
-					postBillHeader.setInvoiceNo(billHeadersList.get(j).getInvoiceNo());
+					postBillHeader.setInvoiceNo(invoiceNo);
 					postBillHeader.setRemark(billHeadersList.get(j).getRemark());
 					postBillHeader.setStatus(billHeadersList.get(j).getStatus());
 					postBillHeader.setTaxableAmt(Float.valueOf(df.format(sumTaxableAmt)));
@@ -2565,25 +2038,14 @@ public class BillController {
 			postBillHeader.setPostBillDetailsList(postBillDetailsList);
 			postBillHeadersList.add(postBillHeader);
 			postBillDataCommon.setPostBillHeadersList(postBillHeadersList);
-
-			System.err.println("PBH " + postBillHeader.toString());
-
 			Info info = restTemplate.postForObject(Constants.url + "updateBillData", postBillDataCommon, Info.class);
 
 		} catch (Exception e) {
-
 			System.out.println("exce in  Bill update " + e.getMessage());
 			e.printStackTrace();
 		}
-		// return "redirect:/showBillList";
-
 		return "redirect:/getSelectedBillHeader";
-		// return model;
-
 	}
-
-	// delete Bill
-
 	@RequestMapping(value = "/deleteBill/{billNo}/{frName}", method = RequestMethod.GET)
 	public String deleteBill(@PathVariable int billNo, @PathVariable String frName) {
 		ModelAndView model = new ModelAndView("billing/viewbillheader");
@@ -2764,81 +2226,46 @@ public class BillController {
 	public void showPDF(HttpServletRequest request, HttpServletResponse response) {
 
 		String url = request.getParameter("url");
-		System.out.println("URL " + url);
-		// http://monginis.ap-south-1.elasticbeanstalk.com
-		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
 		File f = new File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf");
-		// File f = new
-		// File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
-		// File f = new File("E:\\bill.pdf");
-		System.out.println("I am here " + f.toString());
 		try {
 			isTwice = false;
 			runConverter(Constants.ReportURL + url, f, request, response);
 			System.out.println("Come on lets get ");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-
 			System.out.println("Pdf conversion exception " + e.getMessage());
 		}
 
-		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filename = "ordermemo221.pdf";
-		// String filename = "E:\\bill.pdf";
-		// String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf";
 		String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/Bill.pdf";
-		// String filePath =
-		// "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
-		// String filePath = "E:\\bill.pdf";
-		// construct the complete absolute path of the file
+		
 		String fullPath = appPath + filePath;
 		File downloadFile = new File(filePath);
 		FileInputStream inputStream = null;
 		try {
 			inputStream = new FileInputStream(downloadFile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			// get MIME type of the file
 			String mimeType = context.getMimeType(fullPath);
 			if (mimeType == null) {
-				// set to binary type if MIME mapping not found
 				mimeType = "application/pdf";
 			}
-			System.out.println("MIME type: " + mimeType);
-
-			String headerKey = "Content-Disposition";
-
-			// response.addHeader("Content-Disposition", "attachment;filename=report.pdf");
 			response.setContentType("application/pdf");
-
-			// get output stream of the response
-			OutputStream outStream;
-
-			outStream = response.getOutputStream();
-
+			OutputStream outStream = response.getOutputStream();
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int bytesRead = -1;
-
-			// write bytes read from the input stream into the output stream
-
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				outStream.write(buffer, 0, bytesRead);
 			}
-
 			inputStream.close();
 			outStream.close();
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 	private void runConverter(String urlstring, File output, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
@@ -2855,14 +2282,11 @@ public class BillController {
 
 				PD4PageMark footer = new PD4PageMark();
 				footer.setPageNumberTemplate("page $[page] of $[total]");
-				// footer.setTitleTemplate("This Is A Computer Generated Invoice Does Not
-				// Require Signature");
 				footer.setTitleAlignment(PD4PageMark.CENTER_ALIGN);
 				footer.setPageNumberAlignment(PD4PageMark.RIGHT_ALIGN);
 				footer.setInitialPageNumber(1);
 				footer.setFontSize(8);
 				footer.setAreaHeight(15);
-
 				pd4ml.setPageFooter(footer);
 
 			} catch (Exception e) {
@@ -2879,30 +2303,328 @@ public class BillController {
 			} else {
 				pd4ml.setPageInsets(new Insets(topValue, leftValue, bottomValue, rightValue));
 			}
-
 			pd4ml.setHtmlWidth(userSpaceWidth);
-
 			pd4ml.render(urlstring, fos);
-//			
-//if(!isTwice) {
-//	isTwice=true;
-//			try {
-//				Long no = (Long) pd4ml.getLastRenderInfo(PD4Constants.PD4ML_TOTAL_PAGES);
-//				System.out.println("####### Total Pages " + no);
-//
-//				footer.setHtmlTemplate(
-//						"<table width=\"100%\" border=\"0\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border-top:1px solid #313131;border-right:1px solid #313131;\"><tr><td colspan=\"6\" width=\"50%\" style=\"border-left:1px solid #313131; padding:8px;color:#000; font-size:12px;\"><p style=\"color:#000; font-size:12px; text-align:left;margin:0px;\">After PDF Render: We hereby certify that food mentioned in the Tax Invoice is warranted to be of the nature and quality which it purpose to be. FDA Lic. No: 11515044000208</p></td><td colspan=\"5\" width=\"38%\" rowspan=\"2\" style=\"border-left:1px solid #313131; padding:8px;color:#000;font-size:15px;\">&nbsp;</td></tr><tr><td colspan=\"6\"width=\"50%\"style=\"border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000; font-size:12px;\"><p>Certified that the particulars given above are true and correct.</p>&nbsp;</td></tr><tr><td colspan=\"6\" width=\"50%\"  style=\"border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000; font-size:12px;\"><p><b>Invoice Value in Rs.</b><br></br> ${frDetails.amtInWords}</p>&nbsp;</td><td colspan=\"5\" width=\"38%\" style=\"border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000;font-size:15px;\"><p style=\"color:#000; font-size:11px; text-align:left;margin:0px;\">Continue...</p></td></tr><tr><td colspan=\"6\"  width=\"50%\" style=\"border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000; font-size:11px;\"><p style=\"color:#000; font-size:11px; text-align:left;margin:0px;\">Subject to Aurangabad Jurisdiction &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's Signature</p>"
-//								+ "</td><td  align=\"center\" colspan=\"5\" width=\"38%\" style=\"border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000;font-size:11px;\">Authorised Signature</td></tr></table>");
-//				pd4ml.setPageFooter(footer);
-//				fos = new java.io.FileOutputStream(output);
-//runConverter(urlstring, output, request, response);				
-//
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				e.printStackTrace();
-//			}
-//}
-
 		}
 	}
+	@RequestMapping(value = "/insertItemForBill", method = RequestMethod.GET)
+	public @ResponseBody List<Orders> insertItemForBill(HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+
+			int itemId = Integer.parseInt(request.getParameter("itemId"));
+			int frId = Integer.parseInt(request.getParameter("frId"));
+			int menuId = Integer.parseInt(request.getParameter("menuId"));
+			int qty = Integer.parseInt(request.getParameter("qty"));
+			String billDate=request.getParameter("billDate");
+			
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("id", itemId);
+
+			Item item = restTemplate.postForObject("" + Constants.url + "getItem", map, Item.class);
+
+			map = new LinkedMultiValueMap<String, Object>();
+
+			map.add("frId", frId);
+
+			FranchiseeList franchiseeList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
+					FranchiseeList.class, frId);
+			System.out.println("franchiseeList" + franchiseeList.toString());
+
+			Orders order = new Orders();
+
+			if (franchiseeList.getFrRateCat() == 1) {
+				order.setOrderRate(item.getItemRate1());
+				order.setOrderMrp(item.getItemMrp1());
+			} else if (franchiseeList.getFrRateCat() == 2) {
+				order.setOrderRate(item.getItemRate2());
+				order.setOrderMrp(item.getItemMrp2());
+			} else {
+				order.setOrderRate(item.getItemRate3());
+				order.setOrderMrp(item.getItemMrp3());
+			}
+			int frGrnTwo = franchiseeList.getGrnTwo();
+			System.err.println("frGrnTwo" + frGrnTwo + "item.getGrnTwo()" + item.getGrnTwo());
+			if (item.getGrnTwo() == 1) {
+
+				if (frGrnTwo == 1) {
+
+					order.setGrnType(1);
+
+				} else {
+
+					order.setGrnType(0);
+				}
+			} // end of if
+
+			else {
+				if (item.getGrnTwo() == 2) {
+					order.setGrnType(2);
+
+				} else {
+					order.setGrnType(0);
+				}
+			} // end of else
+			if (menuId == 29 || menuId == 30 || menuId == 42 || menuId == 43 || menuId == 44 || menuId == 47) {
+
+				order.setGrnType(3);
+
+			}
+			// for push grn
+			if (menuId == 48) {
+
+				order.setGrnType(4);
+			}
+
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); 
+			Date date = (Date)formatter.parse(billDate);
+			java.sql.Date sqlCurrDate = new java.sql.Date(date.getTime());
+
+			order.setOrderId(0);
+			order.setItemId(String.valueOf(itemId));
+			order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
+			order.setFrId(frId);
+			order.setDeliveryDate(sqlCurrDate);
+			order.setIsEdit(0);
+			order.setEditQty(qty);
+			order.setIsPositive(1);
+			order.setMenuId(menuId);
+			order.setOrderDate(sqlCurrDate);
+			order.setOrderDatetime("" + sqlCurrDate);
+			order.setUserId(0);
+			order.setOrderQty(qty);
+			order.setOrderStatus(0);
+			order.setOrderType(item.getItemGrp1());
+			order.setOrderSubType(item.getItemGrp2());
+			order.setProductionDate(sqlCurrDate);
+			order.setRefId(itemId);
+
+			orderList.add(order);
+			System.out.println("orderListinserted:" + orderList.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return orderList;
+	}
+	 @RequestMapping(value = "/deleteItemOfBillNewItem", method = RequestMethod.GET)
+	  public @ResponseBody List<Orders> deleteItemOfBillNewItem(HttpServletRequest
+	  request, HttpServletResponse response) { 
+	try {
+	  int index=Integer.parseInt(request.getParameter("key"));
+	  orderList.remove(index);
+	  System.out.println("OrderList :"+orderList.toString()); 
+	  } catch (Exception e)
+	  { 
+		  e.printStackTrace();
+	  } 
+		return orderList;
+	  }
+	 
+	@RequestMapping(value = "/postOrderData", method = RequestMethod.POST)
+	  public @ResponseBody Info generateManualBill(HttpServletRequest request, HttpServletResponse response) {
+		
+		 Info info=null;
+		 GenerateBill[] orderListResponse=null;
+		 RestTemplate  restTemplate = new RestTemplate(); 
+		 PostBillDataCommon postBillDataCommon = new PostBillDataCommon();
+
+	try { 
+	
+       int billHeaderId = Integer.parseInt(request.getParameter("billHeaderId"));
+	  
+	   if(orderList!=null || !orderList.isEmpty()) {
+	  
+		orderListResponse = restTemplate.postForObject(Constants.url + "placeManualOrderNew",orderList, GenerateBill[].class);
+	  
+		List<GenerateBill> tempGenerateBillList = new ArrayList<GenerateBill>(Arrays.asList(orderListResponse));
+		
+	if(orderListResponse.length>0) {
+	
+		List<PostBillHeader> postBillHeadersList = new ArrayList<>();
+		PostBillHeader postBillHeader = new PostBillHeader();
+		List<PostBillDetail> postBillDetailsList = new ArrayList<>();
+		
+		float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0,sumTotalCgst = 0, sumTotalSgst = 0,sumTotalIgst = 0;
+		if(billDetailsListHMap.get(billHeaderId)!=null) {
+			
+	    for(int i=0;i<billDetailsListHMap.get(billHeaderId).size();i++)
+	    {
+	    	sumTaxableAmt = sumTaxableAmt + billDetailsListHMap.get(billHeaderId).get(i).getTaxableAmt();
+	    	sumTotalTax = sumTotalTax + billDetailsListHMap.get(billHeaderId).get(i).getTotalTax();
+			sumGrandTotal = sumGrandTotal + billDetailsListHMap.get(billHeaderId).get(i).getGrandTotal();
+			sumTotalSgst=sumTotalSgst + billDetailsListHMap.get(billHeaderId).get(i).getSgstRs();
+			sumTotalCgst=sumTotalCgst + billDetailsListHMap.get(billHeaderId).get(i).getCgstRs();
+			sumTotalIgst=sumTotalIgst + billDetailsListHMap.get(billHeaderId).get(i).getIgstRs();
+	    }
+		for (int j = 0; j < tempGenerateBillList.size(); j++) {
+
+			GenerateBill gBill = tempGenerateBillList.get(j);
+			PostBillDetail billDetail = new PostBillDetail();
+			String billQty = "" + tempGenerateBillList.get(j).getOrderQty();
+
+			Float orderRate = (float) gBill.getOrderRate();
+			Float tax1 = (float) gBill.getItemTax1();
+			Float tax2 = (float) gBill.getItemTax2();
+			Float tax3 = (float) gBill.getItemTax3();
+			
+			Float baseRate = (orderRate * 100) / (100 + (tax1 + tax2));
+			baseRate = roundUp(baseRate);
+
+			Float taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
+
+			taxableAmt = roundUp(taxableAmt);
+
+			float sgstRs=0;float cgstRs=0;float igstRs=0;float totalTax=0;float discAmt = 0;
+			
+			if (billQty == null || billQty == "") {// new code to handle hidden records
+				billQty = "0";
+			}
+
+			if (gBill.getIsSameState() == 1) {
+				baseRate = (orderRate * 100) / (100 + (tax1 + tax2));
+				taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
+				
+				sgstRs = (taxableAmt * tax1) / 100;
+				cgstRs = (taxableAmt * tax2) / 100;
+
+				igstRs = 0;
+				totalTax = sgstRs + cgstRs;
+
+			}
+
+			else {
+				baseRate = (orderRate * 100) / (100 + (tax3));
+				taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
+				
+				sgstRs = 0;
+				cgstRs = 0;
+				igstRs = (taxableAmt * tax3) / 100;
+				totalTax = igstRs;
+			}
+
+			sgstRs = roundUp(sgstRs);
+			cgstRs = roundUp(cgstRs);
+			igstRs = roundUp(igstRs);
+			totalTax = roundUp(totalTax);
+
+			Float grandTotal = totalTax + taxableAmt;
+			grandTotal = roundUp(grandTotal);
+
+			sumTaxableAmt = sumTaxableAmt + taxableAmt;
+
+			sumTotalTax = sumTotalTax + totalTax;
+
+			sumGrandTotal = sumGrandTotal + grandTotal;
+            billDetail.setBillNo(billHeaderId);
+			billDetail.setOrderId(tempGenerateBillList.get(j).getOrderId());
+			billDetail.setMenuId(gBill.getMenuId());
+			billDetail.setCatId(gBill.getCatId());
+			billDetail.setItemId(gBill.getItemId());
+			billDetail.setOrderQty(gBill.getOrderQty());
+			billDetail.setBillQty(Integer.parseInt(billQty));
+			billDetail.setMrp((float) gBill.getOrderMrp());
+			billDetail.setRateType(gBill.getRateType());
+			billDetail.setRate((float) gBill.getOrderRate());
+			billDetail.setBaseRate(roundUp(baseRate));
+			billDetail.setTaxableAmt(roundUp(taxableAmt));
+			billDetail.setRemark("");
+			billDetail.setSgstPer(tax1);
+			billDetail.setSgstRs(sgstRs);
+			billDetail.setCgstPer(tax2);
+			billDetail.setCgstRs(cgstRs);
+			
+			
+			billDetail.setIgstPer(tax3);
+			billDetail.setIgstRs(igstRs);
+			billDetail.setTotalTax(totalTax);
+			billDetail.setGrandTotal(grandTotal);
+			billDetail.setDelStatus(0);
+			billDetail.setIsGrngvnApplied(0);
+			billDetail.setGrnType(gBill.getGrnType());// newly added
+
+			sumTotalSgst=sumTotalSgst + billDetail.getSgstRs();
+			sumTotalCgst=sumTotalCgst + billDetail.getCgstRs();
+			sumTotalIgst=sumTotalIgst + billDetail.getIgstRs();
+			int itemShelfLife = gBill.getItemShelfLife();
+
+			String deliveryDate = gBill.getDeliveryDate();
+
+			String calculatedDate = incrementDate(deliveryDate, itemShelfLife);
+
+			// inc exp date if these menuId
+			if (gBill.getMenuId() == 84 || gBill.getMenuId() == 87 || gBill.getMenuId() == 88 || gBill.getMenuId() == 89) {
+
+
+				calculatedDate = incrementDate(calculatedDate, 1);
+
+			}
+
+			DateFormat Df = new SimpleDateFormat("dd-MM-yyyy");
+
+			Date expiryDate = null;
+			try {
+				expiryDate = Df.parse(calculatedDate);
+			} catch (ParseException e) {
+
+				e.printStackTrace();
+			}
+
+			billDetail.setExpiryDate(expiryDate);
+			postBillDetailsList.add(billDetail);
+
+		}
+		}
+		
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+		for (int j = 0; j < billHeadersList.size(); j++) {
+
+			if (billHeadersList.get(j).getBillNo() == postBillDetailsList.get(0).getBillNo()) {
+
+				Date billDate = null;
+				try {
+					billDate= formatter.parse(billHeadersList.get(j).getBillDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				postBillHeader.setBillDate(billDate);
+				postBillHeader.setBillNo(billHeadersList.get(j).getBillNo());
+				postBillHeader.setDelStatus(0);
+				postBillHeader.setFrCode(billHeadersList.get(j).getFrCode());
+				postBillHeader.setFrId(billHeadersList.get(j).getFrId());
+				postBillHeader.setGrandTotal(roundUp(sumGrandTotal));
+				postBillHeader.setInvoiceNo(billHeadersList.get(j).getInvoiceNo());
+				postBillHeader.setStatus(billHeadersList.get(j).getStatus());
+				postBillHeader.setTaxableAmt(roundUp(sumTaxableAmt));
+				postBillHeader.setTaxApplicable(billHeadersList.get(j).getTaxApplicable());
+				postBillHeader.setTotalTax(roundUp(sumTotalTax));
+				postBillHeader.setRemark(billHeadersList.get(j).getRemark());
+				postBillHeader.setSgstSum(roundUp(sumTotalSgst));
+				postBillHeader.setCgstSum(roundUp(sumTotalCgst));
+				postBillHeader.setIgstSum(roundUp(sumTotalIgst));
+				postBillHeader.setTime(billHeadersList.get(j).getTime());
+				break;
+			} // end of if
+
+		} // end of for
+
+		postBillHeader.setPostBillDetailsList(postBillDetailsList);
+		postBillHeadersList.add(postBillHeader);
+		postBillDataCommon.setPostBillHeadersList(postBillHeadersList);
+
+		 info = restTemplate.postForObject(Constants.url + "updateBillData", postBillDataCommon, Info.class);
+	  
+	  orderList=new ArrayList<Orders>();
+		}
+	  System.out.println("Place Order Response" + postBillDataCommon.toString());
+	  }
+	  } catch (Exception e) { 
+		  e.printStackTrace(); 
+	  } 
+	  return info;
+	  }
 }

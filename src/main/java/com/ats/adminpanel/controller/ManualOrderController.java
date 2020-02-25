@@ -118,56 +118,57 @@ public class ManualOrderController {
 		return confMenuList;
 	}
 	// ----------------------------------------END--------------------------------------------
-	/*
-	 * @RequestMapping(value = "/getItemsOfMenuId", method = RequestMethod.GET)
-	 * public @ResponseBody List<CommonConf> commonItemById(@RequestParam(value =
-	 * "menuId", required = true) int menuId) {
-	 * 
-	 * System.out.println("menuId " + menuId);
-	 * 
-	 * RestTemplate restTemplate = new RestTemplate();
-	 * 
-	 * List<Menu> menuList = franchiseeAndMenuList.getAllMenu(); Menu frMenu = new
-	 * Menu(); for (Menu menu : menuList) { if (menu.getMenuId() == menuId) { frMenu
-	 * = menu; break; } } int selectedCatId = frMenu.getMainCatId();
-	 * 
-	 * System.out.println("Finding Item List for Selected CatId=" + selectedCatId);
-	 * 
-	 * List<SpecialCake> specialCakeList = new ArrayList<SpecialCake>();
-	 * 
-	 * List<CommonConf> commonConfList = new ArrayList<CommonConf>();
-	 * 
-	 * if (selectedCatId == 5) { SpCakeResponse spCakeResponse =
-	 * restTemplate.getForObject(Constants.url + "showSpecialCakeList",
-	 * SpCakeResponse.class);
-	 * System.out.println("SpCake Controller SpCakeList Response " +
-	 * spCakeResponse.toString());
-	 * 
-	 * specialCakeList = spCakeResponse.getSpecialCake();
-	 * 
-	 * for (SpecialCake specialCake : specialCakeList) { CommonConf commonConf = new
-	 * CommonConf(); commonConf.setId(specialCake.getSpId());
-	 * commonConf.setName(specialCake.getSpCode() + "-" + specialCake.getSpName());
-	 * commonConfList.add(commonConf); System.out.println("spCommonConf" +
-	 * commonConf.toString()); }
-	 * 
-	 * System.out.println("------------------------"); } else {
-	 * MultiValueMap<String, Object> map = new LinkedMultiValueMap<String,
-	 * Object>(); map.add("itemGrp1", selectedCatId);
-	 * 
-	 * Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId",
-	 * map, Item[].class); ArrayList<Item> itemList = new
-	 * ArrayList<Item>(Arrays.asList(item)); System.out.println("Filter Item List "
-	 * + itemList.toString());
-	 * 
-	 * for (Item items : itemList) { CommonConf commonConf = new CommonConf();
-	 * commonConf.setId(items.getId()); commonConf.setName(items.getItemName());
-	 * commonConfList.add(commonConf); System.out.println("itemCommonConf" +
-	 * commonConf.toString()); } System.out.println("------------------------"); }
-	 * 
-	 * return commonConfList; }
-	 */
-
+	
+	/* @RequestMapping(value = "/getItemsOfMenuId", method = RequestMethod.GET)
+	 public @ResponseBody List<CommonConf> commonItemById(@RequestParam(value ="menuId", required = true) int menuId) {
+	
+	     RestTemplate restTemplate = new RestTemplate();
+	  
+	  List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
+	  Menu frMenu = new  Menu(); 
+	  for (Menu menu : menuList) { 
+		  if (menu.getMenuId() == menuId) { 
+			  frMenu= menu; 
+			  break; 
+			  }
+		  }
+	  int selectedCatId = frMenu.getMainCatId();
+	
+	  List<SpecialCake> specialCakeList = new ArrayList<SpecialCake>();
+	 
+	  List<CommonConf> commonConfList = new ArrayList<CommonConf>();
+	  
+	  if (selectedCatId == 5) { 
+		  SpCakeResponse spCakeResponse=restTemplate.getForObject(Constants.url + "showSpecialCakeList", SpCakeResponse.class);
+	
+	     specialCakeList = spCakeResponse.getSpecialCake();
+	  
+	  for (SpecialCake specialCake : specialCakeList) { 
+		  CommonConf commonConf = new CommonConf(); 
+		  commonConf.setId(specialCake.getSpId());
+	      commonConf.setName(specialCake.getSpCode() + "-" + specialCake.getSpName());
+	      commonConfList.add(commonConf);
+	  }
+		
+	  } else {
+		  
+	  MultiValueMap<String, Object> map = new LinkedMultiValueMap<String,
+	  Object>(); map.add("itemGrp1", selectedCatId);
+	  
+	  Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class); 
+	  ArrayList<Item> itemList = new  ArrayList<Item>(Arrays.asList(item)); 
+	  
+	  for (Item items : itemList) { 
+		  CommonConf commonConf = new CommonConf();
+	  commonConf.setId(items.getId()); 
+	  commonConf.setName(items.getItemName());
+	  commonConfList.add(commonConf); 
+	  } 
+	  }
+	  
+	  return commonConfList;
+	 }*/
+	
 	@RequestMapping(value = "/getItemsOfMenuId", method = RequestMethod.GET)
 	public @ResponseBody List<Orders> commonItemById(@RequestParam(value = "menuId", required = true) int menuId,
 			@RequestParam(value = "frId", required = true) int frId) {

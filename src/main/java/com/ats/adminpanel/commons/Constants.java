@@ -3,8 +3,8 @@ package com.ats.adminpanel.commons;
 
 public class Constants {
 
-	public static final String url="http://132.148.148.215:8080/webapi/";
-	 // public static final String url="http://localhost:8091/";
+	//public static final String url="http://132.148.148.215:8080/webapi/";
+	public static final String url="http://localhost:8091/";
 	public static final String SPCAKE_IMAGE_URL = "http://132.148.148.215:8080/uploads/MSPCAKE/";
 	public static final String FR_IMAGE_URL = "http://132.148.148.215:8080/uploads/FR/";
 
