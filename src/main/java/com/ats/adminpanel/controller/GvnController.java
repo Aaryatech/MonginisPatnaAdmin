@@ -2601,43 +2601,27 @@ public class GvnController {
 			for (int j = 0; j < grnIdList.length; j++) {
 
 				int accGvnQty = Integer.parseInt(request.getParameter("acc_gvn_qty" + grnIdList[j]));
+				float baseRate = Float.parseFloat(request.getParameter("baseRate" + grnIdList[j]));
 
 				for (int i = 0; i < gvnAccDetailList.size(); i++) {
 
 					if (gvnAccDetailList.get(i).getGrnGvnId() == Integer.parseInt(grnIdList[j])) {
-
 						// System.out.println("GRN ID MAtched " + grnIdList[i]);
-
 						detail = gvnAccDetailList.get(i);
-
-						float grnRate = 0;
-
-						float total = detail.getBaseRate() * accGvnQty;
-
-						float aprAmt = 0;
+						//float grnRate = 0;float total = detail.getBaseRate() * accGvnQty;float aprAmt = 0;
 						float aprTotalTax;
 						float sgstRs, cgstRs, igstRs;
-
 						float grandTotal;
-
-						//
-
-						float baseRate = detail.getBaseRate();
+						//float baseRate = detail.getBaseRate();//above Taken From JSP
 						float gvnAmt = accGvnQty * baseRate;
-
 						float aprTaxableAmt = baseRate * accGvnQty;
 
 						aprTotalTax = (aprTaxableAmt * (detail.getSgstPer() + detail.getCgstPer())) / 100;
 
 						grandTotal = aprTaxableAmt + aprTotalTax;
-
-						float finalAmt = detail.getItemRate() * accGvnQty;
-
-						float roundUpAmt = finalAmt - grandTotal;
-
+						//float finalAmt = detail.getItemRate() * accGvnQty;
+						//float roundUpAmt = finalAmt - grandTotal;
 						gvnAmt = roundUp(gvnAmt);
-
-						//
 
 						aprTotalTax = ((aprTaxableAmt) * (detail.getSgstPer() + detail.getCgstPer())) / 100;
 

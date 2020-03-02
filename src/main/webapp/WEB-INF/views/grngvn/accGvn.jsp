@@ -110,7 +110,7 @@
 														<th >Item Name</th>
 														<th >GVN Quantity</th>
 														<th >Sell Apr Qty</th>
-
+	                                                   <!--  <th>Base Rate</th> -->
 														<th>Edited Qty</th>
 														<th>Gvn Amt</th>
 														<th >PHOTO 1</th>
@@ -123,19 +123,19 @@
 
 													<c:forEach items="${gvnList}" var="gvnList"
 														varStatus="count">
-
+	
 														<c:choose>
 															<c:when
 																test="${gvnList.aprQtyGate!=gvnList.grnGvnQty or gvnList.aprQtyStore!=gvnList.aprQtyGate}">
 
-																<c:set var="color" value="blue"></c:set>
+																<c:set var="color" value="red"></c:set>
 															</c:when>
 															<c:otherwise>
-																<c:set var="color" value="white"></c:set>
+																<c:set var="color" value="black"></c:set>
 															</c:otherwise>
 														</c:choose>
 
-														<tr bgcolor="${color}">
+														<tr >
 
 
 															<c:choose>
@@ -157,7 +157,7 @@
 																</c:otherwise>
 															</c:choose>
 															<td><c:out value="${count.index+1}" /></td>
-															<td align="left"><c:out value="${gvnList.billNo}" /></td>
+															<td style="color:${color}" align="left"><c:out value="${gvnList.billNo}" /></td>
 															<td align="left"><c:out value="${gvnList.frName}" /></td>
 															<td align="left"><c:out value="${gvnList.itemName}" /></td>
 															<td align="left"><c:out value="${gvnList.grnGvnQty}" />
@@ -183,16 +183,19 @@
 																		<c:set var="qty" value="${gvnList.aprQtyAcc}"></c:set>
 																	</c:otherwise>
 																</c:choose>
+														<input type="hidden" name="baseRate${gvnList.grnGvnId}" 	onkeyup="calcGvn(${gvnList.baseRate},${gvnList.grnGvnId},${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty})" style="width: 70px" class="form-control"  id='baseRate${gvnList.grnGvnId}' value="${gvnList.baseRate}" />
+															
 															<td align="center"><input type="text"
 																name="acc_gvn_qty${gvnList.grnGvnId}"
-																style="width: 50px" class="form-control"
-																onkeyup="calcGvn(${gvnList.baseRate},${gvnList.grnGvnId},
-																	${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty})"
+																style="width: 70px" class="form-control"
+																onkeyup="calcGvn(${gvnList.baseRate},${gvnList.grnGvnId},${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty})"
 																id='acc_gvn_qty${gvnList.grnGvnId}' value="${qty}" /></td>
-
-															<td id='gvnAmt${gvnList.grnGvnId}' align="left"><c:out
-																	value="${gvnList.grnGvnAmt}"></c:out></td>
-
+				
+			         					
+	                                                        <td align="left">
+	                    <input type="text" name="gvnAmt${gvnList.grnGvnId}" 	onkeyup="calcBaseRate(${gvnList.baseRate},${gvnList.grnGvnId},${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty})" style="width: 70px" class="form-control"  id='gvnAmt${gvnList.grnGvnId}' value="${gvnList.grnGvnAmt}" />                                    
+	                          </td>                              
+	                                                        
 															<td><a href="${url}${gvnList.gvnPhotoUpload1}"
 																data-lightbox="image-1">Image 1</a></td>
 
@@ -705,57 +708,56 @@
 	<!-- insertGrnDisAgree -->
 	<script type="text/javascript">
 
-function calcGvn(baseRate,grnId,sgstPer,cgstPer,gvnQty,curQty){
-	
-	
-//alert("HII");
-	
+function calcGvn(baseRatePrev,grnId,sgstPer,cgstPer,gvnQty,curQty){
+	var baseRate=$("#baseRate"+grnId).val();
 	var grandTotal;
 	var aprTotalTax;
 	
 	var aprTaxableAmt;
 	
-	checkQty(grnId,gvnQty,curQty);//Calling another function 
+	checkQty(grnId,gvnQty,curQty);
 
-	
 	var gvnQty=$("#acc_gvn_qty"+grnId).val();
-	//alert(gvnQty);
-	
-	//var gvnAmt=parseFloat(acc_gvn_qty)*parseFloat(baseRate);
-	//alert(gvnAmt);
-	//$("#gvn_amt"+itemId).html(gvnAmt.toFixed(2));
 
-	 var taxableAmt=baseRate*gvnQty;
+	var taxableAmt=baseRate*gvnQty;
 		
-		var totalTax=(taxableAmt*(sgstPer+cgstPer))/100;
+	var totalTax=(taxableAmt*(sgstPer+cgstPer))/100;
 		
-		var grandTotal=taxableAmt+totalTax;	
+	var grandTotal=taxableAmt+totalTax;	
 		
-		
-		document.getElementById('gvnAmt'+grnId).innerText=grandTotal.toFixed(2);
+	document.getElementById('gvnAmt'+grnId).value=grandTotal.toFixed(2);
 
 }
 
 </script>
+<script type="text/javascript">
 
-	<script type="text/javascript">
+function calcBaseRate(baseRatePrev,grnId,sgstPer,cgstPer,gvnQty,curQty){
+	
+	var gvnAmt=$("#gvnAmt"+grnId).val();
+	var gvnQty=$("#acc_gvn_qty"+grnId).val();
+	var baseRate=(gvnAmt*100)/(100+(sgstPer+cgstPer));
+	    baseRate=(baseRate/gvnQty);
 
+	document.getElementById('baseRate'+grnId).value=baseRate.toFixed(2);
+
+}
+
+</script>
+<script type="text/javascript">
 
 function insertGrnDisAgree(grnGvnId){
-//alert("second function called ");
 var grnId=grnGvnId;
 var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
 var acc_remark=$("#acc_remark"+grnId).val();
 var acc_gvn_qty=$("#acc_gvn_qty"+grnGvnId).val();
 var headerId=$("#headerId").val();
 
-
 if($("#acc_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
 	
 }
 else{
-	
 	
 	$.getJSON('${insertAccGvnProcessDisAgree}',
 			{
@@ -767,20 +769,9 @@ else{
 			headerId : headerId,
 				ajax : 'true',
 			
-
-			}
+   }
 );
-
-
-	
-
-
-
-
 callRefreshDisAgree();
-/* callSecondRefresh();
-callThirdRefresh();
-callfourthRefresh(); */
 }
 }
 
@@ -789,80 +780,45 @@ callfourthRefresh(); */
 
 	<script type="text/javascript">
 function callRefreshDisAgree(){
-	
 		alert("DisApproved Successfully");
 		window.location.reload();
-	//document.getElementById("validation-form").reload();
 	}
 
 </script>
-
-
-
-	<!-- insertGrnDisAgree -->
-
-
-	<!-- insertGrnAgree -->
-
-	<script type="text/javascript">
-
+<script type="text/javascript">
 
 function insertGrnCall(grnGvnId){
-//alert("second function called ");
 var grnId=grnGvnId;
 var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
 var acc_remark=$("#acc_remark"+grnGvnId).val();
 var acc_gvn_qty=$("#acc_gvn_qty"+grnGvnId).val();
 var headerId=$("#headerId").val();
 
-
-/* alert(grnId);
-alert(approve_gate_login); */
-
-	
-
 	$.getJSON('${insertAccGvnProcessAgree}',
 							{
-							
 							grnId : grnId,
 							approveAccLogin:approve_acc_login,
 							acc_gvn_qty : acc_gvn_qty,
 							headerId : headerId,
-								
-								ajax : 'true',
+							ajax : 'true',
 							
 	 complete: function() {
-	       //alert("ajax completed");
 	       
  	  }
 }
 );
 
 callRefresh();
-/* callSecondRefresh();
-callThirdRefresh();
-callfourthRefresh(); */
 }
-
-
 </script>
-
-	<script type="text/javascript">
+<script type="text/javascript">
 function callRefresh(){
 	alert("Approved Successfully");
 		window.location.reload();
-	//document.getElementById("validation-form").reload();
 	}
 
 </script>
-
-
-
-
-	<!-- insertGrnAgree -->
-
-
-	<script>
+<script>
 var acc = document.getElementsByClassName("accordion");
 var i;
 
@@ -878,20 +834,11 @@ for (i = 0; i < acc.length; i++) {
   }
 }
 </script>
-
-
-	<script type="text/javascript">
-
+<script type="text/javascript">
 function showGateGvnDetails(){
-	
-	//alert("hi");
 		var fromDate=$("#from_date").val();
-	
 		var toDate=$("#to_date").val();
-		
-		alert(fromDate);
-		alert(toDate);
-		
+				
 		$.getJSON('${showGateGvnDetails}',
 				{
 				
@@ -902,55 +849,35 @@ function showGateGvnDetails(){
 				
 				});
 
-
 }
 
 </script>
-
-
-
-	<script type="text/javascript">
+<script type="text/javascript">
 
 function getDate(){
-	
-	
 	var fromDate=$("#from_date").val();
 	var toDate=$("#to_date").val();
-	
-	
-	
-	
+		
 	$.getJSON('${getDateForGvnAcc}',
 			{
-			
 			fromDate : fromDate,
 			toDate:toDate,
-				
-				ajax : 'true',
+			ajax : 'true',
 
 }
 );
-
-	
 }
-
-
 </script>
-
-	<script>
+<script>
 	$(document).ready(function(){
-	    //Handles menu drop down
 	    $('.dropdown-menu').find('.form').click(function (e) {
 	        e.stopPropagation();
 	    });
 	});
 </script>
-
-	<script type="text/javascript">
+<script type="text/javascript">
 function checkQty(grnId,gvnQty,qty){
-	//alert("JJJ");
 	var entered=$("#acc_gvn_qty"+grnId).val();
-	//alert("received = " +entered);
 	if(entered>gvnQty){
 		alert("Can not Enter Qty Greater than Gvn Qty ");
 		document.getElementById("acc_gvn_qty"+grnId).value=qty;
@@ -971,13 +898,7 @@ function checkQty(grnId,gvnQty,qty){
 					checkboxes[data[i]].checked = source.checked;
 				}
 			});	
-				
-		/* checkboxes = document.getElementsByName('select_to_agree');
-			
-			for (var i = 0, n = checkboxes.length; i < n; i++) {
-				checkboxes[i].checked = source.checked;
-				
-			} */
+	
 			
 			
 		}
