@@ -274,45 +274,45 @@
 										</div>
 
 
-										<div class="form-group">
+										<div class="form-group" style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">Pastries</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_1" id="kg_1" placeholder="Qty"
 													class="form-control" data-rule-required="true"
-													data-rule-number="true"
+													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group"  style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">1/2 Kg
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_2" id="kg_2" placeholder="Qty"
 													value="" class="form-control" data-rule-required="true"
-													data-rule-number="true"
+													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group"  style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">1 Kg
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_3" id="kg_3" placeholder="Qty"
 													class="form-control" data-rule-required="true"
-													data-rule-number="true"
+													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group"  style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">Above
 												1 Kg Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_4" id="kg_4" placeholder="Qty"
 													class="form-control" data-rule-required="true"
-													data-rule-number="true"
+													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
 										</div>

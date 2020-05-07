@@ -52,6 +52,7 @@ th {
 <h4 align="center">${FACTORYNAME}</h4>
 <p align="center">${FACTORYADDRESS}</p>
 <div align="center"> <h5>Royalty Consolidated Report (Category/Item wise) &nbsp;&nbsp;&nbsp;&nbsp; From &nbsp; ${fromDate}  &nbsp;To &nbsp; ${toDate}</h5></div>
+<div align="center"> <h5>Franchisee :- &nbsp;&nbsp;&nbsp;&nbsp; ${fr}</h5></div>
 <table  align="center" border="1" cellspacing="0" cellpadding="1" 
 		id="table_grid" class="table table-bordered">
 		<thead>

@@ -438,6 +438,41 @@ public class OrderController {
 
 				model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 				model.addObject("franchiseeList", franchiseeList);
+
+				for (int i = 0; i < newModuleList.size(); i++) {
+
+					for (int j = 0; j < newModuleList.get(i).getSubModuleJsonList().size(); j++) {
+
+						if (newModuleList.get(i).getSubModuleJsonList().get(j).getSubModuleMapping()
+								.equals("spCakeOrders")) {
+
+							System.err.println("MAPPING - " + newModuleList.get(i).getSubModuleJsonList().get(j));
+
+							if (newModuleList.get(i).getSubModuleJsonList().get(j).getAddApproveConfig().equalsIgnoreCase("visible")) {
+								model.addObject("addAccess", 1);
+							} else {
+								model.addObject("addAccess", 0);
+							}
+
+							if (newModuleList.get(i).getSubModuleJsonList().get(j).getEditReject().equalsIgnoreCase("visible")) {
+								model.addObject("editAccess", 1);
+							} else {
+								model.addObject("editAccess", 0);
+							}
+
+							if (newModuleList.get(i).getSubModuleJsonList().get(j).getDeleteRejectApprove()
+									.equalsIgnoreCase("visible")) {
+								model.addObject("deleteAccess", 1);
+							} else {
+								model.addObject("deleteAccess", 0);
+							}
+
+							break;
+
+						}
+					}
+				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1105,7 +1140,8 @@ public class OrderController {
 			orderId.append(Integer.toString(spCakeOrderList.get(i).getSpOrderNo()) + ",");
 		}
 
-		orderId.setLength(orderId.length() - 1);System.err.println("orderId" + orderId.toString());
+		orderId.setLength(orderId.length() - 1);
+		System.err.println("orderId" + orderId.toString());
 		map.add("spOrderNo", orderId);
 		List<GetSpCkOrder> orderListResponse = restTemp.postForObject(Constants.url + "getSpCKOrderBySpOrderNo", map,
 				List.class);

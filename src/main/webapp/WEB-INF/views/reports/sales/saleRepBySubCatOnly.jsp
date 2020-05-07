@@ -8,8 +8,10 @@
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
-	<c:url var="getBillList" value="/getSaleBillwise"></c:url>
+	<c:url var="getBillList" value="/getSubCatReport"></c:url>
 	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
+	<c:url var="getGroup2ByCatId" value="/getSubCatByCatIdForReport"></c:url>
+
 
 
 
@@ -33,7 +35,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Bill-wise Report
+					<i class="fa fa-file-o"></i> Sub Category-wise Report
 				</h1>
 				<h4></h4>
 			</div>
@@ -55,7 +57,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Bill-wise Sale Report
+					<i class="fa fa-bars"></i>Sub Category-wise Report
 				</h3>
 
 			</div>
@@ -71,89 +73,24 @@
 								name="fromDate" size="30" type="text" value="${todaysDate}" />
 						</div>
 
-						<!-- </div>
-
-					<div class="form-group  "> -->
-
 						<label class="col-sm-3 col-lg-2	 control-label">To Date</label>
 						<div class="col-sm-6 col-lg-4 controls date_select">
 							<input class="form-control date-picker" id="toDate" name="toDate"
 								size="30" type="text" value="${todaysDate}" />
 						</div>
 					</div>
-
 				</div>
-
-
-				<br>
-
-				<!-- <div class="col-sm-9 col-lg-5 controls">
- -->
+				<br> <br>
 				<div class="row">
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2 control-label">Select
-							Route</label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<select data-placeholder="Select Route"
-								class="form-control chosen" name="selectRoute" id="selectRoute"
-								onchange="disableFr()">
-								<option value="0">Select Route</option>
-								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out
-											value="${route.routeName}" />
-									</option>
 
-								</c:forEach>
-							</select>
-
-						</div>
-
-						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b>Select
-							Franchisee</label>
-						<div class="col-sm-6 col-lg-4">
-
-							<select data-placeholder="Choose Franchisee"
-								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectFr" name="selectFr" onchange="disableRoute()">
-
-								<option value="-1"><c:out value="All" /></option>
-
-								<c:forEach items="${unSelectedFrList}" var="fr"
-									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
-								</c:forEach>
-							</select>
-
-						</div>
-					</div>
-				</div>
-
-				<br>
-				<div class="row">
-					<div class="col-md-2">Select Category</div>
-					<div class="col-md-4" style="text-align: left;">
-						<select data-placeholder="Select Group"
-							class="form-control chosen" name="item_grp1" tabindex="-1"
-							id="item_grp1" data-rule-required="true"
-							onchange="setCatOptions(this.value)" multiple="multiple">
-							<option value="-1">Select All</option>
-
-							<c:forEach items="${mCategoryList}" var="mCategoryList">
-								<option value="${mCategoryList.catId}"><c:out
-										value="${mCategoryList.catName}"></c:out></option>
-							</c:forEach>
-
-
-						</select>
-					</div>
 					<div class="col-md-6" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
-							Billwise Report</button>
+							Report</button>
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button>
 					</div>
 				</div>
-
+				<br>
 
 				<div align="center" id="loader" style="display: none">
 
@@ -168,60 +105,51 @@
 
 			</div>
 		</div>
-
-
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-list-alt"></i>Bill Report
+					<i class="fa fa-list-alt"></i>Sub Category-wise Report
 				</h3>
+			</div>
+			<div class=" box-content">
+				<div class="row">
+					<div class="col-md-12 table-responsive">
+						<table class="table table-bordered table-striped fill-head "
+							style="width: 100%" id="table_grid">
+							<thead style="background-color: #f3b5db;">
+								<tr>
+									<th>Sr.No.</th>
+									<th>Sub Category Name</th>
+									<th>Sold Qty</th>
+									<th>Sold Amt</th>
+									<th>Var Qty</th>
+									<th>Var Amt</th>
+									<th>Ret Qty</th>
+									<th>Ret Amt</th>
+									<th>Net Qty</th>
+									<th>Net Amt</th>
+									<th>Ret Amt %</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group" style="display: none;" id="range">
+
+
+
+						<div class="col-sm-3  controls">
+							<input type="button" id="expExcel" class="btn btn-primary"
+								value="EXPORT TO Excel" onclick="exportToExcel();"
+								disabled="disabled">
+						</div>
+					</div>
+				</div>
 
 			</div>
 
-			<form id="submitBillForm"
-				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post">
-				<div class=" box-content">
-					<div class="row">
-						<div class="col-md-12 table-responsive">
-							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead style="background-color: #f3b5db;">
-									<tr>
-										<th>Sr.No.</th>
-										<th>Bill No</th>
-										<th>Bill Date</th>
-										<th>Party Name</th>
-										<th>City</th>
-										<th>GSTIN</th>
-										<th>Basic Value</th>
-										<th>CGST</th>
-										<th>SGST</th>
-										<th>IGST</th>
-										
-										<th>Total</th>
-
-									</tr>
-								</thead>
-								<tbody>
-
-								</tbody>
-							</table>
-						</div>
-						<div class="form-group" style="display: none;" id="range">
-
-
-
-							<div class="col-sm-3  controls">
-								<input type="button" id="expExcel" class="btn btn-primary"
-									value="EXPORT TO Excel" onclick="exportToExcel();"
-									disabled="disabled">
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</form>
 		</div>
 	</div>
 	<!-- END Main Content -->
@@ -233,57 +161,27 @@
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
 
-	<script type="text/javascript">
-		function setCatOptions(catId) {
-			if (catId == -1) {
-				$.getJSON('${getAllCatByAjax}', {
-					ajax : 'true'
-				}, function(data) {
-					var len = data.length;
-					$('#item_grp1').find('option').remove().end()
 
-					$("#item_grp1").append(
-							$("<option ></option>").attr("value", -1).text(
-									"Select All"));
-
-					for (var i = 0; i < len; i++) {
-
-						$("#item_grp1").append(
-								$("<option selected></option>").attr("value",
-										data[i].catId).text(data[i].catName));
-					}
-
-					$("#item_grp1").trigger("chosen:updated");
-				});
-			}
-		}
-	</script>
 
 	<script type="text/javascript">
 		function searchReport() {
 			//	var isValid = validate();
-
-			var selectedFr = $("#selectFr").val();
-			var selectedCat = $("#item_grp1").val();
-
-			var routeId = $("#selectRoute").val();
-
 			var from_date = $("#fromDate").val();
 			var to_date = $("#toDate").val();
-
 			$('#loader').show();
 
 			$.getJSON('${getBillList}',
 
 			{
-				fr_id_list : JSON.stringify(selectedFr),
-				cat_id_list : JSON.stringify(selectedCat),
+
 				fromDate : from_date,
 				toDate : to_date,
-				route_id : routeId,
+
 				ajax : 'true'
 
 			}, function(data) {
+
+				//alert(data);
 
 				$('#table_grid td').remove();
 				$('#loader').hide();
@@ -293,20 +191,27 @@
 					document.getElementById("expExcel").disabled = true;
 				}
 
-				var totalIgst = 0;
-				var totalSgst = 0;
-				var totalCgst = 0;
-				var totalBasicValue = 0;
-				var totalRoundOff = 0;
-				var totalFinal = 0;
+				var totalSoldQty = 0;
+				var totalSoldAmt = 0;
+				var totalVarQty = 0;
+				var totalVarAmt = 0;
+				var totalRetQty = 0;
+				var totalRetAmt = 0;
+				var totalNetQty = 0;
+				var totalNetAmt = 0;
+				var retAmtPer = 0;
 
 				$.each(data, function(key, report) {
 
-					totalIgst = totalIgst + report.igstSum;
-					totalSgst = totalSgst + report.sgstSum;
-					totalCgst = totalCgst + report.cgstSum;
-					totalBasicValue = totalBasicValue + report.taxableAmt;
-					totalRoundOff = totalRoundOff + report.roundOff;
+					totalSoldQty = totalSoldQty + report.soldQty;
+					totalSoldAmt = totalSoldAmt + report.soldAmt;
+					totalVarQty = totalVarQty + report.varQty;
+					totalVarAmt = totalVarAmt + report.varAmt;
+					totalRetQty = totalRetQty + report.retQty;
+					totalRetAmt = totalRetAmt + report.retAmt;
+					totalNetQty = totalNetQty + report.netQty;
+					totalNetAmt = totalNetAmt + report.netAmt;
+					retAmtPer = retAmtPer + report.retAmtPer;
 
 					document.getElementById("expExcel").disabled = false;
 					document.getElementById('range').style.display = 'block';
@@ -317,53 +222,32 @@
 
 					tr.append($('<td></td>').html(key + 1));
 
-					tr.append($('<td></td>').html(report.invoiceNo));
-
-					tr.append($('<td></td>').html(report.billDate));
-
-					tr.append($('<td></td>').html(report.frName));
-
-					tr.append($('<td></td>').html(report.frCity));
-
-					tr.append($('<td></td>').html(report.frGstNo));
+					tr.append($('<td></td>').html(report.subCatName));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.taxableAmt.toFixed(2)));
-
-					 if (report.isSameState == 1) {
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.cgstSum.toFixed(2)));
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.sgstSum.toFixed(2)));
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(0));
-					} else {
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(0));
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(0));
-						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.igstSum.toFixed(2)));
-					} 
-					
-					
-					
-					//tr.append($('<td></td>').html(report.igstSum));
-					
-					var total;
-
-					if (report.isSameState == 1) {
-						total = parseFloat(report.taxableAmt)
-								+ parseFloat(report.cgstSum + report.sgstSum);
-					} else {
-
-						total = report.taxableAmt + report.igstSum;
-					}
-
-					totalFinal = totalFinal + total;
+							report.soldQty.toFixed(2)));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							total.toFixed(2)));
+							report.soldAmt.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.varQty.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.varAmt.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.retQty.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.retAmt.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.netQty.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.netAmt.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.retAmtPer.toFixed(2)+"%"));
 
 					$('#table_grid tbody').append(tr);
 
@@ -371,24 +255,30 @@
 
 				var tr = $('<tr></tr>');
 
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
-				tr.append($('<td></td>').html(""));
+				tr.append($('<td  ></td>').html(" "));
+
 				tr.append($('<td style="font-weight:bold;"></td>')
 						.html("Total"));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalBasicValue.toFixed(2)));
-				 tr.append($('<td style="text-align:right;"></td>').html(
-						totalCgst.toFixed(2)));
+						totalSoldQty.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSgst.toFixed(2)));
+						totalSoldAmt.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalIgst.toFixed(2)));
-				 
+						totalVarQty.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalFinal.toFixed(2)));
+						totalVarAmt.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalRetQty.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalRetAmt.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalNetQty.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalNetAmt.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						retAmtPer.toFixed(2)+"%"));
 
 				$('#table_grid tbody').append(tr);
 
@@ -451,25 +341,17 @@
 		});
 
 		function genPdf() {
-			var from_date = $("#fromDate").val();
-			var to_date = $("#toDate").val();
-			var selectedFr = $("#selectFr").val();
-			var routeId = $("#selectRoute").val();
-			var selectedCat = $("#item_grp1").val();
+			var fromDate = $("#fromDate").val();
+			var toDate = $("#toDate").val();
 
 			window
-					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportByDatePdf/'
-							+ from_date
-							+ '/'
-							+ to_date
-							+ '/'
-							+ selectedFr
-							+ '/' + routeId + '/' + selectedCat + '/');
-
-			//window.open("${pageContext.request.contextPath}/pdfForReport?url=showSaleReportByDatePdf/"+from_date+"/"+to_date);
+					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportBySubCatPdf/'
+							+ fromDate + '/' + toDate);
 
 		}
 	</script>
+
+
 
 	<script type="text/javascript">
 		function disableFr() {

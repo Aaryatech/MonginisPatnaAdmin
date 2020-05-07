@@ -535,20 +535,47 @@ table {
 															+ parseFloat(spCakeOrder.spPrice);
 													tr.append($('<td></td>')
 															.html(totalValue));
+													
+													
+													/* var action_button='<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
+														+ spCakeOrder.spOrderNo
+														+ '/'
+														+ (key + 1)
+														+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('
+														+ spCakeOrder.spOrderNo
+														+ '); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
+														+ spCakeOrder.spOrderNo
+														+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'; */
+														
+														var action_button='<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
+															+ spCakeOrder.spOrderNo
+															+ '/'
+															+ (key + 1)
+															+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>';
+													
+													
+													var add='&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('
+														+ spCakeOrder.spOrderNo
+														+ '); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>';
+														
+													var del='&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
+															+ spCakeOrder.spOrderNo
+															+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'
+													
+													
+													if(${addAccess}==1 || ${editAccess}==1){
+														action_button=action_button+add;
+													}
+
+													if(${deleteAccess}==1){
+														action_button=action_button+del;
+													}
+
 
 													tr
 															.append($(
 																	'<td></td>')
-																	.html(
-																			'<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'
-																					+ spCakeOrder.spOrderNo
-																					+ '/'
-																					+ (key + 1)
-																					+ '" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('
-																					+ spCakeOrder.spOrderNo
-																					+ '); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('
-																					+ spCakeOrder.spOrderNo
-																					+ '); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>'));
+																	.html(action_button));
 
 													$('#table1 tbody').append(
 															tr);

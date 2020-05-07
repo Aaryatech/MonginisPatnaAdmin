@@ -244,7 +244,7 @@
 										</div>
 
 
-										<div class="form-group">
+										<div class="form-group" style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">Pastries</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_1" id="kg_1" placeholder="Qty"
@@ -255,7 +255,7 @@
 										</div>
 
 
-										<div class="form-group">
+										<div class="form-group"  style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">1/2 Kg
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -266,7 +266,7 @@
 											</div>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group" style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">1 Kg
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
@@ -277,7 +277,7 @@
 											</div>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group" style="display: none;">
 											<label class="col-sm-3 col-lg-2 control-label">Above
 												1 Kg Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
