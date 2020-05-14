@@ -8,7 +8,7 @@ public class RoyaltyListBean {
 	
 	 List<MCategoryList> categoryList;
 	
-	 List<SalesReportRoyalty> salesReportRoyalty;
+	 List<SalesRoyaltyConsByCat> salesReportRoyalty;
 
 	public List<MCategoryList> getCategoryList() {
 		return categoryList;
@@ -18,11 +18,11 @@ public class RoyaltyListBean {
 		this.categoryList = categoryList;
 	}
 
-	public List<SalesReportRoyalty> getSalesReportRoyalty() {
+	public List<SalesRoyaltyConsByCat> getSalesReportRoyalty() {
 		return salesReportRoyalty;
 	}
 
-	public void setSalesReportRoyalty(List<SalesReportRoyalty> salesReportRoyalty) {
+	public void setSalesReportRoyalty(List<SalesRoyaltyConsByCat> salesReportRoyalty) {
 		this.salesReportRoyalty = salesReportRoyalty;
 	}
 

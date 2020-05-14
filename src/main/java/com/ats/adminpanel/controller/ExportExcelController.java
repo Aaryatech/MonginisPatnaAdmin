@@ -383,7 +383,7 @@ public class ExportExcelController {
 			throws IOException {
 		XSSFWorkbook wb = new XSSFWorkbook();
 		XSSFSheet sheet = wb.createSheet("Sheet1");
-		sheet.createFreezePane(0, 4);
+		sheet.createFreezePane(0, 3);
 
 		CellStyle style = wb.createCellStyle();
 		// style.setFillForegroundColor(IndexedColors.PINK.getIndex());"$A$1:$L$1"
@@ -409,7 +409,7 @@ public class ExportExcelController {
 
 		// titleCell.setAlignment(CellStyle.ALIGN_CENTER);
 
-		searchByCell.setCellValue("Search By.." + searchBy);
+		searchByCell.setCellValue("" + searchBy);
 		searchByCell.setCellStyle(createHeaderStyleHeaderFont(wb, 255, 243, 235, 0));
 		// titleCell.setCellStyle(styles.get("title"));
 		sheet.addMergedRegion(CellRangeAddress.valueOf(mergeUpto2));

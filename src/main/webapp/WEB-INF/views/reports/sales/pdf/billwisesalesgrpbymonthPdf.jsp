@@ -56,8 +56,7 @@ th {
 			From &nbsp; ${fromDate} &nbsp;To &nbsp; ${toDate}</h5>
 	</div>
 	<div align="center">
-		<h5>Franchisee :  &nbsp;&nbsp;&nbsp;&nbsp;
-			${fr}</h5>
+		<h5>Franchisee : &nbsp;&nbsp;&nbsp;&nbsp; ${fr}</h5>
 	</div>
 	<table align="center" border="1" cellspacing="0" cellpadding="1"
 		id="table_grid" class="table table-bordered">
@@ -78,7 +77,7 @@ th {
 				<th>NET Tax Total</th>
 				<th>NET Grand Total</th>
 			</tr> -->
-			
+
 			<tr class="bgpink">
 				<th height="25">Sr.No.</th>
 				<th>Month</th>
@@ -86,9 +85,19 @@ th {
 				<th>GRN Grand Total</th>
 				<th>GVN Grand Total</th>
 				<th>NET Grand Total</th>
+				<th>Contribution %</th>
 			</tr>
 		</thead>
 		<tbody>
+
+
+			<c:set var="totalNetValForContri" value="${0}" />
+			<c:forEach items="${report}" var="report" varStatus="count">
+				<c:set var="totalNetValForContri"
+					value="${totalNetValForContri + report.netGrandTotal}" />
+			</c:forEach>
+
+
 
 			<c:set var="totalGrandTotal" value="${0}" />
 			<c:set var="totalTax" value="${0 }" />
@@ -106,6 +115,10 @@ th {
 			<c:set var="totalNetGrandTotal" value="${0 }" />
 			<c:set var="totalNetTax" value="${0}" />
 			<c:set var="totalNetTaxableAmt" value="${0 }" />
+
+			<c:set var="totalContri" value="${0 }" />
+
+
 			<c:forEach items="${report}" var="report" varStatus="count">
 				<tr>
 
@@ -141,9 +154,15 @@ th {
 						value="${totalNetTaxableAmt + report.netTaxableAmt}" />
 
 
+					<c:set var="contri"
+						value="${(report.netGrandTotal*100)/totalNetValForContri}" />
+
+					<c:set var="totalContri" value="${totalContri+ contri}" />
+
+
 					<td width="10"><c:out value="${count.index+1}" /></td>
 					<td width="100"><c:out value="${report.month}" /></td>
-					
+
 					<%-- <td width="100" align="right"><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.taxableAmt}" /></td>
@@ -155,7 +174,7 @@ th {
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.grandTotal}" /></td>
 
-<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
+					<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.grnTaxableAmt}" /></td>
 
@@ -169,7 +188,7 @@ th {
 							value="${report.grnGrandTotal}" /></td>
 
 
-<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
+					<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.gvnTaxableAmt}" /></td>
 
@@ -186,7 +205,7 @@ th {
 
 
 
-<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
+					<%-- 					<td width="100" align="right"><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.netTaxableAmt}" /></td>
 
@@ -198,6 +217,9 @@ th {
 					<td width="100" align="right"><fmt:formatNumber type="number"
 							maxFractionDigits="2" minFractionDigits="2"
 							value="${report.netGrandTotal}" /></td>
+
+					<td width="100" align="right"><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${contri}" /></td>
 
 
 
@@ -211,7 +233,7 @@ th {
 				<td colspan='2'><b>Total</b></td>
 
 
-<%-- 				<td width="100" align="right"><b><fmt:formatNumber
+				<%-- 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalTaxableAmt}" /></b></td>
 				<td width="100" align="right"><b><fmt:formatNumber
@@ -223,7 +245,7 @@ th {
 
 
 
-<%-- 				<td width="100" align="right"><b><fmt:formatNumber
+				<%-- 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalGrnTaxableAmt}" /></b></td>
 				<td width="100" align="right"><b><fmt:formatNumber
@@ -235,7 +257,7 @@ th {
 
 
 
-<%-- 				<td width="100" align="right"><b><fmt:formatNumber
+				<%-- 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalGvnTaxableAmt}" /></b></td>
 				<td width="100" align="right"><b><fmt:formatNumber
@@ -247,7 +269,7 @@ th {
 
 
 
-<%-- 				<td width="100" align="right"><b><fmt:formatNumber
+				<%-- 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalNetTaxableAmt}" /></b></td>
 				<td width="100" align="right"><b><fmt:formatNumber
@@ -256,6 +278,12 @@ th {
 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalNetGrandTotal}" /></b></td>
+
+				<td width="100" align="right"><b><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${totalContri}" /></b></td>
+
+
 
 			</tr>
 		</tbody>

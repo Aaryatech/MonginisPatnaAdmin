@@ -328,13 +328,13 @@
 					tr.append($('<td></td>').html(report.frGstNo));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.taxableAmt.toFixed(2)));
+							addCommas(report.taxableAmt.toFixed(2))));
 
 					 if (report.isSameState == 1) {
 						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.cgstSum.toFixed(2)));
+								.html(addCommas(report.cgstSum.toFixed(2))));
 						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.sgstSum.toFixed(2)));
+								.html(addCommas(report.sgstSum.toFixed(2))));
 						tr.append($('<td style="text-align:right;"></td>')
 								.html(0));
 					} else {
@@ -343,7 +343,7 @@
 						tr.append($('<td style="text-align:right;"></td>')
 								.html(0));
 						tr.append($('<td style="text-align:right;"></td>')
-								.html(report.igstSum.toFixed(2)));
+								.html(addCommas(report.igstSum.toFixed(2))));
 					} 
 					
 					
@@ -363,7 +363,7 @@
 					totalFinal = totalFinal + total;
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							total.toFixed(2)));
+							addCommas(total.toFixed(2))));
 
 					$('#table_grid tbody').append(tr);
 
@@ -379,16 +379,16 @@
 				tr.append($('<td style="font-weight:bold;"></td>')
 						.html("Total"));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalBasicValue.toFixed(2)));
+						addCommas(totalBasicValue.toFixed(2))));
 				 tr.append($('<td style="text-align:right;"></td>').html(
-						totalCgst.toFixed(2)));
+						 addCommas(totalCgst.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSgst.toFixed(2)));
+						addCommas(totalSgst.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalIgst.toFixed(2)));
+						addCommas(totalIgst.toFixed(2))));
 				 
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalFinal.toFixed(2)));
+						addCommas(totalFinal.toFixed(2))));
 
 				$('#table_grid tbody').append(tr);
 
@@ -498,6 +498,23 @@
 			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
+	</script>
+	
+	<script>
+	 function addCommas(x){
+
+		 x=String(x).toString();
+		  var afterPoint = '';
+		  if(x.indexOf('.') > 0)
+		     afterPoint = x.substring(x.indexOf('.'),x.length);
+		  x = Math.floor(x);
+		  x=x.toString();
+		  var lastThree = x.substring(x.length-3);
+		  var otherNumbers = x.substring(0,x.length-3);
+		  if(otherNumbers != '')
+		      lastThree = ',' + lastThree;
+		  return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
+		 }
 	</script>
 
 	<!--basic scripts-->

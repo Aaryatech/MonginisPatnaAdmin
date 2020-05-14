@@ -110,9 +110,19 @@
 
 						</div>
 
-						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b>&nbsp;Select
+						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b></label>
+						
+					</div>
+				</div>
+				
+				<br>
+				
+				<div class="row">
+					<div class="form-group">
+
+						<label class="col-sm-3 col-lg-2 control-label">Select
 							Franchisee</label>
-						<div class="col-sm-6 col-lg-4">
+						<div class="col-sm-6 col-lg-10">
 
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen" multiple="multiple" tabindex="6"
@@ -189,7 +199,7 @@
 			</div>
 
 
-			<div class=" box-content" id="allTable">
+			<div class=" box-content" id="allTable" style="display: none;">
 				<div class="row">
 					<div class="col-md-12 table-responsive">
 						<table class="table table-bordered table-striped fill-head "
@@ -262,7 +272,7 @@
 
 			</div>
 
-			<div id="totalTable" style="display: none;">
+			<div id="totalTable" >
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
@@ -270,12 +280,12 @@
 								style="width: 100%" id="table_grid2">
 								<thead style="background-color: #f3b5db;">
 									<tr>
-										<th>Sr.No.</th>
-										<th>Date</th>
-										<th>Grand Total</th>
-										<th>GRN Grand Total</th>
-										<th>GVN Grand Total</th>
-										<th>NET Grand Total</th>
+										<th style="text-align: center;">Sr.No.</th>
+										<th style="text-align: center;">Date</th>
+										<th style="text-align: center;">Grand Total</th>
+										<th style="text-align: center;">GRN Grand Total</th>
+										<th style="text-align: center;">GVN Grand Total</th>
+										<th style="text-align: center;">NET Grand Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -895,29 +905,29 @@
 																	.append($(
 																			'<td style="text-align:right;"></td>')
 																			.html(
-																					report.grandTotal
-																							.toFixed(2)));
+																					addCommas(report.grandTotal
+																							.toFixed(2))));
 
 															tr
 																	.append($(
 																			'<td style="text-align:right;"></td>')
 																			.html(
-																					report.grnGrandTotal
-																							.toFixed(2)));
+																					addCommas(report.grnGrandTotal
+																							.toFixed(2))));
 
 															tr
 																	.append($(
 																			'<td style="text-align:right;"></td>')
 																			.html(
-																					report.gvnGrandTotal
-																							.toFixed(2)));
+																					addCommas(report.gvnGrandTotal
+																							.toFixed(2))));
 
 															tr
 																	.append($(
 																			'<td style="text-align:right;"></td>')
 																			.html(
-																					report.netGrandTotal
-																							.toFixed(2)));
+																					addCommas(report.netGrandTotal
+																							.toFixed(2))));
 
 															$(
 																	'#table_grid2 tbody')
@@ -938,29 +948,29 @@
 												.append($(
 														'<td style="text-align:right;"></td>')
 														.html(
-																totalGrandTotal
-																		.toFixed(2)));
+																addCommas(totalGrandTotal
+																		.toFixed(2))));
 
 										tr
 												.append($(
 														'<td style="text-align:right;"></td>')
 														.html(
-																totalGrnGrandTotal
-																		.toFixed(2)));
+																addCommas(totalGrnGrandTotal
+																		.toFixed(2))));
 
 										tr
 												.append($(
 														'<td style="text-align:right;"></td>')
 														.html(
-																totalGvnGrandTotal
-																		.toFixed(2)));
+																addCommas(totalGvnGrandTotal
+																		.toFixed(2))));
 
 										tr
 												.append($(
 														'<td style="text-align:right;"></td>')
 														.html(
-																totalNetGrandTotal
-																		.toFixed(2)));
+																addCommas(totalNetGrandTotal
+																		.toFixed(2))));
 
 										$('#table_grid2 tbody').append(tr);
 
@@ -1263,6 +1273,26 @@
 						.open("${pageContext.request.contextPath}/exportToExcelNew");
 				document.getElementById("expExcel").disabled = true;
 			}
+		</script>
+		
+		
+		<script>
+		
+		function addCommas(x){
+
+			x=String(x).toString();
+			 var afterPoint = '';
+			 if(x.indexOf('.') > 0)
+			    afterPoint = x.substring(x.indexOf('.'),x.length);
+			 x = Math.floor(x);
+			 x=x.toString();
+			 var lastThree = x.substring(x.length-3);
+			 var otherNumbers = x.substring(0,x.length-3);
+			 if(otherNumbers != '')
+			     lastThree = ',' + lastThree;
+			 return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
+			}
+		
 		</script>
 
 		<!--basic scripts-->
