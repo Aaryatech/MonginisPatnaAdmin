@@ -11,6 +11,13 @@
 	<c:url var="getBillList" value="/getSaleBillwise"></c:url>
 	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
 
+	<c:url var="getAllSubCatListForGraph" value="/getAllSubCatListForGraph"></c:url>
+	<c:url var="getSubCatContriReportForGraph"
+		value="/getSubCatContriReportForGraph"></c:url>
+
+
+
+
 
 
 	<!-- BEGIN Sidebar -->
@@ -173,11 +180,11 @@
 											varStatus="cnt">
 											<th style="text-align: right;"><fmt:formatNumber
 													type="number" maxFractionDigits="2" minFractionDigits="2"
-													 value="${report.value.totBillAmt}" /></th>
+													value="${report.value.totBillAmt}" /></th>
 
 
 											<c:choose>
-												<c:when test="${report.value.totBillAmt==0}">
+												<c:when test="${report.value.totBillAmt<=0}">
 													<th style="text-align: right;"><fmt:formatNumber
 															type="number" maxFractionDigits="2" minFractionDigits="2"
 															groupingUsed="false" value="0.00" /></th>
@@ -208,6 +215,30 @@
 				</div>
 
 			</div>
+
+
+
+			<div class="box">
+
+				<div class=" box-content">
+
+					<div class="row">
+						<div style="background: #FFF; padding: 10px;">
+							<div id="lineChart"></div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+
+
+
+
+
+
+
 		</form>
 	</div>
 	<!-- END Main Content -->
@@ -265,6 +296,118 @@
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>
+
+
+	<script type="text/javascript">
+		function drawGraph() {
+
+			google.charts.load('current', {
+				'packages' : [ 'line' ]
+			});
+			google.charts.setOnLoadCallback(drawStuffCat);
+
+			var type = $
+			{
+				type
+			}
+			;
+
+		}
+	</script>
+
+	<script type="text/javascript">
+		function drawStuffCat() {
+
+			var chartDiv = document.getElementById('lineChart');
+
+			var dataTable = new google.visualization.DataTable();
+
+			dataTable.addColumn('string', 'Month'); // Implicit domain column.
+			//dataTable.addColumn('number', 'Sp Cake'); // Implicit data column.
+			//dataTable.addColumn('number', 'Puff'); // Implicit data column.
+			//dataTable.addColumn('number', 'Credit Note');
+			//dataTable.addColumn('number', 'Net');
+
+			$.getJSON('${getAllSubCatListForGraph}', {
+				ajax : 'true'
+			}, function(data) {
+				dataTable.addColumn('number', data.subCatName);
+			});
+
+			//alert("in");
+
+			$.getJSON('${getSubCatContriReportForGraph}', {
+				ajax : 'true'
+			}, function(chartsBardata) {
+
+				alert(JSON.stringify(chartsBardata));
+
+				var len = chartsBardata.length;
+				//alert("LEN - " + len);
+
+			 /*	$.getJSON('${getAllSubCatListForGraph}', {
+					ajax : 'true'
+				}, function(data) {
+					
+			 		$.each(chartsBardata, function(key, chartsBardata) {
+						
+						
+						
+						$.each(chartsBardata.salesReturnQtyValueList, function(key, report) {
+
+							if(data.subCatId==report.subCatId){
+								dataTable.addRows([ [ chartsBardata.month, report.grandTotal] ]);
+							}
+							
+						});
+						
+
+					}); */
+					
+					
+				}); 
+
+				  $.each(chartsBardata, function(key, chartsBardata) {
+					/* dataTable
+							.addRows([ [ chartsBardata.catName,
+							//parseInt(chartsBardata.sale),
+							parseInt(chartsBardata.crn),
+									parseInt(chartsBardata.net) ] ]); */
+
+					dataTable.addRows([ [ chartsBardata.month, 500, 300 ] ]);
+
+				});  
+
+				//alert(11);
+
+				var materialOptions = {
+					width : 1000,
+					height : 800,
+				};
+
+				var materialChart = new google.charts.Line(chartDiv);
+
+				function drawMaterialChart() {
+					materialChart.draw(dataTable, google.charts.Line
+							.convertOptions(materialOptions));
+				}
+
+				drawMaterialChart();
+			});
+
+		}
+	</script>
+
+	<!-- CHARTS -->
+
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+
+	<!-- ------ -->
+
+
+
+
 
 	<!--basic scripts-->
 	<script

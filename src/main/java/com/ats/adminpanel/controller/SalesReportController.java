@@ -5834,6 +5834,10 @@ public class SalesReportController {
 		return model;
 
 	}
+	
+	
+	ArrayList<SubCategory> subCatList=new ArrayList<>();
+	List<SalesReturnValueDaoList> salesReturnValueReportList =new ArrayList<>();
 
 	@RequestMapping(value = "/showMonthlySalesPercentageReport", method = RequestMethod.GET)
 	public ModelAndView showMonthlySalesPercentageReport(HttpServletRequest request, HttpServletResponse response) {
@@ -5861,13 +5865,14 @@ public class SalesReportController {
 				SalesReturnValueDaoList[] salesReturnValueReportListRes = restTemplate.postForObject(
 						Constants.url + "getSalesReturnValueReport", map, SalesReturnValueDaoList[].class);
 
-				List<SalesReturnValueDaoList> salesReturnValueReportList = new ArrayList<SalesReturnValueDaoList>(
+				salesReturnValueReportList = new ArrayList<SalesReturnValueDaoList>(
 						Arrays.asList(salesReturnValueReportListRes));
 
 				SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
 						SubCategory[].class);
 
-				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
+				subCatList.clear();
+				subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
 
 				LinkedHashMap<Integer, SalesReturnValueDaoList> salesReturnValueReport = new LinkedHashMap<>();
 
@@ -5912,6 +5917,7 @@ public class SalesReportController {
 					rowData.add(salesReturnValueReport.get(i).getMonth() + " Total");
 					rowData.add(salesReturnValueReport.get(i).getMonth() + "%");
 				}
+				rowData.add("Total");
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
@@ -5921,6 +5927,9 @@ public class SalesReportController {
 					rowData = new ArrayList<String>();
 					rowData.add("" + (k + 1));
 					rowData.add("" + subCatList.get(k).getSubCatName());
+
+					float horizontalTotal = 0.0f;
+
 					for (int i = 0; i < salesReturnValueReport.size(); i++) {
 						for (int j = 0; j < salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
 
@@ -5932,6 +5941,13 @@ public class SalesReportController {
 										- (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()
 												+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
 														.getGrnQty())));
+
+								horizontalTotal = horizontalTotal
+										+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+												.getGrandTotal()
+										- (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()
+												+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+														.getGrnQty());
 
 								if (salesReturnValueReport.get(i).getTotBillAmt() > 0) {
 									rowData.add("" + roundUp(((salesReturnValueReport.get(i)
@@ -5947,6 +5963,9 @@ public class SalesReportController {
 							}
 						}
 					}
+					
+					rowData.add("" + roundUp(horizontalTotal));
+					
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 				}
@@ -5957,7 +5976,12 @@ public class SalesReportController {
 				rowData.add("Total");
 				for (int i = 0; i < salesReturnValueReport.size(); i++) {
 					rowData.add("" + salesReturnValueReport.get(i).getTotBillAmt());
-					rowData.add("0.00");
+					if(salesReturnValueReport.get(i).getTotBillAmt()>0) {
+						rowData.add("100.00");
+					}else {
+						rowData.add("0.00");	
+					}
+					
 				}
 
 				expoExcel.setRowData(rowData);
@@ -5984,5 +6008,24 @@ public class SalesReportController {
 		return model;
 
 	}
-
+	
+	
+	
+	@RequestMapping(value = "/getAllSubCatListForGraph", method = RequestMethod.GET)
+	public @ResponseBody List<SubCategory> getAllSubCatListForGraph(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		return subCatList;
+	}
+	
+	
+	@RequestMapping(value = "/getSubCatContriReportForGraph", method = RequestMethod.GET)
+	public @ResponseBody List<SalesReturnValueDaoList>   getSubCatContriReportForGraph(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		return salesReturnValueReportList;
+	}
+	
+	
+	
 }
