@@ -86,6 +86,10 @@ th {
 				<th>GVN Grand Total</th>
 				<th>NET Grand Total</th>
 				<th>Contribution %</th>
+				<th>Return % GRN</th>
+				<th>Return % GVN</th>
+				<th>Return % SUM</th>
+
 			</tr>
 		</thead>
 		<tbody>
@@ -222,6 +226,35 @@ th {
 							maxFractionDigits="2" minFractionDigits="2" value="${contri}" /></td>
 
 
+					<c:choose>
+
+						<c:when test="${report.grandTotal>0}">
+							<c:set var="grnRet"
+								value="${(report.grnGrandTotal*100)/report.grandTotal}" />
+							<c:set var="gvnRet"
+								value="${(report.gvnGrandTotal*100)/report.grandTotal}" />
+							<c:set var="sumRet"
+								value="${((report.grnGrandTotal+report.gvnGrandTotal)*100)/report.grandTotal}" />
+						</c:when>
+
+						<c:otherwise>
+
+							<c:set var="grnRet" value="0" />
+							<c:set var="gvnRet" value="0" />
+							<c:set var="sumRet" value="0" />
+
+						</c:otherwise>
+
+					</c:choose>
+
+					<td width="100" align="right"><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${grnRet}" /></td>
+
+					<td width="100" align="right"><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${gvnRet}" /></td>
+
+					<td width="100" align="right"><fmt:formatNumber type="number"
+							maxFractionDigits="2" minFractionDigits="2" value="${sumRet}" /></td>
 
 				</tr>
 
@@ -282,6 +315,29 @@ th {
 				<td width="100" align="right"><b><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${totalContri}" /></b></td>
+
+
+
+				<c:set var="grnRet"
+					value="${(totalGrnGrandTotal*100)/totalGrandTotal}" />
+				<c:set var="gvnRet"
+					value="${(totalGvnGrandTotal*100)/totalGrandTotal}" />
+				<c:set var="sumRet"
+					value="${((totalGrnGrandTotal +totalGvnGrandTotal)*100)/totalGrandTotal}" />
+
+
+				<td width="100" align="right"><b><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${grnRet}" /></b></td>
+
+				<td width="100" align="right"><b><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${gvnRet}" /></b></td>
+
+				<td width="100" align="right"><b><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${sumRet}" /></b></td>
+
 
 
 

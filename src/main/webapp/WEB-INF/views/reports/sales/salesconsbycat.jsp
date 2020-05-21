@@ -241,9 +241,9 @@
 					<div class=" box-content">
 						<div class="row">
 							<div class="col-md-12 table-responsive">
-								<table class="table table-bordered table-striped fill-head "
+								<table class="table-bordered table-striped fill-head "
 									style="width: 100%" id="table_grid">
-									<thead style="background-color: #f3b5db;">
+									<thead style="background-color: #f3b5db; color: white;">
 										<tr>
 											<th>Sr.No.</th>
 											<th>Item Name</th>
@@ -257,6 +257,11 @@
 											<th>Net Value</th>
 											<th>Royalty %</th>
 											<th>Royalty Amt</th>
+											<th>Return % GRN</th>
+											<th>Return % GVN</th>
+											<th>Return % SUM</th>
+											<th>Contribution %</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -297,6 +302,12 @@
 										<th>Net Value</th>
 										<th>Royalty %</th>
 										<th>Royalty Amt</th>
+										<th>Return % GRN</th>
+										<th>Return % GVN</th>
+										<th>Return % SUM</th>
+										<th>Contribution %</th>
+
+
 									</tr>
 								</thead>
 								<tbody>
@@ -384,6 +395,55 @@
 										var finalCatGvnQtyTotal = 0.0;
 										var finalCatGvnValTotal = 0.0;
 										var finalCatGrnValTotal = 0.0;
+										var finalContri = 0.0;
+										
+										
+										var contriTotalNet = 0;
+										$.each(data.salesReportRoyalty, function(key, report) {
+												
+												var billVal=0;
+												var grnVal=0;
+												var gvnVal=0;
+												
+												if(getBy==1){
+													
+													billVal=report.taxableAmt;
+													
+													if(type==1){
+													
+														grnVal=report.grnTaxableAmt;
+														gvnVal=report.gvnTaxableAmt;
+														
+													}else{
+
+														grnVal=report.crnGrnTaxableAmt;
+														gvnVal=report.crnGvnTaxableAmt;
+
+													}
+													
+												}else{
+												
+													billVal=report.grandTotal;
+													
+													if(type==1){
+														
+														grnVal=report.grnGrandTotal;
+														gvnVal=report.gvnGrandTotal;
+														
+													}else{
+
+														grnVal=report.crnGrnGrandTotal;
+														gvnVal=report.crnGvnGrandTotal;
+
+													}
+
+												}
+												
+												var netValue = billVal - (grnVal + gvnVal);
+												
+											contriTotalNet = contriTotalNet
+													+ netValue;
+										});
 										
 										
 
@@ -459,6 +519,31 @@
 																			'<td></td>')
 																			.html(
 																					""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
 															$(
 																	'#table_grid tbody')
 																	.append(tr);
@@ -475,12 +560,17 @@
 															var catGvnValTotal = 0.0;
 															var catGrnValTotal = 0.0;
 															
+															
 															$.each(data.salesReportRoyalty,
 																			function(
 																					key,
 																					report) {
+																
+																
 
-																				if (cat.catId == report.catId) {
+																if (cat.catId == report.catId) {
+																	
+																
 																					
 																					
 																					var billQty=report.billQty;
@@ -535,6 +625,9 @@
 																						gvnQty=report.crnGvnQty;
 
 																					}
+																					
+																					
+																					if(billVal>0 || grnVal>0 || gvnVal>0){
 																					
 																					
 																					//alert("Hi");
@@ -613,6 +706,35 @@
 																									.html(
 																											addCommas(rAmt)));
 																					
+																					
+																					var grnRet=(grnVal*100)/billVal;
+																					var gvnRet=(gvnVal*100)/billVal;
+																					var sumRet=((grnVal+gvnVal)*100)/billVal;
+																					
+																					tr.append($(
+																							'<td  style="text-align:right;"></td>')
+																							.html(grnRet.toFixed(2)));
+
+																					tr.append($(
+																					'<td  style="text-align:right;"></td>')
+																					.html(gvnRet.toFixed(2)));
+
+																					tr.append($(
+																					'<td  style="text-align:right;"></td>')
+																					.html(sumRet.toFixed(2)));
+																					
+																					
+																					var contri = (netValue * 100)/ contriTotalNet;
+																					finalContri = finalContri+ contri;
+																			
+																			
+																					tr.append($(
+																					'<td  style="text-align:right;"></td>')
+																					.html(contri.toFixed(2)));
+																					
+																					
+
+																					
 																					/* CAT TOTAL */
 																					
 																					catNetQtyTotal=parseFloat(catNetQtyTotal)+parseFloat(netQty);
@@ -640,7 +762,7 @@
 																					
 																					$('#table_grid tbody').append(tr);
 																					
-																					
+																					}
 
 																				}//end of if
 
@@ -704,6 +826,37 @@
 																			'<td style="text-align:right;"></td>')
 																			.html(addCommas(catRAmtTotal.toFixed(2)))); 
 															
+															
+															var grnRetCat=(catGrnValTotal*100)/catBillValTotal;
+															var gvnRetCat=(catGvnValTotal*100)/catBillValTotal;
+															var sumRetCat=((catGrnValTotal+catGvnValTotal)*100)/catBillValTotal;
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(grnRetCat.toFixed(2)));
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(gvnRetCat.toFixed(2)));
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(sumRetCat.toFixed(2)));
+															
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(" "));
+															
+															
+															
+														
+															
+															
 															$('#table_grid tbody').append(tr);
 																			
 																			
@@ -766,6 +919,34 @@
 																			'<td style="text-align:right;"></td>')
 																			.html(addCommas(finalCatRAmtTotal.toFixed(2)))); 
 															
+															
+															var grnRetTot=(finalCatGrnValTotal*100)/finalCatBillValTotal;
+															var gvnRetTot=(finalCatGvnValTotal*100)/finalCatBillValTotal;
+															var sumRetTot=((finalCatGrnValTotal+finalCatGvnValTotal)*100)/finalCatBillValTotal;
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(grnRetTot.toFixed(2)));
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(gvnRetTot.toFixed(2)));
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(sumRetTot.toFixed(2)));
+															
+															tr
+															.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(finalContri.toFixed(2)));
+															
+															
+															
+															
 															$('#table_grid tbody').append(tr);
 														
 														/* ----------------------------------------------------------------------- */
@@ -779,6 +960,57 @@
 										var finalGvnQtyTotal = 0.0;
 										var finalGvnTaxableAmtTotal = 0.0;
 										var finalGrnTaxableAmtTotal = 0.0;
+										var finalContriTotal = 0.0;
+										
+										
+
+										var contriTotalNet = 0;
+										$.each(data.salesReportRoyalty, function(key, report) {
+												
+												var billVal=0;
+												var grnVal=0;
+												var gvnVal=0;
+												
+												if(getBy==1){
+													
+													billVal=report.taxableAmt;
+													
+													if(type==1){
+													
+														grnVal=report.grnTaxableAmt;
+														gvnVal=report.gvnTaxableAmt;
+														
+													}else{
+
+														grnVal=report.crnGrnTaxableAmt;
+														gvnVal=report.crnGvnTaxableAmt;
+
+													}
+													
+												}else{
+												
+													billVal=report.grandTotal;
+													
+													if(type==1){
+														
+														grnVal=report.grnGrandTotal;
+														gvnVal=report.gvnGrandTotal;
+														
+													}else{
+
+														grnVal=report.crnGrnGrandTotal;
+														gvnVal=report.crnGvnGrandTotal;
+
+													}
+
+												}
+												
+												var netValue = billVal - (grnVal + gvnVal);
+												
+											contriTotalNet = contriTotalNet
+													+ netValue;
+										});
+										
 
 										$
 												.each(
@@ -854,6 +1086,31 @@
 																			'<td></td>')
 																			.html(
 																					""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
+															tr
+															.append($(
+																	'<td></td>')
+																	.html(
+																			""));
+															
 															$(
 																	'#table_grid1 tbody')
 																	.append(tr);
@@ -927,6 +1184,32 @@
 																								'<td></td>')
 																								.html(
 																										""));
+																				
+																				tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								""));
+																				
+																				tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								""));
+																				
+																				tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								""));
+																				
+																				tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								""));
+																				
+																				
 																				$(
 																						'#table_grid1 tbody')
 																						.append(
@@ -1004,6 +1287,8 @@
 																											gvnQty=report.crnGvnQty;
 
 																										}
+																										
+																										if(billVal>0 || grnVal>0 || gvnVal>0){
 
 																										srNo = srNo + 1;
 
@@ -1082,11 +1367,54 @@
 																														.html(
 																																addCommas(rAmt
 																																		.toFixed(2))));
+																										
+
+																										
+																										
+																										var grnRet=(grnVal*100)/billVal;
+																										var gvnRet=(gvnVal*100)/billVal;
+																										var sumRet=((grnVal+gvnVal)*100)/billVal;
+																										
+																										if(isNaN(grnRet)){
+																											grnRet=0;
+																										}
+
+																										if(isNaN(gvnRet)){
+																											gvnRet=0;
+																										}
+
+																										if(isNaN(sumRet)){
+																											sumRet=0;
+																										}
+
+																										
+																										tr.append($(
+																												'<td  style="text-align:right;"></td>')
+																												.html(grnRet.toFixed(2)));
+
+																										tr.append($(
+																										'<td  style="text-align:right;"></td>')
+																										.html(gvnRet.toFixed(2)));
+
+																										tr.append($(
+																										'<td  style="text-align:right;"></td>')
+																										.html(sumRet.toFixed(2)));
+																										
+																										
+																										var contri = (netValue * 100)/ contriTotalNet;
+																										finalContriTotal = finalContriTotal+ contri;
+																								
+																								
+																										tr.append($(
+																										'<td  style="text-align:right;"></td>')
+																										.html(contri.toFixed(2)));
+																										
+																										
 																										$(
 																												'#table_grid1 tbody')
 																												.append(
 																														tr);
-
+																										}
 																									}//end of if
 
 																								})
@@ -1183,6 +1511,41 @@
 																								.html(
 																										addCommas(rAmtTotal
 																												.toFixed(2))));
+																				
+																				
+																				var grnRet=(grnTaxableAmtTotal*100)/billTaxableAmtTotal;
+																				var gvnRet=(gvnTaxableAmtTotal*100)/billTaxableAmtTotal;
+																				var sumRet=((grnTaxableAmtTotal+gvnTaxableAmtTotal)*100)/billTaxableAmtTotal;
+																				
+																				if(isNaN(grnRet)){
+																					grnRet=0;
+																				}
+
+																				if(isNaN(gvnRet)){
+																					gvnRet=0;
+																				}
+
+																				if(isNaN(sumRet)){
+																					sumRet=0;
+																				}
+																				
+																				tr.append($(
+																						'<td  style="text-align:right;"></td>')
+																						.html(grnRet.toFixed(2)));
+
+																				tr.append($(
+																				'<td  style="text-align:right;"></td>')
+																				.html(gvnRet.toFixed(2)));
+
+																				tr.append($(
+																				'<td  style="text-align:right;"></td>')
+																				.html(sumRet.toFixed(2)));
+																				
+																				tr.append($(
+																				'<td  style="text-align:right;"></td>')
+																				.html(" "));
+																				
+																				
 																				$(
 																						'#table_grid1 tbody')
 																						.append(
@@ -1282,6 +1645,30 @@
 																			.html(
 																					addCommas(rAmtSum
 																							.toFixed(2))));
+															
+															
+															var grnRet=(grnTaxableAmtSum*100)/billTaxableAmtSum;
+															var gvnRet=(gvnTaxableAmtSum*100)/billTaxableAmtSum;
+															var sumRet=((grnTaxableAmtSum+gvnTaxableAmtSum)*100)/billTaxableAmtSum;
+															
+															tr.append($(
+																	'<td  style="text-align:right;"></td>')
+																	.html(grnRet.toFixed(2)));
+
+															tr.append($(
+															'<td  style="text-align:right;"></td>')
+															.html(gvnRet.toFixed(2)));
+
+															tr.append($(
+															'<td  style="text-align:right;"></td>')
+															.html(sumRet.toFixed(2)));
+															
+															tr.append($(
+															'<td  style="text-align:right;"></td>')
+															.html(" "));
+															
+															
+															
 															$(
 																	'#table_grid1 tbody')
 																	.append(tr);
@@ -1351,6 +1738,30 @@
 														.html(
 																finalRAmtTotal
 																		.toFixed(2)));
+										
+										
+										var grnRet=(finalGrnTaxableAmtTotal*100)/finalBillTaxableAmtTotal;
+										var gvnRet=(finalGvnTaxableAmtTotal*100)/finalBillTaxableAmtTotal;
+										var sumRet=((finalGrnTaxableAmtTotal+finalGvnTaxableAmtTotal)*100)/finalBillTaxableAmtTotal;
+										
+										tr.append($(
+												'<td  style="text-align:right;"></td>')
+												.html(grnRet.toFixed(2)));
+
+										tr.append($(
+										'<td  style="text-align:right;"></td>')
+										.html(gvnRet.toFixed(2)));
+
+										tr.append($(
+										'<td  style="text-align:right;"></td>')
+										.html(sumRet.toFixed(2)));
+										
+										tr.append($(
+										'<td  style="text-align:right;"></td>')
+										.html(finalContriTotal.toFixed(2)));
+										
+										
+										
 										$('#table_grid1 tbody').append(tr);
 
 									});
@@ -1733,7 +2144,7 @@ function tableToExcel(table, name, filename) {
 				}
 			}
 		</script>
-		
+
 		<script type="text/javascript">
 		
 		function addCommas(x){
@@ -1752,7 +2163,7 @@ function tableToExcel(table, name, filename) {
 			}
 		
 		</script>
-		
+
 
 		<!--basic scripts-->
 		<script

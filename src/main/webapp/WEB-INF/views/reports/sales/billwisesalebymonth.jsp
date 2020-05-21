@@ -213,6 +213,9 @@
 								<th>NET Taxable Total</th>
 								<th>NET Tax Total</th>
 								<th>NET Grand Total</th>
+								<th>Return % GRN</th>
+								<th>Return % GVN</th>
+								<th>Return % SUM</th>
 								<!-- <th>Total</th> -->
 							</tr>
 						</thead>
@@ -250,7 +253,9 @@
 
 									<th>NET Taxable Total</th>
 									<th>NET Tax Total</th>
-
+									<th>Return % GRN</th>
+									<th>Return % GVN</th>
+									<th>Return % SUM</th>
 									<!-- <th>Total</th> -->
 								</tr>
 							</thead>
@@ -281,6 +286,9 @@
 									<th style="text-align: center;">GVN Grand Total</th>
 									<th style="text-align: center;">NET Grand Total</th>
 									<th style="text-align: center;">Contribution %</th>
+									<th style="text-align: center;">Return % GRN</th>
+									<th style="text-align: center;">Return % GVN</th>
+									<th style="text-align: center;">Return % SUM</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -305,8 +313,7 @@
 
 		</div>
 
-		<br>
-		<br>
+		<br> <br>
 
 		<div class="row">
 
@@ -378,10 +385,10 @@
 									alert("No records found !!");
 									document.getElementById("expExcel").disabled = true;
 
-								}else{
+								} else {
 									drawGraph();
 								}
-								
+
 								if (selectStatus == -1) {
 
 									$('#allTable').show();
@@ -952,6 +959,58 @@
 																				contri
 																						.toFixed(2)));
 
+														var grnRet = 0;
+														var gvnRet = 0;
+														var sumRet = 0;
+
+														if (report.grandTotal > 0) {
+
+															grnRet = (report.grnGrandTotal * 100)
+																	/ report.grandTotal;
+															gvnRet = (report.gvnGrandTotal * 100)
+																	/ report.grandTotal;
+															sumRet = ((report.grnGrandTotal + report.gvnGrandTotal) * 100)
+																	/ report.grandTotal;
+
+															if (isNaN(grnRet)) {
+																grnRet = 0;
+															}
+
+															if (isNaN(gvnRet)) {
+																gvnRet = 0;
+															}
+
+															if (isNaN(sumRet)) {
+																sumRet = 0;
+															}
+
+														} else {
+															grnRet = 0;
+															gvnRet = 0;
+															sumRet = 0;
+														}
+
+														tr
+																.append($(
+																		'<td  style="text-align:right;"></td>')
+																		.html(
+																				grnRet
+																						.toFixed(2)));
+
+														tr
+																.append($(
+																		'<td  style="text-align:right;"></td>')
+																		.html(
+																				gvnRet
+																						.toFixed(2)));
+
+														tr
+																.append($(
+																		'<td  style="text-align:right;"></td>')
+																		.html(
+																				sumRet
+																						.toFixed(2)));
+
 														$('#table_grid2 tbody')
 																.append(tr);
 
@@ -1000,6 +1059,28 @@
 													.html(
 															totalContri
 																	.toFixed(2)));
+
+									var grnRet = (totalGrnGrandTotal * 100)
+											/ totalGrandTotal;
+									var gvnRet = (totalGvnGrandTotal * 100)
+											/ totalGrandTotal;
+									var sumRet = ((totalGrnGrandTotal + totalGvnGrandTotal) * 100)
+											/ totalGrandTotal;
+
+									tr
+											.append($(
+													'<td  style="text-align:right;"></td>')
+													.html(grnRet.toFixed(2)));
+
+									tr
+											.append($(
+													'<td  style="text-align:right;"></td>')
+													.html(gvnRet.toFixed(2)));
+
+									tr
+											.append($(
+													'<td  style="text-align:right;"></td>')
+													.html(sumRet.toFixed(2)));
 
 									$('#table_grid2 tbody').append(tr);
 

@@ -594,7 +594,9 @@ public class SalesReportController {
 				System.out.println("sales List Bill Wise " + saleList.toString());
 
 			}
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report Bill Wise " + e.getMessage());
 			e.printStackTrace();
 
@@ -673,7 +675,9 @@ public class SalesReportController {
 		rowData.add("");
 		rowData.add("");
 		rowData.add("");
-		rowData.add("" + roundUp(taxableAmt));
+		rowData.add("" +
+
+				roundUp(taxableAmt));
 		rowData.add("" + roundUp(cgstSum));
 		rowData.add("" + roundUp(sgstSum));
 		rowData.add("" + roundUp(igstSum));
@@ -778,7 +782,9 @@ public class SalesReportController {
 
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
@@ -981,7 +987,9 @@ public class SalesReportController {
 				System.out.println("sales List Bill Wise " + saleList.toString());
 
 			}
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report Bill Wise " + e.getMessage());
 			e.printStackTrace();
 
@@ -1149,7 +1157,9 @@ public class SalesReportController {
 			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 
 			model.addObject("report", saleListForPdf);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report Bill Wise1 " + e.getMessage());
 			e.printStackTrace();
 
@@ -1785,6 +1795,10 @@ public class SalesReportController {
 		rowData.add("Net Grand Total");
 		rowData.add("Contribution %");
 
+		rowData.add("Return % GRN");
+		rowData.add("Return % GVN");
+		rowData.add("Return % SUM");
+
 		float totalNetValForContri = 0f;
 		for (int i = 0; i < saleList.size(); i++) {
 			totalNetValForContri = totalNetValForContri + saleList.get(i).getNetGrandTotal();
@@ -1856,6 +1870,21 @@ public class SalesReportController {
 
 			rowData.add("" + contri);
 
+			float grnRet = 0;
+			float gvnRet = 0;
+			float sumRet = 0;
+
+			if (saleList.get(i).getGrandTotal() > 0) {
+				grnRet = (saleList.get(i).getGrnGrandTotal() * 100) / saleList.get(i).getGrandTotal();
+				gvnRet = (saleList.get(i).getGvnGrandTotal() * 100) / saleList.get(i).getGrandTotal();
+				sumRet = ((saleList.get(i).getGrnGrandTotal() + saleList.get(i).getGvnGrandTotal()) * 100)
+						/ saleList.get(i).getGrandTotal();
+			}
+
+			rowData.add("" + grnRet);
+			rowData.add("" + gvnRet);
+			rowData.add("" + sumRet);
+
 			srno = srno + 1;
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -1887,6 +1916,20 @@ public class SalesReportController {
 
 		rowData.add("" + roundUp(totalContri));
 
+		float grnRet = 0;
+		float gvnRet = 0;
+		float sumRet = 0;
+
+		if (totalGrandTotal > 0) {
+			grnRet = (totalGrnGrandTotal * 100) / totalGrandTotal;
+			gvnRet = (totalGvnGrandTotal * 100) / totalGrandTotal;
+			sumRet = ((totalGrnGrandTotal + totalGvnGrandTotal) * 100) / totalGrandTotal;
+		}
+
+		rowData.add("" + grnRet);
+		rowData.add("" + gvnRet);
+		rowData.add("" + sumRet);
+
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
 
@@ -1897,8 +1940,8 @@ public class SalesReportController {
 		// session.setAttribute("searchByNew", "From Date: " + fromDate + " To Date: " +
 		// toDate + " ");
 		session.setAttribute("searchByNew", "Franchisee : " + frDisplay);
-		session.setAttribute("mergeUpto1", "$A$1:$F$1");
-		session.setAttribute("mergeUpto2", "$A$2:$F$2");
+		session.setAttribute("mergeUpto1", "$A$1:$J$1");
+		session.setAttribute("mergeUpto2", "$A$2:$J$2");
 
 		return saleList;
 	}
@@ -2187,10 +2230,12 @@ public class SalesReportController {
 			System.out.println("Category list  " + categoryList);
 
 			royaltyBean.setCategoryList(categoryList);
-			//royaltyBean.setSalesReportRoyalty(royaltyList);
+			// royaltyBean.setSalesReportRoyalty(royaltyList);
 			staticRoyaltyBean = royaltyBean;
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report royaltyList by cat " + e.getMessage());
 			e.printStackTrace();
 
@@ -2363,11 +2408,13 @@ public class SalesReportController {
 			System.out.println("Category list  " + categoryList);
 
 			royaltyBean.setCategoryList(categoryList);
-			//royaltyBean.setSalesReportRoyalty(royaltyList);
+			// royaltyBean.setSalesReportRoyalty(royaltyList);
 			staticRoyaltyBean = royaltyBean;
 			model.addObject("royPer", royPer);
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report royaltyList by cat " + e.getMessage());
 			e.printStackTrace();
 
@@ -2383,7 +2430,7 @@ public class SalesReportController {
 		return model;
 	}
 
-	// royalty FR wise
+// royalty FR wise
 
 	@RequestMapping(value = "/showSaleRoyaltyByFr", method = RequestMethod.GET)
 	public ModelAndView showSaleRoyaltyByFr(HttpServletRequest request, HttpServletResponse response) {
@@ -2538,7 +2585,9 @@ public class SalesReportController {
 
 			// allFrIdNameList = new AllFrIdNameList();
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report royaltyList by cat " + e.getMessage());
 			e.printStackTrace();
 
@@ -2594,9 +2643,9 @@ public class SalesReportController {
 
 	}
 
-	// royalty fr pdf is not done
+// royalty fr pdf is not done
 
-	// done pdf
+// done pdf
 	@RequestMapping(value = "pdf/showSaleRoyaltyByFrPdf/{fromDate}/{toDate}/{selectedFr}/{routeId}", method = RequestMethod.GET)
 	public ModelAndView showSaleRoyaltyByFrPdf(@PathVariable String fromDate, @PathVariable String toDate,
 			@PathVariable String selectedFr, @PathVariable String routeId, HttpServletRequest request,
@@ -2686,12 +2735,16 @@ public class SalesReportController {
 
 			// allFrIdNameList = new AllFrIdNameList();
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			System.out.println("get sale Report royaltyList by Fr " + e.getMessage());
 			e.printStackTrace();
 
 		}
-		model.addObject("royPer", getRoyPer());
+		model.addObject("royPer",
+
+				getRoyPer());
 
 		model.addObject("fromDate", fromDate);
 
@@ -4770,7 +4823,7 @@ public class SalesReportController {
 
 	}
 
-	// --------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getSaleReportRoyConsoByCat", method = RequestMethod.GET)
 	public @ResponseBody RoyaltyListBean getSaleReportRoyConsoByCat(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -4781,6 +4834,9 @@ public class SalesReportController {
 		RoyaltyListBean royaltyBean = new RoyaltyListBean();
 		int getBy = 1;
 		int type = 1;
+		List<String> catList = new ArrayList<>();
+		String frDisplay = "";
+
 		try {
 			System.out.println("Inside get Sale Bill Wise");
 			String selectedFr = request.getParameter("fr_id_list");
@@ -4806,7 +4862,8 @@ public class SalesReportController {
 			selectedCat = selectedCat.substring(1, selectedCat.length() - 1);
 			selectedCat = selectedCat.replaceAll("\"", "");
 
-			List<String> catList = Stream.of(selectedCat.split(",")).collect(Collectors.toList());
+			catList.clear();
+			catList = Stream.of(selectedCat.split(",")).collect(Collectors.toList());
 
 			// List<String> catList = new ArrayList<>();
 			// catList = Arrays.asList(selectedCat);
@@ -4909,6 +4966,27 @@ public class SalesReportController {
 			royaltyBean.setSalesReportRoyalty(royaltyList);
 			staticRoyaltyBean = royaltyBean;
 
+			List<Integer> frIds = Stream.of(selectedFr.split(",")).map(Integer::parseInt).collect(Collectors.toList());
+
+			Set<String> set = new HashSet<>();
+
+			if (allFrIdNameList.getFrIdNamesList() != null) {
+
+				for (int j = 0; j < frIds.size(); j++) {
+
+					for (int i = 0; i < allFrIdNameList.getFrIdNamesList().size(); i++) {
+
+						if (allFrIdNameList.getFrIdNamesList().get(i).getFrId() == frIds.get(j)) {
+							set.add(allFrIdNameList.getFrIdNamesList().get(i).getFrName());
+							break;
+						}
+
+					}
+
+				}
+			}
+			frDisplay = String.join(", ", set);
+
 		} catch (
 
 		Exception e) {
@@ -4935,6 +5013,16 @@ public class SalesReportController {
 
 		rowData.add("Net Qty");
 		rowData.add("Net Value");
+
+		rowData.add("Royalty %");
+		rowData.add("Royalty Amt");
+
+		rowData.add("Return % GRN");
+		rowData.add("Return % GVN");
+		rowData.add("Return % SUM");
+
+		rowData.add("Contribution %");
+
 		float royPer = getRoyPer();
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
@@ -4947,18 +5035,14 @@ public class SalesReportController {
 		float gvnValue = 0.0f;
 		float netQtyTotal = 0.0f;
 		float netValueTotal = 0.0f;
+		float rAmtTotal = 0.0f;
+		float contriTotal = 0.0f;
+
+		float netValTotalForContri = 0.0f;
 
 		if (!royaltyBean.getSalesReportRoyalty().isEmpty()) {
+
 			for (int i = 0; i < royaltyList.size(); i++) {
-				int index = 1;
-				index = index + i;
-				expoExcel = new ExportToExcel();
-				rowData = new ArrayList<String>();
-
-				rowData.add("" + index);
-				rowData.add("" + royaltyList.get(i).getCat_name());
-
-				rowData.add("" + royaltyList.get(i).getItem_name());
 
 				float billVal = 0, grnQty1 = 0, grnVal = 0, gvnQty1 = 0, gvnVal = 0;
 
@@ -4989,50 +5073,272 @@ public class SalesReportController {
 
 				}
 
-				if (type == 1) {
-					grnQty1 = royaltyList.get(i).getGrnQty();
-					gvnQty1 = royaltyList.get(i).getGvnQty();
-				} else {
-					grnQty1 = royaltyList.get(i).getCrnGrnQty();
-					gvnQty1 = royaltyList.get(i).getCrnGvnQty();
+				float netValue = billVal - (grnVal + gvnVal);
+
+				netValTotalForContri = netValTotalForContri + netValue;
+
+			}
+
+			for (int c = 0; c < catList.size(); c++) {
+
+				int sr = 1;
+
+				float saleQtyCat = 0.0f;
+				float saleValueCat = 0.0f;
+				float grnQtyCat = 0.0f;
+				float grnValueCat = 0.0f;
+				float gvnQtyCat = 0.0f;
+				float gvnValueCat = 0.0f;
+				float netQtyTotalCat = 0.0f;
+				float netValueTotalCat = 0.0f;
+				float rAmtTotalCat = 0.0f;
+
+				for (int i = 0; i < royaltyList.size(); i++) {
+
+					if (catList.get(c).equalsIgnoreCase(String.valueOf(royaltyList.get(i).getCatId()))) {
+
+						int index = 1;
+
+						float billVal = 0, grnQty1 = 0, grnVal = 0, gvnQty1 = 0, gvnVal = 0;
+
+						if (getBy == 1) {
+							billVal = royaltyList.get(i).getTaxableAmt();
+
+							if (type == 1) {
+								grnVal = royaltyList.get(i).getGrnTaxableAmt();
+								gvnVal = royaltyList.get(i).getGvnTaxableAmt();
+
+							} else {
+								grnVal = royaltyList.get(i).getCrnGrnTaxableAmt();
+								gvnVal = royaltyList.get(i).getCrnGvnTaxableAmt();
+
+							}
+						} else {
+							billVal = royaltyList.get(i).getGrandTotal();
+
+							if (type == 1) {
+								grnVal = royaltyList.get(i).getGrnGrandTotal();
+								gvnVal = royaltyList.get(i).getGvnGrandTotal();
+
+							} else {
+								grnVal = royaltyList.get(i).getCrnGrnGrandTotal();
+								gvnVal = royaltyList.get(i).getCrnGvnGrandTotal();
+
+							}
+
+						}
+
+						if (type == 1) {
+							grnQty1 = royaltyList.get(i).getGrnQty();
+							gvnQty1 = royaltyList.get(i).getGvnQty();
+						} else {
+							grnQty1 = royaltyList.get(i).getCrnGrnQty();
+							gvnQty1 = royaltyList.get(i).getCrnGvnQty();
+						}
+
+						if (billVal > 0 || grnVal > 0 || gvnVal > 0) {
+
+							expoExcel = new ExportToExcel();
+							rowData = new ArrayList<String>();
+
+							index = index + i;
+
+							rowData.add("" + sr);
+							sr = sr + 1;
+							rowData.add("" + royaltyList.get(i).getCat_name());
+
+							rowData.add("" + royaltyList.get(i).getItem_name());
+
+							rowData.add("" + roundUp(royaltyList.get(i).getBillQty()));
+
+							rowData.add("" + roundUp(billVal));
+
+							rowData.add("" + roundUp(grnQty1));
+
+							rowData.add("" + roundUp(grnVal));
+							rowData.add("" + roundUp(gvnQty1));
+							rowData.add("" + roundUp(gvnVal));
+
+							float netQty = royaltyList.get(i).getBillQty() - (grnQty1 + gvnQty1);
+
+							float netValue = billVal - (grnVal + gvnVal);
+							// float royPer = getRoyPer();
+
+							float rAmt = netValue * royPer / 100;
+
+							rowData.add("" + roundUp(netQty));
+							rowData.add("" + roundUp(netValue));
+							rowData.add("" + roundUp(royPer));
+							rowData.add("" + roundUp(rAmt));
+
+							float grnRet = (grnVal * 100) / billVal;
+							float gvnRet = (gvnVal * 100) / billVal;
+							float sumRet = ((grnVal + gvnVal) * 100) / billVal;
+
+							rowData.add("" + roundUp(grnRet));
+							rowData.add("" + roundUp(gvnRet));
+							rowData.add("" + roundUp(sumRet));
+
+							float contri = (netValue * 100) / netValTotalForContri;
+							contriTotal = contriTotal + contri;
+
+							rowData.add("" + roundUp(contri));
+
+							saleQtyCat = saleQtyCat + royaltyList.get(i).getBillQty();
+							saleValueCat = saleValueCat + billVal;
+							grnQtyCat = grnQtyCat + grnQty1;
+							grnValueCat = grnValueCat + grnVal;
+							gvnQtyCat = gvnQtyCat + gvnQty1;
+							gvnValueCat = gvnValueCat + gvnVal;
+							netQtyTotalCat = netQtyTotalCat + netQty;
+							netValueTotalCat = netValueTotalCat + netValue;
+
+							rAmtTotalCat = rAmtTotalCat + rAmt;
+
+							saleQty = saleQty + royaltyList.get(i).getBillQty();
+							saleValue = saleValue + billVal;
+							grnQty = grnQty + grnQty1;
+							grnValue = grnValue + grnVal;
+							gvnQty = gvnQty + gvnQty1;
+							gvnValue = gvnValue + gvnVal;
+							netQtyTotal = netQtyTotal + netQty;
+							netValueTotal = netValueTotal + netValue;
+
+							rAmtTotal = rAmtTotal + rAmt;
+
+							expoExcel.setRowData(rowData);
+							exportToExcelList.add(expoExcel);
+
+						}
+
+					}
+
 				}
 
-				rowData.add("" + roundUp(royaltyList.get(i).getBillQty()));
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
 
-				rowData.add("" + roundUp(billVal));
+				rowData.add("");
+				rowData.add("Total");
+				rowData.add("");
 
-				rowData.add("" + roundUp(grnQty1));
+				rowData.add("" + roundUp(saleQtyCat));
+				rowData.add("" + roundUp(saleValueCat));
+				rowData.add("" + roundUp(grnQtyCat));
+				rowData.add("" + roundUp(grnValueCat));
+				rowData.add("" + roundUp(gvnQtyCat));
+				rowData.add("" + roundUp(gvnValueCat));
+				rowData.add("" + roundUp(netQtyTotalCat));
+				rowData.add("" + roundUp(netValueTotalCat));
+				rowData.add("");
+				rowData.add("" + roundUp(rAmtTotalCat));
 
-				rowData.add("" + roundUp(grnVal));
-				rowData.add("" + roundUp(gvnQty1));
-				rowData.add("" + roundUp(gvnVal));
+				float grnRet = (grnValueCat * 100) / saleValueCat;
+				float gvnRet = (gvnValueCat * 100) / saleValueCat;
+				float sumRet = ((grnValueCat + gvnValueCat) * 100) / saleValueCat;
 
-				float netQty = royaltyList.get(i).getBillQty() - (grnQty1 + gvnQty1);
-
-				float netValue = billVal - (grnVal + gvnVal);
-				// float royPer = getRoyPer();
-
-				float rAmt = netValue * royPer / 100;
-
-				rowData.add("" + roundUp(netQty));
-				rowData.add("" + roundUp(netValue));
-				/*
-				 * rowData.add(""+roundUp(royPer)); rowData.add(""+roundUp(rAmt));
-				 */
-
-				saleQty = saleQty + royaltyList.get(i).getBillQty();
-				saleValue = saleValue + billVal;
-				grnQty = grnQty + grnQty1;
-				grnValue = grnValue + grnVal;
-				gvnQty = gvnQty + gvnQty1;
-				gvnValue = gvnValue + gvnVal;
-				netQtyTotal = netQtyTotal + netQty;
-				netValueTotal = netValueTotal + netValue;
+				rowData.add("" + roundUp(grnRet));
+				rowData.add("" + roundUp(gvnRet));
+				rowData.add("" + roundUp(sumRet));
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+
+//			for (int i = 0; i < royaltyList.size(); i++) {
+//
+//				int index = 1;
+//
+//				float billVal = 0, grnQty1 = 0, grnVal = 0, gvnQty1 = 0, gvnVal = 0;
+//
+//				if (getBy == 1) {
+//					billVal = royaltyList.get(i).getTaxableAmt();
+//
+//					if (type == 1) {
+//						grnVal = royaltyList.get(i).getGrnTaxableAmt();
+//						gvnVal = royaltyList.get(i).getGvnTaxableAmt();
+//
+//					} else {
+//						grnVal = royaltyList.get(i).getCrnGrnTaxableAmt();
+//						gvnVal = royaltyList.get(i).getCrnGvnTaxableAmt();
+//
+//					}
+//				} else {
+//					billVal = royaltyList.get(i).getGrandTotal();
+//
+//					if (type == 1) {
+//						grnVal = royaltyList.get(i).getGrnGrandTotal();
+//						gvnVal = royaltyList.get(i).getGvnGrandTotal();
+//
+//					} else {
+//						grnVal = royaltyList.get(i).getCrnGrnGrandTotal();
+//						gvnVal = royaltyList.get(i).getCrnGvnGrandTotal();
+//
+//					}
+//
+//				}
+//
+//				if (type == 1) {
+//					grnQty1 = royaltyList.get(i).getGrnQty();
+//					gvnQty1 = royaltyList.get(i).getGvnQty();
+//				} else {
+//					grnQty1 = royaltyList.get(i).getCrnGrnQty();
+//					gvnQty1 = royaltyList.get(i).getCrnGvnQty();
+//				}
+//
+//				if (billVal > 0 || grnVal > 0 || gvnVal > 0) {
+//
+//					expoExcel = new ExportToExcel();
+//					rowData = new ArrayList<String>();
+//
+//					index = index + i;
+//
+//					rowData.add("" + sr);
+//					sr = sr + 1;
+//					rowData.add("" + royaltyList.get(i).getCat_name());
+//
+//					rowData.add("" + royaltyList.get(i).getItem_name());
+//
+//					rowData.add("" + roundUp(royaltyList.get(i).getBillQty()));
+//
+//					rowData.add("" + roundUp(billVal));
+//
+//					rowData.add("" + roundUp(grnQty1));
+//
+//					rowData.add("" + roundUp(grnVal));
+//					rowData.add("" + roundUp(gvnQty1));
+//					rowData.add("" + roundUp(gvnVal));
+//
+//					float netQty = royaltyList.get(i).getBillQty() - (grnQty1 + gvnQty1);
+//
+//					float netValue = billVal - (grnVal + gvnVal);
+//					// float royPer = getRoyPer();
+//
+//					float rAmt = netValue * royPer / 100;
+//
+//					rowData.add("" + roundUp(netQty));
+//					rowData.add("" + roundUp(netValue));
+//					rowData.add("" + roundUp(royPer));
+//					rowData.add("" + roundUp(rAmt));
+//
+//					saleQty = saleQty + royaltyList.get(i).getBillQty();
+//					saleValue = saleValue + billVal;
+//					grnQty = grnQty + grnQty1;
+//					grnValue = grnValue + grnVal;
+//					gvnQty = gvnQty + gvnQty1;
+//					gvnValue = gvnValue + gvnVal;
+//					netQtyTotal = netQtyTotal + netQty;
+//					netValueTotal = netValueTotal + netValue;
+//
+//					rAmtTotal = rAmtTotal + rAmt;
+//
+//					expoExcel.setRowData(rowData);
+//					exportToExcelList.add(expoExcel);
+//
+//				}
+//
+//			}
 		}
 
 		expoExcel = new ExportToExcel();
@@ -5050,18 +5356,45 @@ public class SalesReportController {
 		rowData.add("" + roundUp(gvnValue));
 		rowData.add("" + roundUp(netQtyTotal));
 		rowData.add("" + roundUp(netValueTotal));
+		rowData.add("");
+		rowData.add("" + roundUp(rAmtTotal));
+
+		float grnRet = (grnValue * 100) / saleValue;
+		float gvnRet = (gvnValue * 100) / saleValue;
+		float sumRet = ((grnValue + gvnValue) * 100) / saleValue;
+
+		rowData.add("" + roundUp(grnRet));
+		rowData.add("" + roundUp(gvnRet));
+		rowData.add("" + roundUp(sumRet));
+
+		rowData.add("" + roundUp(contriTotal));
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
+
+		String searchBy = "", searchType = "";
+		if (getBy == 1) {
+			searchBy = "Taxable Amount";
+		} else {
+			searchBy = "Grand Total";
+		}
+
+		if (type == 1) {
+			searchType = "GRN";
+		} else {
+			searchType = "CRN";
+		}
 
 		System.out.println("exportToExcelList" + exportToExcelList);
 		HttpSession session = request.getSession();
 		session.setAttribute("exportExcelListNew", exportToExcelList);
 		session.setAttribute("excelNameNew", "RoyaltyConsolidatedCatList");
-		session.setAttribute("reportNameNew", "View Sales Royalty by Category");
-		session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
-		session.setAttribute("mergeUpto1", "$A$1:$K$1");
-		session.setAttribute("mergeUpto2", "$A$2:$K$2");
+		session.setAttribute("reportNameNew", "View Sales Royalty by Category  " + " From Date: " + fromDate
+				+ "  To Date: " + toDate + "   And Search By: " + searchBy + "  and  " + searchType);
+		session.setAttribute("searchByNew", "Franchisee: " + frDisplay);
+
+		session.setAttribute("mergeUpto1", "$A$1:$Q$1");
+		session.setAttribute("mergeUpto2", "$A$2:$Q$2");
 
 		return royaltyBean;
 
@@ -5161,7 +5494,8 @@ public class SalesReportController {
 				};
 
 				ResponseEntity<List<SalesRoyaltyConsByCat>> responseEntity = restTemplate.exchange(
-						Constants.url + "getSaleRoyConsoByCatReportData", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+						Constants.url + "getSaleRoyConsoByCatReportData", HttpMethod.POST, new HttpEntity<>(map),
+						typeRef);
 
 				royaltyList = responseEntity.getBody();
 				royaltyConsByCatListForPdf = new ArrayList<>();
@@ -5210,7 +5544,7 @@ public class SalesReportController {
 				model.addObject("FACTORYNAME", Constants.FACTORYNAME);
 				model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 				model.addObject("royPer", getRoyPer());
-				
+
 				model.addObject("getBy", getBy);
 				model.addObject("type", type);
 

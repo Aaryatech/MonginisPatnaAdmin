@@ -87,11 +87,14 @@ public class SalesReportController2 {
 
 	}
 	
+	List<SubCatReport> saleList = new ArrayList<>();
 	
 	@RequestMapping(value = "/getSubCatReport", method = RequestMethod.GET)
 	public @ResponseBody List<SubCatReport> getSubCatReport(HttpServletRequest request, HttpServletResponse response) {
 
-		List<SubCatReport> saleList = new ArrayList<>();
+		saleList = new ArrayList<>();
+		saleList.clear();
+		
 		String fromDate = "";
 		String toDate = "";
 		try {
@@ -126,6 +129,8 @@ public class SalesReportController2 {
 				saleList.get(i).setRetAmtPer(retAmtPer);
 			}
 
+			System.err.println("SALE - "+saleList);
+			
 			// exportToExcel
 			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -147,6 +152,7 @@ public class SalesReportController2 {
 			rowData.add("Net Amt");
 
 			rowData.add("Ret Per Amt%");
+			rowData.add("Contribution %");
 
 			expoExcel.setRowData(rowData);
 			int srno = 1;
@@ -161,6 +167,14 @@ public class SalesReportController2 {
 			float totalNetQty = 0;
 			float totalNetAmt = 0;
 			float retAmtPer = 0;
+			float contriTotal = 0;
+			
+			
+			float netTotalForContri = 0;
+			for (int i = 0; i < saleList.size(); i++) {
+				netTotalForContri = netTotalForContri + saleList.get(i).getNetAmt();
+			}
+			
 
 			for (int i = 0; i < saleList.size(); i++) {
 
@@ -172,7 +186,10 @@ public class SalesReportController2 {
 				totalRetAmt = totalRetAmt + saleList.get(i).getRetAmt();
 				totalNetQty = totalNetQty + saleList.get(i).getNetQty();
 				totalNetAmt = totalNetAmt + saleList.get(i).getNetAmt();
-				retAmtPer = retAmtPer + saleList.get(i).getRetAmtPer();
+				
+				if(!Double.isNaN(saleList.get(i).getRetAmtPer())) {
+					retAmtPer = retAmtPer + saleList.get(i).getRetAmtPer();
+				}
 
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
@@ -189,7 +206,19 @@ public class SalesReportController2 {
 				rowData.add("" + roundUp(saleList.get(i).getRetAmt()));
 				rowData.add("" + roundUp(saleList.get(i).getNetQty()));
 				rowData.add("" + roundUp(saleList.get(i).getNetAmt()));
-				rowData.add("" + roundUp(saleList.get(i).getRetAmtPer())+"%");
+				
+				if(Double.isNaN(saleList.get(i).getRetAmtPer())) {
+					rowData.add("0.00%");
+				}else {
+					rowData.add("" + roundUp(saleList.get(i).getRetAmtPer())+"%");
+				}
+				
+			
+				
+				float contri=(saleList.get(i).getNetAmt()*100)/netTotalForContri;
+				contriTotal=contriTotal+contri;
+				
+				rowData.add(""+contri);
 
 				srno = srno + 1;
 
@@ -212,6 +241,7 @@ public class SalesReportController2 {
 			rowData.add("" + roundUp(totalNetQty));
 			rowData.add("" + roundUp(totalNetAmt));
 			rowData.add("" + roundUp(retAmtPer)+"%");
+			rowData.add("" + roundUp(contriTotal));
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -223,10 +253,19 @@ public class SalesReportController2 {
 			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
 			session.setAttribute("mergeUpto1", "$A$1:$K$1");
 			session.setAttribute("mergeUpto2", "$A$2:$K$2");
+			
+			
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 
+		return saleList;
+	}
+	
+	
+	@RequestMapping(value = "/getSubCatReportForGraph", method = RequestMethod.GET)
+	public @ResponseBody List<SubCatReport> getSubCatReportForGraph(HttpServletRequest request, HttpServletResponse response) {
 		return saleList;
 	}
 	

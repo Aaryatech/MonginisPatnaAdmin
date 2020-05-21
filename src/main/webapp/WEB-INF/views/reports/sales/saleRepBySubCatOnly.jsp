@@ -12,6 +12,8 @@
 	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
 	<c:url var="getGroup2ByCatId" value="/getSubCatByCatIdForReport"></c:url>
 
+	<c:url var="getSubCatReportForGraph" value="/getSubCatReportForGraph"></c:url>
+
 
 
 
@@ -129,6 +131,7 @@
 									<th>Net Qty</th>
 									<th>Net Amt</th>
 									<th>Ret Amt %</th>
+									<th>Contribution %</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -151,6 +154,26 @@
 			</div>
 
 		</div>
+
+		<div class="box">
+
+			<div class=" box-content">
+				<div class="row" style="display: inline-block; width: 100%;">
+					<div
+						style="float: none !important; width: 100% !important; margin: 0 0 15px 0;">
+						<div id="pieChart"></div>
+					</div>
+
+					<div class="clr"></div>
+
+				</div>
+			</div>
+
+
+
+
+		</div>
+
 	</div>
 	<!-- END Main Content -->
 
@@ -191,6 +214,13 @@
 					document.getElementById("expExcel").disabled = true;
 				}
 
+				drawGraph();
+
+				var netTotalForContri = 0;
+				$.each(data, function(key, report) {
+					netTotalForContri = netTotalForContri + report.netAmt;
+				})
+
 				var totalSoldQty = 0;
 				var totalSoldAmt = 0;
 				var totalVarQty = 0;
@@ -200,6 +230,7 @@
 				var totalNetQty = 0;
 				var totalNetAmt = 0;
 				var retAmtPer = 0;
+				var contriTotal = 0;
 
 				$.each(data, function(key, report) {
 
@@ -211,7 +242,10 @@
 					totalRetAmt = totalRetAmt + report.retAmt;
 					totalNetQty = totalNetQty + report.netQty;
 					totalNetAmt = totalNetAmt + report.netAmt;
-					retAmtPer = retAmtPer + report.retAmtPer;
+
+					if (!isNaN(report.retAmtPer)) {
+						retAmtPer = retAmtPer + report.retAmtPer;
+					}
 
 					document.getElementById("expExcel").disabled = false;
 					document.getElementById('range').style.display = 'block';
@@ -225,29 +259,43 @@
 					tr.append($('<td></td>').html(report.subCatName));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.soldQty.toFixed(2)));
+							addCommas(report.soldQty.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.soldAmt.toFixed(2)));
+							addCommas(report.soldAmt.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.varQty.toFixed(2)));
+							addCommas(report.varQty.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.varAmt.toFixed(2)));
+							addCommas(report.varAmt.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.retQty.toFixed(2)));
+							addCommas(report.retQty.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.retAmt.toFixed(2)));
+							addCommas(report.retAmt.toFixed(2))));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.netQty.toFixed(2)));
+							addCommas(report.netQty.toFixed(2))));
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.netAmt.toFixed(2)));
+							addCommas(report.netAmt.toFixed(2))));
+
+					if (isNaN(report.retAmtPer)) {
+						tr.append($('<td style="text-align:right;"></td>')
+								.html("0.00%"));
+					} else {
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(
+										addCommas(report.retAmtPer.toFixed(2))
+												+ "%"));
+					}
+
+					var contri = (report.netAmt * 100) / netTotalForContri;
+					contriTotal = contriTotal + contri;
+
 					tr.append($('<td style="text-align:right;"></td>').html(
-							report.retAmtPer.toFixed(2)+"%"));
+							contri.toFixed(2)));
 
 					$('#table_grid tbody').append(tr);
 
@@ -260,25 +308,28 @@
 				tr.append($('<td style="font-weight:bold;"></td>')
 						.html("Total"));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSoldQty.toFixed(2)));
+						addCommas(totalSoldQty.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalSoldAmt.toFixed(2)));
+						addCommas(totalSoldAmt.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalVarQty.toFixed(2)));
+						addCommas(totalVarQty.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalVarAmt.toFixed(2)));
+						addCommas(totalVarAmt.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalRetQty.toFixed(2)));
+						addCommas(totalRetQty.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalRetAmt.toFixed(2)));
+						addCommas(totalRetAmt.toFixed(2))));
 
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalNetQty.toFixed(2)));
+						addCommas(totalNetQty.toFixed(2))));
 				tr.append($('<td style="text-align:right;"></td>').html(
-						totalNetAmt.toFixed(2)));
+						addCommas(totalNetAmt.toFixed(2))));
 
 				tr.append($('<td style="text-align:right;"></td>').html(
-						retAmtPer.toFixed(2)+"%"));
+						addCommas(retAmtPer.toFixed(2)) + "%"));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						contriTotal.toFixed(2)));
 
 				$('#table_grid tbody').append(tr);
 
@@ -286,6 +337,125 @@
 
 		}
 	</script>
+
+
+	<script>
+		function addCommas(x) {
+
+			x = String(x).toString();
+			var afterPoint = '';
+			if (x.indexOf('.') > 0)
+				afterPoint = x.substring(x.indexOf('.'), x.length);
+			x = Math.floor(x);
+			x = x.toString();
+			var lastThree = x.substring(x.length - 3);
+			var otherNumbers = x.substring(0, x.length - 3);
+			if (otherNumbers != '')
+				lastThree = ',' + lastThree;
+			return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",")
+					+ lastThree + afterPoint;
+		}
+	</script>
+
+
+
+	<script type="text/javascript">
+		function drawGraph() {
+
+			google.charts.load("current", {
+				packages : [ "corechart" ]
+			});
+			google.charts.setOnLoadCallback(drawPieChart1);
+
+			var type = $
+			{
+				type
+			}
+			;
+
+		}
+	</script>
+
+	<script type="text/javascript">
+		function drawPieChart1() {
+
+			var chart;
+			var datag = '';
+			var a = "";
+			var dataSale = [];
+			var Header = [ 'Sub Category', 'Amount', 'ID' ];
+			dataSale.push(Header);
+
+			$.getJSON('${getSubCatReportForGraph}', {
+				ajax : 'true'
+			}, function(chartsdata) {
+				//alert("---" + JSON.stringify(chartsdata));
+
+				var len = chartsdata.length;
+				datag = datag + '[';
+				$.each(chartsdata, function(key, chartsdata) {
+					var temp = [];
+
+					var netAmt = parseFloat(chartsdata.netAmt);
+					if (netAmt < 0) {
+						netAmt = 0;
+					}
+
+					temp
+							.push(chartsdata.subCatName + " ("
+									+ (parseFloat(netAmt).toFixed(2)) + ")",
+									(parseFloat(netAmt)),
+									parseInt(chartsdata.subCatId));
+
+					dataSale.push(temp);
+
+				});
+
+				//console.log(dataSale);
+				var data1 = google.visualization.arrayToDataTable(dataSale);
+
+				var options = {
+					width : 900,
+					height : 700,
+					title : ' ',
+					pieHole : 0.4,
+					backgroundColor : 'transparent',
+					pieSliceText : 'none',
+					sliceVisibilityThreshold : 0,
+					legend : {
+						position : 'none',
+						labeledValueText : 'both',
+						textStyle : {
+							color : 'red',
+							fontSize : 10
+						}
+					},
+					is3D : true,
+				};
+				//  alert(222);
+				chart = new google.visualization.PieChart(document
+						.getElementById('pieChart'));
+
+				function selectQtyHandler() {
+					// alert("hii");
+					var selectedItem = chart.getSelection()[0];
+					if (selectedItem) {
+						// alert("hii selectedItem");
+						i = selectedItem.row, 0;
+					}
+				}
+
+				google.visualization.events.addListener(chart, 'select',
+						selectQtyHandler);
+				chart.draw(data1, options);
+
+			});
+
+		}
+	</script>
+
+
+
 
 	<script type="text/javascript">
 		function validate() {
@@ -381,6 +551,13 @@
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>
+
+	<!-- CHARTS -->
+
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+
+	<!-- ------ -->
 
 	<!--basic scripts-->
 	<script

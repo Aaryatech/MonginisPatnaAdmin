@@ -80,14 +80,14 @@
 									<c:forEach items="${catList}" var="cat" varStatus="count">
 										<c:choose>
 											<c:when test="${cat.catId==catId}">
-										<option value="${cat.catId}" selected><c:out
-												value="${cat.catName}" /></option>
-												</c:when>
-												<c:otherwise>
-													<option value="${cat.catId}"><c:out
-												value="${cat.catName}" /></option>
-												</c:otherwise>
-												</c:choose>
+												<option value="${cat.catId}" selected><c:out
+														value="${cat.catName}" /></option>
+											</c:when>
+											<c:otherwise>
+												<option value="${cat.catId}"><c:out
+														value="${cat.catName}" /></option>
+											</c:otherwise>
+										</c:choose>
 									</c:forEach>
 								</select>
 							</div>
@@ -223,6 +223,7 @@
 										<th>Gross Sale</th>
 										<th>GRN Value</th>
 										<th>GVN Value</th>
+										<th>Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -230,6 +231,7 @@
 									<c:set var="finalBillAmt" value="0.0" />
 									<c:set var="finalGrnValue" value="0.0" />
 									<c:set var="finalGvnValue" value="0.0" />
+									<c:set var="finalTotal" value="0.0" />
 									<c:forEach items="${itemsList}" var="itemsList"
 										varStatus="count">
 										<c:set var="grandTotal" value="0.0" />
@@ -281,9 +283,14 @@
 											<td style="text-align: right;"><fmt:formatNumber
 													type="number" minFractionDigits="2" maxFractionDigits="2"
 													value="${gvnQty}" /></td>
+											<td style="text-align: right;"><fmt:formatNumber
+													type="number" minFractionDigits="2" maxFractionDigits="2"
+													value="${grandTotal-(grnQty+gvnQty)}" /></td>
 											<c:set var="finalBillAmt" value="${finalBillAmt+grandTotal}" />
 											<c:set var="finalGrnValue" value="${grnQty+finalGrnValue}" />
 											<c:set var="finalGvnValue" value="${gvnQty+finalGvnValue}" />
+											<c:set var="finalTotal"
+												value="${(grandTotal-(grnQty+gvnQty))+finalTotal}" />
 										</tr>
 									</c:forEach>
 									<tr>
@@ -316,6 +323,10 @@
 										<th style="text-align: right;"><fmt:formatNumber
 												type="number" maxFractionDigits="2" minFractionDigits="2"
 												groupingUsed="false" value="${finalGvnValue}" /></th>
+
+										<th style="text-align: right;"><fmt:formatNumber
+												type="number" maxFractionDigits="2" minFractionDigits="2"
+												groupingUsed="false" value="${finalTotal}" /></th>
 									</tr>
 								</tbody>
 							</table>
