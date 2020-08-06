@@ -167,7 +167,7 @@
 											<div class="col-sm-6 col-lg-4 controls">
 												<textarea rows="4" cols="25" name="fr_addr" id="fr_addr"
 													placeholder="Address" class="form-control"
-													form="validation-form" required></textarea>
+													 required></textarea>
 											</div>
 										</div>
 
@@ -278,7 +278,7 @@
 											<label class="col-sm-3 col-lg-2 control-label">Pastries</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_1" id="kg_1" placeholder="Qty"
-													class="form-control" data-rule-required="true"
+													class="form-control" data-rule-required="false"
 													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
@@ -289,7 +289,7 @@
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_2" id="kg_2" placeholder="Qty"
-													value="" class="form-control" data-rule-required="true"
+													value="" class="form-control" data-rule-required="false"
 													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
@@ -300,7 +300,7 @@
 												Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_3" id="kg_3" placeholder="Qty"
-													class="form-control" data-rule-required="true"
+													class="form-control" data-rule-required="false"
 													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
@@ -311,7 +311,7 @@
 												1 Kg Cake</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="kg_4" id="kg_4" placeholder="Qty"
-													class="form-control" data-rule-required="true"
+													class="form-control" data-rule-required="false"
 													data-rule-number="true" value="0"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>

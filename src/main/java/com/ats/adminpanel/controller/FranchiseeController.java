@@ -627,16 +627,16 @@ public class FranchiseeController {
 		String frCity = request.getParameter("fr_city");
 		System.out.println("8] fr city " + frCity);
 
-		int frKg1 = Integer.parseInt(request.getParameter("kg_1"));
+		int frKg1 =0;// Integer.parseInt(request.getParameter("kg_1"));
 		System.out.println("9] fr kg1 " + frKg1);
 
-		int frKg2 = Integer.parseInt(request.getParameter("kg_2"));
+		int frKg2 =0;// Integer.parseInt(request.getParameter("kg_2"));
 		System.out.println("10] fr kg 2 " + frKg2);
 
-		int frKg3 = Integer.parseInt(request.getParameter("kg_3"));
+		int frKg3 =0;// Integer.parseInt(request.getParameter("kg_3"));
 		System.out.println("10] fr kg 3 " + frKg3);
 
-		int frKg4 = Integer.parseInt(request.getParameter("kg_4"));
+		int frKg4 = 0;//Integer.parseInt(request.getParameter("kg_4"));
 		System.out.println("11] fr kg 4 " + frKg4);
 
 		String frPassword = request.getParameter("fr_password");

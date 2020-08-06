@@ -627,9 +627,9 @@ function calMrp()
 	var rate3 = parseFloat($("#sp_rate3").val());
 	var margin= parseFloat($("#margin").val());
 	
-	var calRate1=((rate1*100)/(100+margin));  
-	var calRate2=rate2+(rate2*margin/100);
-	var calRate3=rate3+(rate3*margin/100);
+	var calRate1= Math.round((rate1*100)/(100+margin));  
+	var calRate2=Math.round(rate2+(rate2*margin/100));
+	var calRate3=Math.round(rate3+(rate3*margin/100));
 	
 	document.getElementById("sp_rate1").setAttribute('value', calRate1);
 	document.getElementById("mrp_rate2").setAttribute('value', calRate2);

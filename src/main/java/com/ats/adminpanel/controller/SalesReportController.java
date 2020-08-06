@@ -5171,10 +5171,23 @@ public class SalesReportController {
 							rowData.add("" + roundUp(royPer));
 							rowData.add("" + roundUp(rAmt));
 
-							float grnRet = (grnVal * 100) / billVal;
-							float gvnRet = (gvnVal * 100) / billVal;
-							float sumRet = ((grnVal + gvnVal) * 100) / billVal;
+							float grnRet =0;
+							float gvnRet=0;
+							float sumRet=0;
+							if(billVal>0)
+							{	
+							 grnRet = (grnVal * 100) / billVal;
+							}
+							if(billVal>0)
+							{	
+							 gvnRet = (gvnVal * 100) / billVal;
+							}
+							if((billVal)>0)
+							{	
+							 sumRet = ((grnVal + gvnVal) * 100) / billVal;
+							}
 
+						
 							rowData.add("" + roundUp(grnRet));
 							rowData.add("" + roundUp(gvnRet));
 							rowData.add("" + roundUp(sumRet));
@@ -5232,10 +5245,23 @@ public class SalesReportController {
 				rowData.add("" + roundUp(netValueTotalCat));
 				rowData.add("");
 				rowData.add("" + roundUp(rAmtTotalCat));
-
-				float grnRet = (grnValueCat * 100) / saleValueCat;
-				float gvnRet = (gvnValueCat * 100) / saleValueCat;
-				float sumRet = ((grnValueCat + gvnValueCat) * 100) / saleValueCat;
+				float grnRet=0;
+				float gvnRet=0;
+				float sumRet=0;
+				if(grnValueCat>0)
+				{	
+				 grnRet = (grnValueCat * 100) / saleValueCat;
+				}
+				if(gvnValueCat>0)
+				{
+					 gvnRet = (gvnValueCat * 100) / saleValueCat;	
+				}
+				if(gvnValueCat>0)
+				{
+					 sumRet = ((grnValueCat + gvnValueCat) * 100) / saleValueCat;
+				}
+				
+				
 
 				rowData.add("" + roundUp(grnRet));
 				rowData.add("" + roundUp(gvnRet));
