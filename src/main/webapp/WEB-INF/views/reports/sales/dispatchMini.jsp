@@ -59,7 +59,7 @@ th {
 </style>
 </head>
 <body onload="directPrint()">
-<h5 align="center">MONGINIS &nbsp;&nbsp;
+<!-- <h5 align="center">MONGINIS &nbsp;&nbsp; -->
 <!-- <p align="center">Patna,Bihar</p>
  -->
 <c:forEach items="${frList}" var="fr" varStatus="count">

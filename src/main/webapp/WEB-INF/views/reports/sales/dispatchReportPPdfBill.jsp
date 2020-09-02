@@ -49,9 +49,9 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-<h4 align="center">MONGINIS</h4>
-<p align="center">Patna,Bihar</p>
-<div align="center"> <h5>
+<!-- <h4 align="center">MONGINIS</h4> -->
+<!-- <p align="center">Patna,Bihar</p>
+ --><div align="center"> <h5>
 <c:forEach items="${frList}" var="fr" varStatus="count">
 			<c:if test="${fr.frId==frId}">
 			<b>${fr.frName}</b>
