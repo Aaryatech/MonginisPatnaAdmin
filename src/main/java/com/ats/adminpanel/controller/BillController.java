@@ -2327,7 +2327,7 @@ public class BillController {
 			map = new LinkedMultiValueMap<String, Object>();
 
 			map.add("frId", frId);
-
+			System.out.println("frId1111" + frId);
 			FranchiseeList franchiseeList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
 					FranchiseeList.class, frId);
 			System.out.println("franchiseeList" + franchiseeList.toString());
@@ -2436,6 +2436,8 @@ public class BillController {
        int billHeaderId = Integer.parseInt(request.getParameter("billHeaderId"));
 	  
 	   if(orderList!=null || !orderList.isEmpty()) {
+		   
+		   System.out.println("orderList"+orderList.toString());
 	  
 		orderListResponse = restTemplate.postForObject(Constants.url + "placeManualOrderNew",orderList, GenerateBill[].class);
 	  

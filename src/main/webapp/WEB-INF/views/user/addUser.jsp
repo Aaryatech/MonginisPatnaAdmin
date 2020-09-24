@@ -131,7 +131,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Email</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="email" id="email" onkeyup="sameEmail()" class="form-control"placeholder="Email"data-rule-required="true" />
+										<input type="email" name="email" id="email" class="form-control"placeholder="Email"data-rule-required="true" />
 									<span style="opacity: 0.6;">Mail will be send on this email id.</span>
 									</div>
 									
@@ -139,7 +139,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Contact</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="contact" id="contact" onkeyup="sameContact();" maxlength="10" class="form-control"placeholder="Contact"data-rule-required="true" />
+										<input type="text" name="contact" id="contact"  maxlength="10" class="form-control"placeholder="Contact"data-rule-required="true" />
 									<span style="opacity: 0.6;">OTP will be send on this number.</span>
 									</div>
 									
@@ -462,7 +462,7 @@ function  sameUser(){
 												ajax : 'true'
 											},
 											function(data) {
-												//alert(JSON.stringify(data))
+											//alert(JSON.stringify(data))
 												if(data.error===false){
 													alert("User Name Already Exist!")
 													document.getElementById("uname").value="";

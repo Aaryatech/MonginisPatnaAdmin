@@ -99,15 +99,17 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<select name="frId" id="frId" class="form-control chosen"
 											required>
+											
+											
 											<c:forEach items="${frList}" var="frList">
 
 												<c:choose>
 													<c:when test="${frList.frId==getBillHeader.frId}">
 														<option value="${frList.frId}" selected>${frList.frName}</option>
 													</c:when>
-													<c:otherwise>
+													 <%-- <c:otherwise>
 														<option value="${frList.frId}">${frList.frName}</option>
-													</c:otherwise>
+													</c:otherwise>  --%>
 												</c:choose>
 
 											</c:forEach>
