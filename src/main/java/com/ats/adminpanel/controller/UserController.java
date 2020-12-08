@@ -100,7 +100,7 @@ public class UserController {
 		
 		User user = rest.postForObject(Constants.url + "getUserInfoByEmail", map, User.class);
 		System.err.println("User-----------"+user);
-		if(user!=null) {
+		if(user.getId()>0) {
 			info.setError(false);
 			info.setMessage("User Found");
 			System.err.println(info);
@@ -110,6 +110,9 @@ public class UserController {
 			System.err.println(info);
 		}
 	}catch (Exception e) {
+		info.setError(true);
+		info.setMessage("User Not Found");
+		System.err.println(info);
 		e.printStackTrace();		
 	}
 		
