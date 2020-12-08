@@ -2597,12 +2597,18 @@ public class GvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
-
+//
+			int key = Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " + key);
+			gvnAccDetailList = hashMap.get(key);
+			globalGvnAccHeaderId = key;
+			//
 			for (int j = 0; j < grnIdList.length; j++) {
 
 				int accGvnQty = Integer.parseInt(request.getParameter("acc_gvn_qty" + grnIdList[j]));
 				float baseRate = Float.parseFloat(request.getParameter("baseRate" + grnIdList[j]));
 
+				
 				for (int i = 0; i < gvnAccDetailList.size(); i++) {
 
 					if (gvnAccDetailList.get(i).getGrnGvnId() == Integer.parseInt(grnIdList[j])) {
@@ -2689,10 +2695,11 @@ public class GvnController {
 
 			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
 
-			int key = Integer.parseInt(request.getParameter("headerId"));
-			System.err.println("Key " + key);
-			gvnAccDetailList = hashMap.get(key);
-			globalGvnAccHeaderId = key;
+			/*
+			 * int key = Integer.parseInt(request.getParameter("headerId"));
+			 * System.err.println("Key " + key); gvnAccDetailList = hashMap.get(key);
+			 * globalGvnAccHeaderId = key;
+			 */
 
 			if (updateAccGrn.getError() == false) {
 
@@ -2711,18 +2718,18 @@ public class GvnController {
 			}
 
 			GrnGvnHeader accHeader = new GrnGvnHeader();
-
+			Integer isFound=null;
+			System.err.println("For  globalGvnAccHeaderId " +globalGvnAccHeaderId);
 			for (int i = 0; i < gvnAccHeaderList.size(); i++) {
-
-				if (gvnAccHeaderList.get(i).getGrnGvnHeaderId() == globalGvnAccHeaderId) {
-
+				System.err.println("*** accHeader " +gvnAccHeaderList.get(i).getGrngvnSrno() +" id "+gvnAccHeaderList.get(i).getGrnGvnHeaderId());
+				System.err.println("*** globalGvnAccHeaderId " +globalGvnAccHeaderId);
+				isFound=Integer.compare(gvnAccHeaderList.get(i).getGrnGvnHeaderId(), globalGvnAccHeaderId);
+				if (isFound.equals(0)) {
 					accHeader = gvnAccHeaderList.get(i);
-
 					break;
 
 				}
 			}
-
 			if (accHeader.getGrngvnStatus() == 4 || accHeader.getGrngvnStatus() == 6
 					|| accHeader.getGrngvnStatus() == 7) {
 
