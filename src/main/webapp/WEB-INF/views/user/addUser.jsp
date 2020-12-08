@@ -67,7 +67,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">User Name</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="uname" id="uname" onkeyup="sameUser();" class="form-control"placeholder="User Name"data-rule-required="true" />
+										<input type="text" name="uname" autocomplete="off" id="uname" onfocusout="sameUser();" class="form-control"placeholder="User Name"data-rule-required="true" />
 									</div>
 									<input type="hidden" name="umo_id" id="umo_id" />
 									
@@ -75,7 +75,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Password</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="password" name="upass" id="upass" onkeyup="samePass();" class="form-control"placeholder="Password"data-rule-required="true" />
+										<input type="password" autocomplete="off" name="upass" id="upass" onkeyup="samePass();" class="form-control"placeholder="Password"data-rule-required="true" />
 									</div>
 									 <span class="" id="pass" ></span>
 								 
@@ -84,7 +84,7 @@
 						<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Confirm Password</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="password" name="confirmPass" id="confirmPass" onkeyup="samePass();" class="form-control"placeholder="Confirm Password"data-rule-required="true" />
+										<input type="password" autocomplete="off" name="confirmPass" id="confirmPass" onkeyup="samePass();" class="form-control"placeholder="Confirm Password"data-rule-required="true" />
 									</div>
 									
 								 <span class="" id="cpass" ></span>
@@ -131,7 +131,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Email</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="email" name="email" id="email" class="form-control"placeholder="Email"data-rule-required="true" />
+										<input type="email" name="email" onkeyup="sameEmail()" id="email" autocomplete="off" class="form-control"placeholder="Email"data-rule-required="true" />
 									<span style="opacity: 0.6;">Mail will be send on this email id.</span>
 									</div>
 									
@@ -139,7 +139,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Contact</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" name="contact" id="contact"  maxlength="10" class="form-control"placeholder="Contact"data-rule-required="true" />
+										<input type="text" name="contact" onfocusout="sameContact()" id="contact" autocomplete="off"  maxlength="10" class="form-control"placeholder="Contact"data-rule-required="true" />
 									<span style="opacity: 0.6;">OTP will be send on this number.</span>
 									</div>
 									
@@ -298,57 +298,33 @@
 	        }).insertAfter($(this));
 	      	return false;
 	      }
-	      
 	})
-	
 	function samePass(){
-		 
-	
 		  if(document.getElementById("upass").value==document.getElementById("confirmPass").value && document.getElementById("upass").value!=null && document.getElementById("upass").value!="")
 			{
-			   
 			  $("#pass").addClass("glyphicon glyphicon-ok");
 				 $("#cpass").addClass("glyphicon glyphicon-ok");
-				// flag=false;
-		
-				 
-				 
-				
 					  document.getElementById("submitbtn").disabled=false;
 			} 
-			  
 		  else{
-			  
 			  $("#pass").removeClass("glyphicon glyphicon-ok");
 			  $("#cpass").removeClass("glyphicon glyphicon-ok");
 			  document.getElementById("submitbtn").disabled=true;
 		  }
 	}
-	
 	function submitUser(){
-	
 		var valid=validate();
+		sameEmail();
+		sameContact();
 	 if(!valid)
 		 {
-		 
-		// var pageContext=document.getElementById("pageContext").value;
-
-	
 		  document.getElementById("validation-form").submit();
-		  //alert("submit");
-		   // form.submit();
-		    
-		   
-		   
 		 }
-	
 	}
 	
 	function validate()
 	{
-		
 		var flag=false;
-		 
 			var usertype = $("#user_type").val();
 			var dept_id = $("#dept_id").val();
 		 var uname=document.getElementById("uname").value;
@@ -356,12 +332,7 @@
 			 {
 			 flag=true;
 			 alert("enter Username");
-			 
-			 
 			 }
-			 
-			 
-		
 		 else if(dept_id=="" || dept_id==null)
 			 {
 			 flag=true;
@@ -370,34 +341,22 @@
 		 else if(usertype=="" || usertype==null ){
 				flag=true;
 				alert("Please Select User Type");
-				
 			}
-	
 		return flag;
 	}
 	</script>
 	<script>
 function validateEmail(email) {
-    
 	var eml = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-
 	if (eml.test($.trim(email)) == false) {
-
-
 	return false;
-
 	}
-
 	return true;
-
 }
 function  sameEmail(){
 	var valid = true
 		var email = $("#email").val();
-		//alert(email);
-		$(document)
-				.ready(
-						function() {
+	if(validateEmail(email))
 							$
 									.getJSON(
 											'${getUniqueEmail}',
@@ -411,20 +370,14 @@ function  sameEmail(){
 													alert("Email Id Already Exist!")
 													document.getElementById("email").value="";
 												}
-
 											});
-
-						});
-
 	}
 
 function  sameContact(){
 	var valid = true
 		var contact = $("#contact").val();
 		//alert(contact);
-		$(document)
-				.ready(
-						function() {
+		if(contact.length>9)
 							$
 									.getJSON(
 											'${getUniqueContact}',
@@ -438,11 +391,7 @@ function  sameContact(){
 													alert("Contact No Already Exist!")
 													document.getElementById("contact").value="";
 												}
-
 											});
-
-						});
-
 	}
 	
 	
@@ -451,9 +400,6 @@ function  sameUser(){
 	var valid = true
 		var uname = $("#uname").val();
 		//alert(contact);
-		$(document)
-				.ready(
-						function() {
 							$
 									.getJSON(
 											'${getUniqueUser}',
@@ -467,10 +413,7 @@ function  sameUser(){
 													alert("User Name Already Exist!")
 													document.getElementById("uname").value="";
 												}
-
 											});
-
-						});
 
 	}
 </script>
