@@ -143,6 +143,8 @@ public class UserController {
 			System.err.println(info);
 		}
 	}catch (Exception e) {
+		info.setError(true);
+		info.setMessage("User Not Found");
 		e.printStackTrace();		
 	}
 		
