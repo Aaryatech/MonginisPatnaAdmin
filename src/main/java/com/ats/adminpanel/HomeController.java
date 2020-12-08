@@ -169,25 +169,27 @@ public class HomeController {
 		HttpSession session = request.getSession();
 
 		try {
-			System.out.println("Login Process " + name);
+			//System.out.println("Login Process " + name);
 
 			if (name.equalsIgnoreCase("") || password.equalsIgnoreCase("") || name == null || password == null) {
 
 				mav = new ModelAndView("login");
 			} else {
 
-
-				UserResponse userObj = restTemplate.getForObject(
-						Constants.url+"/login?username=" + name + "&password=" + password,
+				MultiValueMap<String, Object> checkLoginMap =new LinkedMultiValueMap<String, Object>();
+				checkLoginMap.add("username", name.trim());
+				checkLoginMap.add("password", password.trim());
+				UserResponse userObj = restTemplate.postForObject(
+						Constants.url+"/login",checkLoginMap,
 						UserResponse.class);
 				
 				session.setAttribute("UserDetail", userObj);
 				UserResponse userResponse =(UserResponse) session.getAttribute("UserDetail");
 				
-				System.out.println("new Field Dept Id = "+userResponse.getUser().getDeptId());
+				//System.out.println("new Field Dept Id = "+userResponse.getUser().getDeptId());
 				
 
-				System.out.println("JSON Response Objet " + userObj.toString());
+				//System.out.println("JSON Response Objet " + userObj.toString());
 				String loginResponseMessage="";
 
 				
@@ -202,7 +204,7 @@ public class HomeController {
 					MultiValueMap<String, Object> map =new LinkedMultiValueMap<String, Object>();
 					int userId=userObj.getUser().getId();
 					map.add("usrId", userId);
-					System.out.println("Before web service");
+					//System.out.println("Before web service");
 					try {
 					 ParameterizedTypeReference<List<ModuleJson>> typeRef = new ParameterizedTypeReference<List<ModuleJson>>() {
 					};
@@ -211,7 +213,7 @@ public class HomeController {
 					
 					 List<ModuleJson> newModuleList = responseEntity.getBody();
 					
-					 System.err.println("new Module List " +newModuleList.toString());
+					// System.err.println("new Module List " +newModuleList.toString());
 					 
 						session.setAttribute("newModuleList", newModuleList);
 						session.setAttribute("sessionModuleId", 0);
@@ -235,9 +237,9 @@ public class HomeController {
 					orderCounts=orderCountList.getOrderCount();
 					mav.addObject("orderCounts",orderCounts);
 					mav.addObject("cDate",dateFormat.format(new Date()));
-					System.out.println("menu list =="+orderCounts.toString());
-					System.out.println("order count tile -"+orderCounts.get(0).getMenuTitle());
-					System.out.println("order  count -"+orderCounts.get(0).getTotal());
+					//System.out.println("menu list =="+orderCounts.toString());
+					//System.out.println("order count tile -"+orderCounts.get(0).getMenuTitle());
+					//System.out.println("order  count -"+orderCounts.get(0).getTotal());
 					
 					
 
