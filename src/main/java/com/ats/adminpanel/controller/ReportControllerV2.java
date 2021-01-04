@@ -185,7 +185,7 @@ public class ReportControllerV2 {
 				float netVal2 = (netVal1) - (saleReportList.get(i).getGrnValue());
 				float inLac = (netVal2) / 100000;
 				float retPer = 0.0f;
-				if (saleReportList.get(i).getGrnValue() > 0) {
+				if (saleReportList.get(i).getSaleValue() > 0) {
 					retPer = ((saleReportList.get(i).getGrnValue()) / (saleReportList.get(i).getSaleValue() / 100));
 				}
 				rowData.add("" + roundUp(netVal1));
@@ -358,7 +358,7 @@ public class ReportControllerV2 {
 				float netVal2 = (netVal1) - (saleReportList.get(j).getGrnValue());
 				float inLac = (netVal2) / 100000;
 				float retPer = 0.0f;
-				if (saleReportList.get(j).getGrnValue() > 0) {
+				if (saleReportList.get(j).getSaleValue() > 0) {
 					retPer = ((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue() / 100));
 				}
 

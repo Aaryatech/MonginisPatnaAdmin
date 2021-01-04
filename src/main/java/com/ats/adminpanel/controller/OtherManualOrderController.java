@@ -270,7 +270,7 @@ public class OtherManualOrderController {
 				order.setDeliveryDate(sqlTommDate);	
 			}
 			order.setIsEdit(0);
-			order.setEditQty(0);
+			order.setEditQty(qty);
 			order.setIsPositive(1);
 			order.setMenuId(menuId);
 			order.setOrderDate(sqlCurrDate);
