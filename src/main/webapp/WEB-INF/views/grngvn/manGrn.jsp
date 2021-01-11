@@ -276,7 +276,8 @@
 						  	
 						  //	tr.append($('<td></td>').html(bill.rate));
 
-						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+" >"));
+						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+">"
+						 	+"<span id=err"+bill.billDetailNo+" style='display: none; color: red; font-size: 15px;'>Enter GRN</span>"));
 						  	tr.append($('<td></td>').html(bill.igstPer));
 						  	tr.append($('<td id=taxable_amt'+bill.billDetailNo+'></td>').html(""));
 						  	tr.append($('<td id=tax_amt'+bill.billDetailNo+'></td>').html(""));
@@ -425,15 +426,11 @@
 																				.getElementsByClassName("chkcls")[counter].value;
 																		grnQty = $( "#" + chkVal).val();
 
-																		if (grnQty == 0) {
+																		if (grnQty == 0) {	
 																			isError = true;
-																			$(
-																					"#error_grnqty")
-																					.show()
+																			$("#err"+chkVal).show()
 																		} else {
-																			$(
-																					"#error_grnqty")
-																					.hide()
+																			$("#err"+chkVal).hide()
 																		}
 																	}
 																	
