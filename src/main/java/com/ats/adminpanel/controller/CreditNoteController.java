@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -104,6 +107,12 @@ public class CreditNoteController {
 
 		} else {
 			model = new ModelAndView("creditNote/generateCreditNote");
+			
+			ZoneId z = ZoneId.of("Asia/Calcutta");
+
+			LocalDate date = LocalDate.now(z);
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+			model.addObject("todaysDate", date.format(formatters));
 
 			AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
 			try {
@@ -226,12 +235,12 @@ public class CreditNoteController {
 	}
 
 	@RequestMapping(value = "/insertCreditNote", method = RequestMethod.POST)
-	public ModelAndView insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
+	public String insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
 		// Constants.mainAct = 8;
 		// Constants.subAct = 85;
 
-		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
+		//ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
 		System.out.println("inside insert credit note ");
 
 		try {
@@ -243,6 +252,8 @@ public class CreditNoteController {
 			RestTemplate restTemplate = new RestTemplate();
 
 			String[] grnGvnIdList = request.getParameterValues("select_to_credit");
+			
+			String crnHeadDate = request.getParameter("crnHeadDate");
 
 			List<GetGrnGvnForCreditNote> selectedCreditNote = new ArrayList<>();
 
@@ -399,7 +410,10 @@ public class CreditNoteController {
 					java.sql.Date creditNoteDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
 					postCreditHeader.setCreatedDateTime(dateFormat.format(cal.getTime()));
-					postCreditHeader.setCrnDate(creditNoteDate);
+					
+					String hdate = DateConvertor.convertToYMD(crnHeadDate);
+					postCreditHeader.setCrnDate(java.sql.Date.valueOf(hdate));//creditNoteDate
+					
 					postCreditHeader.setCrnFinalAmt(Math.round(creditNote.getAprGrandTotal()));
 					postCreditHeader.setCrnGrandTotal(Math.round(creditNote.getAprGrandTotal()));
 					postCreditHeader.setCrnTaxableAmt(creditNote.getAprTaxableAmt());
@@ -498,7 +512,7 @@ public class CreditNoteController {
 
 		}
 
-		return model;
+		return "redirect:/showInsertCreditNote";
 
 	}
 
