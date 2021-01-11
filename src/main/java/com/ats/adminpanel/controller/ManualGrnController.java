@@ -232,10 +232,10 @@ public class ManualGrnController {
 	}
 
 	@RequestMapping(value = "/insertManGrn", method = RequestMethod.POST)
-	public ModelAndView insertManGrn(HttpServletRequest request, HttpServletResponse response) {
+	public String insertManGrn(HttpServletRequest request, HttpServletResponse response) {
 
 		System.err.println("Inside insertManGrn");
-		ModelAndView model = new ModelAndView("grngvn/manGrn");
+		//ModelAndView model = new ModelAndView("grngvn/manGrn");
 		selectedGrn = new ArrayList<>();
 		try {
 
@@ -506,7 +506,7 @@ public class ManualGrnController {
 
 		}
 
-		return model;
+		return "redirect:/showManGrn";
 
 	}
 

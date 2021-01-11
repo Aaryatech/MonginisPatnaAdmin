@@ -151,7 +151,7 @@
 								<tbody>
 
 								</tbody>
-							</table>
+							</table>							
 						</div>
 					</div>
 
@@ -161,10 +161,12 @@
 
 								<input type="submit" class="btn btn-primary" value="Submit">
 							</div>
+							<span id="error_grnqty" style="display: none; color: red; font-size: 15px;">Enter GRN Value Greater Than 0.</span>
 						</div>
 					</div>
 				</div>
 			</form>
+			
 		</div>
 	</div>
 	<!-- END Main Content -->
@@ -249,7 +251,7 @@
 
 						  /* 	tr.append($('<td></td>').html(key+1)); */
 														
-						tr.append($('<td></td>').html("<input type=checkbox  id=check"+bill.billDetailNo+" name="+bill.billDetailNo+" value="+bill.billDetailNo+">"));
+						tr.append($('<td></td>').html("<input type=checkbox class='chkcls' id=check"+bill.billDetailNo+" name="+bill.billDetailNo+" value="+bill.billDetailNo+">"));
 						  
 						  						  	//tr.append($('<td></td>').html(bill.invoiceNo));
 
@@ -340,6 +342,11 @@
 					var grnBaseRate;
 					var grnRate;
 					
+					var invId = $("#check"+dNo).val();
+					if(invId>0){
+						$("#check"+dNo).prop("checked", true);					
+					}
+					
 				    if(grnType==0){
 						var grnRate=rate;
 						grnBaseRate = baseRate * 75 / 100;
@@ -378,9 +385,76 @@
 					$("#tax_per"+dNo).html(totTaxPer.toFixed(2));
 					$("#taxable_amt"+dNo).html(taxableAmt.toFixed(2));
 					$("#tax_amt"+dNo).html(totalTax.toFixed(2));
+					
 				}
 					
 			</script>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function($) {
+							$("#openingStockForm")
+									.submit(
+											function(e) {
+
+												var isError = false;
+												var errMsg = "";
+												var chkVal = 0;
+												var grnQty = 0;
+
+												if($("#selectFr").val()<0){													
+													isError = true;
+													alert("Select Franchise");
+												}
+												
+												if($("#selectMenu").val()<0){													
+													isError = true;
+													alert("Select Bill");
+												}
+												
+												
+												$(".chkcls")
+														.each(
+																function(
+																		counter) {																	
+
+																	if (document
+																			.getElementsByClassName("chkcls")[counter].checked) {
+
+																		chkVal = document
+																				.getElementsByClassName("chkcls")[counter].value;
+																		grnQty = $( "#" + chkVal).val();
+
+																		if (grnQty == 0) {
+																			isError = true;
+																			$(
+																					"#error_grnqty")
+																					.show()
+																		} else {
+																			$(
+																					"#error_grnqty")
+																					.hide()
+																		}
+																	}
+																	
+																});
+												
+
+												if (!isError) {
+													
+													var form = document
+															.getElementById("openingStockForm")
+
+													form.submit();
+												} else {
+
+												}
+
+												return false;
+
+											});
+						});
+	</script>
 	<!--basic scripts-->
 	<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
