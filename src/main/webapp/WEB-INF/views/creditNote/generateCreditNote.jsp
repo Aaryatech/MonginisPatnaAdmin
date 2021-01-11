@@ -221,7 +221,7 @@
 										</tbody>
 									</table>
 									<label class="col-sm-3 col-lg-1	 control-label">Date</label>
-									<div class="col-sm-6 col-lg-4 controls date_select">
+									<div class="col-sm-1 col-lg-2 controls date_select">
 
 										<input class="form-control date-picker" id="crnHeadDate"
 											name="crnHeadDate" size="30" type="text" value="${todaysDate}" />
